@@ -92,9 +92,9 @@ body {
 }
 #particles-background {
   background: #2c2d44;
-  background-image: -moz-linear-gradient(45deg, #000000 3%, #623a1f 95%);
-  background-image: -webkit-linear-gradient(45deg, #000000 3%, #623a1f 95%);
-  background-image: linear-gradient(45deg, #000000 3%, #623a1f 95%);
+  background-image: -moz-linear-gradient(45deg, #000000 15%, #623a1f 55%);
+  background-image: -webkit-linear-gradient(45deg, #000000 15%, #623a1f 55%);
+  background-image: linear-gradient(45deg, #000000 15%, #623a1f 55%);
 }
 lesshat-selector {
   -lh-property: 0; } 
