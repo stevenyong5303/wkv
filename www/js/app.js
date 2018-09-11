@@ -13,9 +13,11 @@ var app  = new Framework7({
 
 
 $(document).ready(function(){
+	var STORAGE = window.localStorage;
+	var usr = STORAGE.getItem('usr');
+	
 	var DATA = {
-			'usr' : 1,
-			'pwd' : 2
+			'usr' : usr
 		};
 	var post_data = "ACT=" + encodeURIComponent('lgn_chk')
 				  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
@@ -27,20 +29,16 @@ $(document).ready(function(){
 			
 		},
 		success: function(str){
-			loading(0);
 			setTimeout(function(){
+				sys.loading(0);
 				if(str==='200 OK'){
 					
 				}else{
-					
+					app.loginScreen.open('#lgn');
 				}
 			}, 2000);
 		}
 	});
-	
-	if(0){
-		app.loginScreen.open('#lgn');
-	}
 });
 
 sys = {
