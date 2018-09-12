@@ -14,10 +14,12 @@ var app  = new Framework7({
 
 $(document).ready(function(){
 	var STORAGE = window.localStorage;
-	var usr = STORAGE.getItem('usr');
+	var usr = STORAGE.getItem('usr'),
+		key = STORAGE.getItem('key');
 	
 	var DATA = {
-			'usr' : usr
+			'usr' : usr,
+			'key' : key
 		};
 	var post_data = "ACT=" + encodeURIComponent('lgn_chk')
 				  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
