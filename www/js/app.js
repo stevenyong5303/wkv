@@ -1,5 +1,6 @@
 var $$ = Dom7;
 var sys = new Object();
+var STORAGE = window.localStorage;
 var app  = new Framework7({
   root: '#app',
   id: 'com.wkv.manage',
@@ -13,33 +14,60 @@ var app  = new Framework7({
 
 
 $(document).ready(function(){
-	var STORAGE = window.localStorage;
 	var usr = STORAGE.getItem('usr'),
-		key = STORAGE.getItem('key');
+		pwd = STORAGE.getItem('pwd');
 	
 	var DATA = {
 			'usr' : usr,
-			'key' : key
+			'pwd' : pwd
 		};
-	var post_data = "ACT=" + encodeURIComponent('lgn_chk')
+	var post_data = "ACT=" + encodeURIComponent('ssn_chk')
 				  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
 	$.ajax({
 		type: 'POST',
 		url: 'http://app.wkvmusicstore.com/',
 		data: post_data,
-		beforeSend: function(){
-			
-		},
 		success: function(str){
 			setTimeout(function(){
 				sys.loading(0);
-				if(str==='200 OK'){
-					
-				}else{
+				if(str!=='200 OK'){
 					app.loginScreen.open('#lgn');
 				}
-			}, 2000);
+			}, 2500);
 		}
+	});
+	
+	
+	$('#lgn #lgn_sgn').on('click', function(){
+		usr = $('#lgn input[name="lgn_usr"]').val();
+		pwd = $('#lgn input[name="lgn_pwd"]').val();
+		
+		DATA = {
+			'usr' : usr,
+			'pwd' : pwd
+		};
+		post_data = "ACT=" + encodeURIComponent('lgn_chk')
+				  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
+				  
+		$.ajax({
+			type: 'POST',
+			url: 'http://app.wkvmusicstore.com/',
+			data: post_data,
+			beforeSend: function(){
+				sys.loading(1);
+			},
+			success: function(str){
+				setTimeout(function(){
+					sys.loading(0);
+					if(str==='200 OK'){
+						STORAGE.setItem('usr', usr);
+						STORAGE.setItem('pwd', pwd);
+						
+						app.loginScreen.close('#lgn');
+					}
+				}, 2000);
+			}
+		});
 	});
 });
 
