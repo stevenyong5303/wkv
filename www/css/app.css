@@ -1,7 +1,6 @@
 #app {
 	z-index: -100;
 }
-
 #loading-overlay {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
@@ -9,6 +8,20 @@
   -webkit-user-select: none;
   overflow: hidden;
   z-index: 100;
+}
+.toolbar-inner .left {
+	padding-left: 13px;
+}
+.rotate-180 {
+	-webkit-transform: rotate(180deg);
+	-moz-transform: rotate(180deg);
+	-ms-transform: rotate(180deg);
+	-o-transform: rotate(180deg);
+	transform: rotate(180deg);
+}
+.w200 {
+	display: inline-block;
+	width: 170px;
 }
 body .vertical-centered-box {
   position: absolute;

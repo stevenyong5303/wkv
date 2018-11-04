@@ -6,12 +6,46 @@ var app = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.12",
+			  version: "1.0.13",
 			  rtl: false,
 			  language: "en-US"
 		  });
 
 $(document).ready(function(){
+	var monthNames = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG' , 'SEP' , 'OCT', 'NOV', 'DEC'];
+	var calendarInline = app.calendar.create({
+			containerEl: '#wkv-calendar',
+			value:  [new Date()],
+					weekHeader: false,
+					renderToolbar: function () {
+						return  '<div class="toolbar calendar-custom-toolbar no-shadow">' +
+								'<div class="toolbar-inner">' +
+								'<div class="left">' +
+								'<a href="#" class="link icon-only"><i class="icon icon-back ' + (app.theme === 'md' ? 'color-black' : '') + '"></i></a>' +
+								'</div>' +
+								'<div class="center"></div>' +
+								'<div class="right">' +
+								'<a href="#" class="link icon-only"><i class="icon icon-forward ' + (app.theme === 'md' ? 'color-black' : '') + '"></i></a>' +
+								'</div>' +
+								'</div>' +
+								'</div>';
+					},
+					on: {
+						init: function (c) {
+							$$('.calendar-custom-toolbar .center').text(monthNames[c.currentMonth] +', ' + c.currentYear);
+							$$('.calendar-custom-toolbar .left .link').on('click', function () {
+								calendarInline.prevMonth();
+							});
+							$$('.calendar-custom-toolbar .right .link').on('click', function () {
+								calendarInline.nextMonth();
+							});
+						},
+						monthYearChangeStart: function (c) {
+							$$('.calendar-custom-toolbar .center').text(monthNames[c.currentMonth] +', ' + c.currentYear);
+						}
+					}
+		});
+		
 	var usr = STORAGE.getItem('usr'),
 		pwd = STORAGE.getItem('pwd');
 	
@@ -73,39 +107,51 @@ $(document).ready(function(){
 		}
 	});
 	
-	var monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August' , 'September' , 'October', 'November', 'December'];
-	var calendarInline = app.calendar.create({
-			containerEl: '#wkv-calendar',
-			value:  [new Date()],
-					weekHeader: false,
-					renderToolbar: function () {
-						return  '<div class="toolbar calendar-custom-toolbar no-shadow">' +
-								'<div class="toolbar-inner">' +
-								'<div class="left">' +
-								'<a href="#" class="link icon-only"><i class="icon icon-back ' + (app.theme === 'md' ? 'color-black' : '') + '"></i></a>' +
-								'</div>' +
-								'<div class="center"></div>' +
-								'<div class="right">' +
-								'<a href="#" class="link icon-only"><i class="icon icon-forward ' + (app.theme === 'md' ? 'color-black' : '') + '"></i></a>' +
-								'</div>' +
-								'</div>' +
-								'</div>';
-					},
-					on: {
-						init: function (c) {
-							$$('.calendar-custom-toolbar .center').text(monthNames[c.currentMonth] +', ' + c.currentYear);
-							$$('.calendar-custom-toolbar .left .link').on('click', function () {
-								calendarInline.prevMonth();
-							});
-							$$('.calendar-custom-toolbar .right .link').on('click', function () {
-								calendarInline.nextMonth();
-							});
-						},
-						monthYearChangeStart: function (c) {
-							$$('.calendar-custom-toolbar .center').text(monthNames[c.currentMonth] +', ' + c.currentYear);
-						}
-					}
-		});
+	$('#wkv-calendar .calendar-day').on('dblclick', function(){
+		var tmp = new Date(calendarInline.getValue()[0]);
+		
+		if(!sys.isEmpty(tmp)){
+			DATA = {
+				'date' : tmp.toString()
+			};
+			post_data = "ACT=" + encodeURIComponent('cal_get')
+					  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
+					  
+			$.ajax({
+				type: 'POST',
+				url: 'http://app.wkvmusicstore.com/',
+				data: post_data,
+				beforeSend: function(){
+					sys.loading(1);
+				},
+				success: function(str){
+					sys.loading(0);
+					
+				}
+			});
+		}
+	});
+	
+	$('input#stcl_row, input#stcl_col').on('keyup', function(){
+		var row = parseInt($('input#stcl_row').val()), col = parseInt($('input#stcl_col').val()), tmp = 0;
+		
+		if($.isNumeric(row) && $.isNumeric(col) && row!=0 && col!=0){
+			tmp = row * col;
+			$('#stcl_board').text(tmp);
+			
+			tmp = (((row+1)*col)+((col+1)*row));
+			$('#stcl_side').text(tmp);
+			
+			tmp = ((row+1)*(col+1));
+			$('#stcl_leg').text(tmp);
+			$('#stcl_shoe').text(tmp);
+		}else{
+			$('#stcl_board').text(0);
+			$('#stcl_side').text(0);
+			$('#stcl_leg').text(0);
+			$('#stcl_shoe').text(0);
+		}
+	});
 });
 
 sys = {

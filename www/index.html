@@ -150,7 +150,22 @@
 						</div>
 						<div id="pg-tools" class="tab page-content">
 							<div class="block">
-								tools
+								<div class="list">
+									<ul>
+										<li>
+											<div class="item-content">
+												<div class="item-media">
+													<i class="icon material-icons md-only">border_inner</i>
+												</div>
+												<div class="item-inner">
+													<div class="item-title">
+														<a class="link popup-open" href="#" data-popup=".popup-stage">Stage Calculator</a>
+													</div>
+												</div>
+											</div>
+										</li>
+									</ul>
+								</div>
 							</div>
 						</div>
 						<div id="pg-settings" class="tab page-content">
@@ -159,6 +174,96 @@
 							</div>
 						</div>
 					</div>
+				</div>
+			</div>
+			<div class="popup popup-stage">
+				<div class="toolbar">
+					<div class="toolbar-inner">
+						<div class="left">Stage Calculator</div>
+						<div class="right"><a class="link popup-close" href="#">Close</a></div>
+					</div>
+				</div>
+				<div class="block">
+					<form class="list" id="my-form">
+						<ul>
+							<li>
+								<div class="item-content item-input">
+									<div class="item-inner">
+										<div class="item-title item-label">
+											<i class="icon material-icons md-only">swap_vert</i> Row
+										</div>
+										<div class="item-input-wrap">
+											<input id="stcl_row" type="text" name="row" autocomplete="off" placeholder="In pieces">
+										</div>
+									</div>
+								</div>
+							</li>
+							<li>
+								<div class="item-content item-input">
+									<div class="item-inner">
+										<div class="item-title item-label">
+											<i class="icon material-icons md-only">swap_horiz</i> Column
+										</div>
+										<div class="item-input-wrap">
+											<input id="stcl_col" type="text" name="column" autocomplete="off" placeholder="In pieces">
+										</div>
+									</div>
+								</div>
+							</li>
+							<li>
+								<div class="item-content item-input">
+									<div class="item-inner">
+										<div class="item-input-wrap">
+											<span class="w200">
+												<i class="icon material-icons md-only">apps</i>
+												Board
+											</span>
+											<span id="stcl_board" class="badge">0</span>
+										</div>
+									</div>
+								</div>
+							</li>
+							<li>
+								<div class="item-content item-input">
+									<div class="item-inner">
+										<div class="item-input-wrap">
+											<span class="w200">
+												<i class="icon material-icons md-only">border_left</i>
+												Side
+											</span>
+											<span id="stcl_side" class="badge">0</span>
+										</div>
+									</div>
+								</div>
+							</li>
+							<li>
+								<div class="item-content item-input">
+									<div class="item-inner">
+										<div class="item-input-wrap">
+											<span class="w200">
+												<i class="icon material-icons md-only">settings_input_component</i>
+												Leg
+											</span>
+											<span id="stcl_leg" class="badge">0</span>
+										</div>
+									</div>
+								</div>
+							</li>
+							<li>
+								<div class="item-content item-input">
+									<div class="item-inner">
+										<div class="item-input-wrap">
+											<span class="w200">
+												<i class="icon material-icons md-only rotate-180">format_strikethrough</i>
+												Shoe
+											</span>
+											<span id="stcl_shoe" class="badge">0</span>
+										</div>
+									</div>
+								</div>
+							</li>
+						</ul>
+					</form>
 				</div>
 			</div>
 		</div>
