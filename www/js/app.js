@@ -1,16 +1,16 @@
 var $$ = Dom7;
 var sys = new Object();
 var STORAGE = window.localStorage;
-var app  = new Framework7({
-  root: '#app',
-  id: 'com.wkv.manage',
-  name: 'WKV',
-  theme: 'md',
-  routes: routes,
-  version: "1.0.6",
-  rtl: false,
-  language: "en-US"
-});
+var app = new Framework7({
+				  root: '#app',
+				  id: 'com.wkv.manage',
+				  name: 'WKV',
+				  theme: 'md',
+				  routes: routes,
+				  version: "1.0.11",
+				  rtl: false,
+				  language: "en-US"
+			  });
 
 
 $(document).ready(function(){
@@ -23,6 +23,7 @@ $(document).ready(function(){
 		};
 	var post_data = "ACT=" + encodeURIComponent('ssn_chk')
 				  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
+	
 	$.ajax({
 		type: 'POST',
 		url: 'http://app.wkvmusicstore.com/',
@@ -42,32 +43,36 @@ $(document).ready(function(){
 		usr = $('#lgn input[name="lgn_usr"]').val();
 		pwd = $('#lgn input[name="lgn_pwd"]').val();
 		
-		DATA = {
-			'usr' : usr,
-			'pwd' : pwd
-		};
-		post_data = "ACT=" + encodeURIComponent('lgn_chk')
-				  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
-				  
-		$.ajax({
-			type: 'POST',
-			url: 'http://app.wkvmusicstore.com/',
-			data: post_data,
-			beforeSend: function(){
-				sys.loading(1);
-			},
-			success: function(str){
-				setTimeout(function(){
-					sys.loading(0);
-					if(str==='200 OK'){
-						STORAGE.setItem('usr', usr);
-						STORAGE.setItem('pwd', pwd);
-						
-						app.loginScreen.close('#lgn');
-					}
-				}, 2000);
-			}
-		});
+		if(!sys.isEmpty(usr) && !sys.isEmpty(pwd)){
+			DATA = {
+				'usr' : usr,
+				'pwd' : pwd
+			};
+			post_data = "ACT=" + encodeURIComponent('lgn_chk')
+					  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
+					  
+			$.ajax({
+				type: 'POST',
+				url: 'http://app.wkvmusicstore.com/',
+				data: post_data,
+				beforeSend: function(){
+					sys.loading(1);
+				},
+				success: function(str){
+					setTimeout(function(){
+						sys.loading(0);
+						if(str==='200 OK'){
+							STORAGE.setItem('usr', usr);
+							STORAGE.setItem('pwd', pwd);
+							
+							app.loginScreen.close('#lgn');
+						}
+						$('#lgn input[name="lgn_usr"]').val('');
+						$('#lgn input[name="lgn_pwd"]').val('');
+					}, 2000);
+				}
+			});
+		}
 	});
 });
 
