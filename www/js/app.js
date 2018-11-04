@@ -2,16 +2,14 @@ var $$ = Dom7;
 var sys = new Object();
 var STORAGE = window.localStorage;
 var app = new Framework7({
-				  root: '#app',
-				  id: 'com.wkv.manage',
-				  name: 'WKV',
-				  theme: 'md',
-				  routes: routes,
-				  version: "1.0.11",
-				  rtl: false,
-				  language: "en-US"
-			  });
-
+			  root: '#app',
+			  id: 'com.wkv.manage',
+			  name: 'WKV',
+			  theme: 'md',
+			  version: "1.0.12",
+			  rtl: false,
+			  language: "en-US"
+		  });
 
 $(document).ready(function(){
 	var usr = STORAGE.getItem('usr'),
@@ -74,6 +72,40 @@ $(document).ready(function(){
 			});
 		}
 	});
+	
+	var monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August' , 'September' , 'October', 'November', 'December'];
+	var calendarInline = app.calendar.create({
+			containerEl: '#wkv-calendar',
+			value:  [new Date()],
+					weekHeader: false,
+					renderToolbar: function () {
+						return  '<div class="toolbar calendar-custom-toolbar no-shadow">' +
+								'<div class="toolbar-inner">' +
+								'<div class="left">' +
+								'<a href="#" class="link icon-only"><i class="icon icon-back ' + (app.theme === 'md' ? 'color-black' : '') + '"></i></a>' +
+								'</div>' +
+								'<div class="center"></div>' +
+								'<div class="right">' +
+								'<a href="#" class="link icon-only"><i class="icon icon-forward ' + (app.theme === 'md' ? 'color-black' : '') + '"></i></a>' +
+								'</div>' +
+								'</div>' +
+								'</div>';
+					},
+					on: {
+						init: function (c) {
+							$$('.calendar-custom-toolbar .center').text(monthNames[c.currentMonth] +', ' + c.currentYear);
+							$$('.calendar-custom-toolbar .left .link').on('click', function () {
+								calendarInline.prevMonth();
+							});
+							$$('.calendar-custom-toolbar .right .link').on('click', function () {
+								calendarInline.nextMonth();
+							});
+						},
+						monthYearChangeStart: function (c) {
+							$$('.calendar-custom-toolbar .center').text(monthNames[c.currentMonth] +', ' + c.currentYear);
+						}
+					}
+		});
 });
 
 sys = {

@@ -112,28 +112,54 @@
 			</div>
 		</div>
 		<div class="views">
-			<div class="toolbar tabbar-labels toolbar-bottom-md">
-				<div class="toolbar-inner">
-				<a href="#" class="tab-link tab-link-active">
-					<i class="icon material-icons md-only">home</i>
-					<span class="tabbar-label">Home</span>
-				</a>
-					<a href="#" class="tab-link">
-					<i class="icon material-icons md-only">view_list</i>
-					<span class="tabbar-label">Catalog</span>
-				</a>
-				<a id="tls" href="#" class="tab-link">
-					<i class="icon material-icons md-only">work</i>
-					<span class="tabbar-label">Tools</span>
-				</a>
-				<a href="#" class="tab-link">
-					<i class="icon material-icons md-only">settings</i>
-					<span class="tabbar-label">Settings</span>
-				</a>
+			<div class="view view-main">
+				<div class="toolbar tabbar-labels toolbar-bottom-md">
+					<div class="toolbar-inner">
+					<a id="btn-home" href="#pg-home" class="tab-link tab-link-active">
+						<i class="icon material-icons md-only">important_devices</i>
+						<span class="tabbar-label">Home</span>
+					</a>
+					<a id="btn-schedule" href="#pg-schedule" class="tab-link">
+						<i class="icon material-icons md-only">today</i>
+						<span class="tabbar-label">Schedule</span>
+					</a>
+					<a id="btn-tools" href="#pg-tools" class="tab-link">
+						<i class="icon material-icons md-only">work</i>
+						<span class="tabbar-label">Tools</span>
+					</a>
+					<a id="btn-settings" href="#pg-settings" class="tab-link">
+						<i class="icon material-icons md-only">settings</i>
+						<span class="tabbar-label">Settings</span>
+					</a>
+					</div>
 				</div>
-			</div>
-			<div id="view-settings" class="view tab">
-			xxxxxxxxxxxxx
+				<div class="tabs-animated-wrap">
+					<div class="tabs">
+						<div id="pg-home" class="tab tab-active page-content">
+							<div class="block">
+								home
+							</div>
+						</div>
+						<div id="pg-schedule" class="tab page-content">
+							<div class="block">
+								<div class="block-title">Event Schedule</div>
+								<div class="block block-strong no-padding">
+									<div id="wkv-calendar"></div>
+								</div>
+							</div>
+						</div>
+						<div id="pg-tools" class="tab page-content">
+							<div class="block">
+								tools
+							</div>
+						</div>
+						<div id="pg-settings" class="tab page-content">
+							<div class="block">
+								settings
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
