@@ -19,6 +19,10 @@
 	-o-transform: rotate(180deg);
 	transform: rotate(180deg);
 }
+.data-table, .popover {
+	height: 100%;
+	overflow-x: auto;
+}
 .w200 {
 	display: inline-block;
 	width: 170px;

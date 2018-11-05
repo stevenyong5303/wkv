@@ -6,7 +6,7 @@ var app = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.20",
+			  version: "1.0.21",
 			  rtl: false,
 			  language: "en-US"
 		  });
@@ -133,29 +133,57 @@ $(document).ready(function(){
 						if(str==='204 No Response'){
 							$('.popup-event .event_list').text('No data found.');
 						}else{
-							var x = '<thead><tr><th class="label-cell"></th><th class="label-cell">PIC</th><th class="label-cell">Time</th><th class="label-cell">Venue</th><th class="label-cell">Desc.</th><th class="label-cell">Mixer</th><th class="label-cell">W/L</th><th class="label-cell">Speaker</th><th class="label-cell">Band</th><th class="label-cell">Crew</th><th class="label-cell">IN</th><th class="label-cell">OUT</th><th class="label-cell">B/G</th></tr></thead><tbody>', row = [], inf = JSON.parse(str);
+							var x = '<thead><tr><th class="label-cell"></th><th class="label-cell">PIC</th><th class="tablet-only">Time</th><th class="label-cell">Venue</th><th class="tablet-only">Desc.</th><th class="tablet-only">Mixer</th><th class="tablet-only">W/L</th><th class="tablet-only">Speaker</th><th class="tablet-only">Band</th><th class="label-cell">Crew</th><th class="label-cell">IN</th><th class="label-cell">OUT</th><th class="tablet-only">B/G</th></tr></thead><tbody>',
+								row = [],
+								inf = JSON.parse(str);
 							
 							for(var i=0; i<inf.length; i++){
-								x += '<tr><td>'+(i+1)+'</td>';
-								x += '<td>'+inf[i].pic+'</td>';
-								x += '<td>'+inf[i].lunheon_dinner+'</td>';
-								x += '<td>'+inf[i].venue+'</td>';
-								x += '<td>'+inf[i].description+'</td>';
-								x += '<td>'+inf[i].mixer+'</td>';
-								x += '<td>'+inf[i].wireless_mic+'</td>';
-								x += '<td>'+inf[i].speaker+'</td>';
-								x += '<td>'+inf[i].band+'</td>';
-								x += '<td>'+inf[i].crew+'</td>';
-								x += '<td>'+inf[i].car_in+'</td>';
-								x += '<td>'+inf[i].car_out+'</td>';
-								x += '<td>'+inf[i].bride_groom+'</td>';
+								x += '<tr name="el'+(i+1)+'"><td class="label-cell">'+(i+1)+'</td>';
+								x += '<td class="label-cell">'+inf[i].pic+'</td>';
+								x += '<td class="tablet-only">'+((inf[i].luncheon_dinner==null) ? '-' : inf[i].luncheon_dinner)+'</td>';
+								x += '<td class="label-cell">'+((inf[i].venue==null) ? '-' : inf[i].venue)+'</td>';
+								x += '<td class="tablet-only">'+((inf[i].description==null) ? '-' : inf[i].description)+'</td>';
+								x += '<td class="tablet-only">'+((inf[i].mixer==null) ? '-' : inf[i].mixer)+'</td>';
+								x += '<td class="tablet-only">'+((inf[i].wireless_mic==null) ? '-' : inf[i].wireless_mic)+'</td>';
+								x += '<td class="tablet-only">'+((inf[i].speaker==null) ? '-' : inf[i].speaker)+'</td>';
+								x += '<td class="tablet-only">'+((inf[i].band==null) ? '-' : inf[i].band)+'</td>';
+								x += '<td class="label-cell">'+((inf[i].crew==null) ? '-' : inf[i].crew)+'</td>';
+								x += '<td class="label-cell">'+((inf[i].car_in==null) ? '-' : inf[i].car_in)+'</td>';
+								x += '<td class="label-cell">'+((inf[i].car_out==null) ? '-' : inf[i].car_out)+'</td>';
+								x += '<td class="tablet-only">'+((inf[i].bride_groom==null) ? '-' : inf[i].bride_groom)+'</td>';
 								x += '</tr>';
 							}
 							x += '<tbody>';
 							$('.popup-event .event_list').html(x);
+							
+							for(var i=0; i<inf.length; i++){
+								$('[name="el'+(i+1)+'"]').data('info', inf[i]);
+							}
 						}
 						$('.popup-event .event_date').text(tmp.toDateString().substr(4));
 						app.popup.open('.popup-event');
+						
+						$('.event_list tr').on('click', function(){
+							var x = '';
+							var inf = $(this).data('info');
+							
+							x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Person In Charge</div><div class="item-input-wrap">' + ((inf.pic==null) ? '-' : inf.pic) + '</div></div></div></li>';
+							x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Luncheon/Dinner</div><div class="item-input-wrap">' + ((inf.luncheon_dinner==null) ? '-' : inf.luncheon_dinner) + '</div></div></div></li>';
+							x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Venue</div><div class="item-input-wrap">' + ((inf.venue==null) ? '-' : inf.venue) + '</div></div></div></li>';
+							x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Description</div><div class="item-input-wrap">' + ((inf.description==null) ? '-' : inf.description) + '</div></div></div></li>';
+							x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Mixer</div><div class="item-input-wrap">' + ((inf.mixer==null) ? '-' : inf.mixer) + '</div></div></div></li>';
+							x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Wireless Microphonw</div><div class="item-input-wrap">' + ((inf.wireless_mic==null) ? '-' : inf.wireless_mic) + '</div></div></div></li>';
+							x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Speaker</div><div class="item-input-wrap">' + ((inf.speaker==null) ? '-' : inf.speaker) + '</div></div></div></li>';
+							x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Live Band Information</div><div class="item-input-wrap">' + ((inf.band==null) ? '-' : inf.band) + '</div></div></div></li>';
+							x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Crew</div><div class="item-input-wrap">' + ((inf.crew==null) ? '-' : inf.crew) + '</div></div></div></li>';
+							x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Vehicle to Event</div><div class="item-input-wrap">' + ((inf.car_in==null) ? '-' : inf.car_in) + '</div></div></div></li>';
+							x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Vehicle back from Event</div><div class="item-input-wrap">' + ((inf.car_out==null) ? '-' : inf.car_out) + '</div></div></div></li>';
+							x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Client, Bride/Groom</div><div class="item-input-wrap">' + ((inf.bride_groom==null) ? '-' : inf.bride_groom) + '</div></div></div></li>';
+							
+							x = x.replace(/(?:\r\n|\r|\n)/g, '<br>');
+							$('.details-popover ul').html(x);
+							app.popover.open('.details-popover');
+						});
 					}
 				});
 			}
