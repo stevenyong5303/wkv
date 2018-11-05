@@ -4,7 +4,7 @@
 <widget xmlns     = "http://www.w3.org/ns/widgets"
         xmlns:gap = "http://phonegap.com/ns/1.0"
         id        = "com.wkv.manage"
-        version   = "1.0.14">
+        version   = "1.0.15">
 
     <name>WKV</name>
 
@@ -45,6 +45,10 @@
 
     <!-- Plugins -->
 
+	<plugin name="cordova-plugin-battery-status" />
+	<plugin name="cordova-plugin-device" />
+	<plugin name="cordova-plugin-geolocation" />
+	
     <!-- Core plugins -->
 	<!--
     <plugin name="cordova-plugin-battery-status" />
@@ -103,7 +107,7 @@
     <gap:splash src="res/screen/windows-phone/screen-portrait.png"      gap:platform="winphone" />
 
     <gap:config-file platform="ios" parent="CFBundleShortVersionString">
-    <string>14</string>
+    <string>15</string>
     </gap:config-file>
 
     <!--

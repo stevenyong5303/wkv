@@ -6,7 +6,7 @@ var app = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.14",
+			  version: "1.0.15",
 			  rtl: false,
 			  language: "en-US"
 		  });
@@ -45,13 +45,22 @@ $(document).ready(function(){
 						}
 					}
 		});
-		
+	
 	var usr = STORAGE.getItem('usr'),
-		pwd = STORAGE.getItem('pwd');
+		pwd = STORAGE.getItem('pwd'),
+		lon = '',
+		lat = '';
+	
+	navigator.geolocation.getCurrentPosition(function(position){
+		lat = position.coords.latitude;
+		lon = position.coords.longitude;
+	});
 	
 	var DATA = {
 			'usr' : usr,
-			'pwd' : pwd
+			'pwd' : pwd,
+			'lat' : lat,
+			'lon' : lon
 		};
 	var post_data = "ACT=" + encodeURIComponent('ssn_chk')
 				  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
