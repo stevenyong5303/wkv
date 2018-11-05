@@ -6,7 +6,7 @@ var app = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.13",
+			  version: "1.0.14",
 			  rtl: false,
 			  language: "en-US"
 		  });
@@ -107,35 +107,90 @@ $(document).ready(function(){
 		}
 	});
 	
-	$('#wkv-calendar .calendar-day').on('dblclick', function(){
-		var tmp = new Date(calendarInline.getValue()[0]);
-		
-		if(!sys.isEmpty(tmp)){
-			DATA = {
-				'date' : tmp.toString()
-			};
-			post_data = "ACT=" + encodeURIComponent('cal_get')
-					  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
-					  
-			$.ajax({
-				type: 'POST',
-				url: 'http://app.wkvmusicstore.com/',
-				data: post_data,
-				beforeSend: function(){
-					sys.loading(1);
-				},
-				success: function(str){
-					sys.loading(0);
-					
-				}
-			});
+	$('#wkv-calendar .calendar-day').on('click', function(){
+		if($(this).hasClass('calendar-day-selected')){
+			var tmp = new Date(calendarInline.getValue()[0]);
+			
+			if(!sys.isEmpty(tmp)){
+				DATA = {
+					'date' : tmp.toString()
+				};
+				post_data = "ACT=" + encodeURIComponent('cal_get')
+						  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
+						  
+				$.ajax({
+					type: 'POST',
+					url: 'http://app.wkvmusicstore.com/',
+					data: post_data,
+					beforeSend: function(){
+						sys.loading(1);
+					},
+					success: function(str){
+						var row = [], inf = JSON.parse(str);
+						
+						for(var i=0; i<inf.length; i++){
+							row[i] = [i, inf[i]];
+						}
+						
+						sys.loading(0);
+					}
+				});
+			}
 		}
+	});
+	
+	$('input#ltcl_nme').on('keyup', function(){
+		var tmp = ($(this).val()).toLowerCase();
+		
+		if(tmp.includes('beam')){
+			$('#ltcl_ads').val('16')
+		}else if(tmp.includes('par can') || tmp.includes('pcc') || tmp.includes('pcw')){
+			$('#ltcl_ads').val('8')
+		}else if(tmp.includes('city')){
+			$('#ltcl_ads').val('3')
+		}else if(tmp.includes('wash') || tmp.includes('zoom')){
+			$('#ltcl_ads').val('16')
+		}
+	});
+	
+	$('button#ltcl_add').on('click', function(){
+		var name = $('#ltcl_nme').val(),
+			addr = parseInt($('#ltcl_ads').val()),
+			qnty = parseInt($('#ltcl_qty').val());
+		
+		if(!sys.isEmpty(name) && $.isNumeric(addr) && $.isNumeric(qnty)){
+			var tmp = '', tmp_add = parseInt($('#ltcl_spc').data('dmx'));
+		
+			for(var x=0; x<qnty; x++){
+				var dmx = ('000' + tmp_add).slice(-3);
+				
+				tmp += '<span class="badge">' + name + '<br/>[ ' + dmx + ' ]</span> ';
+				tmp_add += addr;
+				$('#ltcl_spc').data('dmx', tmp_add);
+			}
+			
+			$('#ltcl_spc').append(tmp);
+			
+			$('#ltcl_nme').val('');
+			$('#ltcl_ads').val('');
+			$('#ltcl_qty').val('');
+		}
+	});
+	
+	$('button#ltcl_clr').on('click', function(){
+		$('#ltcl_spc').data('dmx', 1);
+		$('#ltcl_nme').val('');
+		$('#ltcl_ads').val('');
+		$('#ltcl_qty').val('');
+		$('#ltcl_spc').text('');
 	});
 	
 	$('input#stcl_row, input#stcl_col').on('keyup', function(){
 		var row = parseInt($('input#stcl_row').val()), col = parseInt($('input#stcl_col').val()), tmp = 0;
 		
 		if($.isNumeric(row) && $.isNumeric(col) && row!=0 && col!=0){
+			$('#stcl_size').html((col*4)+' ft&emsp;x&emsp;'+(row*4)+' ft');
+			
 			tmp = row * col;
 			$('#stcl_board').text(tmp);
 			
@@ -150,6 +205,7 @@ $(document).ready(function(){
 			$('#stcl_side').text(0);
 			$('#stcl_leg').text(0);
 			$('#stcl_shoe').text(0);
+			$('#stcl_size').html('0 ft&emsp;x&emsp;0 ft');
 		}
 	});
 });

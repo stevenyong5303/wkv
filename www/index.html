@@ -115,19 +115,19 @@
 			<div class="view view-main">
 				<div class="toolbar tabbar-labels toolbar-bottom-md">
 					<div class="toolbar-inner">
-					<a id="btn-home" href="#pg-home" class="tab-link tab-link-active">
+					<a href="#pg-home" class="tab-link tab-link-active">
 						<i class="icon material-icons md-only">important_devices</i>
 						<span class="tabbar-label">Home</span>
 					</a>
-					<a id="btn-schedule" href="#pg-schedule" class="tab-link">
+					<a href="#pg-schedule" class="tab-link">
 						<i class="icon material-icons md-only">today</i>
 						<span class="tabbar-label">Schedule</span>
 					</a>
-					<a id="btn-tools" href="#pg-tools" class="tab-link">
+					<a href="#pg-tools" class="tab-link">
 						<i class="icon material-icons md-only">work</i>
 						<span class="tabbar-label">Tools</span>
 					</a>
-					<a id="btn-settings" href="#pg-settings" class="tab-link">
+					<a href="#pg-settings" class="tab-link">
 						<i class="icon material-icons md-only">settings</i>
 						<span class="tabbar-label">Settings</span>
 					</a>
@@ -155,6 +155,18 @@
 										<li>
 											<div class="item-content">
 												<div class="item-media">
+													<i class="icon material-icons md-only">wb_incandescent</i>
+												</div>
+												<div class="item-inner">
+													<div class="item-title">
+														<a class="link popup-open" href="#" data-popup=".popup-light">Lighting Address Calculator</a>
+													</div>
+												</div>
+											</div>
+										</li>
+										<li>
+											<div class="item-content">
+												<div class="item-media">
 													<i class="icon material-icons md-only">border_inner</i>
 												</div>
 												<div class="item-inner">
@@ -176,24 +188,24 @@
 					</div>
 				</div>
 			</div>
-			<div class="popup popup-stage">
+			<div class="popup popup-light">
 				<div class="toolbar">
 					<div class="toolbar-inner">
-						<div class="left">Stage Calculator</div>
+						<div class="left">Lighting Address Calculator</div>
 						<div class="right"><a class="link popup-close" href="#">Close</a></div>
 					</div>
 				</div>
 				<div class="block">
-					<form class="list" id="my-form">
+					<div class="list">
 						<ul>
 							<li>
 								<div class="item-content item-input">
 									<div class="item-inner">
 										<div class="item-title item-label">
-											<i class="icon material-icons md-only">swap_vert</i> Row
+											<i class="icon material-icons md-only">create</i> Fixture Legend
 										</div>
 										<div class="item-input-wrap">
-											<input id="stcl_row" type="text" name="row" autocomplete="off" placeholder="In pieces">
+											<input id="ltcl_nme" type="text" name="column" autocomplete="off" placeholder="Name">
 										</div>
 									</div>
 								</div>
@@ -202,10 +214,73 @@
 								<div class="item-content item-input">
 									<div class="item-inner">
 										<div class="item-title item-label">
+											<i class="icon material-icons md-only">dialpad</i> Fixture DMX Channel
+										</div>
+										<div class="item-input-wrap">
+											<input id="ltcl_ads" type="text" name="row" autocomplete="off" placeholder="001 - 016">
+										</div>
+									</div>
+								</div>
+							</li>
+							<li>
+								<div class="item-content item-input">
+									<div class="item-inner">
+										<div class="item-title item-label">
+											<i class="icon material-icons md-only">format_list_numbered</i> Quantity
+										</div>
+										<div class="item-input-wrap">
+											<input id="ltcl_qty" type="text" name="row" autocomplete="off" placeholder="">
+										</div>
+									</div>
+								</div>
+							</li>
+							<li>
+								<div class="item-content item-input">
+									<div class="item-inner">
+										<div class="item-input-wrap">
+											<div class="row">
+												<button id="ltcl_add" class="button col button-fill">Add</button>
+												<button id="ltcl_clr" class="button col button-fill">Clear All</button>
+											</div>
+										</div>
+									</div>
+								</div>
+							</li>
+						</ul>
+					</div>
+					<div id="ltcl_spc" class="block" data-dmx="1"></div>
+				</div>
+			</div>
+			<div class="popup popup-stage">
+				<div class="toolbar">
+					<div class="toolbar-inner">
+						<div class="left">Stage Calculator</div>
+						<div class="right"><a class="link popup-close" href="#">Close</a></div>
+					</div>
+				</div>
+				<div class="block">
+					<div class="list">
+						<ul>
+							<li>
+								<div class="item-content item-input">
+									<div class="item-inner">
+										<div class="item-title item-label">
 											<i class="icon material-icons md-only">swap_horiz</i> Column
 										</div>
 										<div class="item-input-wrap">
 											<input id="stcl_col" type="text" name="column" autocomplete="off" placeholder="In pieces">
+										</div>
+									</div>
+								</div>
+							</li>
+							<li>
+								<div class="item-content item-input">
+									<div class="item-inner">
+										<div class="item-title item-label">
+											<i class="icon material-icons md-only">swap_vert</i> Row
+										</div>
+										<div class="item-input-wrap">
+											<input id="stcl_row" type="text" name="row" autocomplete="off" placeholder="In pieces">
 										</div>
 									</div>
 								</div>
@@ -262,8 +337,21 @@
 									</div>
 								</div>
 							</li>
+							<li>
+								<div class="item-content item-input">
+									<div class="item-inner">
+										<div class="item-input-wrap">
+											<span class="w200">
+												<i class="icon material-icons md-only">crop_free</i>
+												Stage Size
+											</span>
+											<span id="stcl_size" class="badge">0 ft&emsp;x&emsp;0 ft</span>
+										</div>
+									</div>
+								</div>
+							</li>
 						</ul>
-					</form>
+					</div>
 				</div>
 			</div>
 		</div>

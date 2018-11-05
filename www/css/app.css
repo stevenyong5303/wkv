@@ -23,6 +23,9 @@
 	display: inline-block;
 	width: 170px;
 }
+#ltcl_spc .badge{
+	margin: 2px 0;
+}
 body .vertical-centered-box {
   position: absolute;
   width: 100%;
