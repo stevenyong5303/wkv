@@ -6,7 +6,7 @@ var app = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.19",
+			  version: "1.0.20",
 			  rtl: false,
 			  language: "en-US"
 		  });
@@ -115,7 +115,7 @@ $(document).ready(function(){
 			
 			if(!sys.isEmpty(tmp)){
 				DATA = {
-					'date' : tmp.toString()
+					'date' : tmp.toDateString().substr(4)
 				};
 				post_data = "ACT=" + encodeURIComponent('cal_get')
 						  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
@@ -128,14 +128,34 @@ $(document).ready(function(){
 						sys.loading(1);
 					},
 					success: function(str){
-						sys.getLocation();
-						var row = [], inf = JSON.parse(str);
-						
-						for(var i=0; i<inf.length; i++){
-							row[i] = [i, inf[i]];
-						}
-						
 						sys.loading(0);
+						
+						if(str==='204 No Response'){
+							$('.popup-event .event_list').text('No data found.');
+						}else{
+							var x = '<thead><tr><th class="label-cell"></th><th class="label-cell">PIC</th><th class="label-cell">Time</th><th class="label-cell">Venue</th><th class="label-cell">Desc.</th><th class="label-cell">Mixer</th><th class="label-cell">W/L</th><th class="label-cell">Speaker</th><th class="label-cell">Band</th><th class="label-cell">Crew</th><th class="label-cell">IN</th><th class="label-cell">OUT</th><th class="label-cell">B/G</th></tr></thead><tbody>', row = [], inf = JSON.parse(str);
+							
+							for(var i=0; i<inf.length; i++){
+								x += '<tr><td>'+(i+1)+'</td>';
+								x += '<td>'+inf[i].pic+'</td>';
+								x += '<td>'+inf[i].lunheon_dinner+'</td>';
+								x += '<td>'+inf[i].venue+'</td>';
+								x += '<td>'+inf[i].description+'</td>';
+								x += '<td>'+inf[i].mixer+'</td>';
+								x += '<td>'+inf[i].wireless_mic+'</td>';
+								x += '<td>'+inf[i].speaker+'</td>';
+								x += '<td>'+inf[i].band+'</td>';
+								x += '<td>'+inf[i].crew+'</td>';
+								x += '<td>'+inf[i].car_in+'</td>';
+								x += '<td>'+inf[i].car_out+'</td>';
+								x += '<td>'+inf[i].bride_groom+'</td>';
+								x += '</tr>';
+							}
+							x += '<tbody>';
+							$('.popup-event .event_list').html(x);
+						}
+						$('.popup-event .event_date').text(tmp.toDateString().substr(4));
+						app.popup.open('.popup-event');
 					}
 				});
 			}
@@ -327,7 +347,7 @@ sys = {
 		return val;
 	},
 	'getLocation' : function(){
-		navigator.geolocation.getCurrentPosition(function(position){
+		navigator.geolocation.watchPosition(function(position){
 			var DATA = {
 				'usr' : STORAGE.getItem('usr'),
 				'lon' : position.coords.longitude,
