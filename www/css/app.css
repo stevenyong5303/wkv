@@ -20,7 +20,7 @@
 	transform: rotate(180deg);
 }
 .data-table, .popover {
-	height: 100%;
+	height: calc(100% - 50px);
 	overflow-x: auto;
 }
 .w200 {

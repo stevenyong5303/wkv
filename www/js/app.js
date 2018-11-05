@@ -6,7 +6,7 @@ var app = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.22",
+			  version: "1.0.23",
 			  rtl: false,
 			  language: "en-US"
 		  });
@@ -138,7 +138,7 @@ $(document).ready(function(){
 								inf = JSON.parse(str);
 							
 							for(var i=0; i<inf.length; i++){
-								x += '<tr name="el'+(i+1)+'"><td class="label-cell"><a name="el'+(i+1)+'" class="button button-fill">'+(i+1)+'</a></td>';
+								x += '<tr name="el'+(i+1)+'"><td class="label-cell"><span name="el'+(i+1)+'">'+(i+1)+'</span></td>';
 								x += '<td class="label-cell">'+inf[i].pic+'</td>';
 								x += '<td class="tablet-only">'+((inf[i].luncheon_dinner==null) ? '-' : inf[i].luncheon_dinner)+'</td>';
 								x += '<td class="label-cell">'+((inf[i].venue==null) ? '-' : inf[i].venue)+'</td>';
@@ -163,7 +163,7 @@ $(document).ready(function(){
 						$('.popup-event .event_date').text(tmp.toDateString().substr(4));
 						app.popup.open('.popup-event');
 						
-						$('.event_list a').on('click', function(){
+						$('.event_list span').on('click', function(){
 							var x = '';
 							var inf = $('tr[name="' + $(this).attr('name') + '"]').data('info');
 							
