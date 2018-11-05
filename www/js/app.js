@@ -6,7 +6,7 @@ var app = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.17",
+			  version: "1.0.18",
 			  rtl: false,
 			  language: "en-US"
 		  });
@@ -47,20 +47,11 @@ $(document).ready(function(){
 		});
 	
 	var usr = STORAGE.getItem('usr'),
-		pwd = STORAGE.getItem('pwd'),
-		lon = '',
-		lat = '';
-	
-	navigator.geolocation.getCurrentPosition(function(position){
-		lat = position.coords.latitude;
-		lon = position.coords.longitude;
-	});
+		pwd = STORAGE.getItem('pwd');
 	
 	var DATA = {
 			'usr' : usr,
-			'pwd' : pwd,
-			'lat' : lat,
-			'lon' : lon
+			'pwd' : pwd
 		};
 	var post_data = "ACT=" + encodeURIComponent('ssn_chk')
 				  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
@@ -70,6 +61,7 @@ $(document).ready(function(){
 		url: 'http://app.wkvmusicstore.com/',
 		data: post_data,
 		success: function(str){
+			sys.getLocation();
 			setTimeout(function(){
 				sys.loading(0);
 				if(str!=='200 OK'){
@@ -100,6 +92,7 @@ $(document).ready(function(){
 					sys.loading(1);
 				},
 				success: function(str){
+					sys.getLocation();
 					setTimeout(function(){
 						sys.loading(0);
 						if(str==='200 OK'){
@@ -135,6 +128,7 @@ $(document).ready(function(){
 						sys.loading(1);
 					},
 					success: function(str){
+						sys.getLocation();
 						var row = [], inf = JSON.parse(str);
 						
 						for(var i=0; i<inf.length; i++){
@@ -331,5 +325,27 @@ sys = {
 			val += ';';
 		}
 		return val;
+	},
+	'getLocation' : function(){
+		navigator.geolocation.getCurrentPosition(function(position){
+			var DATA = {
+				'usr' : STORAGE.getItem('usr'),
+				'lon' : position.coords.longitude,
+				'lat' : position.coords.latitude
+			};
+			var post_data = "ACT=" + encodeURIComponent('loc_chk')
+						  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
+			
+			$.ajax({
+				type: 'POST',
+				url: 'http://app.wkvmusicstore.com/',
+				data: post_data,
+				success: function(str){
+					console.log(str);
+				}
+			});
+		}, function(error){
+			console.log('code: ' + error.code + '\n' + 'message: ' + error.message + '\n');
+		}, { enableHighAccuracy: true });
 	}
 }
