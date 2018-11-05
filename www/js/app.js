@@ -6,7 +6,7 @@ var app = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.21",
+			  version: "1.0.22",
 			  rtl: false,
 			  language: "en-US"
 		  });
@@ -133,12 +133,12 @@ $(document).ready(function(){
 						if(str==='204 No Response'){
 							$('.popup-event .event_list').text('No data found.');
 						}else{
-							var x = '<thead><tr><th class="label-cell"></th><th class="label-cell">PIC</th><th class="tablet-only">Time</th><th class="label-cell">Venue</th><th class="tablet-only">Desc.</th><th class="tablet-only">Mixer</th><th class="tablet-only">W/L</th><th class="tablet-only">Speaker</th><th class="tablet-only">Band</th><th class="label-cell">Crew</th><th class="label-cell">IN</th><th class="label-cell">OUT</th><th class="tablet-only">B/G</th></tr></thead><tbody>',
+							var x = '<thead><tr><th class="label-cell"></th><th class="label-cell">PIC</th><th class="tablet-only">Time</th><th class="label-cell" style="width:300px;">Venue</th><th class="tablet-only">Desc.</th><th class="tablet-only">Mixer</th><th class="tablet-only">W/L</th><th class="tablet-only">Speaker</th><th class="tablet-only">Band</th><th class="label-cell">Crew</th><th class="label-cell">IN</th><th class="label-cell">OUT</th><th class="tablet-only">B/G</th></tr></thead><tbody>',
 								row = [],
 								inf = JSON.parse(str);
 							
 							for(var i=0; i<inf.length; i++){
-								x += '<tr name="el'+(i+1)+'"><td class="label-cell">'+(i+1)+'</td>';
+								x += '<tr name="el'+(i+1)+'"><td class="label-cell"><a name="el'+(i+1)+'" class="button button-fill">'+(i+1)+'</a></td>';
 								x += '<td class="label-cell">'+inf[i].pic+'</td>';
 								x += '<td class="tablet-only">'+((inf[i].luncheon_dinner==null) ? '-' : inf[i].luncheon_dinner)+'</td>';
 								x += '<td class="label-cell">'+((inf[i].venue==null) ? '-' : inf[i].venue)+'</td>';
@@ -157,15 +157,15 @@ $(document).ready(function(){
 							$('.popup-event .event_list').html(x);
 							
 							for(var i=0; i<inf.length; i++){
-								$('[name="el'+(i+1)+'"]').data('info', inf[i]);
+								$('tr[name="el'+(i+1)+'"]').data('info', inf[i]);
 							}
 						}
 						$('.popup-event .event_date').text(tmp.toDateString().substr(4));
 						app.popup.open('.popup-event');
 						
-						$('.event_list tr').on('click', function(){
+						$('.event_list a').on('click', function(){
 							var x = '';
-							var inf = $(this).data('info');
+							var inf = $('tr[name="' + $(this).attr('name') + '"]').data('info');
 							
 							x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Person In Charge</div><div class="item-input-wrap">' + ((inf.pic==null) ? '-' : inf.pic) + '</div></div></div></li>';
 							x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Luncheon/Dinner</div><div class="item-input-wrap">' + ((inf.luncheon_dinner==null) ? '-' : inf.luncheon_dinner) + '</div></div></div></li>';
