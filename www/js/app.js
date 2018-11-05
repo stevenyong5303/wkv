@@ -6,93 +6,125 @@ var app = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: '1.0.16',
+			  version: "1.0.17",
 			  rtl: false,
-			  language: 'en-US'
+			  language: "en-US"
 		  });
 
-document.addEventListener('deviceready', onDeviceReady, false);
-
-function onDeviceReady() {
-	$(document).ready(function(){
-		var monthNames = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG' , 'SEP' , 'OCT', 'NOV', 'DEC'];
-		var calendarInline = app.calendar.create({
-				containerEl: '#wkv-calendar',
-				value:  [new Date()],
-						weekHeader: false,
-						renderToolbar: function () {
-							return  '<div class="toolbar calendar-custom-toolbar no-shadow">' +
-									'<div class="toolbar-inner">' +
-									'<div class="left">' +
-									'<a href="#" class="link icon-only"><i class="icon icon-back ' + (app.theme === 'md' ? 'color-black' : '') + '"></i></a>' +
-									'</div>' +
-									'<div class="center"></div>' +
-									'<div class="right">' +
-									'<a href="#" class="link icon-only"><i class="icon icon-forward ' + (app.theme === 'md' ? 'color-black' : '') + '"></i></a>' +
-									'</div>' +
-									'</div>' +
-									'</div>';
+$(document).ready(function(){
+	var monthNames = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG' , 'SEP' , 'OCT', 'NOV', 'DEC'];
+	var calendarInline = app.calendar.create({
+			containerEl: '#wkv-calendar',
+			value:  [new Date()],
+					weekHeader: false,
+					renderToolbar: function () {
+						return  '<div class="toolbar calendar-custom-toolbar no-shadow">' +
+								'<div class="toolbar-inner">' +
+								'<div class="left">' +
+								'<a href="#" class="link icon-only"><i class="icon icon-back ' + (app.theme === 'md' ? 'color-black' : '') + '"></i></a>' +
+								'</div>' +
+								'<div class="center"></div>' +
+								'<div class="right">' +
+								'<a href="#" class="link icon-only"><i class="icon icon-forward ' + (app.theme === 'md' ? 'color-black' : '') + '"></i></a>' +
+								'</div>' +
+								'</div>' +
+								'</div>';
+					},
+					on: {
+						init: function (c) {
+							$$('.calendar-custom-toolbar .center').text(monthNames[c.currentMonth] +', ' + c.currentYear);
+							$$('.calendar-custom-toolbar .left .link').on('click', function () {
+								calendarInline.prevMonth();
+							});
+							$$('.calendar-custom-toolbar .right .link').on('click', function () {
+								calendarInline.nextMonth();
+							});
 						},
-						on: {
-							init: function (c) {
-								$$('.calendar-custom-toolbar .center').text(monthNames[c.currentMonth] +', ' + c.currentYear);
-								$$('.calendar-custom-toolbar .left .link').on('click', function () {
-									calendarInline.prevMonth();
-								});
-								$$('.calendar-custom-toolbar .right .link').on('click', function () {
-									calendarInline.nextMonth();
-								});
-							},
-							monthYearChangeStart: function (c) {
-								$$('.calendar-custom-toolbar .center').text(monthNames[c.currentMonth] +', ' + c.currentYear);
-							}
+						monthYearChangeStart: function (c) {
+							$$('.calendar-custom-toolbar .center').text(monthNames[c.currentMonth] +', ' + c.currentYear);
 						}
-			});
-		
-		var usr = STORAGE.getItem('usr'),
-			pwd = STORAGE.getItem('pwd'),
-			lon = '',
-			lat = '';
-		
-		navigator.geolocation.getCurrentPosition(function(position){
-			lat = position.coords.latitude;
-			lon = position.coords.longitude;
-		});
-		
-		var DATA = {
-				'usr' : usr,
-				'pwd' : pwd,
-				'lat' : lat,
-				'lon' : lon
-			};
-		var post_data = "ACT=" + encodeURIComponent('ssn_chk')
-					  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
-		
-		$.ajax({
-			type: 'POST',
-			url: 'http://app.wkvmusicstore.com/',
-			data: post_data,
-			success: function(str){
-				setTimeout(function(){
-					sys.loading(0);
-					if(str!=='200 OK'){
-						app.loginScreen.open('#lgn');
 					}
-				}, 2500);
-			}
 		});
+	
+	var usr = STORAGE.getItem('usr'),
+		pwd = STORAGE.getItem('pwd'),
+		lon = '',
+		lat = '';
+	
+	navigator.geolocation.getCurrentPosition(function(position){
+		lat = position.coords.latitude;
+		lon = position.coords.longitude;
+	});
+	
+	var DATA = {
+			'usr' : usr,
+			'pwd' : pwd,
+			'lat' : lat,
+			'lon' : lon
+		};
+	var post_data = "ACT=" + encodeURIComponent('ssn_chk')
+				  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
+	
+	$.ajax({
+		type: 'POST',
+		url: 'http://app.wkvmusicstore.com/',
+		data: post_data,
+		success: function(str){
+			setTimeout(function(){
+				sys.loading(0);
+				if(str!=='200 OK'){
+					app.loginScreen.open('#lgn');
+				}
+			}, 2500);
+		}
+	});
+	
+	
+	$('#lgn #lgn_sgn').on('click', function(){
+		usr = $('#lgn input[name="lgn_usr"]').val();
+		pwd = $('#lgn input[name="lgn_pwd"]').val();
 		
-		
-		$('#lgn #lgn_sgn').on('click', function(){
-			usr = $('#lgn input[name="lgn_usr"]').val();
-			pwd = $('#lgn input[name="lgn_pwd"]').val();
+		if(!sys.isEmpty(usr) && !sys.isEmpty(pwd)){
+			DATA = {
+				'usr' : usr,
+				'pwd' : pwd
+			};
+			post_data = "ACT=" + encodeURIComponent('lgn_chk')
+					  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
+					  
+			$.ajax({
+				type: 'POST',
+				url: 'http://app.wkvmusicstore.com/',
+				data: post_data,
+				beforeSend: function(){
+					sys.loading(1);
+				},
+				success: function(str){
+					setTimeout(function(){
+						sys.loading(0);
+						if(str==='200 OK'){
+							STORAGE.setItem('usr', usr);
+							STORAGE.setItem('pwd', pwd);
+							
+							app.loginScreen.close('#lgn');
+						}
+						$('#lgn input[name="lgn_usr"]').val('');
+						$('#lgn input[name="lgn_pwd"]').val('');
+					}, 2000);
+				}
+			});
+		}
+	});
+	
+	$('#wkv-calendar .calendar-day').on('click', function(){
+		if($(this).hasClass('calendar-day-selected')){
+			var tmp = new Date(calendarInline.getValue()[0]);
 			
-			if(!sys.isEmpty(usr) && !sys.isEmpty(pwd)){
+			if(!sys.isEmpty(tmp)){
 				DATA = {
-					'usr' : usr,
-					'pwd' : pwd
+					'date' : tmp.toString()
 				};
-				post_data = "ACT=" + encodeURIComponent('lgn_chk')
+				post_data = "ACT=" + encodeURIComponent('cal_get')
 						  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
 						  
 				$.ajax({
@@ -103,125 +135,89 @@ function onDeviceReady() {
 						sys.loading(1);
 					},
 					success: function(str){
-						setTimeout(function(){
-							sys.loading(0);
-							if(str==='200 OK'){
-								STORAGE.setItem('usr', usr);
-								STORAGE.setItem('pwd', pwd);
-								
-								app.loginScreen.close('#lgn');
-							}
-							$('#lgn input[name="lgn_usr"]').val('');
-							$('#lgn input[name="lgn_pwd"]').val('');
-						}, 2000);
+						var row = [], inf = JSON.parse(str);
+						
+						for(var i=0; i<inf.length; i++){
+							row[i] = [i, inf[i]];
+						}
+						
+						sys.loading(0);
 					}
 				});
 			}
-		});
+		}
+	});
+	
+	$('input#ltcl_nme').on('keyup', function(){
+		var tmp = ($(this).val()).toLowerCase();
 		
-		$('#wkv-calendar .calendar-day').on('click', function(){
-			if($(this).hasClass('calendar-day-selected')){
-				var tmp = new Date(calendarInline.getValue()[0]);
+		if(tmp.includes('beam')){
+			$('#ltcl_ads').val('16')
+		}else if(tmp.includes('par can') || tmp.includes('pcc') || tmp.includes('pcw')){
+			$('#ltcl_ads').val('8')
+		}else if(tmp.includes('city')){
+			$('#ltcl_ads').val('3')
+		}else if(tmp.includes('wash') || tmp.includes('zoom')){
+			$('#ltcl_ads').val('16')
+		}
+	});
+	
+	$('button#ltcl_add').on('click', function(){
+		var name = $('#ltcl_nme').val(),
+			addr = parseInt($('#ltcl_ads').val()),
+			qnty = parseInt($('#ltcl_qty').val());
+		
+		if(!sys.isEmpty(name) && $.isNumeric(addr) && $.isNumeric(qnty)){
+			var tmp = '', tmp_add = parseInt($('#ltcl_spc').data('dmx'));
+		
+			for(var x=0; x<qnty; x++){
+				var dmx = ('000' + tmp_add).slice(-3);
 				
-				if(!sys.isEmpty(tmp)){
-					DATA = {
-						'date' : tmp.toString()
-					};
-					post_data = "ACT=" + encodeURIComponent('cal_get')
-							  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
-							  
-					$.ajax({
-						type: 'POST',
-						url: 'http://app.wkvmusicstore.com/',
-						data: post_data,
-						beforeSend: function(){
-							sys.loading(1);
-						},
-						success: function(str){
-							var row = [], inf = JSON.parse(str);
-							
-							for(var i=0; i<inf.length; i++){
-								row[i] = [i, inf[i]];
-							}
-							
-							sys.loading(0);
-						}
-					});
-				}
+				tmp += '<span class="badge">' + name + '<br/>[ ' + dmx + ' ]</span> ';
+				tmp_add += addr;
+				$('#ltcl_spc').data('dmx', tmp_add);
 			}
-		});
-		
-		$('input#ltcl_nme').on('keyup', function(){
-			var tmp = ($(this).val()).toLowerCase();
 			
-			if(tmp.includes('beam')){
-				$('#ltcl_ads').val('16')
-			}else if(tmp.includes('par can') || tmp.includes('pcc') || tmp.includes('pcw')){
-				$('#ltcl_ads').val('8')
-			}else if(tmp.includes('city')){
-				$('#ltcl_ads').val('3')
-			}else if(tmp.includes('wash') || tmp.includes('zoom')){
-				$('#ltcl_ads').val('16')
-			}
-		});
-		
-		$('button#ltcl_add').on('click', function(){
-			var name = $('#ltcl_nme').val(),
-				addr = parseInt($('#ltcl_ads').val()),
-				qnty = parseInt($('#ltcl_qty').val());
+			$('#ltcl_spc').append(tmp);
 			
-			if(!sys.isEmpty(name) && $.isNumeric(addr) && $.isNumeric(qnty)){
-				var tmp = '', tmp_add = parseInt($('#ltcl_spc').data('dmx'));
-			
-				for(var x=0; x<qnty; x++){
-					var dmx = ('000' + tmp_add).slice(-3);
-					
-					tmp += '<span class="badge">' + name + '<br/>[ ' + dmx + ' ]</span> ';
-					tmp_add += addr;
-					$('#ltcl_spc').data('dmx', tmp_add);
-				}
-				
-				$('#ltcl_spc').append(tmp);
-				
-				$('#ltcl_nme').val('');
-				$('#ltcl_ads').val('');
-				$('#ltcl_qty').val('');
-			}
-		});
-		
-		$('button#ltcl_clr').on('click', function(){
-			$('#ltcl_spc').data('dmx', 1);
 			$('#ltcl_nme').val('');
 			$('#ltcl_ads').val('');
 			$('#ltcl_qty').val('');
-			$('#ltcl_spc').text('');
-		});
-		
-		$('input#stcl_row, input#stcl_col').on('keyup', function(){
-			var row = parseInt($('input#stcl_row').val()), col = parseInt($('input#stcl_col').val()), tmp = 0;
-			
-			if($.isNumeric(row) && $.isNumeric(col) && row!=0 && col!=0){
-				$('#stcl_size').html((col*4)+' ft&emsp;x&emsp;'+(row*4)+' ft');
-				
-				tmp = row * col;
-				$('#stcl_board').text(tmp);
-				
-				tmp = (((row+1)*col)+((col+1)*row));
-				$('#stcl_side').text(tmp);
-				
-				tmp = ((row+1)*(col+1));
-				$('#stcl_leg').text(tmp);
-				$('#stcl_shoe').text(tmp);
-			}else{
-				$('#stcl_board').text(0);
-				$('#stcl_side').text(0);
-				$('#stcl_leg').text(0);
-				$('#stcl_shoe').text(0);
-				$('#stcl_size').html('0 ft&emsp;x&emsp;0 ft');
-			}
-		});
+		}
 	});
-}
+	
+	$('button#ltcl_clr').on('click', function(){
+		$('#ltcl_spc').data('dmx', 1);
+		$('#ltcl_nme').val('');
+		$('#ltcl_ads').val('');
+		$('#ltcl_qty').val('');
+		$('#ltcl_spc').text('');
+	});
+	
+	$('input#stcl_row, input#stcl_col').on('keyup', function(){
+		var row = parseInt($('input#stcl_row').val()), col = parseInt($('input#stcl_col').val()), tmp = 0;
+		
+		if($.isNumeric(row) && $.isNumeric(col) && row!=0 && col!=0){
+			$('#stcl_size').html((col*4)+' ft&emsp;x&emsp;'+(row*4)+' ft');
+			
+			tmp = row * col;
+			$('#stcl_board').text(tmp);
+			
+			tmp = (((row+1)*col)+((col+1)*row));
+			$('#stcl_side').text(tmp);
+			
+			tmp = ((row+1)*(col+1));
+			$('#stcl_leg').text(tmp);
+			$('#stcl_shoe').text(tmp);
+		}else{
+			$('#stcl_board').text(0);
+			$('#stcl_side').text(0);
+			$('#stcl_leg').text(0);
+			$('#stcl_shoe').text(0);
+			$('#stcl_size').html('0 ft&emsp;x&emsp;0 ft');
+		}
+	});
+});
 
 sys = {
 	'loading' : function(show){
