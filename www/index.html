@@ -137,8 +137,18 @@
 					<div class="tabs">
 						<div id="pg-home" class="tab tab-active page-content">
 							<div class="block">
-								home
+								<iframe
+									id="gmap"
+									width="400"
+									height="400"
+									frameborder="0"
+									style="border:0;"
+									data-loc="0,0"
+									src="https://www.google.com/maps/embed/v1/view?key=AIzaSyCRKiFjg2CA78cD09yIXuHFCxADjOh75rg&center=0,0&zoom=17">
+								</iframe>
 							</div>
+							
+							<a id="loc_refresh" class="button button-fill button-raised">Refresh</a>
 						</div>
 						<div id="pg-schedule" class="tab page-content">
 							<div class="block">

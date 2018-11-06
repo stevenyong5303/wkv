@@ -6,7 +6,7 @@ var app = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.24",
+			  version: "1.0.25",
 			  rtl: false,
 			  language: "en-US"
 		  });
@@ -271,6 +271,12 @@ $(document).ready(function(){
 			$('#stcl_size').html('0 ft&emsp;x&emsp;0 ft');
 		}
 	});
+	
+	$('a#loc_refresh').on('click', function(){
+		var loc = $('iframe#gmap').data('loc');
+		
+		$('iframe#gmap').attr('src', ('https://www.google.com/maps/embed/v1/view?key=AIzaSyCRKiFjg2CA78cD09yIXuHFCxADjOh75rg&center='+loc+'&zoom=17'));
+	})
 });
 
 sys = {
@@ -401,7 +407,7 @@ sys = {
 				url: 'http://app.wkvmusicstore.com/',
 				data: post_data,
 				success: function(str){
-					console.log(str);
+					$('iframe#gmap').data('loc', (position.coords.latitude+','+position.coords.longitude));
 				}
 			});
 		}, function(error){
