@@ -6,7 +6,7 @@ var app = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.23",
+			  version: "1.0.24",
 			  rtl: false,
 			  language: "en-US"
 		  });
@@ -133,14 +133,26 @@ $(document).ready(function(){
 						if(str==='204 No Response'){
 							$('.popup-event .event_list').text('No data found.');
 						}else{
-							var x = '<thead><tr><th class="label-cell"></th><th class="label-cell">PIC</th><th class="tablet-only">Time</th><th class="label-cell" style="width:300px;">Venue</th><th class="tablet-only">Desc.</th><th class="tablet-only">Mixer</th><th class="tablet-only">W/L</th><th class="tablet-only">Speaker</th><th class="tablet-only">Band</th><th class="label-cell">Crew</th><th class="label-cell">IN</th><th class="label-cell">OUT</th><th class="tablet-only">B/G</th></tr></thead><tbody>',
+							var x = '<thead><tr><th class="label-cell"></th>'
+								  + '<th class="label-cell">&emsp;PIC&emsp;&emsp;&emsp;&emsp;&emsp;</th>'
+								  + '<th class="label-cell">L/D</th>'
+								  + '<th class="label-cell">&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Venue&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;</th>'
+								  + '<th class="tablet-only">Desc.</th>'
+								  + '<th class="tablet-only">Mixer</th>'
+								  + '<th class="tablet-only">W/L</th>'
+								  + '<th class="tablet-only">Speaker</th>'
+								  + '<th class="tablet-only">Band</th>'
+								  + '<th class="label-cell">Crew&emsp;&emsp;</th>'
+								  + '<th class="label-cell">IN&emsp;&emsp;</th>'
+								  + '<th class="label-cell">OUT&emsp;&emsp;</th>'
+								  + '<th class="tablet-only">B/G</th></tr></thead><tbody>',
 								row = [],
 								inf = JSON.parse(str);
 							
 							for(var i=0; i<inf.length; i++){
 								x += '<tr name="el'+(i+1)+'"><td class="label-cell"><span name="el'+(i+1)+'">'+(i+1)+'</span></td>';
 								x += '<td class="label-cell">'+inf[i].pic+'</td>';
-								x += '<td class="tablet-only">'+((inf[i].luncheon_dinner==null) ? '-' : inf[i].luncheon_dinner)+'</td>';
+								x += '<td class="label-cell">'+((inf[i].luncheon_dinner==null) ? '-' : ((inf[i].luncheon_dinner=='Lunch') ? 'L' : 'D'))+'</td>';
 								x += '<td class="label-cell">'+((inf[i].venue==null) ? '-' : inf[i].venue)+'</td>';
 								x += '<td class="tablet-only">'+((inf[i].description==null) ? '-' : inf[i].description)+'</td>';
 								x += '<td class="tablet-only">'+((inf[i].mixer==null) ? '-' : inf[i].mixer)+'</td>';

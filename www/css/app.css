@@ -19,6 +19,10 @@
 	-o-transform: rotate(180deg);
 	transform: rotate(180deg);
 }
+.data-table table.event_list td.label-cell, .data-table table.event_list th.label-cell {
+	padding-left: 10px;
+	padding-right: 10px;
+}
 .data-table, .popover {
 	height: calc(100% - 50px);
 	overflow-x: auto;
