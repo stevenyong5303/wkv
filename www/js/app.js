@@ -6,7 +6,7 @@ var app = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.26",
+			  version: "1.0.27",
 			  rtl: false,
 			  language: "en-US"
 		  });
@@ -61,16 +61,23 @@ $(document).ready(function(){
 		url: 'http://app.wkvmusicstore.com/',
 		data: post_data,
 		success: function(str){
+			inf = JSON.parse(str);
 			sys.getLocation();
+			
+			if(inf['clocked']=='1'){
+				sys.clockToggle('in');
+			}else{
+				sys.clockToggle('out');
+			}
+			
 			setTimeout(function(){
 				sys.loading(0);
-				if(str!=='200 OK'){
+				if(inf['reply']!=='200 OK'){
 					app.loginScreen.open('#lgn');
 				}
-			}, 2500);
+			}, 2000);
 		}
 	});
-	
 	
 	$('#lgn #lgn_sgn').on('click', function(){
 		usr = $('#lgn input[name="lgn_usr"]').val();
@@ -92,10 +99,18 @@ $(document).ready(function(){
 					sys.loading(1);
 				},
 				success: function(str){
+					inf = JSON.parse(str);
 					sys.getLocation();
+					
+					if(inf['clocked']=='1'){
+						sys.clockToggle('in');
+					}else{
+						sys.clockToggle('out');
+					}
+					
 					setTimeout(function(){
 						sys.loading(0);
-						if(str==='200 OK'){
+						if(inf['reply']==='200 OK'){
 							STORAGE.setItem('usr', usr);
 							STORAGE.setItem('pwd', pwd);
 							
@@ -146,7 +161,6 @@ $(document).ready(function(){
 								  + '<th class="label-cell">IN&emsp;&emsp;</th>'
 								  + '<th class="label-cell">OUT&emsp;&emsp;</th>'
 								  + '<th class="tablet-only">B/G</th></tr></thead><tbody>',
-								row = [],
 								inf = JSON.parse(str);
 							
 							for(var i=0; i<inf.length; i++){
@@ -278,6 +292,88 @@ $(document).ready(function(){
 		$('iframe#gmap').attr('src', ('https://www.google.com/maps/embed/v1/view?key=AIzaSyCRKiFjg2CA78cD09yIXuHFCxADjOh75rg&center='+loc+'&zoom=17'));
 		sys.getTime();
 	})
+	
+	$$('button.clock-in').on('click', function () {
+		app.dialog.confirm('Clock in to this location?', 'Confirmation', function(){
+			var DATA = {
+				'usr' : STORAGE.getItem('usr'),
+				'loc' : $('iframe#gmap').data('loc')
+			};
+			var post_data = "ACT=" + encodeURIComponent('clk_in')
+						  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
+			
+			$.ajax({
+				type: 'POST',
+				url: 'http://app.wkvmusicstore.com/',
+				data: post_data,
+				beforeSend: function(){
+					sys.loading(1);
+				},
+				success: function(str){
+					sys.loading(0);
+					if(str=='200 OK'){
+						var clockin_toast = app.toast.create({
+												icon: '<i class="material-icons">alarm_on</i>',
+												text: 'Clocked In',
+												position: 'center',
+												closeTimeout: 2000
+											});
+						sys.clockToggle('in');
+						clockin_toast.open();
+					}else{
+						var failed_toast = app.toast.create({
+											   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
+											   text: 'Oooppss, error',
+											   position: 'center',
+											   closeTimeout: 2000
+										   });
+						failed_toast.open();
+					}
+				}
+			});
+		});
+	});
+	
+	$$('button.clock-out').on('click', function () {
+		app.dialog.confirm('Clock out from this location?', 'Confirmation', function(){
+			var DATA = {
+				'usr' : STORAGE.getItem('usr'),
+				'loc' : $('iframe#gmap').data('loc')
+			};
+			var post_data = "ACT=" + encodeURIComponent('clk_out')
+						  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
+			
+			$.ajax({
+				type: 'POST',
+				url: 'http://app.wkvmusicstore.com/',
+				data: post_data,
+				beforeSend: function(){
+					sys.loading(1);
+				},
+				success: function(str){
+					sys.loading(0);
+					if(str=='200 OK'){
+						var clockout_toast = app.toast.create({
+												icon: '<i class="material-icons">alarm_off</i>',
+												text: 'Clocked Out',
+												position: 'center',
+												closeTimeout: 2000
+											});
+						sys.clockToggle('out');
+						clockout_toast.open();
+					}else{
+						var failed_toast = app.toast.create({
+											   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
+											   text: 'Oooppss, error',
+											   position: 'center',
+											   closeTimeout: 2000
+										   });
+						failed_toast.open();
+					}
+				}
+			});
+		});
+	});
 	
 	sys.getTime();
 	sys.startClock();
@@ -442,5 +538,14 @@ sys = {
 		$('#app-time').data('time', ntime);
 		$('#app-time').text(ntime.toString().substr(4,20));
 		setTimeout(sys.startClock, 1000);
+	},
+	'clockToggle' : function(str){
+		if(str=='out'){
+			$('.popup-clock button.clock-in').removeClass('disabled');
+			$('.popup-clock button.clock-out').addClass('disabled');
+		}else if(str=='in'){
+			$('.popup-clock button.clock-in').addClass('disabled');
+			$('.popup-clock button.clock-out').removeClass('disabled');
+		}
 	}
 }
