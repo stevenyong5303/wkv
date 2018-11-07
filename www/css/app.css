@@ -23,7 +23,7 @@
 	padding-left: 10px;
 	padding-right: 10px;
 }
-.data-table, .popover {
+.data-table, .popup, .popover {
 	height: calc(100% - 50px);
 	overflow-x: auto;
 }

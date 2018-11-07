@@ -6,7 +6,7 @@ var app = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.25",
+			  version: "1.0.26",
 			  rtl: false,
 			  language: "en-US"
 		  });
@@ -276,7 +276,11 @@ $(document).ready(function(){
 		var loc = $('iframe#gmap').data('loc');
 		
 		$('iframe#gmap').attr('src', ('https://www.google.com/maps/embed/v1/view?key=AIzaSyCRKiFjg2CA78cD09yIXuHFCxADjOh75rg&center='+loc+'&zoom=17'));
+		sys.getTime();
 	})
+	
+	sys.getTime();
+	sys.startClock();
 });
 
 sys = {
@@ -413,5 +417,30 @@ sys = {
 		}, function(error){
 			console.log('code: ' + error.code + '\n' + 'message: ' + error.message + '\n');
 		}, { enableHighAccuracy: true });
+	},
+	'getTime' : function(){
+		var post_data = "ACT=" + encodeURIComponent('tme_chk');
+	
+		$.ajax({
+			type: 'POST',
+			url: 'http://app.wkvmusicstore.com/',
+			data: post_data,
+			success: function(str){
+				$('#app-time').data('time', new Date(str));
+				$('#app-time').text(new Date(str).toString().substr(4,20));
+			}
+		});
+	},
+	'startClock' : function(){
+		var time = $('#app-time').data('time'), ntime;
+		
+		if(sys.isEmpty(time)){
+			time = new Date();
+		}
+		ntime = new Date(time.getTime()+1000);
+		
+		$('#app-time').data('time', ntime);
+		$('#app-time').text(ntime.toString().substr(4,20));
+		setTimeout(sys.startClock, 1000);
 	}
 }
