@@ -6,7 +6,7 @@ var app = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.27",
+			  version: "1.0.28",
 			  rtl: false,
 			  language: "en-US"
 		  });
@@ -293,6 +293,46 @@ $(document).ready(function(){
 		sys.getTime();
 	})
 	
+	$$('button.clock-check').on('click', function () {
+		app.dialog.confirm('Clock to this location?', 'Confirmation', function(){
+			var DATA = {
+				'usr' : STORAGE.getItem('usr'),
+				'loc' : $('iframe#gmap').data('loc')
+			};
+			var post_data = "ACT=" + encodeURIComponent('clk_add')
+						  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
+			
+			$.ajax({
+				type: 'POST',
+				url: 'http://app.wkvmusicstore.com/',
+				data: post_data,
+				beforeSend: function(){
+					sys.loading(1);
+				},
+				success: function(str){
+					sys.loading(0);
+					if(str=='200 OK'){
+						var clockcheck_toast = app.toast.create({
+												icon: '<i class="material-icons">alarm_add</i>',
+												text: 'Clocked',
+												position: 'center',
+												closeTimeout: 2000
+											});
+						clockcheck_toast.open();
+					}else{
+						var failed_toast = app.toast.create({
+											   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
+											   text: 'Oooppss, error',
+											   position: 'center',
+											   closeTimeout: 2000
+										   });
+						failed_toast.open();
+					}
+				}
+			});
+		});
+	});
+	
 	$$('button.clock-in').on('click', function () {
 		app.dialog.confirm('Clock in to this location?', 'Confirmation', function(){
 			var DATA = {
@@ -373,6 +413,18 @@ $(document).ready(function(){
 				}
 			});
 		});
+	});
+	
+	$('a.test').on('click', function(){
+		navigator.notification.alert(
+			'You are the winner!',  // message
+			function(){
+				console.log('nothing');
+			},         // callback
+			'Game Over',            // title
+			'Done'                  // buttonName
+		);
+		navigator.notification.beep(2);
 	});
 	
 	sys.getTime();

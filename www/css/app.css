@@ -24,7 +24,7 @@
 	padding-right: 10px;
 }
 .data-table, .popup, .popover {
-	height: calc(100% - 50px);
+	height: calc(100% - 56px);
 	overflow-x: auto;
 }
 .w200 {
