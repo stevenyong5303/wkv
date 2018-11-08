@@ -4,7 +4,7 @@
 <widget xmlns     = "http://www.w3.org/ns/widgets"
         xmlns:gap = "http://phonegap.com/ns/1.0"
         id        = "com.wkv.manage"
-        version   = "1.0.28">
+        version   = "1.0.29">
 
     <name>WKV</name>
 
@@ -46,7 +46,7 @@
     <!-- Plugins -->
 
 	<plugin name="org.apache.cordova.geolocation" source="npm"/>
-	<plugin name="org.apache.cordova.dialogs" source="npm"/>
+	<plugin name="cordova-plugin-dialogs" source="npm"/>
 	
     <!-- Core plugins -->
 	<!--
@@ -106,7 +106,7 @@
     <gap:splash src="res/screen/windows-phone/screen-portrait.png"      gap:platform="winphone" />
 
     <gap:config-file platform="ios" parent="CFBundleShortVersionString">
-    <string>28</string>
+    <string>29</string>
     </gap:config-file>
 
     <!--
