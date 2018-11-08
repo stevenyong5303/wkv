@@ -31,6 +31,9 @@
 	display: inline-block;
 	width: 170px;
 }
+td span.button.button-fill {
+	min-width: 30px;
+}
 #ltcl_spc .badge{
 	margin: 2px 0;
 }

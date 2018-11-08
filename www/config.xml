@@ -4,7 +4,7 @@
 <widget xmlns     = "http://www.w3.org/ns/widgets"
         xmlns:gap = "http://phonegap.com/ns/1.0"
         id        = "com.wkv.manage"
-        version   = "1.0.30">
+        version   = "1.0.31">
 
     <name>WKV</name>
 
@@ -45,13 +45,17 @@
 
     <!-- Plugins -->
 
+	<plugin name="cordova-plugin-battery-status" />
+    <plugin name="cordova-plugin-camera" />
 	<plugin name="cordova-plugin-contacts" />
     <plugin name="cordova-plugin-device" />
     <plugin name="cordova-plugin-device-motion" />
     <plugin name="cordova-plugin-device-orientation" />
-	<plugin name="cordova-plugin-dialogs"/>
-	<plugin name="cordova-plugin-geolocation"/>
+	<plugin name="cordova-plugin-dialogs" />
+	<plugin name="cordova-plugin-geolocation" />
+	<plugin name="cordova-plugin-media" />
 	<plugin name="cordova-plugin-network-information" />
+	<plugin name="cordova-plugin-splashscreen" />
 	<plugin name="cordova-plugin-vibration" />
 	
     <!-- Core plugins -->
@@ -112,7 +116,7 @@
     <gap:splash src="res/screen/windows-phone/screen-portrait.png"      gap:platform="winphone" />
 
     <gap:config-file platform="ios" parent="CFBundleShortVersionString">
-    <string>30</string>
+    <string>31</string>
     </gap:config-file>
 
     <!--

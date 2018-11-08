@@ -6,7 +6,7 @@ var app = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.30",
+			  version: "1.0.31",
 			  rtl: false,
 			  language: "en-US"
 		  });
@@ -164,7 +164,7 @@ $(document).ready(function(){
 								inf = JSON.parse(str);
 							
 							for(var i=0; i<inf.length; i++){
-								x += '<tr name="el'+(i+1)+'"><td class="label-cell"><span name="el'+(i+1)+'">'+(i+1)+'</span></td>';
+								x += '<tr name="el'+(i+1)+'"><td class="label-cell"><span class="button button-fill" name="el'+(i+1)+'">'+(i+1)+'</span></td>';
 								x += '<td class="label-cell">'+inf[i].pic+'</td>';
 								x += '<td class="label-cell">'+((inf[i].luncheon_dinner==null) ? '-' : ((inf[i].luncheon_dinner=='Lunch') ? 'L' : 'D'))+'</td>';
 								x += '<td class="label-cell">'+((inf[i].venue==null) ? '-' : inf[i].venue)+'</td>';
@@ -413,18 +413,6 @@ $(document).ready(function(){
 				}
 			});
 		});
-	});
-	
-	$('a.test').on('click', function(){
-		navigator.notification.alert(
-			'You are the winner!',  // message
-			function(){
-				console.log('nothing');
-			},         // callback
-			'Game Over',            // title
-			'Done'                  // buttonName
-		);
-		navigator.notification.beep(2);
 	});
 	
 	sys.getTime();
