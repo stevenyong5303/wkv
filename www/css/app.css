@@ -31,6 +31,10 @@
 	display: inline-block;
 	width: 170px;
 }
+.w85 {
+	display: inline-block;
+	width: 55px;
+}
 td span.button.button-fill {
 	min-width: 30px;
 }

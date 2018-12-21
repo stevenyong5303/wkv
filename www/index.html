@@ -111,6 +111,28 @@
 				</div>
 			</div>
 		</div>
+		<div class="login-screen" id="error">
+			<div class="view">
+				<div class="page">
+					<div class="page-content login-screen-content">
+						<div class="toolbar">
+							<div class="toolbar-inner">
+								<div class="left">Error</div>
+							</div>
+						</div>
+						<div class="block">
+							<div class="list">
+								<div class="item-content item-input">
+									<div class="item-inner">
+										<i class="icon material-icons md-only">priority_high</i> No internet connection.
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 		<div class="views">
 			<div class="view view-main">
 				<div class="toolbar tabbar-labels toolbar-bottom-md">
@@ -174,6 +196,30 @@
 							<div class="block">
 								<div class="list">
 									<ul>
+										<li>
+											<div class="item-content">
+												<div class="item-media">
+													<i class="icon material-icons md-only">flash_on</i>
+												</div>
+												<div class="item-inner">
+													<div class="item-title">
+														<a class="link popup-open" href="#" data-popup=".popup-power">3 Phase Information</a>
+													</div>
+												</div>
+											</div>
+										</li>
+										<li>
+											<div class="item-content">
+												<div class="item-media">
+													<i class="icon material-icons md-only">wallpaper</i>
+												</div>
+												<div class="item-inner">
+													<div class="item-title">
+														<a class="link popup-open" href="#" data-popup=".popup-backd">Backdrop Truss Calculator</a>
+													</div>
+												</div>
+											</div>
+										</li>
 										<li>
 											<div class="item-content">
 												<div class="item-media">
@@ -275,6 +321,139 @@
 				</div>
 				<div class="data-table">
 					<table class="event_list"></table>
+				</div>
+			</div>
+			<div class="popup popup-power">
+				<div class="toolbar">
+					<div class="toolbar-inner">
+						<div class="left">3 Phase Information</div>
+						<div class="right"><a class="link popup-close" href="#">Close</a></div>
+					</div>
+				</div>
+				<div class="block">
+					<div class="list">
+						<ul>
+							<li>
+								<div class="item-content item-input">
+									<div class="item-inner">
+										<div class="item-input-wrap">
+											<span class="w85">
+												<span class="badge">L1</span>
+											</span>
+											<i class="icon material-icons md-only" style="color:#FF0000;">lens</i>&emsp;<i class="icon material-icons md-only" style="color:#AA7700;">lens</i>
+										</div>
+									</div>
+								</div>
+							</li>
+							<li>
+								<div class="item-content item-input">
+									<div class="item-inner">
+										<div class="item-input-wrap">
+											<span class="w85">
+												<span class="badge">L2</span>
+											</span>
+											<i class="icon material-icons md-only" style="color:#FFFF00;">lens</i>&emsp;<i class="icon material-icons md-only" style="color:#999999;">lens</i>
+										</div>
+									</div>
+								</div>
+							</li>
+							<li>
+								<div class="item-content item-input">
+									<div class="item-inner">
+										<div class="item-input-wrap">
+											<span class="w85">
+												<span class="badge">L3</span>
+											</span>
+											<i class="icon material-icons md-only" style="color:#0000FF;">lens</i> 
+										</div>
+									</div>
+								</div>
+							</li>
+							<li>
+								<div class="item-content item-input">
+									<div class="item-inner">
+										<div class="item-input-wrap">
+											<span class="w85">
+												<span class="badge">N</span>
+											</span>
+											<i class="icon material-icons md-only">lens</i> 
+										</div>
+									</div>
+								</div>
+							</li>
+							<li>
+								<div class="item-content item-input">
+									<div class="item-inner">
+										<div class="item-input-wrap">
+											<span class="w85">
+												<span class="badge">Earth</span>
+											</span>
+											<i class="icon material-icons md-only" style="color:#22AA00;">lens</i> 
+										</div>
+									</div>
+								</div>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<div class="popup popup-backd">
+				<div class="toolbar">
+					<div class="toolbar-inner">
+						<div class="left">Backdrop Truss Calculator</div>
+						<div class="right"><a class="link popup-close" href="#">Close</a></div>
+					</div>
+				</div>
+				<div class="block">
+					<div class="list">
+						<ul>
+							<li>
+								<div class="item-content item-input">
+									<div class="item-inner">
+										<div class="item-input-wrap">
+											
+										</div>
+									</div>
+								</div>
+							</li>
+							<li>
+								<label class="item-radio item-content">
+									<input type="radio" name="backd-radio" value="8_16" />
+									<i class="icon icon-radio"></i>
+									<div class="item-inner">
+										<div class="item-title">8ft x 16ft</div>
+									</div>
+								</label>
+							</li>
+							<li>
+								<label class="item-radio item-content">
+									<input type="radio" name="backd-radio" value="8_17" />
+									<i class="icon icon-radio"></i>
+									<div class="item-inner">
+										<div class="item-title">8ft x 17ft</div>
+									</div>
+								</label>
+							</li>
+							<li>
+								<label class="item-radio item-content">
+									<input type="radio" name="backd-radio" value="8_18" />
+									<i class="icon icon-radio"></i>
+									<div class="item-inner">
+										<div class="item-title">8ft x 18ft</div>
+									</div>
+								</label>
+							</li>
+							<li>
+								<label class="item-radio item-content">
+									<input type="radio" name="backd-radio" value="8_19" />
+									<i class="icon icon-radio"></i>
+									<div class="item-inner">
+										<div class="item-title">8ft x 19ft</div>
+									</div>
+								</label>
+							</li>
+						</ul>
+					</div>
 				</div>
 			</div>
 			<div class="popup popup-light">
