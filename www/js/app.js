@@ -6,7 +6,7 @@ var app = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.33",
+			  version: "1.0.34",
 			  rtl: false,
 			  language: "en-US"
 		  });
@@ -123,7 +123,7 @@ $(document).ready(function(){
 						sys.loading(0);
 						
 						if(str==='204 No Response'){
-							$('.popup-event .event_list').text('No data found.');
+							$('.popup-event .event_list').html('<p style="margin-left:10px;">No event found.</p>');
 						}else{
 							var x = '<thead><tr><th class="label-cell"></th>'
 								  + '<th class="label-cell">&emsp;PIC&emsp;&emsp;&emsp;&emsp;&emsp;</th>'
