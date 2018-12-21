@@ -6,7 +6,7 @@ var app = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.32",
+			  version: "1.0.33",
 			  rtl: false,
 			  language: "en-US"
 		  });
