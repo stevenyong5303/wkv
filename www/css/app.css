@@ -19,6 +19,54 @@
 	-o-transform: rotate(180deg);
 	transform: rotate(180deg);
 }
+#wkv-calendar .calendar-month-current .calendar-day.hl1 span {
+	background-color: #ff9999;
+}
+#wkv-calendar .calendar-month-current .calendar-day.hl2 span {
+	background-color: #ff8888;
+}
+#wkv-calendar .calendar-month-current .calendar-day.hl3 span {
+	background-color: #ff7777;
+}
+#wkv-calendar .calendar-month-current .calendar-day.hl4 span {
+	background-color: #ff6666;
+}
+#wkv-calendar .calendar-month-current .calendar-day.hl5 span {
+	background-color: #ff5555;
+}
+#wkv-calendar .calendar-month-current .calendar-day.hl6 span {
+	background-color: #ff4444;
+}
+#wkv-calendar .calendar-month-current .calendar-day.hl7 span {
+	background-color: #ff3333;
+}
+#wkv-calendar .calendar-month-current .calendar-day.hl8 span {
+	background-color: #ff2222;
+}
+#wkv-calendar .calendar-month-current .calendar-day.hl9 span {
+	background-color: #ff1111;
+}
+#wkv-calendar .calendar-month-current .calendar-day.hl10 span {
+	background-color: #ff0000;
+}
+#wkv-calendar .calendar-month-current .calendar-day.hl11 span {
+	background-color: #ee0000;
+}
+#wkv-calendar .calendar-month-current .calendar-day.hl12 span {
+	background-color: #dd0000;
+}
+#wkv-calendar .calendar-month-current .calendar-day.hl13 span {
+	background-color: #cc0000;
+}
+#wkv-calendar .calendar-month-current .calendar-day.hl14 span {
+	background-color: #bb0000;
+}
+#wkv-calendar .calendar-month-current .calendar-day.hl15 span {
+	background-color: #aa0000;
+}
+#wkv-calendar .calendar-month-current .calendar-day.hl16 span {
+	background-color: #990000;
+}
 .data-table table.event_list td.label-cell, .data-table table.event_list th.label-cell {
 	padding-left: 10px;
 	padding-right: 10px;

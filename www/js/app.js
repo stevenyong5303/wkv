@@ -6,12 +6,17 @@ var app = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.34",
+			  version: "1.0.35",
 			  rtl: false,
 			  language: "en-US"
 		  });
 
 $(document).ready(function(){
+	var usr = STORAGE.getItem('usr'),
+		pwd = STORAGE.getItem('pwd');
+	
+	var DATA = '', post_data = '';
+	
 	var monthNames = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG' , 'SEP' , 'OCT', 'NOV', 'DEC'];
 	var calendarInline = app.calendar.create({
 			containerEl: '#wkv-calendar',
@@ -42,19 +47,18 @@ $(document).ready(function(){
 						},
 						monthYearChangeStart: function (c) {
 							$$('.calendar-custom-toolbar .center').text(monthNames[c.currentMonth] +', ' + c.currentYear);
+							sys.dayClick();
+							sys.eventCheck(c.currentMonth, c.currentYear);
 						}
 					}
 		});
 	
-	var usr = STORAGE.getItem('usr'),
-		pwd = STORAGE.getItem('pwd');
-	
-	var DATA = {
+	DATA = {
 			'usr' : usr,
 			'pwd' : pwd
 		};
-	var post_data = "ACT=" + encodeURIComponent('ssn_chk')
-				  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
+	post_data = "ACT=" + encodeURIComponent('ssn_chk')
+			  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
 	
 	$('#lgn #lgn_sgn').on('click', function(){
 		usr = $('#lgn input[name="lgn_usr"]').val();
@@ -101,97 +105,101 @@ $(document).ready(function(){
 		}
 	});
 	
-	$('#wkv-calendar .calendar-day').on('click', function(){
-		if($(this).hasClass('calendar-day-selected')){
-			var tmp = new Date(calendarInline.getValue()[0]);
-			
-			if(!sys.isEmpty(tmp)){
-				DATA = {
-					'date' : tmp.toDateString().substr(4)
-				};
-				post_data = "ACT=" + encodeURIComponent('cal_get')
-						  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
-						  
-				$.ajax({
-					type: 'POST',
-					url: 'http://app.wkvmusicstore.com/',
-					data: post_data,
-					beforeSend: function(){
-						sys.loading(1);
-					},
-					success: function(str){
-						sys.loading(0);
-						
-						if(str==='204 No Response'){
-							$('.popup-event .event_list').html('<p style="margin-left:10px;">No event found.</p>');
-						}else{
-							var x = '<thead><tr><th class="label-cell"></th>'
-								  + '<th class="label-cell">&emsp;PIC&emsp;&emsp;&emsp;&emsp;&emsp;</th>'
-								  + '<th class="label-cell">L/D</th>'
-								  + '<th class="label-cell">&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Venue&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;</th>'
-								  + '<th class="tablet-only">Desc.</th>'
-								  + '<th class="tablet-only">Mixer</th>'
-								  + '<th class="tablet-only">W/L</th>'
-								  + '<th class="tablet-only">Speaker</th>'
-								  + '<th class="tablet-only">Band</th>'
-								  + '<th class="label-cell">Crew&emsp;&emsp;</th>'
-								  + '<th class="label-cell">IN&emsp;&emsp;</th>'
-								  + '<th class="label-cell">OUT&emsp;&emsp;</th>'
-								  + '<th class="tablet-only">B/G</th></tr></thead><tbody>',
-								inf = JSON.parse(str);
+	sys.dayClick = function(){
+		$('#wkv-calendar .calendar-month-current .calendar-day').on('click', function(){
+			if($(this).hasClass('calendar-day-selected')){
+				var tmp = new Date(calendarInline.getValue()[0]);
+				
+				if(!sys.isEmpty(tmp)){
+					DATA = {
+						'date' : tmp.toDateString().substr(4)
+					};
+					post_data = "ACT=" + encodeURIComponent('cal_get')
+							  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
+							  
+					$.ajax({
+						type: 'POST',
+						url: 'http://app.wkvmusicstore.com/',
+						data: post_data,
+						beforeSend: function(){
+							sys.loading(1);
+						},
+						success: function(str){
+							sys.loading(0);
 							
-							for(var i=0; i<inf.length; i++){
-								x += '<tr name="el'+(i+1)+'"><td class="label-cell"><span class="button button-fill" name="el'+(i+1)+'">'+(i+1)+'</span></td>';
-								x += '<td class="label-cell">'+inf[i].pic+'</td>';
-								x += '<td class="label-cell">'+((inf[i].luncheon_dinner==null) ? '-' : ((inf[i].luncheon_dinner=='Lunch') ? 'L' : 'D'))+'</td>';
-								x += '<td class="label-cell">'+((inf[i].venue==null) ? '-' : inf[i].venue)+'</td>';
-								x += '<td class="tablet-only">'+((inf[i].description==null) ? '-' : inf[i].description)+'</td>';
-								x += '<td class="tablet-only">'+((inf[i].mixer==null) ? '-' : inf[i].mixer)+'</td>';
-								x += '<td class="tablet-only">'+((inf[i].wireless_mic==null) ? '-' : inf[i].wireless_mic)+'</td>';
-								x += '<td class="tablet-only">'+((inf[i].speaker==null) ? '-' : inf[i].speaker)+'</td>';
-								x += '<td class="tablet-only">'+((inf[i].band==null) ? '-' : inf[i].band)+'</td>';
-								x += '<td class="label-cell">'+((inf[i].crew==null) ? '-' : inf[i].crew)+'</td>';
-								x += '<td class="label-cell">'+((inf[i].car_in==null) ? '-' : inf[i].car_in)+'</td>';
-								x += '<td class="label-cell">'+((inf[i].car_out==null) ? '-' : inf[i].car_out)+'</td>';
-								x += '<td class="tablet-only">'+((inf[i].bride_groom==null) ? '-' : inf[i].bride_groom)+'</td>';
-								x += '</tr>';
+							if(str==='204 No Response'){
+								$('.popup-event .event_list').html('<p style="margin-left:10px;">No event found.</p>');
+							}else{
+								var x = '<thead><tr><th class="label-cell"></th>'
+									  + '<th class="label-cell">&emsp;PIC&emsp;&emsp;&emsp;&emsp;&emsp;</th>'
+									  + '<th class="label-cell">L/D</th>'
+									  + '<th class="label-cell">&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Venue&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;</th>'
+									  + '<th class="tablet-only">Desc.</th>'
+									  + '<th class="tablet-only">Mixer</th>'
+									  + '<th class="tablet-only">W/L</th>'
+									  + '<th class="tablet-only">Speaker</th>'
+									  + '<th class="tablet-only">Band</th>'
+									  + '<th class="label-cell">Crew&emsp;&emsp;</th>'
+									  + '<th class="label-cell">IN&emsp;&emsp;</th>'
+									  + '<th class="label-cell">OUT&emsp;&emsp;</th>'
+									  + '<th class="tablet-only">B/G</th></tr></thead><tbody>',
+									inf = JSON.parse(str);
+								
+								for(var i=0; i<inf.length; i++){
+									x += '<tr name="el'+(i+1)+'"><td class="label-cell"><span class="button button-fill" name="el'+(i+1)+'">'+(i+1)+'</span></td>';
+									x += '<td class="label-cell">'+inf[i].pic+'</td>';
+									x += '<td class="label-cell">'+((inf[i].luncheon_dinner==null) ? '-' : ((inf[i].luncheon_dinner=='Lunch') ? 'L' : 'D'))+'</td>';
+									x += '<td class="label-cell">'+((inf[i].venue==null) ? '-' : inf[i].venue)+'</td>';
+									x += '<td class="tablet-only">'+((inf[i].description==null) ? '-' : inf[i].description)+'</td>';
+									x += '<td class="tablet-only">'+((inf[i].mixer==null) ? '-' : inf[i].mixer)+'</td>';
+									x += '<td class="tablet-only">'+((inf[i].wireless_mic==null) ? '-' : inf[i].wireless_mic)+'</td>';
+									x += '<td class="tablet-only">'+((inf[i].speaker==null) ? '-' : inf[i].speaker)+'</td>';
+									x += '<td class="tablet-only">'+((inf[i].band==null) ? '-' : inf[i].band)+'</td>';
+									x += '<td class="label-cell">'+((inf[i].crew==null) ? '-' : inf[i].crew)+'</td>';
+									x += '<td class="label-cell">'+((inf[i].car_in==null) ? '-' : inf[i].car_in)+'</td>';
+									x += '<td class="label-cell">'+((inf[i].car_out==null) ? '-' : inf[i].car_out)+'</td>';
+									x += '<td class="tablet-only">'+((inf[i].bride_groom==null) ? '-' : inf[i].bride_groom)+'</td>';
+									x += '</tr>';
+								}
+								x += '<tbody>';
+								$('.popup-event .event_list').html(x);
+								
+								for(var i=0; i<inf.length; i++){
+									$('tr[name="el'+(i+1)+'"]').data('info', inf[i]);
+								}
 							}
-							x += '<tbody>';
-							$('.popup-event .event_list').html(x);
+							$('.popup-event .event_date').text(tmp.toDateString().substr(4));
+							app.popup.open('.popup-event');
 							
-							for(var i=0; i<inf.length; i++){
-								$('tr[name="el'+(i+1)+'"]').data('info', inf[i]);
-							}
+							$('.event_list span').on('click', function(){
+								var x = '';
+								var inf = $('tr[name="' + $(this).attr('name') + '"]').data('info');
+								
+								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Person In Charge</div><div class="item-input-wrap">' + ((inf.pic==null) ? '-' : inf.pic) + '</div></div></div></li>';
+								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Luncheon/Dinner</div><div class="item-input-wrap">' + ((inf.luncheon_dinner==null) ? '-' : inf.luncheon_dinner) + '</div></div></div></li>';
+								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Venue</div><div class="item-input-wrap">' + ((inf.venue==null) ? '-' : inf.venue) + '</div></div></div></li>';
+								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Description</div><div class="item-input-wrap">' + ((inf.description==null) ? '-' : inf.description) + '</div></div></div></li>';
+								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Mixer</div><div class="item-input-wrap">' + ((inf.mixer==null) ? '-' : inf.mixer) + '</div></div></div></li>';
+								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Wireless Microphonw</div><div class="item-input-wrap">' + ((inf.wireless_mic==null) ? '-' : inf.wireless_mic) + '</div></div></div></li>';
+								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Speaker</div><div class="item-input-wrap">' + ((inf.speaker==null) ? '-' : inf.speaker) + '</div></div></div></li>';
+								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Live Band Information</div><div class="item-input-wrap">' + ((inf.band==null) ? '-' : inf.band) + '</div></div></div></li>';
+								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Crew</div><div class="item-input-wrap">' + ((inf.crew==null) ? '-' : inf.crew) + '</div></div></div></li>';
+								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Vehicle to Event</div><div class="item-input-wrap">' + ((inf.car_in==null) ? '-' : inf.car_in) + '</div></div></div></li>';
+								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Vehicle back from Event</div><div class="item-input-wrap">' + ((inf.car_out==null) ? '-' : inf.car_out) + '</div></div></div></li>';
+								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Client, Bride/Groom</div><div class="item-input-wrap">' + ((inf.bride_groom==null) ? '-' : inf.bride_groom) + '</div></div></div></li>';
+								
+								x = x.replace(/(?:\r\n|\r|\n)/g, '<br>');
+								$('.details-popover ul').html(x);
+								app.popover.open('.details-popover');
+							});
 						}
-						$('.popup-event .event_date').text(tmp.toDateString().substr(4));
-						app.popup.open('.popup-event');
-						
-						$('.event_list span').on('click', function(){
-							var x = '';
-							var inf = $('tr[name="' + $(this).attr('name') + '"]').data('info');
-							
-							x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Person In Charge</div><div class="item-input-wrap">' + ((inf.pic==null) ? '-' : inf.pic) + '</div></div></div></li>';
-							x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Luncheon/Dinner</div><div class="item-input-wrap">' + ((inf.luncheon_dinner==null) ? '-' : inf.luncheon_dinner) + '</div></div></div></li>';
-							x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Venue</div><div class="item-input-wrap">' + ((inf.venue==null) ? '-' : inf.venue) + '</div></div></div></li>';
-							x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Description</div><div class="item-input-wrap">' + ((inf.description==null) ? '-' : inf.description) + '</div></div></div></li>';
-							x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Mixer</div><div class="item-input-wrap">' + ((inf.mixer==null) ? '-' : inf.mixer) + '</div></div></div></li>';
-							x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Wireless Microphonw</div><div class="item-input-wrap">' + ((inf.wireless_mic==null) ? '-' : inf.wireless_mic) + '</div></div></div></li>';
-							x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Speaker</div><div class="item-input-wrap">' + ((inf.speaker==null) ? '-' : inf.speaker) + '</div></div></div></li>';
-							x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Live Band Information</div><div class="item-input-wrap">' + ((inf.band==null) ? '-' : inf.band) + '</div></div></div></li>';
-							x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Crew</div><div class="item-input-wrap">' + ((inf.crew==null) ? '-' : inf.crew) + '</div></div></div></li>';
-							x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Vehicle to Event</div><div class="item-input-wrap">' + ((inf.car_in==null) ? '-' : inf.car_in) + '</div></div></div></li>';
-							x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Vehicle back from Event</div><div class="item-input-wrap">' + ((inf.car_out==null) ? '-' : inf.car_out) + '</div></div></div></li>';
-							x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Client, Bride/Groom</div><div class="item-input-wrap">' + ((inf.bride_groom==null) ? '-' : inf.bride_groom) + '</div></div></div></li>';
-							
-							x = x.replace(/(?:\r\n|\r|\n)/g, '<br>');
-							$('.details-popover ul').html(x);
-							app.popover.open('.details-popover');
-						});
-					}
-				});
+					});
+				}
 			}
-		}
-	});
+		});
+	};
+	sys.dayClick();
+	sys.eventCheck((new Date().getMonth())+1, new Date().getYear()+1900);
 	
 	$('input#ltcl_nme').on('keyup', function(){
 		var tmp = ($(this).val()).toLowerCase();
@@ -536,6 +544,38 @@ sys = {
 			val += ';';
 		}
 		return val;
+	},
+	'eventCheck' : function(month, year){
+		var DATA = {
+			'month' : month,
+			'year' : year
+		};
+		var post_data = "ACT=" + encodeURIComponent('evt_chk')
+					  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
+		
+		$.ajax({
+			type: 'POST',
+			url: 'http://app.wkvmusicstore.com/',
+			data: post_data,
+			beforeSend: function(){
+				sys.loading(1);
+			},
+			success: function(str){
+				if(str!=='204 No Response'){
+					var inf = JSON.parse(str);
+					
+					for(var i=1; i<=31; i++){
+						var tmpDay = ''+(i < 10 ? ('0'+i) : (i));
+						if(inf[tmpDay]){
+							var tmpClass = (inf[tmpDay] > 15 ? 'hl16' : ('hl'+inf[tmpDay]));
+							$('#wkv-calendar .calendar-month-current .calendar-day:not(.calendar-day-next):not(.calendar-day-prev):eq('+(i-1)+')').addClass(tmpClass);
+						}
+					}
+				}
+				
+				sys.loading(0);
+			}
+		});
 	},
 	'getLocation' : function(){
 		navigator.geolocation.watchPosition(function(position){
