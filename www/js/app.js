@@ -6,7 +6,7 @@ var app = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.36",
+			  version: "1.0.37",
 			  rtl: false,
 			  language: "en-US"
 		  });
@@ -507,7 +507,7 @@ sys = {
 	'testing' : function(){
 		navigator.notification.alert(
 			'You are the winner!',
-			function(),
+			function(){},
 			'Game Over',
 			'Done'
 		);
