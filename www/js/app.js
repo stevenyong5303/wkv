@@ -6,7 +6,7 @@ var app = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.37",
+			  version: "1.0.38",
 			  rtl: false,
 			  language: "en-US"
 		  });
@@ -467,10 +467,6 @@ $(document).ready(function(){
 		});
 	});
 	
-	$('button#testing').on('click', function(){
-		sys.testing();
-	});
-	
 	$.ajax({
 		type: 'POST',
 		url: 'http://app.wkvmusicstore.com/',
@@ -504,14 +500,6 @@ $(document).ready(function(){
 });
 
 sys = {
-	'testing' : function(){
-		navigator.notification.alert(
-			'You are the winner!',
-			function(){},
-			'Game Over',
-			'Done'
-		);
-	},
 	'loading' : function(show){
 		if(show===1){
 			$('#loading-overlay').css('z-index', '100');
