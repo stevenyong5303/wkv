@@ -6,11 +6,11 @@ var app = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.35",
+			  version: "1.0.36",
 			  rtl: false,
 			  language: "en-US"
 		  });
-
+		  
 $(document).ready(function(){
 	var usr = STORAGE.getItem('usr'),
 		pwd = STORAGE.getItem('pwd');
@@ -271,6 +271,73 @@ $(document).ready(function(){
 		}
 	});
 	
+	$('.popup-convr input[type=radio][name=convr-radio][value=fttom]').prop("checked", true);
+	$('.popup-convr input[type=radio][name=convr-radio]').change(function() {
+		if(this.value == 'fttom') {
+			$('.convr-u1').html('Foot (ft)');
+			$('.convr-u2').html('Metre (m)');
+			$('#convr2').attr('placeholder', '0.3048');
+		}else if(this.value == 'intomm') {
+			$('.convr-u1').html('Inch (in)');
+			$('.convr-u2').html('Millimetre (mm)');
+			$('#convr2').attr('placeholder', '25.4');
+		}else if(this.value == 'ft2tom2') {
+			$('.convr-u1').html('Square Foot (ft<sup>2</sup>)');
+			$('.convr-u2').html('Square Metre (m<sup>2</sup>)');
+			$('#convr2').attr('placeholder', '0.092903');
+		}else if(this.value == 'mtopx') {
+			$('.convr-u1').html('Metre (m)');
+			$('.convr-u2').html('Pixel (px)');
+			$('#convr2').attr('placeholder', '256');
+		}else if(this.value == 'wtoA') {
+			$('.convr-u1').html('Watt (w)');
+			$('.convr-u2').html('Ampere (A)');
+			$('#convr2').attr('placeholder', '240');
+		}
+		$('#convr1').val('');
+		$('#convr2').val('');
+	});
+	
+	$('input#convr1').on('keyup', function(){
+		switch($('.popup-convr input[type=radio][name=convr-radio]:checked').val()){
+			case 'fttom':
+				$('#convr2').val(parseFloat(this.value)*0.3048);
+				break;
+			case 'intomm':
+				$('#convr2').val(parseFloat(this.value)*25.4);
+				break;
+			case 'ft2tom2':
+				$('#convr2').val(parseFloat(this.value)*0.092903);
+				break;
+			case 'mtopx':
+				$('#convr2').val(parseFloat(this.value)*256);
+				break;
+			case 'wtoA':
+				$('#convr2').val(parseFloat(this.value)/240);
+				break;
+		}
+	});
+	
+	$('input#convr2').on('keyup', function(){
+		switch($('.popup-convr input[type=radio][name=convr-radio]:checked').val()){
+			case 'fttom':
+				$('#convr1').val(parseFloat(this.value)/0.3048);
+				break;
+			case 'intomm':
+				$('#convr1').val(parseFloat(this.value)/25.4);
+				break;
+			case 'ft2tom2':
+				$('#convr1').val(parseFloat(this.value)/0.092903);
+				break;
+			case 'mtopx':
+				$('#convr1').val(parseFloat(this.value)/256);
+				break;
+			case 'wtoA':
+				$('#convr1').val(parseFloat(this.value)*240);
+				break;
+		}
+	});
+	
 	$('a#loc_refresh').on('click', function(){
 		var loc = $('iframe#gmap').data('loc');
 		
@@ -400,6 +467,10 @@ $(document).ready(function(){
 		});
 	});
 	
+	$('button#testing').on('click', function(){
+		sys.testing();
+	});
+	
 	$.ajax({
 		type: 'POST',
 		url: 'http://app.wkvmusicstore.com/',
@@ -433,6 +504,14 @@ $(document).ready(function(){
 });
 
 sys = {
+	'testing' : function(){
+		navigator.notification.alert(
+			'You are the winner!',
+			function(),
+			'Game Over',
+			'Done'
+		);
+	},
 	'loading' : function(show){
 		if(show===1){
 			$('#loading-overlay').css('z-index', '100');

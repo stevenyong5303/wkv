@@ -20,16 +20,16 @@
 	transform: rotate(180deg);
 }
 #wkv-calendar .calendar-month-current .calendar-day.hl1 span {
-	background-color: #ff9999;
+	background-color: #ffcccc;
 }
 #wkv-calendar .calendar-month-current .calendar-day.hl2 span {
-	background-color: #ff8888;
+	background-color: #ffaaaa;
 }
 #wkv-calendar .calendar-month-current .calendar-day.hl3 span {
-	background-color: #ff7777;
+	background-color: #ff9999;
 }
 #wkv-calendar .calendar-month-current .calendar-day.hl4 span {
-	background-color: #ff6666;
+	background-color: #ff7777;
 }
 #wkv-calendar .calendar-month-current .calendar-day.hl5 span {
 	background-color: #ff5555;

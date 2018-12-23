@@ -173,6 +173,9 @@
 												</div>
 											</div>
 										</li>
+										<li>
+											<button id="test">Test</button>
+										</li>
 									</ul>
 								</div>
 							</div>
@@ -194,6 +197,7 @@
 						</div>
 						<div id="pg-tools" class="tab page-content">
 							<div class="block">
+							<div class="block-title">Tools</div>
 								<div class="list">
 									<ul>
 										<li>
@@ -204,18 +208,6 @@
 												<div class="item-inner">
 													<div class="item-title">
 														<a class="link popup-open" href="#" data-popup=".popup-power">3 Phase Information</a>
-													</div>
-												</div>
-											</div>
-										</li>
-										<li>
-											<div class="item-content">
-												<div class="item-media">
-													<i class="icon material-icons md-only">wallpaper</i>
-												</div>
-												<div class="item-inner">
-													<div class="item-title">
-														<a class="link popup-open" href="#" data-popup=".popup-backd">Backdrop Truss Calculator</a>
 													</div>
 												</div>
 											</div>
@@ -240,6 +232,18 @@
 												<div class="item-inner">
 													<div class="item-title">
 														<a class="link popup-open" href="#" data-popup=".popup-stage">Stage Calculator</a>
+													</div>
+												</div>
+											</div>
+										</li>
+										<li>
+											<div class="item-content">
+												<div class="item-media">
+													<i class="icon material-icons md-only">sync</i>
+												</div>
+												<div class="item-inner">
+													<div class="item-title">
+														<a class="link popup-open" href="#" data-popup=".popup-convr">Unit Converter</a>
 													</div>
 												</div>
 											</div>
@@ -392,65 +396,6 @@
 										</div>
 									</div>
 								</div>
-							</li>
-						</ul>
-					</div>
-				</div>
-			</div>
-			<div class="popup popup-backd">
-				<div class="toolbar">
-					<div class="toolbar-inner">
-						<div class="left">Backdrop Truss Calculator</div>
-						<div class="right"><a class="link popup-close" href="#">Close</a></div>
-					</div>
-				</div>
-				<div class="block">
-					<div class="list">
-						<ul>
-							<li>
-								<div class="item-content item-input">
-									<div class="item-inner">
-										<div class="item-input-wrap">
-											
-										</div>
-									</div>
-								</div>
-							</li>
-							<li>
-								<label class="item-radio item-content">
-									<input type="radio" name="backd-radio" value="8_16" />
-									<i class="icon icon-radio"></i>
-									<div class="item-inner">
-										<div class="item-title">8ft x 16ft</div>
-									</div>
-								</label>
-							</li>
-							<li>
-								<label class="item-radio item-content">
-									<input type="radio" name="backd-radio" value="8_17" />
-									<i class="icon icon-radio"></i>
-									<div class="item-inner">
-										<div class="item-title">8ft x 17ft</div>
-									</div>
-								</label>
-							</li>
-							<li>
-								<label class="item-radio item-content">
-									<input type="radio" name="backd-radio" value="8_18" />
-									<i class="icon icon-radio"></i>
-									<div class="item-inner">
-										<div class="item-title">8ft x 18ft</div>
-									</div>
-								</label>
-							</li>
-							<li>
-								<label class="item-radio item-content">
-									<input type="radio" name="backd-radio" value="8_19" />
-									<i class="icon icon-radio"></i>
-									<div class="item-inner">
-										<div class="item-title">8ft x 19ft</div>
-									</div>
-								</label>
 							</li>
 						</ul>
 					</div>
@@ -617,6 +562,106 @@
 										</div>
 									</div>
 								</div>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<div class="popup popup-convr">
+				<div class="toolbar">
+					<div class="toolbar-inner">
+						<div class="left">Unit Converter</div>
+						<div class="right"><a class="link popup-close" href="#">Close</a></div>
+					</div>
+				</div>
+				<div class="block">
+					<div class="list">
+						<ul>
+							<li>
+								<div class="item-content item-input">
+									<div class="item-inner">
+										<div class="item-title item-label">
+											<i class="icon material-icons md-only">sync</i> <span class="convr-u1">Foot (ft)</span>
+										</div>
+										<div class="item-input-wrap">
+											<input id="convr1" type="text" name="column" autocomplete="off" placeholder="1">
+										</div>
+									</div>
+								</div>
+							</li>
+							<li>
+								<div class="item-content item-input">
+									<div class="item-inner">
+										<div class="item-title item-label">
+											<i class="icon material-icons md-only">sync</i> <span class="convr-u2">Metre (m)</span>
+										</div>
+										<div class="item-input-wrap">
+											<input id="convr2" type="text" name="column" autocomplete="off" placeholder="0.3048">
+										</div>
+									</div>
+								</div>
+							</li>
+							<li>
+								<div class="item-content">
+									<div class="item-inner">
+										<div class="item-title item-label">
+											<i class="icon material-icons md-only">straighten</i> Length
+										</div>
+									</div>
+								</div>
+								<label class="item-radio item-content">
+									<input type="radio" name="convr-radio" value="fttom" checked/>
+									<i class="icon icon-radio"></i>
+									<div class="item-inner">
+										<div class="item-title">ft &emsp;<i class="icon material-icons md-only">compare_arrows</i>&emsp; m</div>
+									</div>
+								</label>
+								<label class="item-radio item-content">
+									<input type="radio" name="convr-radio" value="intomm" checked/>
+									<i class="icon icon-radio"></i>
+									<div class="item-inner">
+										<div class="item-title">in &emsp;<i class="icon material-icons md-only">compare_arrows</i>&emsp; mm</div>
+									</div>
+								</label>
+								<label class="item-radio item-content">
+									<input type="radio" name="convr-radio" value="mtopx" />
+									<i class="icon icon-radio"></i>
+									<div class="item-inner">
+										<div class="item-title">m &emsp;<i class="icon material-icons md-only">compare_arrows</i>&emsp; px</div>
+									</div>
+								</label>
+							</li>
+							<li>
+								<div class="item-content">
+									<div class="item-inner">
+										<div class="item-title item-label">
+											<i class="icon material-icons md-only">photo_size_select_small</i> Area
+										</div>
+									</div>
+								</div>
+								<label class="item-radio item-content">
+									<input type="radio" name="convr-radio" value="ft2tom2" />
+									<i class="icon icon-radio"></i>
+									<div class="item-inner">
+										<div class="item-title">ft <sup>2</sup> &emsp;<i class="icon material-icons md-only">compare_arrows</i>&emsp; m <sup>2</sup></div>
+									</div>
+								</label>
+							</li>
+							<li>
+								<div class="item-content">
+									<div class="item-inner">
+										<div class="item-title item-label">
+											<i class="icon material-icons md-only">flash_on</i> Power
+										</div>
+									</div>
+								</div>
+								<label class="item-radio item-content">
+									<input type="radio" name="convr-radio" value="wtoA" />
+									<i class="icon icon-radio"></i>
+									<div class="item-inner">
+										<div class="item-title">w &emsp;<i class="icon material-icons md-only">compare_arrows</i>&emsp; A</div>
+									</div>
+								</label>
 							</li>
 						</ul>
 					</div>
