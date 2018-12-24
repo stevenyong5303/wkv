@@ -4,7 +4,7 @@
 <widget xmlns     = "http://www.w3.org/ns/widgets"
         xmlns:gap = "http://phonegap.com/ns/1.0"
         id        = "com.wkv.manage"
-        version   = "1.0.38">
+        version   = "1.0.39">
 
     <name>WKV</name>
 
@@ -114,12 +114,8 @@
     <!-- <gap:splash src="res/screen/ios/screen-ipad-landscape.png"          gap:platform="ios"     width="1024" height="768" /> -->
     <!-- <gap:splash src="res/screen/windows-phone/screen-portrait.png"      gap:platform="winphone" /> -->
 
-	<gap:config-file platform="android" parent="/manifest" mode="add">
-		<uses-permission android:name="android.permission.CAMERA" />
-	</gap:config-file>  
-	
     <gap:config-file platform="ios" parent="CFBundleShortVersionString">
-		<string>32</string>
+    <string>39</string>
     </gap:config-file>
 
     <!--

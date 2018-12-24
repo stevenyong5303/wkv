@@ -6,7 +6,7 @@ var app = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.38",
+			  version: "1.0.39",
 			  rtl: false,
 			  language: "en-US"
 		  });
@@ -96,12 +96,16 @@ $(document).ready(function(){
 							STORAGE.setItem('pwd', pwd);
 							
 							app.loginScreen.close('#lgn');
+						}else{
+							navigator.vibrate(500);
 						}
 						$('#lgn input[name="lgn_usr"]').val('');
 						$('#lgn input[name="lgn_pwd"]').val('');
 					}, 2000);
 				}
 			});
+		}else{
+			navigator.vibrate(500);
 		}
 	});
 	
@@ -236,6 +240,8 @@ $(document).ready(function(){
 			$('#ltcl_nme').val('');
 			$('#ltcl_ads').val('');
 			$('#ltcl_qty').val('');
+		}else{
+			navigator.vibrate(500);
 		}
 	});
 	
