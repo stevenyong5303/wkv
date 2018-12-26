@@ -6,7 +6,7 @@ var app = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.40",
+			  version: "1.0.41",
 			  rtl: false,
 			  language: "en-US"
 		  });
@@ -97,7 +97,7 @@ $(document).ready(function(){
 							
 							app.loginScreen.close('#lgn');
 						}else{
-							navigator.vibrate(200);
+							navigator.vibrate(100);
 						}
 						$('#lgn input[name="lgn_usr"]').val('');
 						$('#lgn input[name="lgn_pwd"]').val('');
@@ -105,7 +105,7 @@ $(document).ready(function(){
 				}
 			});
 		}else{
-			navigator.vibrate(200);
+			navigator.vibrate(100);
 		}
 	});
 	
@@ -241,7 +241,7 @@ $(document).ready(function(){
 			$('#ltcl_ads').val('');
 			$('#ltcl_qty').val('');
 		}else{
-			navigator.vibrate(200);
+			navigator.vibrate(100);
 		}
 	});
 	
@@ -418,7 +418,6 @@ $(document).ready(function(){
 											});
 						sys.clockToggle('in');
 						clockin_toast.open();
-						window.navigator.vibrate([100,30,100,30,100,30,200,30,200,30,200,30,100,30,100,30,10000]);
 					}else{
 						var failed_toast = app.toast.create({
 											   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',

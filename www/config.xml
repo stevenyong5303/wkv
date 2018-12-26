@@ -4,7 +4,7 @@
 <widget xmlns     = "http://www.w3.org/ns/widgets"
         xmlns:gap = "http://phonegap.com/ns/1.0"
         id        = "com.wkv.manage"
-        version   = "1.0.40">
+        version   = "1.0.41">
 
     <name>WKV</name>
 
@@ -140,6 +140,8 @@
     <allow-intent href="geo:*" />
     <platform name="android">
         <allow-intent href="market:*" />
+		<preference name="android-minSdkVersion" value="16" /> 
+		<preference name="android-targetSdkVersion" value="26" /> 
     </platform>
     <platform name="ios">
         <allow-intent href="itms:*" />
