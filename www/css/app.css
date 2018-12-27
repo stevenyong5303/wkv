@@ -1,6 +1,9 @@
 #app {
 	z-index: -100;
 }
+div.views {
+	opacity: 0;
+}
 #loading-overlay {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;

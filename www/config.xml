@@ -4,7 +4,7 @@
 <widget xmlns     = "http://www.w3.org/ns/widgets"
         xmlns:gap = "http://phonegap.com/ns/1.0"
         id        = "com.wkv.manage"
-        version   = "1.0.44">
+        version   = "1.0.45">
 
     <name>WKV</name>
 
@@ -12,7 +12,7 @@
         It's an application for WKV staff and members.
     </description>
 
-    <author href="http://www.wkvmusicstore.com" email="sales@wkvmusicstore.com">
+    <author href="http://www.wkvmusicstore.com" email="wkv.malaysia@gmail.com">
         WKV Team
     </author>
 

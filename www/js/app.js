@@ -6,7 +6,7 @@ var app = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.44",
+			  version: "1.0.45",
 			  rtl: false,
 			  language: "en-US"
 		  });
@@ -53,13 +53,6 @@ $(document).ready(function(){
 					}
 		});
 	
-	DATA = {
-			'usr' : usr,
-			'pwd' : pwd
-		};
-	post_data = "ACT=" + encodeURIComponent('ssn_chk')
-			  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
-	
 	$('#lgn #lgn_sgn').on('click', function(){
 		usr = $('#lgn input[name="lgn_usr"]').val();
 		pwd = $('#lgn input[name="lgn_pwd"]').val();
@@ -95,6 +88,7 @@ $(document).ready(function(){
 							STORAGE.setItem('usr', usr);
 							STORAGE.setItem('pwd', pwd);
 							
+							$('div.views').css('opacity', '1');
 							app.loginScreen.close('#lgn');
 						}else{
 							navigator.vibrate(100);
@@ -473,6 +467,22 @@ $(document).ready(function(){
 		});
 	});
 	
+	$('a#btn-stlo').on('click', function(){
+		app.dialog.confirm('Confirm logout?', function (){
+			STORAGE.removeItem('usr');
+			STORAGE.removeItem('pwd');
+			
+			app.loginScreen.open('#lgn');
+		});
+	});
+	
+	DATA = {
+			'usr' : usr,
+			'pwd' : pwd
+		};
+	post_data = "ACT=" + encodeURIComponent('ssn_chk')
+			  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
+	
 	$.ajax({
 		type: 'POST',
 		url: 'http://app.wkvmusicstore.com/',
@@ -492,15 +502,15 @@ $(document).ready(function(){
 				sys.clockToggle('out');
 			}
 			
-			setTimeout(function(){
-				sys.loading(0);
-				if(inf['reply']!=='200 OK'){
-					app.loginScreen.open('#lgn');
-				}
-			}, 2000);
+			if(inf['reply']!=='200 OK'){
+				app.loginScreen.open('#lgn');
+			}else{
+				$('div.views').css('opacity', '1');
+			}
 			
 			sys.getTime();
 			sys.startClock();
+			sys.loading(0);
 		}
 	});
 });
