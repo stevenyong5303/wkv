@@ -6,7 +6,7 @@ var app = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.46",
+			  version: "1.0.47",
 			  rtl: false,
 			  language: "en-US"
 		  });
@@ -197,7 +197,7 @@ $(document).ready(function(){
 		});
 	};
 	sys.dayClick();
-	sys.eventCheck((new Date().getMonth())+1, new Date().getYear()+1900);
+	sys.eventCheck((new Date().getMonth()), new Date().getYear()+1900);
 	
 	$('input#ltcl_nme').on('keyup', function(){
 		var tmp = ($(this).val()).toLowerCase();
@@ -716,4 +716,15 @@ sys = {
 			$('.popup-clock button.clock-out').removeClass('disabled');
 		}
 	}
+}
+
+document.addEventListener('deviceready', onDeviceReady.bind(this), false);
+
+function onDeviceReady() {
+	document.addEventListener("backbutton", onBackKeyDown, false);
+}
+
+function onBackKeyDown(e){
+	e.preventDefault();
+	app.toolbar.show('#pg-home');
 }

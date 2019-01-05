@@ -4,7 +4,7 @@
 <widget xmlns     = "http://www.w3.org/ns/widgets"
         xmlns:gap = "http://phonegap.com/ns/1.0"
         id        = "com.wkv.manage"
-        version   = "1.0.46">
+        version   = "1.0.47">
 
     <name>WKV</name>
 
@@ -51,6 +51,7 @@
     <plugin name="cordova-plugin-device" />
 	<plugin name="cordova-plugin-dialogs" />
 	<plugin name="cordova-plugin-geolocation" />
+	<plugin name="cordova-plugin-inappbrowser" />
 	<plugin name="cordova-plugin-media" />
 	<plugin name="cordova-plugin-network-information" />
 	<plugin name="cordova-plugin-vibration" />
