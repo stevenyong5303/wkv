@@ -6,7 +6,7 @@ var app = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.47",
+			  version: "1.0.48",
 			  rtl: false,
 			  language: "en-US"
 		  });
@@ -202,14 +202,12 @@ $(document).ready(function(){
 	$('input#ltcl_nme').on('keyup', function(){
 		var tmp = ($(this).val()).toLowerCase();
 		
-		if(tmp.includes('beam')){
+	if(tmp.includes('beam') || tmp.includes('moving') || tmp.includes('wash') || tmp.includes('zoom')){
 			$('#ltcl_ads').val('16')
-		}else if(tmp.includes('par can') || tmp.includes('pcc') || tmp.includes('pcw')){
+		}else if(tmp.includes('par') || tmp.includes('pcc') || tmp.includes('pcw') || tmp.includes('small')){
 			$('#ltcl_ads').val('8')
 		}else if(tmp.includes('city')){
 			$('#ltcl_ads').val('3')
-		}else if(tmp.includes('wash') || tmp.includes('zoom')){
-			$('#ltcl_ads').val('16')
 		}
 	});
 	
@@ -511,6 +509,11 @@ $(document).ready(function(){
 			sys.getTime();
 			sys.startClock();
 			sys.loading(0);
+			
+			$(document).on('backbutton', function(e){
+				e.preventDefault();
+				app.toolbar.show('#pg-home');
+			});
 		}
 	});
 });
@@ -716,15 +719,4 @@ sys = {
 			$('.popup-clock button.clock-out').removeClass('disabled');
 		}
 	}
-}
-
-document.addEventListener('deviceready', onDeviceReady.bind(this), false);
-
-function onDeviceReady() {
-	document.addEventListener("backbutton", onBackKeyDown, false);
-}
-
-function onBackKeyDown(e){
-	e.preventDefault();
-	app.toolbar.show('#pg-home');
 }
