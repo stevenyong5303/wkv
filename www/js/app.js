@@ -1,3 +1,13 @@
+document.addEventListener("deviceready", onDeviceReady, false);
+
+function onDeviceReady(){
+    document.addEventListener("backbutton", function(e){
+            e.preventDefault();
+            $('.popup-backdrop')[0].click();
+			$('#home-btn')[0].click();
+    }, false);
+}
+
 var $$ = Dom7;
 var sys = new Object();
 var STORAGE = window.localStorage;
@@ -6,7 +16,7 @@ var app = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.48",
+			  version: "1.0.49",
 			  rtl: false,
 			  language: "en-US"
 		  });
@@ -89,16 +99,34 @@ $(document).ready(function(){
 							STORAGE.setItem('pwd', pwd);
 							
 							$('div.views').css('opacity', '1');
+							
+							$('#lgn input[name="lgn_usr"]').val('');
+							$('#lgn input[name="lgn_pwd"]').val('');
+							
 							app.loginScreen.close('#lgn');
 						}else{
+							var failed_toast = app.toast.create({
+												   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
+												   text: 'ID or password invalid',
+												   position: 'center',
+												   closeTimeout: 2000
+											   });
+							failed_toast.open();
+							
 							navigator.vibrate(100);
 						}
-						$('#lgn input[name="lgn_usr"]').val('');
-						$('#lgn input[name="lgn_pwd"]').val('');
 					}, 2000);
 				}
 			});
 		}else{
+			var failed_toast = app.toast.create({
+								   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
+								   text: 'Error, field is empty',
+								   position: 'center',
+								   closeTimeout: 2000
+							   });
+			failed_toast.open();
+			
 			navigator.vibrate(100);
 		}
 	});
@@ -233,6 +261,14 @@ $(document).ready(function(){
 			$('#ltcl_ads').val('');
 			$('#ltcl_qty').val('');
 		}else{
+			var failed_toast = app.toast.create({
+								   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
+								   text: 'Error, field is empty',
+								   position: 'center',
+								   closeTimeout: 2000
+							   });
+			failed_toast.open();
+			
 			navigator.vibrate(100);
 		}
 	});
@@ -474,6 +510,77 @@ $(document).ready(function(){
 		});
 	});
 	
+	$('button#rspw_chg').on('click', function(){
+		var oldpwd = $('#rspw_old').val(),
+			newpwd = $('#rspw_new').val(),
+			conpwd = $('#rspw_cfn').val();
+		
+		if(sys.isEmpty(oldpwd) || sys.isEmpty(newpwd) || sys.isEmpty(conpwd)){
+			var failed_toast = app.toast.create({
+								   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
+								   text: 'Error, field is empty',
+								   position: 'center',
+								   closeTimeout: 2000
+							   });
+			failed_toast.open();
+			
+			navigator.vibrate(100);
+		}else if(newpwd != conpwd){
+			var failed_toast = app.toast.create({
+								   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
+								   text: 'Passwords does not match',
+								   position: 'center',
+								   closeTimeout: 2000
+							   });
+			failed_toast.open();
+			
+			navigator.vibrate(100);
+		}else{
+			var DATA = {
+				'old' : oldpwd,
+				'new' : newpwd
+			};
+			var post_data = "ACT=" + encodeURIComponent('rst_pwd')
+						  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
+						  
+			$.ajax({
+				type: 'POST',
+				url: 'http://app.wkvmusicstore.com/',
+				data: post_data,
+				beforeSend: function(){
+					sys.loading(1);
+				},
+				success: function(str){
+					sys.loading(0);
+					
+					if(str==='200 OK'){
+						var success_toast = app.toast.create({
+											   icon: '<i class="material-icons">lock_open</i>',
+											   text: 'Password Successfully Reset',
+											   position: 'center',
+											   closeTimeout: 2000
+										   });
+						success_toast.open();
+						
+						$('#rspw_old').val('');
+						$('#rspw_new').val('');
+						$('#rspw_cfn').val('');
+					}else{
+						var failed_toast = app.toast.create({
+											   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
+											   text: 'Current Password Invalid',
+											   position: 'center',
+											   closeTimeout: 2000
+										   });
+						failed_toast.open();
+						
+						navigator.vibrate(100);
+					}
+				}
+			});
+		}
+	});
+	
 	DATA = {
 			'usr' : usr,
 			'pwd' : pwd
@@ -509,11 +616,6 @@ $(document).ready(function(){
 			sys.getTime();
 			sys.startClock();
 			sys.loading(0);
-			
-			$(document).on('backbutton', function(e){
-				e.preventDefault();
-				app.toolbar.show('#pg-home');
-			});
 		}
 	});
 });

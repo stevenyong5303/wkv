@@ -137,7 +137,7 @@
 			<div class="view view-main">
 				<div class="toolbar tabbar-labels toolbar-bottom-md">
 					<div class="toolbar-inner">
-					<a href="#pg-home" class="tab-link tab-link-active">
+					<a id="home-btn" href="#pg-home" class="tab-link tab-link-active">
 						<i class="icon material-icons md-only">important_devices</i>
 						<span class="tabbar-label">Home</span>
 					</a>
@@ -1484,7 +1484,57 @@
 					</div>
 				</div>
 				<div class="block">
-					
+					<div class="list">
+						<ul>
+							<li>
+								<div class="item-content item-input">
+									<div class="item-inner">
+										<div class="item-title item-label">
+											<i class="icon material-icons md-only">fingerprint</i> Current Password
+										</div>
+										<div class="item-input-wrap">
+											<input id="rspw_old" type="password" autocomplete="off">
+										</div>
+									</div>
+								</div>
+							</li>
+							<li>
+								<div class="item-content item-input">
+									<div class="item-inner">
+										<div class="item-title item-label">
+											<i class="icon material-icons md-only">lock_open</i> New Password
+										</div>
+										<div class="item-input-wrap">
+											<input id="rspw_new" type="password" name="row" autocomplete="off">
+										</div>
+									</div>
+								</div>
+							</li>
+							<li>
+								<div class="item-content item-input">
+									<div class="item-inner">
+										<div class="item-title item-label">
+											<i class="icon material-icons md-only">verified_user</i> Confirm Password
+										</div>
+										<div class="item-input-wrap">
+											<input id="rspw_cfn" type="password" name="row" autocomplete="off">
+										</div>
+									</div>
+								</div>
+							</li>
+							<li>
+								<div class="item-content item-input">
+									<div class="item-inner">
+										<div class="item-input-wrap">
+											<div class="row">
+												<button id="rspw_chg" class="button col button-fill">Reset Password</button>
+											</div>
+										</div>
+									</div>
+								</div>
+							</li>
+						</ul>
+					</div>
 				</div>
 			</div>
 			<div class="popup popup-staa">
@@ -1497,7 +1547,7 @@
 				<div class="block">
 					<div align="center">
 						 <img src="icon.png" alt="WKV Logo" height="128" width="128">
-						 <span style="color:#999;position:absolute;top:40px;font-size:12px;">WKV<br/>Ver 1.0.48</span>
+						 <span style="color:#999;position:absolute;top:40px;font-size:12px;">WKV<br/>Ver 1.0.49</span>
 					</div>
 					<p>WKV Application serves as a platform for of WKV’s member to obtain basic information and calculation method can easily obtain by accessing to the application.</p>
 					<p>For general usage, clock in and clock out is built in the application for employees of WKV to check in whenever they report to event venue.</p>
