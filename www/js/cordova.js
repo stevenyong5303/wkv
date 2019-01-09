@@ -94,6 +94,15 @@ function createEvent (type, data) {
     return event;
 }
 
+document.addEventListener("deviceready", onDeviceReady, false);
+function onDeviceReady(){
+    document.addEventListener("backbutton", onBackKeyDown, false);
+}
+function onBackKeyDown(){
+    alert('back');
+    return false;
+}
+
 /* eslint-disable no-undef */
 var cordova = {
     define: define,

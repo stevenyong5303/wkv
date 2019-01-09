@@ -1,13 +1,3 @@
-document.addEventListener("deviceready", onDeviceReady, false);
-
-function onDeviceReady(){
-    document.addEventListener("backbutton", function(e){
-            e.preventDefault();
-            $('.popup-backdrop')[0].click();
-			$('#home-btn')[0].click();
-    }, false);
-}
-
 var $$ = Dom7;
 var sys = new Object();
 var STORAGE = window.localStorage;
@@ -16,7 +6,7 @@ var app = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.49",
+			  version: "1.0.50",
 			  rtl: false,
 			  language: "en-US"
 		  });
@@ -537,6 +527,7 @@ $(document).ready(function(){
 			navigator.vibrate(100);
 		}else{
 			var DATA = {
+				'usr' : STORAGE.getItem('usr'),
 				'old' : oldpwd,
 				'new' : newpwd
 			};
@@ -579,6 +570,10 @@ $(document).ready(function(){
 				}
 			});
 		}
+	});
+	
+	$('div.popup-staa .block img').on('click', function(){
+		window.open("market://details?id=com.wkv.manage", "_system");
 	});
 	
 	DATA = {

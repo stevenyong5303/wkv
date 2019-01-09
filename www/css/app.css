@@ -120,6 +120,10 @@ body .vertical-centered-box .content {
   -o-transition: all 0.3s;
   transition: all 0.3s;
 }
+.popup-stpp .block, .popup-sttm .block{
+	text-align: justify;
+	text-justify: inter-word;
+}
 body {
   background: #ffffff;
 }
