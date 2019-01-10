@@ -6,7 +6,7 @@ var app = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.51",
+			  version: "1.0.52",
 			  rtl: false,
 			  language: "en-US"
 		  });
@@ -495,10 +495,47 @@ $(document).ready(function(){
 	
 	$('a#btn-stlo').on('click', function(){
 		app.dialog.confirm('Confirm logout?', function (){
-			STORAGE.removeItem('usr');
-			STORAGE.removeItem('pwd');
+			var DATA = {
+				'usr' : STORAGE.getItem('usr'),
+				'loc' : $('iframe#gmap').data('loc')
+			};
+			var post_data = "ACT=" + encodeURIComponent('log_out')
+						  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
 			
-			app.loginScreen.open('#lgn');
+			$.ajax({
+				type: 'POST',
+				url: 'http://app.wkvmusicstore.com/',
+				data: post_data,
+				beforeSend: function(){
+					sys.loading(1);
+				},
+				success: function(str){
+					sys.loading(0);
+					if(str=='200 OK'){
+						STORAGE.removeItem('usr');
+						STORAGE.removeItem('pwd');
+						
+						app.loginScreen.open('#lgn');
+						
+						var logout_toast = app.toast.create({
+												icon: '<i class="material-icons">screen_lock_portrait</i>',
+												text: 'Logged Out',
+												position: 'center',
+												closeTimeout: 2000
+											});
+						sys.logout_toast('out');
+						logout_toast.open();
+					}else{
+						var failed_toast = app.toast.create({
+											   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
+											   text: 'Oooppss, error',
+											   position: 'center',
+											   closeTimeout: 2000
+										   });
+						failed_toast.open();
+					}
+				}
+			});
 		});
 	});
 	
@@ -589,7 +626,7 @@ $(document).ready(function(){
 		type: 'POST',
 		url: 'http://app.wkvmusicstore.com/',
 		data: post_data,
-		timeout: 5000,
+		timeout: 10000,
 		error: function(){
 			sys.loading(0);
 			app.loginScreen.open('#error');
