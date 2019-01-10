@@ -6,10 +6,11 @@ var app = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.50",
+			  version: "1.0.51",
 			  rtl: false,
 			  language: "en-US"
 		  });
+var geoToken = true, geoCount = 60;
 		  
 $(document).ready(function(){
 	var usr = STORAGE.getItem('usr'),
@@ -47,8 +48,8 @@ $(document).ready(function(){
 						},
 						monthYearChangeStart: function (c) {
 							$$('.calendar-custom-toolbar .center').text(monthNames[c.currentMonth] +', ' + c.currentYear);
-							sys.dayClick();
-							sys.eventCheck(c.currentMonth, c.currentYear);
+							sys.dayClick(usr);
+							sys.eventCheck(usr, c.currentMonth, c.currentYear);
 						}
 					}
 		});
@@ -121,13 +122,14 @@ $(document).ready(function(){
 		}
 	});
 	
-	sys.dayClick = function(){
+	sys.dayClick = function(user){
 		$('#wkv-calendar .calendar-month-current .calendar-day').on('click', function(){
 			if($(this).hasClass('calendar-day-selected')){
 				var tmp = new Date(calendarInline.getValue()[0]);
 				
 				if(!sys.isEmpty(tmp)){
 					DATA = {
+						'usr' : user,
 						'date' : tmp.toDateString().substr(4)
 					};
 					post_data = "ACT=" + encodeURIComponent('cal_get')
@@ -214,8 +216,8 @@ $(document).ready(function(){
 			}
 		});
 	};
-	sys.dayClick();
-	sys.eventCheck((new Date().getMonth()), new Date().getYear()+1900);
+	sys.dayClick(usr);
+	sys.eventCheck(usr, (new Date().getMonth()), new Date().getYear()+1900);
 	
 	$('input#ltcl_nme').on('keyup', function(){
 		var tmp = ($(this).val()).toLowerCase();
@@ -728,8 +730,9 @@ sys = {
 		}
 		return val;
 	},
-	'eventCheck' : function(month, year){
+	'eventCheck' : function(user, month, year){
 		var DATA = {
+			'usr' : user,
 			'month' : month,
 			'year' : year
 		};
@@ -769,15 +772,20 @@ sys = {
 			};
 			var post_data = "ACT=" + encodeURIComponent('loc_chk')
 						  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
-			
-			$.ajax({
-				type: 'POST',
-				url: 'http://app.wkvmusicstore.com/',
-				data: post_data,
-				success: function(str){
-					$('iframe#gmap').data('loc', (position.coords.latitude+','+position.coords.longitude));
-				}
-			});
+			if(geoToken){
+				$.ajax({
+					type: 'POST',
+					url: 'http://app.wkvmusicstore.com/',
+					data: post_data,
+					success: function(str){
+						$('iframe#gmap').data('loc', (position.coords.latitude+','+position.coords.longitude));
+					}
+				});
+				
+				geoToken = false;
+			}else{
+				$('iframe#gmap').data('loc', (position.coords.latitude+','+position.coords.longitude));
+			}
 		}, function(error){
 			console.log('code: ' + error.code + '\n' + 'message: ' + error.message + '\n');
 		}, { enableHighAccuracy: true });
@@ -805,6 +813,13 @@ sys = {
 		
 		$('#app-time').data('time', ntime);
 		$('#app-time').text(ntime.toString().substr(4,20));
+		
+		if(geoCount==0){
+			geoToken = true;
+			geoCount = 60;
+		}else{
+			geoCount--;
+		}
 		setTimeout(sys.startClock, 1000);
 	},
 	'clockToggle' : function(str){
