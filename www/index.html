@@ -137,22 +137,22 @@
 			<div class="view view-main">
 				<div class="toolbar tabbar-labels toolbar-bottom-md">
 					<div class="toolbar-inner">
-					<a id="home-btn" href="#pg-home" class="tab-link tab-link-active">
-						<i class="icon material-icons md-only">important_devices</i>
-						<span class="tabbar-label">Home</span>
-					</a>
-					<a href="#pg-schedule" class="tab-link">
-						<i class="icon material-icons md-only">today</i>
-						<span class="tabbar-label">Schedule</span>
-					</a>
-					<a href="#pg-tools" class="tab-link">
-						<i class="icon material-icons md-only">work</i>
-						<span class="tabbar-label">Tools</span>
-					</a>
-					<a href="#pg-settings" class="tab-link">
-						<i class="icon material-icons md-only">settings</i>
-						<span class="tabbar-label">Settings</span>
-					</a>
+						<a id="home-btn" href="#pg-home" class="tab-link tab-link-active">
+							<i class="icon material-icons md-only">important_devices</i>
+							<span class="tabbar-label">Home</span>
+						</a>
+						<a href="#pg-schedule" class="tab-link">
+							<i class="icon material-icons md-only">today</i>
+							<span class="tabbar-label">Schedule</span>
+						</a>
+						<a href="#pg-tools" class="tab-link">
+							<i class="icon material-icons md-only">work</i>
+							<span class="tabbar-label">Tools</span>
+						</a>
+						<a href="#pg-settings" class="tab-link">
+							<i class="icon material-icons md-only">settings</i>
+							<span class="tabbar-label">Settings</span>
+						</a>
 					</div>
 				</div>
 				<div class="tabs-animated-wrap">
@@ -161,9 +161,9 @@
 							<div class="block">
 								<div class="item-content" align="center">
 									<div class="workClock elevation-hover-7 elevation-5 elevation-pressed-2">
-										<span class="h">00</span> :
-										<span class="m">00</span> :
-										<span class="s">00</span>
+										<span class="h1">0</span><span class="h2">0</span> :
+										<span class="m1">0</span><span class="m2">0</span> :
+										<span class="s1">0</span><span class="s2">0</span>
 									</div>
 								</div>
 								<div class="list">
@@ -212,6 +212,18 @@
 												<div class="item-inner">
 													<div class="item-title">
 														<a class="link popup-open" href="#" data-popup=".popup-power">3 Phase Information</a>
+													</div>
+												</div>
+											</div>
+										</li>
+										<li>
+											<div class="item-content">
+												<div class="item-media">
+													<i class="icon material-icons md-only">network_check</i>
+												</div>
+												<div class="item-inner">
+													<div class="item-title">
+														<a class="link popup-open" href="#" data-popup=".popup-frqcy">Frequency Check</a>
 													</div>
 												</div>
 											</div>
@@ -512,6 +524,26 @@
 								</div>
 							</li>
 						</ul>
+					</div>
+				</div>
+			</div>
+			<div class="popup popup-frqcy">
+				<div class="toolbar">
+					<div class="toolbar-inner">
+						<div class="left">Frequency Check</div>
+						<div class="right"><a class="link popup-close" href="#">Close</a></div>
+					</div>
+				</div>
+				<div class="block">
+					<div class="item-content" align="center">
+						<div class="frqcy elevation-2">
+							0 Hz
+						</div>
+					</div>
+					<div class="item-content" align="center">
+						<button class="col button button-fill sound-check">
+							<i class="icon material-icons md-only">mic_none</i>
+						</button>
 					</div>
 				</div>
 			</div>
@@ -1554,7 +1586,7 @@
 				<div class="block">
 					<div align="center">
 						 <img src="icon.png" alt="WKV Logo" height="128" width="128">
-						 <span style="color:#999;position:absolute;top:40px;font-size:12px;">WKV<br/>Version 1.0.55</span>
+						 <span style="color:#999;position:absolute;top:40px;font-size:12px;">WKV<br/>Version 1.0.56</span>
 					</div>
 					<p>WKV Application serves as a platform for of WKV’s member to obtain basic information and calculation method can easily obtain by accessing to the application.</p>
 					<p>For general usage, clock in and clock out is built in the application for employees of WKV to check in whenever they report to event venue.</p>
@@ -1736,19 +1768,28 @@
 	<script src="js/routes.js"></script>
 	<script src="js/cordova.js"></script>
 	<script>
-		document.addEventListener('deviceready', onDeviceReady.bind(this), true);
-
-		function onDeviceReady() {
-			document.addEventListener("backbutton", onBackKeyDown, true);
+		function onLoad(){
+			document.addEventListener('deviceready', deviceReady, false);
 		}
 
-		function onBackKeyDown(e){
-			e.preventDefault();
-			history.go(-1);
-			navigator.app.backHistory();
-			alert('quit');
+		function deviceReady(){
+			document.addEventListener('backbutton', backButtonCallback, false);
+		}
+
+		function backButtonCallback(){
+			navigator.notification.confirm('do you want to exit the app?', confirmCallback);
+		}
+		
+		function confirmCallback(buttonIndex){
+			if(buttonIndex == 1){
+				navigator.app.exitApp();
+				return true;
+			}else{
+				return false;
+			}
 		}
 	</script>
 	<script src="js/app.js"></script>
+	<script src="js/wad.min.js"></script>
 </body>
 </html>

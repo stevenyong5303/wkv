@@ -6,7 +6,7 @@ var app = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.55",
+			  version: "1.0.56",
 			  rtl: false,
 			  language: "en-US"
 		  });
@@ -219,10 +219,30 @@ $(document).ready(function(){
 	sys.dayClick(usr);
 	sys.eventCheck(usr, (new Date().getMonth()), new Date().getYear()+1900);
 	
+	var voice = new Wad({source : 'mic' }),
+		tuner = new Wad.Poly(),
+		soundCheck = 0;
+	tuner.setVolume(0);
+	tuner.add(voice);
+	
+	$('.sound-check').on('mousedown', function(){
+		voice.play();
+		tuner.updatePitch();
+		
+		soundCheck = setInterval(function(){
+			$('.frqcy').text(tuner.pitch + ' Hz');
+		}, 100);
+	});
+	
+	$('.sound-check').on('mouseup', function(){
+		tuner.stopUpdatingPitch();
+		clearInterval(soundCheck);
+	});
+	
 	$('input#ltcl_nme').on('keyup', function(){
 		var tmp = ($(this).val()).toLowerCase();
 		
-	if(tmp.includes('beam') || tmp.includes('moving') || tmp.includes('wash') || tmp.includes('zoom')){
+		if(tmp.includes('beam') || tmp.includes('moving') || tmp.includes('wash') || tmp.includes('zoom')){
 			$('#ltcl_ads').val('16')
 		}else if(tmp.includes('par') || tmp.includes('pcc') || tmp.includes('pcw') || tmp.includes('small')){
 			$('#ltcl_ads').val('8')
@@ -630,10 +650,10 @@ $(document).ready(function(){
 		url: 'http://app.wkvmusicstore.com/',
 		data: post_data,
 		timeout: 10000,
-		error: function(){
-			sys.loading(0);
-			app.loginScreen.open('#error');
-		},
+		// error: function(){
+			// sys.loading(0);
+			// app.loginScreen.open('#error');
+		// },
 		success: function(str){
 			inf = JSON.parse(str);
 			sys.getLocation();
@@ -867,14 +887,23 @@ sys = {
 		
 		if(workTime){
 			var work = (Date.now() - workTime)/1000;
+			var s = sys.pad(parseInt(work) % 60),
+				m = sys.pad(parseInt(work / 60) % 60),
+				h = sys.pad(parseInt(work / 3600));
 			
-			$('.workClock .s').text(sys.pad(parseInt(work % 60)));
-			$('.workClock .m').text(sys.pad(parseInt(work / 60)));
-			$('.workClock .h').text(sys.pad(parseInt(work / 3600)));
+			$('.workClock .h1').text(h.substr(0,1));
+			$('.workClock .m1').text(m.substr(0,1));
+			$('.workClock .s1').text(s.substr(0,1));
+			$('.workClock .h2').text(h.substr(1,1));
+			$('.workClock .m2').text(m.substr(1,1));
+			$('.workClock .s2').text(s.substr(1,1));
 		}else{
-			$('.workClock .h').text('00');
-			$('.workClock .m').text('00');
-			$('.workClock .s').text('00');
+			$('.workClock .h1').text('0');
+			$('.workClock .m1').text('0');
+			$('.workClock .s1').text('0');
+			$('.workClock .h2').text('0');
+			$('.workClock .m2').text('0');
+			$('.workClock .s2').text('0');
 		}
 		setTimeout(sys.startClock, 1000);
 	},

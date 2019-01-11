@@ -6,11 +6,14 @@
     font-style: normal;
 }
 
-.workClock{
+.workClock, .frqcy{
 	font-family: 'orbitronbold';
-	font-size: 42px;
+	font-size: 52px;
 }
-
+.workClock .h1, .workClock .m1, .workClock .s1, .workClock .h2, .workClock .m2, .workClock .s2{
+	width: 43px;
+	display: inline-block;
+}
 #app {
 	z-index: -100;
 }
