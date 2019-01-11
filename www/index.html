@@ -159,6 +159,13 @@
 					<div class="tabs">
 						<div id="pg-home" class="tab tab-active page-content">
 							<div class="block">
+								<div class="item-content" align="center">
+									<div class="workClock elevation-hover-7 elevation-5 elevation-pressed-2">
+										<span class="h">00</span> :
+										<span class="m">00</span> :
+										<span class="s">00</span>
+									</div>
+								</div>
 								<div class="list">
 									<ul>
 										<li>
@@ -1547,7 +1554,7 @@
 				<div class="block">
 					<div align="center">
 						 <img src="icon.png" alt="WKV Logo" height="128" width="128">
-						 <span style="color:#999;position:absolute;top:40px;font-size:12px;">WKV<br/>Version 1.0.54</span>
+						 <span style="color:#999;position:absolute;top:40px;font-size:12px;">WKV<br/>Version 1.0.55</span>
 					</div>
 					<p>WKV Application serves as a platform for of WKV’s member to obtain basic information and calculation method can easily obtain by accessing to the application.</p>
 					<p>For general usage, clock in and clock out is built in the application for employees of WKV to check in whenever they report to event venue.</p>
@@ -1729,10 +1736,10 @@
 	<script src="js/routes.js"></script>
 	<script src="js/cordova.js"></script>
 	<script>
-		document.addEventListener('deviceready', onDeviceReady.bind(this), false);
+		document.addEventListener('deviceready', onDeviceReady.bind(this), true);
 
 		function onDeviceReady() {
-			document.addEventListener("backbutton", onBackKeyDown, false);
+			document.addEventListener("backbutton", onBackKeyDown, true);
 		}
 
 		function onBackKeyDown(e){

@@ -6,7 +6,7 @@ var app = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.54",
+			  version: "1.0.55",
 			  rtl: false,
 			  language: "en-US"
 		  });
@@ -430,6 +430,8 @@ $(document).ready(function(){
 				success: function(str){
 					sys.loading(0);
 					if(str=='200 OK'){
+						STORAGE.setItem('clock_in', Date.now());
+						
 						var clockin_toast = app.toast.create({
 												icon: '<i class="material-icons">alarm_on</i>',
 												text: 'Clocked In',
@@ -471,6 +473,8 @@ $(document).ready(function(){
 				success: function(str){
 					sys.loading(0);
 					if(str=='200 OK'){
+						STORAGE.removeItem('clock_in');
+						
 						var clockout_toast = app.toast.create({
 												icon: '<i class="material-icons">alarm_off</i>',
 												text: 'Clocked Out',
@@ -523,7 +527,6 @@ $(document).ready(function(){
 												position: 'center',
 												closeTimeout: 2000
 											});
-						sys.logout_toast('out');
 						logout_toast.open();
 					}else{
 						var failed_toast = app.toast.create({
@@ -827,6 +830,9 @@ sys = {
 			console.log('code: ' + error.code + '\n' + 'message: ' + error.message + '\n');
 		}, { enableHighAccuracy: true });
 	},
+	'pad' : function(d){
+		return (d < 10) ? '0' + d.toString() : d.toString();
+	},
 	'getTime' : function(){
 		var post_data = "ACT=" + encodeURIComponent('tme_chk');
 	
@@ -842,6 +848,7 @@ sys = {
 	},
 	'startClock' : function(){
 		var time = $('#app-time').data('time'), ntime;
+		var workTime = STORAGE.getItem('clock_in');
 		
 		if(sys.isEmpty(time)){
 			time = new Date();
@@ -856,6 +863,18 @@ sys = {
 			geoCount = 60;
 		}else{
 			geoCount--;
+		}
+		
+		if(workTime){
+			var work = (Date.now() - workTime)/1000;
+			
+			$('.workClock .s').text(sys.pad(parseInt(work % 60)));
+			$('.workClock .m').text(sys.pad(parseInt(work / 60)));
+			$('.workClock .h').text(sys.pad(parseInt(work / 3600)));
+		}else{
+			$('.workClock .h').text('00');
+			$('.workClock .m').text('00');
+			$('.workClock .s').text('00');
 		}
 		setTimeout(sys.startClock, 1000);
 	},
