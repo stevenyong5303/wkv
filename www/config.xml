@@ -4,16 +4,16 @@
 <widget xmlns     = "http://www.w3.org/ns/widgets"
         xmlns:gap = "http://phonegap.com/ns/1.0"
         id        = "com.wkv.manage"
-        version   = "1.0.56">
+        version   = "1.0.57">
 
     <name>WKV</name>
 
     <description>
-        It's an application for WKV staff and members.
+        WKV Application serves as a platform for of WKV’s member to obtain basic information and calculation method can easily obtain by accessing to the application.
     </description>
 
     <author href="http://www.wkvmusicstore.com" email="wkv.malaysia@gmail.com">
-        WKV Team
+        WKV Group
     </author>
 
     <!--
@@ -115,7 +115,7 @@
     <!-- <gap:splash src="res/screen/windows-phone/screen-portrait.png"      gap:platform="winphone" /> -->
 
     <gap:config-file platform="ios" parent="CFBundleShortVersionString">
-    <string>56</string>
+    <string>57</string>
     </gap:config-file>
 
     <!--

@@ -6,7 +6,7 @@ var app = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.56",
+			  version: "1.0.57",
 			  rtl: false,
 			  language: "en-US"
 		  });
@@ -219,24 +219,48 @@ $(document).ready(function(){
 	sys.dayClick(usr);
 	sys.eventCheck(usr, (new Date().getMonth()), new Date().getYear()+1900);
 	
-	var voice = new Wad({source : 'mic' }),
-		tuner = new Wad.Poly(),
-		soundCheck = 0;
-	tuner.setVolume(0);
-	tuner.add(voice);
-	
-	$('.sound-check').on('mousedown', function(){
-		voice.play();
-		tuner.updatePitch();
+	$('.sound-check').on('click', function(){
+		// var options = { limit: 1, duration: 10 };
+		// var voice = new Wad({source : 'sawtooth' }),
+			// tuner = new Wad.Poly(),
+			// soundCheck = 0,
+			// path = '';
+		// tuner.setVolume(0);
 		
-		soundCheck = setInterval(function(){
-			$('.frqcy').text(tuner.pitch + ' Hz');
-		}, 100);
-	});
-	
-	$('.sound-check').on('mouseup', function(){
-		tuner.stopUpdatingPitch();
-		clearInterval(soundCheck);
+		// navigator.device.capture.captureAudio(captureSuccess, captureError, options);
+		
+		// function captureSuccess(mediaFiles) {
+			// path = mediaFiles[i].fullPath;
+		// };
+		// function captureError(mediaFiles) {
+			// console.log('BOOM');
+		// };
+		// console.log(path);
+		// voice = new Wad({source : path});
+		// tuner.add(voice);
+		// voice.play();
+		// tuner.updatePitch();
+		
+		// soundCheck = setInterval(function(){
+			// $('.frqcy').text(tuner.pitch + ' Hz');
+		// }, 100);
+		var captureSuccess = function(mediaFiles){
+			var i, path, len;
+			for (i = 0, len = mediaFiles.length; i < len; i += 1) {
+				path = mediaFiles[i].fullPath;
+				// do something interesting with the file
+				$('.frqcy').text(path);
+			}
+		};
+
+		// capture error callback
+		var captureError = function(error){
+			navigator.notification.alert('Error code: ' + error.code, null, 'Capture Error');
+		};
+
+		$('.frqcy').text(JSON.stringify(navigator.device));
+		// start audio capture
+		navigator.device.capture.captureAudio(captureSuccess, captureError, {limit:2});
 	});
 	
 	$('input#ltcl_nme').on('keyup', function(){
@@ -650,10 +674,10 @@ $(document).ready(function(){
 		url: 'http://app.wkvmusicstore.com/',
 		data: post_data,
 		timeout: 10000,
-		// error: function(){
-			// sys.loading(0);
-			// app.loginScreen.open('#error');
-		// },
+		error: function(){
+			sys.loading(0);
+			app.loginScreen.open('#error');
+		},
 		success: function(str){
 			inf = JSON.parse(str);
 			sys.getLocation();
