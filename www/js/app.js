@@ -6,7 +6,7 @@ var app = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.57",
+			  version: "1.0.58",
 			  rtl: false,
 			  language: "en-US"
 		  });
@@ -260,6 +260,7 @@ $(document).ready(function(){
 
 		$('.frqcy').text(JSON.stringify(navigator.device));
 		// start audio capture
+		console.log('->'+JSON.stringify(navigator));
 		navigator.device.capture.captureAudio(captureSuccess, captureError, {limit:2});
 	});
 	

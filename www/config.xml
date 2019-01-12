@@ -4,7 +4,7 @@
 <widget xmlns     = "http://www.w3.org/ns/widgets"
         xmlns:gap = "http://phonegap.com/ns/1.0"
         id        = "com.wkv.manage"
-        version   = "1.0.57">
+        version   = "1.0.58">
 
     <name>WKV</name>
 
@@ -41,12 +41,13 @@
     <!--
         Define a specific version of PhoneGap to build into your app.
     -->
-	<preference name="phonegap-version"       value="cli-7.1.0" />
+	<preference name="phonegap-version"       value="cli-8.1.1" />
 
     <!-- Plugins -->
 
 	<plugin name="cordova-plugin-battery-status" />
     <plugin name="cordova-plugin-camera" />
+	<plugin name="cordova-plugin-console" />
 	<plugin name="cordova-plugin-contacts" />
     <plugin name="cordova-plugin-device" />
 	<plugin name="cordova-plugin-dialogs" />
@@ -115,7 +116,7 @@
     <!-- <gap:splash src="res/screen/windows-phone/screen-portrait.png"      gap:platform="winphone" /> -->
 
     <gap:config-file platform="ios" parent="CFBundleShortVersionString">
-    <string>57</string>
+    <string>58</string>
     </gap:config-file>
 
     <!--
