@@ -1,15 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="utf-8">
-	<meta http-equiv="Content-Security-Policy" content="script-src * 'self' 'unsafe-inline' 'unsafe-eval'; connect-src 'self' http://app.wkvmusicstore.com/">
-	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui, viewport-fit=cover">
-	<meta name="apple-mobile-web-app-capable" content="yes">
-	<meta name="apple-mobile-web-app-status-bar-style" content="default">
-	<meta name="format-detection" content="telephone=no">
-	<meta name="msapplication-tap-highlight" content="no">
+	<meta charset="utf-8" />
+	<meta name="format-detection" content="telephone=no" />
+	<meta name="msapplication-tap-highlight" content="no" />
+	<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width" />
 	<title>WKV</title>
-
 	<link rel="stylesheet" href="framework7/css/framework7.min.css">
 	<link rel="stylesheet" href="css/icons.css">
 	<link rel="stylesheet" href="css/app.css">
@@ -212,18 +208,6 @@
 												<div class="item-inner">
 													<div class="item-title">
 														<a class="link popup-open" href="#" data-popup=".popup-power">3 Phase Information</a>
-													</div>
-												</div>
-											</div>
-										</li>
-										<li>
-											<div class="item-content">
-												<div class="item-media">
-													<i class="icon material-icons md-only">network_check</i>
-												</div>
-												<div class="item-inner">
-													<div class="item-title">
-														<a class="link popup-open" href="#" data-popup=".popup-frqcy">Frequency Check</a>
 													</div>
 												</div>
 											</div>
@@ -524,26 +508,6 @@
 								</div>
 							</li>
 						</ul>
-					</div>
-				</div>
-			</div>
-			<div class="popup popup-frqcy">
-				<div class="toolbar">
-					<div class="toolbar-inner">
-						<div class="left">Frequency Check</div>
-						<div class="right"><a class="link popup-close" href="#">Close</a></div>
-					</div>
-				</div>
-				<div class="block">
-					<div class="item-content" align="center">
-						<div class="frqcy elevation-2">
-							01 Hz
-						</div>
-					</div>
-					<div class="item-content" align="center">
-						<button class="col button button-fill sound-check">
-							<i class="icon material-icons md-only">mic_none</i>
-						</button>
 					</div>
 				</div>
 			</div>
@@ -1586,7 +1550,7 @@
 				<div class="block">
 					<div align="center">
 						 <img src="icon.png" alt="WKV Logo" height="128" width="128">
-						 <span style="color:#999;position:absolute;top:40px;font-size:12px;">WKV<br/>Version 1.0.59</span>
+						 <span style="color:#999;position:absolute;top:40px;font-size:12px;">WKV<br/>Version 1.0.60</span>
 					</div>
 					<p>WKV Application serves as a platform for of WKV’s member to obtain basic information and calculation method can easily obtain by accessing to the application.</p>
 					<p>For general usage, clock in and clock out is built in the application for employees of WKV to check in whenever they report to event venue.</p>
@@ -1763,35 +1727,13 @@
 			</div>
 		</div>
 	</div>
+	<script type="text/javascript" src="cordova.js"></script>
 	<script src="framework7/js/framework7.min.js"></script>
 	<script src="js/jquery-3.3.1.min.js"></script>
 	<script src="js/routes.js"></script>
-	<script src="js/cordova.js"></script>
-	<script>
-		function onLoad(){
-			document.addEventListener('deviceready', deviceReady, false);
-		}
-
-		function deviceReady(){
-			document.addEventListener('backbutton', backButtonCallback, false);
-		}
-
-		function backButtonCallback(){
-			navigator.notification.confirm('do you want to exit the app?', confirmCallback);
-		}
-		
-		
-		
-		function confirmCallback(buttonIndex){
-			if(buttonIndex == 1){
-				navigator.app.exitApp();
-				return true;
-			}else{
-				return false;
-			}
-		}
-	</script>
 	<script src="js/app.js"></script>
-	<script src="js/wad.min.js"></script>
+	<script type="text/javascript">
+		app.initialize();
+	</script>
 </body>
 </html>

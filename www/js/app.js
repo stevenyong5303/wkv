@@ -1,7 +1,7 @@
 var $$ = Dom7;
 var sys = new Object();
 var STORAGE = window.localStorage;
-var app = new Framework7({
+var apps = new Framework7({
 			  root: '#app',
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
@@ -11,7 +11,32 @@ var app = new Framework7({
 			  language: "en-US"
 		  });
 var geoToken = true, geoCount = 60;
-		  
+
+function onBackKeyDown(){
+	$('.popup-backdrop')[0].click();
+    $('#home-btn')[0].click();
+    return false;
+}
+
+var app = {
+    initialize: function() {
+        this.bindEvents();
+    },
+	
+    bindEvents: function() {
+        document.addEventListener('deviceready', this.onDeviceReady, false);
+    },
+	
+    onDeviceReady: function() {
+        app.receivedEvent('deviceready');
+		document.addEventListener("backbutton", onBackKeyDown, false);
+    },
+	
+    receivedEvent: function(id) {
+        console.log('Received Event: ' + id);
+    }
+};
+
 $(document).ready(function(){
 	var usr = STORAGE.getItem('usr'),
 		pwd = STORAGE.getItem('pwd');
@@ -19,7 +44,7 @@ $(document).ready(function(){
 	var DATA = '', post_data = '';
 	
 	var monthNames = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG' , 'SEP' , 'OCT', 'NOV', 'DEC'];
-	var calendarInline = app.calendar.create({
+	var calendarInline = apps.calendar.create({
 			containerEl: '#wkv-calendar',
 			value:  [new Date()],
 					weekHeader: false,
@@ -27,11 +52,11 @@ $(document).ready(function(){
 						return  '<div class="toolbar calendar-custom-toolbar no-shadow">' +
 								'<div class="toolbar-inner">' +
 								'<div class="left">' +
-								'<a href="#" class="link icon-only"><i class="icon icon-back ' + (app.theme === 'md' ? 'color-black' : '') + '"></i></a>' +
+								'<a href="#" class="link icon-only"><i class="icon icon-back ' + (apps.theme === 'md' ? 'color-black' : '') + '"></i></a>' +
 								'</div>' +
 								'<div class="center"></div>' +
 								'<div class="right">' +
-								'<a href="#" class="link icon-only"><i class="icon icon-forward ' + (app.theme === 'md' ? 'color-black' : '') + '"></i></a>' +
+								'<a href="#" class="link icon-only"><i class="icon icon-forward ' + (apps.theme === 'md' ? 'color-black' : '') + '"></i></a>' +
 								'</div>' +
 								'</div>' +
 								'</div>';
@@ -94,9 +119,9 @@ $(document).ready(function(){
 							$('#lgn input[name="lgn_usr"]').val('');
 							$('#lgn input[name="lgn_pwd"]').val('');
 							
-							app.loginScreen.close('#lgn');
+							apps.loginScreen.close('#lgn');
 						}else{
-							var failed_toast = app.toast.create({
+							var failed_toast = apps.toast.create({
 												   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
 												   text: 'ID or password invalid',
 												   position: 'center',
@@ -110,7 +135,7 @@ $(document).ready(function(){
 				}
 			});
 		}else{
-			var failed_toast = app.toast.create({
+			var failed_toast = apps.toast.create({
 								   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
 								   text: 'Error, field is empty',
 								   position: 'center',
@@ -187,7 +212,7 @@ $(document).ready(function(){
 								}
 							}
 							$('.popup-event .event_date').text(tmp.toDateString().substr(4));
-							app.popup.open('.popup-event');
+							apps.popup.open('.popup-event');
 							
 							$('.event_list span').on('click', function(){
 								var x = '';
@@ -208,7 +233,7 @@ $(document).ready(function(){
 								
 								x = x.replace(/(?:\r\n|\r|\n)/g, '<br>');
 								$('.details-popover ul').html(x);
-								app.popover.open('.details-popover');
+								apps.popover.open('.details-popover');
 							});
 						}
 					});
@@ -218,51 +243,6 @@ $(document).ready(function(){
 	};
 	sys.dayClick(usr);
 	sys.eventCheck(usr, (new Date().getMonth()), new Date().getYear()+1900);
-	
-	$('.sound-check').on('click', function(){
-		// var options = { limit: 1, duration: 10 };
-		// var voice = new Wad({source : 'sawtooth' }),
-			// tuner = new Wad.Poly(),
-			// soundCheck = 0,
-			// path = '';
-		// tuner.setVolume(0);
-		
-		// navigator.device.capture.captureAudio(captureSuccess, captureError, options);
-		
-		// function captureSuccess(mediaFiles) {
-			// path = mediaFiles[i].fullPath;
-		// };
-		// function captureError(mediaFiles) {
-			// console.log('BOOM');
-		// };
-		// console.log(path);
-		// voice = new Wad({source : path});
-		// tuner.add(voice);
-		// voice.play();
-		// tuner.updatePitch();
-		
-		// soundCheck = setInterval(function(){
-			// $('.frqcy').text(tuner.pitch + ' Hz');
-		// }, 100);
-		var captureSuccess = function(mediaFiles){
-			var i, path, len;
-			for (i = 0, len = mediaFiles.length; i < len; i += 1) {
-				path = mediaFiles[i].fullPath;
-				// do something interesting with the file
-				$('.frqcy').text(path);
-			}
-		};
-
-		// capture error callback
-		var captureError = function(error){
-			navigator.notification.alert('Error code: ' + error.code, null, 'Capture Error');
-		};
-
-		$('.frqcy').text(JSON.stringify(navigator.device));
-		// start audio capture
-		console.log('->'+JSON.stringify(navigator));
-		navigator.device.capture.captureAudio(captureSuccess, captureError, {limit:2});
-	});
 	
 	$('input#ltcl_nme').on('keyup', function(){
 		var tmp = ($(this).val()).toLowerCase();
@@ -298,7 +278,7 @@ $(document).ready(function(){
 			$('#ltcl_ads').val('');
 			$('#ltcl_qty').val('');
 		}else{
-			var failed_toast = app.toast.create({
+			var failed_toast = apps.toast.create({
 								   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
 								   text: 'Error, field is empty',
 								   position: 'center',
@@ -417,7 +397,7 @@ $(document).ready(function(){
 	})
 	
 	$$('button.clock-check').on('click', function () {
-		app.dialog.confirm('Clock to this location?', 'Confirmation', function(){
+		apps.dialog.confirm('Clock to this location?', 'Confirmation', function(){
 			var DATA = {
 				'usr' : STORAGE.getItem('usr'),
 				'loc' : $('iframe#gmap').data('loc')
@@ -435,7 +415,7 @@ $(document).ready(function(){
 				success: function(str){
 					sys.loading(0);
 					if(str=='200 OK'){
-						var clockcheck_toast = app.toast.create({
+						var clockcheck_toast = apps.toast.create({
 												icon: '<i class="material-icons">alarm_add</i>',
 												text: 'Clocked',
 												position: 'center',
@@ -443,7 +423,7 @@ $(document).ready(function(){
 											});
 						clockcheck_toast.open();
 					}else{
-						var failed_toast = app.toast.create({
+						var failed_toast = apps.toast.create({
 											   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
 											   text: 'Oooppss, error',
 											   position: 'center',
@@ -457,7 +437,7 @@ $(document).ready(function(){
 	});
 	
 	$$('button.clock-in').on('click', function () {
-		app.dialog.confirm('Clock in to this location?', 'Confirmation', function(){
+		apps.dialog.confirm('Clock in to this location?', 'Confirmation', function(){
 			var DATA = {
 				'usr' : STORAGE.getItem('usr'),
 				'loc' : $('iframe#gmap').data('loc')
@@ -477,7 +457,7 @@ $(document).ready(function(){
 					if(str=='200 OK'){
 						STORAGE.setItem('clock_in', Date.now());
 						
-						var clockin_toast = app.toast.create({
+						var clockin_toast = apps.toast.create({
 												icon: '<i class="material-icons">alarm_on</i>',
 												text: 'Clocked In',
 												position: 'center',
@@ -486,7 +466,7 @@ $(document).ready(function(){
 						sys.clockToggle('in');
 						clockin_toast.open();
 					}else{
-						var failed_toast = app.toast.create({
+						var failed_toast = apps.toast.create({
 											   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
 											   text: 'Oooppss, error',
 											   position: 'center',
@@ -500,7 +480,7 @@ $(document).ready(function(){
 	});
 	
 	$$('button.clock-out').on('click', function () {
-		app.dialog.confirm('Clock out from this location?', 'Confirmation', function(){
+		apps.dialog.confirm('Clock out from this location?', 'Confirmation', function(){
 			var DATA = {
 				'usr' : STORAGE.getItem('usr'),
 				'loc' : $('iframe#gmap').data('loc')
@@ -520,7 +500,7 @@ $(document).ready(function(){
 					if(str=='200 OK'){
 						STORAGE.removeItem('clock_in');
 						
-						var clockout_toast = app.toast.create({
+						var clockout_toast = apps.toast.create({
 												icon: '<i class="material-icons">alarm_off</i>',
 												text: 'Clocked Out',
 												position: 'center',
@@ -529,7 +509,7 @@ $(document).ready(function(){
 						sys.clockToggle('out');
 						clockout_toast.open();
 					}else{
-						var failed_toast = app.toast.create({
+						var failed_toast = apps.toast.create({
 											   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
 											   text: 'Oooppss, error',
 											   position: 'center',
@@ -543,7 +523,7 @@ $(document).ready(function(){
 	});
 	
 	$('a#btn-stlo').on('click', function(){
-		app.dialog.confirm('Confirm logout?', function (){
+		apps.dialog.confirm('Confirm logout?', function (){
 			var DATA = {
 				'usr' : STORAGE.getItem('usr'),
 				'loc' : $('iframe#gmap').data('loc')
@@ -564,9 +544,9 @@ $(document).ready(function(){
 						STORAGE.removeItem('usr');
 						STORAGE.removeItem('pwd');
 						
-						app.loginScreen.open('#lgn');
+						apps.loginScreen.open('#lgn');
 						
-						var logout_toast = app.toast.create({
+						var logout_toast = apps.toast.create({
 												icon: '<i class="material-icons">screen_lock_portrait</i>',
 												text: 'Logged Out',
 												position: 'center',
@@ -574,7 +554,7 @@ $(document).ready(function(){
 											});
 						logout_toast.open();
 					}else{
-						var failed_toast = app.toast.create({
+						var failed_toast = apps.toast.create({
 											   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
 											   text: 'Oooppss, error',
 											   position: 'center',
@@ -593,7 +573,7 @@ $(document).ready(function(){
 			conpwd = $('#rspw_cfn').val();
 		
 		if(sys.isEmpty(oldpwd) || sys.isEmpty(newpwd) || sys.isEmpty(conpwd)){
-			var failed_toast = app.toast.create({
+			var failed_toast = apps.toast.create({
 								   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
 								   text: 'Error, field is empty',
 								   position: 'center',
@@ -603,7 +583,7 @@ $(document).ready(function(){
 			
 			navigator.vibrate(100);
 		}else if(newpwd != conpwd){
-			var failed_toast = app.toast.create({
+			var failed_toast = apps.toast.create({
 								   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
 								   text: 'Passwords does not match',
 								   position: 'center',
@@ -632,7 +612,7 @@ $(document).ready(function(){
 					sys.loading(0);
 					
 					if(str==='200 OK'){
-						var success_toast = app.toast.create({
+						var success_toast = apps.toast.create({
 											   icon: '<i class="material-icons">lock_open</i>',
 											   text: 'Password Successfully Reset',
 											   position: 'center',
@@ -644,7 +624,7 @@ $(document).ready(function(){
 						$('#rspw_new').val('');
 						$('#rspw_cfn').val('');
 					}else{
-						var failed_toast = app.toast.create({
+						var failed_toast = apps.toast.create({
 											   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
 											   text: 'Current Password Invalid',
 											   position: 'center',
@@ -677,7 +657,7 @@ $(document).ready(function(){
 		timeout: 10000,
 		error: function(){
 			sys.loading(0);
-			app.loginScreen.open('#error');
+			apps.loginScreen.open('#error');
 		},
 		success: function(str){
 			inf = JSON.parse(str);
@@ -690,7 +670,7 @@ $(document).ready(function(){
 			}
 			
 			if(inf['reply']!=='200 OK'){
-				app.loginScreen.open('#lgn');
+				apps.loginScreen.open('#lgn');
 			}else{
 				$('div.views').css('opacity', '1');
 			}
