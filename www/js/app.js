@@ -6,7 +6,7 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.64",
+			  version: "1.0.65",
 			  rtl: false,
 			  language: "en-US"
 		  });
@@ -718,13 +718,13 @@ $(document).ready(function(){
 	
 	DATA = {
 			'usr' : usr,
-			'pwd' : pwd,
-			'model' : device.model,
-			'platform' : device.platform,
-			'uuid' : device.uuid,
-			'version' : device.version,
-			'manufacturer' : device.manufacturer,
-			'serial' : device.serial
+			'pwd' : pwd
+			// 'model' : device.model,
+			// 'platform' : device.platform,
+			// 'uuid' : device.uuid,
+			// 'version' : device.version,
+			// 'manufacturer' : device.manufacturer,
+			// 'serial' : device.serial
 		};
 	post_data = "ACT=" + encodeURIComponent('ssn_chk')
 			  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));

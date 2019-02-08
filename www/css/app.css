@@ -105,12 +105,15 @@ div.views {
 .popup-stnc .swiper-slide span {
 	position: absolute;
 	transform: rotate(90deg);
-	font-family: 'Helvetica';
+	font-family: 'Arial';
+	font-weight: 500;
+	color: #332314;
+	opacity: 0.8;
 }
 @media screen and (min-width : 360px)
 {
 	.popup-stnc .swiper-slide span {
-		font-size: 12px;
+		font-size: 15px !important;
 		display: block;
 	}
 	.ncf-img, .ncb-img {
@@ -150,10 +153,10 @@ div.views {
 		width: 250px;
 	}
 }
-@media screen and (min-width : 400px)
+@media screen and (min-width : 420px)
 {
 	.popup-stnc .swiper-slide span {
-		font-size: 13px;
+		font-size: 17px !important;
 		display: block;
 	}
 	.ncf-img, .ncb-img {
