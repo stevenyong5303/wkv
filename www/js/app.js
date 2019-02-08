@@ -6,17 +6,11 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.59",
+			  version: "1.0.61",
 			  rtl: false,
 			  language: "en-US"
 		  });
 var geoToken = true, geoCount = 60;
-
-function onBackKeyDown(){
-	$('.popup-backdrop')[0].click();
-    $('#home-btn')[0].click();
-    return false;
-}
 
 var app = {
     initialize: function() {
@@ -29,7 +23,7 @@ var app = {
 	
     onDeviceReady: function() {
         app.receivedEvent('deviceready');
-		document.addEventListener("backbutton", onBackKeyDown, false);
+		document.addEventListener("backbutton", sys.onBackKeyDown, false);
     },
 	
     receivedEvent: function(id) {
@@ -47,7 +41,7 @@ $(document).ready(function(){
 	var calendarInline = apps.calendar.create({
 			containerEl: '#wkv-calendar',
 			value:  [new Date()],
-					weekHeader: false,
+					weekHeader: true,
 					renderToolbar: function () {
 						return  '<div class="toolbar calendar-custom-toolbar no-shadow">' +
 								'<div class="toolbar-inner">' +
@@ -522,6 +516,11 @@ $(document).ready(function(){
 		});
 	});
 	
+	var swiper = apps.swiper.create('.swiper-container', {
+		speed: 100,
+		spaceBetween: 50
+	});
+	
 	$('a#btn-stlo').on('click', function(){
 		apps.dialog.confirm('Confirm logout?', function (){
 			var DATA = {
@@ -645,7 +644,13 @@ $(document).ready(function(){
 	
 	DATA = {
 			'usr' : usr,
-			'pwd' : pwd
+			'pwd' : pwd,
+			'model' : device.model,
+			'platform' : device.platform,
+			'uuid' : device.uuid,
+			'version' : device.version,
+			'manufacturer' : device.manufacturer,
+			'serial' : device.serial
 		};
 	post_data = "ACT=" + encodeURIComponent('ssn_chk')
 			  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
@@ -662,6 +667,7 @@ $(document).ready(function(){
 		success: function(str){
 			inf = JSON.parse(str);
 			sys.getLocation();
+			$('body').data('user_level', inf['level']);
 			
 			if(inf['clocked']=='1'){
 				sys.clockToggle('in');
@@ -672,6 +678,13 @@ $(document).ready(function(){
 			if(inf['reply']!=='200 OK'){
 				apps.loginScreen.open('#lgn');
 			}else{
+				$('span.ncf-pos1').text(inf['pos1'].toLowerCase());
+				$('span.ncf-pos2').text(inf['pos2'].toLowerCase());
+				$('span.ncf-name').text(inf['name'].toLowerCase());
+				$('span.ncf-name').html($('span.ncf-name').text().replace(/ /g, '&nbsp;&nbsp;&nbsp;'));
+				$('span.ncf-tel').text(inf['contact'].toLowerCase());
+				$('span.ncf-email').text(inf['email'].toLowerCase());
+				
 				$('div.views').css('opacity', '1');
 			}
 			
@@ -920,5 +933,10 @@ sys = {
 			$('.popup-clock button.clock-in').addClass('disabled');
 			$('.popup-clock button.clock-out').removeClass('disabled');
 		}
+	},
+	'onBackKeyDown' : function(){
+		$('.popup-backdrop')[0].click();
+		$('#home-btn')[0].click();
+		return false;
 	}
 }
