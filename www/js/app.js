@@ -6,7 +6,7 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.65",
+			  version: "1.0.66",
 			  rtl: false,
 			  language: "en-US"
 		  });
@@ -107,6 +107,16 @@ $(document).ready(function(){
 						if(inf['reply']==='200 OK'){
 							STORAGE.setItem('usr', usr);
 							STORAGE.setItem('pwd', pwd);
+							
+							$('span.ncf-pos1').text(inf['pos1'].toLowerCase());
+							$('span.ncf-pos2').text(inf['pos2'].toLowerCase());
+							$('span.ncf-name').text(inf['name'].toLowerCase());
+							$('span.ncf-name').html($('span.ncf-name').text().replace(/ /g, '&nbsp;&nbsp;&nbsp;'));
+							$('#edpf_name').val(inf['name']);
+							$('span.ncf-tel').text(inf['contact'].toLowerCase());
+							$('#edpf_tel').val(inf['contact']);
+							$('span.ncf-email').text(inf['email'].toLowerCase());
+							$('#edpf_eml').val(inf['email']);
 							
 							$('div.views').css('opacity', '1');
 							
@@ -212,22 +222,105 @@ $(document).ready(function(){
 								var x = '';
 								var inf = $('tr[name="' + $(this).attr('name') + '"]').data('info');
 								
-								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Person In Charge</div><div class="item-input-wrap">' + ((inf.pic==null) ? '-' : inf.pic) + '</div></div></div></li>';
-								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Luncheon/Dinner</div><div class="item-input-wrap">' + ((inf.luncheon_dinner==null) ? '-' : inf.luncheon_dinner) + '</div></div></div></li>';
-								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Venue</div><div class="item-input-wrap">' + ((inf.venue==null) ? '-' : inf.venue) + '</div></div></div></li>';
-								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Description</div><div class="item-input-wrap">' + ((inf.description==null) ? '-' : inf.description) + '</div></div></div></li>';
-								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Mixer</div><div class="item-input-wrap">' + ((inf.mixer==null) ? '-' : inf.mixer) + '</div></div></div></li>';
-								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Wireless Microphonw</div><div class="item-input-wrap">' + ((inf.wireless_mic==null) ? '-' : inf.wireless_mic) + '</div></div></div></li>';
-								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Speaker</div><div class="item-input-wrap">' + ((inf.speaker==null) ? '-' : inf.speaker) + '</div></div></div></li>';
-								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Live Band Information</div><div class="item-input-wrap">' + ((inf.band==null) ? '-' : inf.band) + '</div></div></div></li>';
-								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Crew</div><div class="item-input-wrap">' + ((inf.crew==null) ? '-' : inf.crew) + '</div></div></div></li>';
-								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Vehicle to Event</div><div class="item-input-wrap">' + ((inf.car_in==null) ? '-' : inf.car_in) + '</div></div></div></li>';
-								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Vehicle back from Event</div><div class="item-input-wrap">' + ((inf.car_out==null) ? '-' : inf.car_out) + '</div></div></div></li>';
-								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Client, Bride/Groom</div><div class="item-input-wrap">' + ((inf.bride_groom==null) ? '-' : inf.bride_groom) + '</div></div></div></li>';
+								if(parseInt($('body').data('user_level'))>=8){
+									x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Person In Charge</div><div class="item-input-wrap">' + ((inf.pic==null) ? '-' : inf.pic) + '</div></div></div></li>';
+									x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Luncheon/Dinner</div><div class="item-input-wrap"><input class="evtd_ld" type="text" autocomplete="off" value="' + ((inf.luncheon_dinner==null) ? '-' : inf.luncheon_dinner) + '"></div></div></div></li>';
+									x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Venue</div><div class="item-input-wrap"><input class="evtd_venue" type="text" autocomplete="off" value="' + ((inf.venue==null) ? '-' : inf.venue) + '"></div></div></div></li>';
+									x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Description</div><div class="item-input-wrap"><input class="evtd_desc" type="text" autocomplete="off" value="' + ((inf.description==null) ? '-' : inf.description) + '"></div></div></div></li>';
+									x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Mixer</div><div class="item-input-wrap"><input class="evtd_mixer" type="text" autocomplete="off" value="' + ((inf.mixer==null) ? '-' : inf.mixer) + '"></div></div></div></li>';
+									x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Wireless Microphonw</div><div class="item-input-wrap"><input class="evtd_wmic" type="text" autocomplete="off" value="' + ((inf.wireless_mic==null) ? '-' : inf.wireless_mic) + '"></div></div></div></li>';
+									x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Speaker</div><div class="item-input-wrap"><input class="evtd_spkr" type="text" autocomplete="off" value="' + ((inf.speaker==null) ? '-' : inf.speaker) + '"></div></div></div></li>';
+									x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Live Band Information</div><div class="item-input-wrap"><input class="evtd_band" type="text" autocomplete="off" value="' + ((inf.band==null) ? '-' : inf.band) + '"></div></div></div></li>';
+									x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Crew</div><div class="item-input-wrap"><input class="evtd_crew" type="text" autocomplete="off" value="' + ((inf.crew==null) ? '-' : inf.crew) + '"></div></div></div></li>';
+									x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Vehicle to Event</div><div class="item-input-wrap"><input class="evtd_cin" type="text" autocomplete="off" value="' + ((inf.car_in==null) ? '-' : inf.car_in) + '"></div></div></div></li>';
+									x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Vehicle back from Event</div><div class="item-input-wrap"><input class="evtd_cout" type="text" autocomplete="off" value="' + ((inf.car_out==null) ? '-' : inf.car_out) + '"></div></div></div></li>';
+									x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Client, Bride/Groom</div><div class="item-input-wrap"><input class="evtd_bng" type="text" autocomplete="off" value="' + ((inf.bride_groom==null) ? '-' : inf.bride_groom) + '"></div></div></div></li>';
+									x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-input-wrap"><button class="evtd_sve button col button-fill" data-eid="' + inf.primary_id + '">Save Details</button></div></div></div></li>';
+								}else{
+									x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Person In Charge</div><div class="item-input-wrap">' + ((inf.pic==null) ? '-' : inf.pic) + '</div></div></div></li>';
+									x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Luncheon/Dinner</div><div class="item-input-wrap">' + ((inf.luncheon_dinner==null) ? '-' : inf.luncheon_dinner) + '</div></div></div></li>';
+									x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Venue</div><div class="item-input-wrap">' + ((inf.venue==null) ? '-' : inf.venue) + '</div></div></div></li>';
+									x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Description</div><div class="item-input-wrap">' + ((inf.description==null) ? '-' : inf.description) + '</div></div></div></li>';
+									x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Mixer</div><div class="item-input-wrap">' + ((inf.mixer==null) ? '-' : inf.mixer) + '</div></div></div></li>';
+									x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Wireless Microphonw</div><div class="item-input-wrap">' + ((inf.wireless_mic==null) ? '-' : inf.wireless_mic) + '</div></div></div></li>';
+									x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Speaker</div><div class="item-input-wrap">' + ((inf.speaker==null) ? '-' : inf.speaker) + '</div></div></div></li>';
+									x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Live Band Information</div><div class="item-input-wrap">' + ((inf.band==null) ? '-' : inf.band) + '</div></div></div></li>';
+									x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Crew</div><div class="item-input-wrap">' + ((inf.crew==null) ? '-' : inf.crew) + '</div></div></div></li>';
+									x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Vehicle to Event</div><div class="item-input-wrap">' + ((inf.car_in==null) ? '-' : inf.car_in) + '</div></div></div></li>';
+									x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Vehicle back from Event</div><div class="item-input-wrap">' + ((inf.car_out==null) ? '-' : inf.car_out) + '</div></div></div></li>';
+									x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Client, Bride/Groom</div><div class="item-input-wrap">' + ((inf.bride_groom==null) ? '-' : inf.bride_groom) + '</div></div></div></li>';
+								}
 								
 								x = x.replace(/(?:\r\n|\r|\n)/g, '<br>');
 								$('.details-popover ul').html(x);
 								apps.popover.open('.details-popover');
+								
+								$('.details-popover button.evtd_sve').on('click', function(){
+									var pid = $(this).data('eid'),
+										ld = $('input.evtd_ld').val(),
+										venue = $('input.evtd_venue').val(),
+										desc = $('input.evtd_desc').val(),
+										mixer = $('input.evtd_mixer').val(),
+										wmic = $('input.evtd_wmic').val(),
+										spkr = $('input.evtd_spkr').val(),
+										band = $('input.evtd_band').val(),
+										crew = $('input.evtd_crew').val(),
+										cin = $('input.evtd_cin').val(),
+										cout = $('input.evtd_cout').val(),
+										bng = $('input.evtd_bng').val();
+									
+									var DATA = {
+										'usr' : STORAGE.getItem('usr'),
+										'pid' : pid,
+										'ld' : ld,
+										'venue' : venue,
+										'desc' : desc,
+										'mixer' : mixer,
+										'wmic' : wmic,
+										'spkr' : spkr,
+										'band' : band,
+										'crew' : crew,
+										'cin' : cin,
+										'cout' : cout,
+										'bng' : bng
+									};
+									var post_data = "ACT=" + encodeURIComponent('evd_udt')
+												  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
+												  
+									$.ajax({
+										type: 'POST',
+										url: 'http://app.wkvmusicstore.com/',
+										data: post_data,
+										beforeSend: function(){
+											sys.loading(1);
+										},
+										success: function(str){
+											sys.loading(0);
+											
+											if(str==='200 OK'){
+												var success_toast = apps.toast.create({
+																	   icon: '<i class="material-icons">cloud_done</i>',
+																	   text: 'Details Successfully Save',
+																	   position: 'center',
+																	   closeTimeout: 2000
+																   });
+												success_toast.open();
+												
+												navigator.vibrate(50,30,50,30,50);
+											}else{
+												var failed_toast = apps.toast.create({
+																	   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
+																	   text: 'Oooppss, error',
+																	   position: 'center',
+																	   closeTimeout: 2000
+																   });
+												failed_toast.open();
+												
+												navigator.vibrate(100);
+											}
+										}
+									});
+								});
 							});
 						}
 					});
@@ -627,7 +720,7 @@ $(document).ready(function(){
 					}else{
 						var failed_toast = apps.toast.create({
 											   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
-											   text: 'Current Password Invalid',
+											   text: 'Oooppss, error',
 											   position: 'center',
 											   closeTimeout: 2000
 										   });

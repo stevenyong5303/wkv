@@ -102,6 +102,9 @@ div.views {
 	display: inline-block;
 	width: 55px;
 }
+div.popup.popup-stnc{
+	height: 100%;
+}
 .popup-stnc .swiper-slide span {
 	position: absolute;
 	transform: rotate(90deg);
