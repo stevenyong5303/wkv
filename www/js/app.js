@@ -6,7 +6,7 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.66",
+			  version: "1.0.67",
 			  rtl: false,
 			  language: "en-US"
 		  });
@@ -194,18 +194,18 @@ $(document).ready(function(){
 								
 								for(var i=0; i<inf.length; i++){
 									x += '<tr name="el'+(i+1)+'"><td class="label-cell"><span class="button button-fill" name="el'+(i+1)+'">'+(i+1)+'</span></td>';
-									x += '<td class="label-cell">'+inf[i].pic+'</td>';
-									x += '<td class="label-cell">'+((inf[i].luncheon_dinner==null) ? '-' : ((inf[i].luncheon_dinner=='Lunch') ? 'L' : 'D'))+'</td>';
-									x += '<td class="label-cell">'+((inf[i].venue==null) ? '-' : inf[i].venue)+'</td>';
-									x += '<td class="tablet-only">'+((inf[i].description==null) ? '-' : inf[i].description)+'</td>';
-									x += '<td class="tablet-only">'+((inf[i].mixer==null) ? '-' : inf[i].mixer)+'</td>';
-									x += '<td class="tablet-only">'+((inf[i].wireless_mic==null) ? '-' : inf[i].wireless_mic)+'</td>';
-									x += '<td class="tablet-only">'+((inf[i].speaker==null) ? '-' : inf[i].speaker)+'</td>';
-									x += '<td class="tablet-only">'+((inf[i].band==null) ? '-' : inf[i].band)+'</td>';
-									x += '<td class="label-cell">'+((inf[i].crew==null) ? '-' : inf[i].crew)+'</td>';
-									x += '<td class="label-cell">'+((inf[i].car_in==null) ? '-' : inf[i].car_in)+'</td>';
-									x += '<td class="label-cell">'+((inf[i].car_out==null) ? '-' : inf[i].car_out)+'</td>';
-									x += '<td class="tablet-only">'+((inf[i].bride_groom==null) ? '-' : inf[i].bride_groom)+'</td>';
+									x += '<td class="tb-pic label-cell">'+inf[i].pic+'</td>';
+									x += '<td class="tb-ld label-cell">'+((inf[i].luncheon_dinner==null) ? '-' : ((inf[i].luncheon_dinner=='Lunch') ? 'L' : 'D'))+'</td>';
+									x += '<td class="tb-venue label-cell">'+((inf[i].venue==null) ? '-' : inf[i].venue)+'</td>';
+									x += '<td class="tb-desc tablet-only">'+((inf[i].description==null) ? '-' : inf[i].description)+'</td>';
+									x += '<td class="tb-mixer tablet-only">'+((inf[i].mixer==null) ? '-' : inf[i].mixer)+'</td>';
+									x += '<td class="tb-wmic tablet-only">'+((inf[i].wireless_mic==null) ? '-' : inf[i].wireless_mic)+'</td>';
+									x += '<td class="tb-spkr tablet-only">'+((inf[i].speaker==null) ? '-' : inf[i].speaker)+'</td>';
+									x += '<td class="tb-band tablet-only">'+((inf[i].band==null) ? '-' : inf[i].band)+'</td>';
+									x += '<td class="tb-crew label-cell">'+((inf[i].crew==null) ? '-' : inf[i].crew)+'</td>';
+									x += '<td class="tb-cin label-cell">'+((inf[i].car_in==null) ? '-' : inf[i].car_in)+'</td>';
+									x += '<td class="tb-cout label-cell">'+((inf[i].car_out==null) ? '-' : inf[i].car_out)+'</td>';
+									x += '<td class="tb-bng tablet-only">'+((inf[i].bride_groom==null) ? '-' : inf[i].bride_groom)+'</td>';
 									x += '</tr>';
 								}
 								x += '<tbody>';
@@ -221,6 +221,7 @@ $(document).ready(function(){
 							$('.event_list span').on('click', function(){
 								var x = '';
 								var inf = $('tr[name="' + $(this).attr('name') + '"]').data('info');
+								var trName = $(this).attr('name');
 								
 								if(parseInt($('body').data('user_level'))>=8){
 									x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Person In Charge</div><div class="item-input-wrap">' + ((inf.pic==null) ? '-' : inf.pic) + '</div></div></div></li>';
@@ -298,6 +299,30 @@ $(document).ready(function(){
 											sys.loading(0);
 											
 											if(str==='200 OK'){
+												inf.luncheon_dinner = ((ld == 'Lunch') ? ld : 'Dinner');
+												inf.venue = ((venue == '-') ? null : venue);
+												inf.description = ((desc == '-') ? null : desc);
+												inf.mixer = ((mixer == '-') ? null : mixer);
+												inf.wireless_mic = ((wmic == '-') ? null : wmic);
+												inf.speaker = ((spkr == '-') ? null : spkr);
+												inf.band = ((band == '-') ? null : band);
+												inf.crew = ((crew == '-') ? null : crew);
+												inf.car_in = ((cin == '-') ? null : cin);
+												inf.car_out = ((cout == '-') ? null : cout);
+												inf.bride_groom = ((bng == '-') ? null : bng);
+												$('tr[name="' + trName + '"]').data('info', inf);
+												$('tr[name="' + trName + '"] td.tb-ld').text((ld == 'Lunch') ? 'L' : 'D');
+												$('tr[name="' + trName + '"] td.tb-venue').text(venue);
+												$('tr[name="' + trName + '"] td.tb-desc').text(desc);
+												$('tr[name="' + trName + '"] td.tb-mixer').text(mixer);
+												$('tr[name="' + trName + '"] td.tb-wmic').text(wmic);
+												$('tr[name="' + trName + '"] td.tb-spkr').text(spkr);
+												$('tr[name="' + trName + '"] td.tb-band').text(band);
+												$('tr[name="' + trName + '"] td.tb-crew').text(crew);
+												$('tr[name="' + trName + '"] td.tb-cin').text(cin);
+												$('tr[name="' + trName + '"] td.tb-cout').text(cout);
+												$('tr[name="' + trName + '"] td.tb-bng').text(bng);									
+												
 												var success_toast = apps.toast.create({
 																	   icon: '<i class="material-icons">cloud_done</i>',
 																	   text: 'Details Successfully Save',
@@ -306,7 +331,7 @@ $(document).ready(function(){
 																   });
 												success_toast.open();
 												
-												navigator.vibrate(50,30,50,30,50);
+												navigator.vibrate(100,80,100);
 											}else{
 												var failed_toast = apps.toast.create({
 																	   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
