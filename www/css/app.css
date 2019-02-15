@@ -102,6 +102,10 @@ div.views {
 	display: inline-block;
 	width: 55px;
 }
+div.fab.fab-right-bottom.evtd_shr{
+	bottom: 75px;
+	z-index: 5000;
+}
 div.popup.popup-stnc{
 	height: 100%;
 }
