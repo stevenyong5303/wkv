@@ -6,7 +6,7 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.68",
+			  version: "1.0.69",
 			  rtl: false,
 			  language: "en-US"
 		  });
@@ -224,6 +224,7 @@ $(document).ready(function(){
 									x += '</tbody>';
 									
 									$('.popup-event .event_list').html(x);
+									$('table.event_list').data('info', inf);
 									
 									for(var i=0; i<inf.length; i++){
 										$('tr[name="el'+(i+1)+'"]').data('info', inf[i]);
@@ -242,8 +243,9 @@ $(document).ready(function(){
 										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Luncheon/Dinner</div><div class="item-input-wrap"><input class="evtd_ld" type="text" autocomplete="off" value="' + ((inf.luncheon_dinner==null) ? '-' : inf.luncheon_dinner) + '"></div></div></div></li>';
 										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Venue</div><div class="item-input-wrap"><input class="evtd_venue" type="text" autocomplete="off" value="' + ((inf.venue==null) ? '-' : inf.venue) + '"></div></div></div></li>';
 										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Description</div><div class="item-input-wrap"><input class="evtd_desc" type="text" autocomplete="off" value="' + ((inf.description==null) ? '-' : inf.description) + '"></div></div></div></li>';
+										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Price</div><div class="item-input-wrap"><input class="evtd_price" type="text" autocomplete="off" value="' + ((inf.price==null) ? '-' : inf.price) + '"></div></div></div></li>';
 										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Mixer</div><div class="item-input-wrap"><input class="evtd_mixer" type="text" autocomplete="off" value="' + ((inf.mixer==null) ? '-' : inf.mixer) + '"></div></div></div></li>';
-										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Wireless Microphonw</div><div class="item-input-wrap"><input class="evtd_wmic" type="text" autocomplete="off" value="' + ((inf.wireless_mic==null) ? '-' : inf.wireless_mic) + '"></div></div></div></li>';
+										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Wireless Microphone</div><div class="item-input-wrap"><input class="evtd_wmic" type="text" autocomplete="off" value="' + ((inf.wireless_mic==null) ? '-' : inf.wireless_mic) + '"></div></div></div></li>';
 										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Speaker</div><div class="item-input-wrap"><input class="evtd_spkr" type="text" autocomplete="off" value="' + ((inf.speaker==null) ? '-' : inf.speaker) + '"></div></div></div></li>';
 										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Live Band Information</div><div class="item-input-wrap"><input class="evtd_band" type="text" autocomplete="off" value="' + ((inf.band==null) ? '-' : inf.band) + '"></div></div></div></li>';
 										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Crew</div><div class="item-input-wrap"><input class="evtd_crew" type="text" autocomplete="off" value="' + ((inf.crew==null) ? '-' : inf.crew) + '"></div></div></div></li>';
@@ -260,8 +262,11 @@ $(document).ready(function(){
 										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Luncheon/Dinner</div><div class="item-input-wrap">' + ((inf.luncheon_dinner==null) ? '-' : inf.luncheon_dinner) + '</div></div></div></li>';
 										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Venue</div><div class="item-input-wrap">' + ((inf.venue==null) ? '-' : inf.venue) + '</div></div></div></li>';
 										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Description</div><div class="item-input-wrap">' + ((inf.description==null) ? '-' : inf.description) + '</div></div></div></li>';
+										if(parseInt($('body').data('user_level'))>=7){
+											x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">price</div><div class="item-input-wrap">' + ((inf.price==null) ? '-' : inf.price) + '</div></div></div></li>';
+										}
 										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Mixer</div><div class="item-input-wrap">' + ((inf.mixer==null) ? '-' : inf.mixer) + '</div></div></div></li>';
-										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Wireless Microphonw</div><div class="item-input-wrap">' + ((inf.wireless_mic==null) ? '-' : inf.wireless_mic) + '</div></div></div></li>';
+										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Wireless Microphone</div><div class="item-input-wrap">' + ((inf.wireless_mic==null) ? '-' : inf.wireless_mic) + '</div></div></div></li>';
 										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Speaker</div><div class="item-input-wrap">' + ((inf.speaker==null) ? '-' : inf.speaker) + '</div></div></div></li>';
 										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Live Band Information</div><div class="item-input-wrap">' + ((inf.band==null) ? '-' : inf.band) + '</div></div></div></li>';
 										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Crew</div><div class="item-input-wrap">' + ((inf.crew==null) ? '-' : inf.crew) + '</div></div></div></li>';
@@ -279,6 +284,7 @@ $(document).ready(function(){
 											ld = $('input.evtd_ld').val(),
 											venue = $('input.evtd_venue').val(),
 											desc = $('input.evtd_desc').val(),
+											price = $('input.evtd_price').val(),
 											mixer = $('input.evtd_mixer').val(),
 											wmic = $('input.evtd_wmic').val(),
 											spkr = $('input.evtd_spkr').val(),
@@ -294,6 +300,7 @@ $(document).ready(function(){
 											'ld' : ld,
 											'venue' : venue,
 											'desc' : desc,
+											'price' : price,
 											'mixer' : mixer,
 											'wmic' : wmic,
 											'spkr' : spkr,
@@ -317,9 +324,10 @@ $(document).ready(function(){
 												sys.loading(0);
 												
 												if(str==='200 OK'){
-													inf.luncheon_dinner = ((ld == 'Lunch') ? ld : 'Dinner');
+													inf.luncheon_dinner = ((ld == '-') ? 'Dinner' : ld);
 													inf.venue = ((venue == '-') ? null : venue);
 													inf.description = ((desc == '-') ? null : desc);
+													inf.price = ((price == '-') ? null : price);
 													inf.mixer = ((mixer == '-') ? null : mixer);
 													inf.wireless_mic = ((wmic == '-') ? null : wmic);
 													inf.speaker = ((spkr == '-') ? null : spkr);
@@ -333,6 +341,7 @@ $(document).ready(function(){
 													$('tr[name="' + trName + '"] td.tb-ld').text((ld == 'Lunch') ? 'L' : 'D');
 													$('tr[name="' + trName + '"] td.tb-venue').text(venue);
 													$('tr[name="' + trName + '"] td.tb-desc').text(desc);
+													$('tr[name="' + trName + '"] td.tb-price').text(price);
 													$('tr[name="' + trName + '"] td.tb-mixer').text(mixer);
 													$('tr[name="' + trName + '"] td.tb-wmic').text(wmic);
 													$('tr[name="' + trName + '"] td.tb-spkr').text(spkr);
@@ -702,14 +711,36 @@ $(document).ready(function(){
 		});
 	});
 	
+	$('a.evts_shr').on('click', function(){
+		var inf = $('table.event_list').data('info');
+
+		var share = '';
+		
+		if(inf.length == 0){
+			share += 'No event.'
+		}else{
+			share = sys.toMonth(inf[0].date) + ' ' + sys.toDay(inf[0].date) + ' (' + sys.toWeek(inf[0].date) + ')\n\n';
+			
+			for(var i = 0; i < inf.length; i++){
+				share += (i+1) + '. ' + (sys.isEmpty(inf[i].description) ? '' : (inf[i].description + ', ')) + inf[i].venue + '.\n';
+				share += '< *' + (sys.isEmpty(inf[i].crew) ? '-' : (inf[i].crew)) + '* >\n';
+			}
+		}
+
+		window.plugins.socialsharing.share(share);
+	});
+	
 	$('a.evtd_shr').on('click', function(){
 		var inf = $('.details-popover').data('info');
 		var share = sys.toMonth(inf.date) + ' ' + sys.toDay(inf.date) + ' (' + sys.toWeek(inf.date) + ')\n'
-				  + (sys.isEmpty(inf.description) ? 'Sound \n2 Top 2 Mon' : inf.description) + '\n'
-				  + (sys.isEmpty(inf.bride_groom) ? '' : (inf.bride_groom + '\n'))
+				  + (sys.isEmpty(inf.description) ? 'Sound \n2 Top 2 Mon' : (inf.description).replace("  ", "\n")) + '\n'
+				  + 'Wedding Dinner \n' 
+				  + (sys.isEmpty(inf.bride_groom) ? '' : ('Couple Name : ' + inf.bride_groom + '\n'))
 				  + 'Venue : ' + inf.venue + '\n'
 				  + 'PIC : ' + inf.pic + '\n'
-				  + (sys.isEmpty(inf.band) ? '' : (inf.band + '\n')) + '\n'
+				  + (sys.isEmpty(inf.band) ? '' : (inf.band + '\n'))
+				  + 'Setup : 3pm\n' 
+				  + 'Sound Check : 5pm\n\n'
 				  + (sys.isEmpty(inf.car_in) ? '' : ('Use : ' + inf.car_in + '\n'));
 		window.plugins.socialsharing.share(share);
 	});
