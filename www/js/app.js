@@ -6,7 +6,7 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.72",
+			  version: "1.0.73",
 			  rtl: false,
 			  language: "en-US"
 		  });
@@ -473,6 +473,47 @@ $(document).ready(function(){
 	};
 	sys.dayClick(usr);
 	sys.eventCheck(usr, (new Date().getMonth()), new Date().getYear()+1900);
+	
+	$('#status-btn').on('click', function(){
+		var DATA = {
+				'usr' : STORAGE.getItem('usr')
+			};
+		var post_data = "ACT=" + encodeURIComponent('usr_chk')
+					  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
+					  
+		$.ajax({
+			type: 'POST',
+			url: 'http://app.wkvmusicstore.com/',
+			data: post_data,
+			beforeSend: function(){
+				sys.loading(1);
+			},
+			success: function(str){
+				inf = JSON.parse(str);
+			
+				if(inf['reply']==='200 OK'){
+					var status = inf['status'], x = '';
+						
+					for(var i=0; i<status.length; i++){
+						x += '<li><a href="#" class="item-link item-content" data-usr="' + status[i].user_id + '">';
+						x += '<div class="item-media"><i class="icon material-icons md-only">' + (status[i].clocked_in == 1 ? 'directions_run' : 'hotel') + '</i></div>';
+						x += '<div class="item-inner"><div class="item-title">' + status[i].nc_name + (status[i].clocked_in == 1 ? ('<div class="item-footer">' + (status[i].clocked_time).substr(11) + '</div>') : '') + '</div></div></a></li>';
+					}
+					$('#user-status').html(x);
+					sys.loading(0);
+				}else{
+					sys.loading(0);
+					var failed_toast = apps.toast.create({
+										   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
+										   text: 'Oooppss, error',
+										   position: 'center',
+										   closeTimeout: 2000
+									   });
+					failed_toast.open();
+				}
+			}
+		});
+	});
 	
 	$('#user-status').on('click', 'a.item-link', function(){
 		var target = $(this).data('usr');
