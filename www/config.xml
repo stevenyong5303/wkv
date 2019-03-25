@@ -4,7 +4,7 @@
 <widget xmlns     = "http://www.w3.org/ns/widgets"
         xmlns:gap = "http://phonegap.com/ns/1.0"
         id        = "com.wkv.manage"
-        version   = "1.0.71">
+        version   = "1.0.72">
 
     <name>WKV</name>
 
@@ -40,7 +40,7 @@
     <preference name="auto-hide-splash-screen"    value="true" />           <!-- ios: if set to false, the splash screen must be hidden using a JavaScript API -->
     <preference name="disable-cursor"             value="false" />          <!-- blackberry: prevents a mouse-icon/cursor from being displayed on the app -->
     <preference name="android-installLocation"    value="auto" />           <!-- android: app install location. 'auto' will choose. 'internalOnly' is device memory. 'preferExternal' is SDCard. -->
-    <!--
+	<!--
         Define a specific version of PhoneGap to build into your app.
     -->
 	<preference name="phonegap-version"       value="cli-8.1.1" />
@@ -58,9 +58,11 @@
 	<plugin name="cordova-plugin-media" />
 	<plugin name="cordova-plugin-media-capture" />
 	<plugin name="cordova-plugin-network-information" />
+	<plugin name="cordova-plugin-statusbar" />
 	<plugin name="cordova-plugin-vibration" />
 	
 	<plugin name="cordova-plugin-x-socialsharing" />
+	<plugin name="cordova-plugin-background-fetch" source="npm" />
     <!-- Core plugins -->
 	<!--
     <plugin name="cordova-plugin-battery-status" />
@@ -119,7 +121,7 @@
     <!-- <gap:splash src="res/screen/windows-phone/screen-portrait.png"      gap:platform="winphone" /> -->
 
     <gap:config-file platform="ios" parent="CFBundleShortVersionString">
-    <string>71</string>
+    <string>72</string>
     </gap:config-file>
 
     <!--

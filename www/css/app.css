@@ -5,7 +5,9 @@
     font-weight: normal;
     font-style: normal;
 }
-
+.clk-loc {
+	margin-top: 20px;
+}
 .map-locater {
 	position: absolute;
 	font-size: 10px;

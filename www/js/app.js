@@ -6,7 +6,7 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.71",
+			  version: "1.0.72",
 			  rtl: false,
 			  language: "en-US"
 		  });
@@ -72,6 +72,36 @@ $(document).ready(function(){
 						}
 					}
 		});
+		
+	if(window.BackgroundFetch){
+		var BackgroundFetch = window.BackgroundFetch;
+		
+		var fetchCallback = function() {
+			navigator.notification.alert(
+				'OK Fetch!',
+				console.log('[js] BackgroundFetch event received'),
+				'Fetch?',
+				'Done'
+			);
+			BackgroundFetch.finish();
+		};
+
+		var failureCallback = function(error) {
+			navigator.notification.alert(
+				'Error Fetch!',
+				console.log('- BackgroundFetch failed', error),
+				'Fetch?',
+				'Bye'
+			);
+		};
+
+		BackgroundFetch.configure(fetchCallback, failureCallback, {
+			minimumFetchInterval: 15,
+			stopOnTerminate: false,
+			startOnBoot: true,
+			forceReload: true
+		});
+	}
 	
 	$('#lgn #lgn_sgn').on('click', function(){
 		usr = $('#lgn input[name="lgn_usr"]').val();
@@ -124,6 +154,17 @@ $(document).ready(function(){
 							$('#lgn input[name="lgn_pwd"]').val('');
 							
 							sys.eventCheck(usr, (new Date().getMonth()), new Date().getYear()+1900);
+							
+							if(inf['status'].length){
+								var status = inf['status'], x = '';
+								
+								for(var i=0; i<status.length; i++){
+									x += '<li><a href="#" class="item-link item-content" data-usr="' + status[i].user_id + '">';
+									x += '<div class="item-media"><i class="icon material-icons md-only">' + (status[i].clocked_in == 1 ? 'directions_run' : 'hotel') + '</i></div>';
+									x += '<div class="item-inner"><div class="item-title">' + status[i].nc_name + '</div></div></a></li>';
+								}
+								$('#user-status').html(x);
+							}
 							
 							for(var i=9; i>parseInt(inf['level']); i--){
 								if($('.level'+i).length > 0){
@@ -432,6 +473,72 @@ $(document).ready(function(){
 	};
 	sys.dayClick(usr);
 	sys.eventCheck(usr, (new Date().getMonth()), new Date().getYear()+1900);
+	
+	$('#user-status').on('click', 'a.item-link', function(){
+		var target = $(this).data('usr');
+		var DATA = {
+				'usr' : STORAGE.getItem('usr'),
+				'target' : target
+			};
+		var post_data = "ACT=" + encodeURIComponent('clk_chk')
+					  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
+					  
+		$.ajax({
+			type: 'POST',
+			url: 'http://app.wkvmusicstore.com/',
+			data: post_data,
+			beforeSend: function(){
+				sys.loading(1);
+			},
+			success: function(str){
+				if(sys.isEmpty(str)){
+					str = '{"clock_action":"OUT","reply":"200 OK"}';
+				}
+				var inf = JSON.parse(str);
+				
+				if(inf['reply']==='200 OK'){
+					if(inf['clock_action']=='IN'){
+						var x = '';
+						var work = (Date.now() - new Date(inf['clock_in_out']).getTime())/1000;
+						var s = sys.pad(parseInt(work) % 60),
+							m = sys.pad(parseInt(work / 60) % 60),
+							h = sys.pad(parseInt(work / 3600));
+						
+						$('.popup-status .workClock .h1').text(h.substr(0,1));
+						$('.popup-status .workClock .m1').text(m.substr(0,1));
+						$('.popup-status .workClock .s1').text(s.substr(0,1));
+						$('.popup-status .workClock .h2').text(h.substr(1,1));
+						$('.popup-status .workClock .m2').text(m.substr(1,1));
+						$('.popup-status .workClock .s2').text(s.substr(1,1));
+						
+						x += '<iframe width="100%" height="300" frameborder="0" style="border:0;" src="https://www.google.com/maps/embed/v1/view?key=AIzaSyCRKiFjg2CA78cD09yIXuHFCxADjOh75rg&center=' + inf['clock_location'] + '&zoom=16"> </iframe>';
+						
+						$('.popup-status .clk-loc').html(x);
+					}else{
+						$('.popup-status .workClock .h1').text('0');
+						$('.popup-status .workClock .m1').text('0');
+						$('.popup-status .workClock .s1').text('0');
+						$('.popup-status .workClock .h2').text('0');
+						$('.popup-status .workClock .m2').text('0');
+						$('.popup-status .workClock .s2').text('0');
+						
+						$('.popup-status .clk-loc').html('');
+					}
+					sys.loading(0);
+					apps.popup.open('.popup-status');
+				}else{
+					sys.loading(0);
+					var failed_toast = apps.toast.create({
+										   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
+										   text: 'Oooppss, error',
+										   position: 'center',
+										   closeTimeout: 2000
+									   });
+					failed_toast.open();
+				}
+			}
+		});
+	});
 	
 	$('input#ltcl_nme').on('keyup', function(){
 		var tmp = ($(this).val()).toLowerCase();
@@ -1002,9 +1109,9 @@ $(document).ready(function(){
 				var status = inf['status'], x = '';
 				
 				for(var i=0; i<status.length; i++){
-					x += '<li data-usr="' + status[i].user_id + '"><a href="#" class="item-link item-content">';
+					x += '<li><a href="#" class="item-link item-content" data-usr="' + status[i].user_id + '">';
 					x += '<div class="item-media"><i class="icon material-icons md-only">' + (status[i].clocked_in == 1 ? 'directions_run' : 'hotel') + '</i></div>';
-					x += '<div class="item-inner"><div class="item-title">' + status[i].nc_name + '</div></div></a></li>';
+					x += '<div class="item-inner"><div class="item-title">' + status[i].nc_name + (status[i].clocked_in == 1 ? ('<div class="item-footer">' + (status[i].clocked_time).substr(11) + '</div>') : '') + '</div></div></a></li>';
 				}
 				$('#user-status').html(x);
 			}
@@ -1242,19 +1349,19 @@ sys = {
 				m = sys.pad(parseInt(work / 60) % 60),
 				h = sys.pad(parseInt(work / 3600));
 			
-			$('.workClock .h1').text(h.substr(0,1));
-			$('.workClock .m1').text(m.substr(0,1));
-			$('.workClock .s1').text(s.substr(0,1));
-			$('.workClock .h2').text(h.substr(1,1));
-			$('.workClock .m2').text(m.substr(1,1));
-			$('.workClock .s2').text(s.substr(1,1));
+			$('#pg-home .workClock .h1').text(h.substr(0,1));
+			$('#pg-home .workClock .m1').text(m.substr(0,1));
+			$('#pg-home .workClock .s1').text(s.substr(0,1));
+			$('#pg-home .workClock .h2').text(h.substr(1,1));
+			$('#pg-home .workClock .m2').text(m.substr(1,1));
+			$('#pg-home .workClock .s2').text(s.substr(1,1));
 		}else{
-			$('.workClock .h1').text('0');
-			$('.workClock .m1').text('0');
-			$('.workClock .s1').text('0');
-			$('.workClock .h2').text('0');
-			$('.workClock .m2').text('0');
-			$('.workClock .s2').text('0');
+			$('#pg-home .workClock .h1').text('0');
+			$('#pg-home .workClock .m1').text('0');
+			$('#pg-home .workClock .s1').text('0');
+			$('#pg-home .workClock .h2').text('0');
+			$('#pg-home .workClock .m2').text('0');
+			$('#pg-home .workClock .s2').text('0');
 		}
 		setTimeout(sys.startClock, 1000);
 	},
@@ -1268,11 +1375,24 @@ sys = {
 		}
 	},
 	'onBackKeyDown' : function(){
-		if($('html').hasClass('with-modal-popup') || !('#home-btn').hasClass('tab-link-active')){
+		if((!$('#home-btn').hasClass('tab-link-active')) || $('html').hasClass('with-modal-popup')){
 			$('.popup-backdrop')[0].click();
 			$('#home-btn')[0].click();
 			
 			return false;
+		}else{
+			function onConfirm(buttonIndex) {
+				if(buttonIndex == 1){
+					navigator.app.exitApp();
+				}
+			}
+
+			navigator.notification.confirm(
+				'Exit the app?',
+				onConfirm,
+				'Confirmation',
+				['OK','Cancel']
+			);
 		}
 	},
 	'toMonth' : function(month){

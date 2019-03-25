@@ -137,9 +137,9 @@
 							<i class="icon material-icons md-only">important_devices</i>
 							<span class="tabbar-label">Home</span>
 						</a>
-						<a href="#pg-admin" class="tab-link level8">
+						<a id="status-btn" href="#pg-admin" class="tab-link level8">
 							<i class="icon material-icons md-only">supervisor_account</i>
-							<span class="tabbar-label">Admin</span>
+							<span class="tabbar-label">Status</span>
 						</a>
 						<a href="#pg-schedule" class="tab-link">
 							<i class="icon material-icons md-only">today</i>
@@ -186,6 +186,7 @@
 						</div>
 						<div id="pg-admin" class="tab page-content level8">
 							<div class="block">
+								<div class="block-title">User Status</div>
 								<div class="list">
 									<ul id="user-status">
 										
@@ -437,6 +438,26 @@
 								</div>
 							</li>
 						<ul>
+					</div>
+				</div>
+			</div>
+			<div class="popup popup-status">
+				<div class="toolbar">
+					<div class="toolbar-inner">
+						<div class="left">User Status</div>
+						<div class="right"><a class="link popup-close" href="#">Close</a></div>
+					</div>
+				</div>
+				<div class="block">
+					<div class="item-content" align="center">
+						<div class="workClock elevation-hover-7 elevation-5 elevation-pressed-2">
+							<span class="h1">0</span><span class="h2">0</span> :
+							<span class="m1">0</span><span class="m2">0</span> :
+							<span class="s1">0</span><span class="s2">0</span>
+						</div>
+						<div class="clk-loc">
+						
+						</div>
 					</div>
 				</div>
 			</div>
@@ -1633,7 +1654,7 @@
 				<div class="block">
 					<div align="center">
 						 <img src="icon.png" alt="WKV Logo" height="128" width="128">
-						 <span style="color:#999;position:absolute;top:40px;font-size:12px;">WKV<br/>Version 1.0.71</span>
+						 <span style="color:#999;position:absolute;top:40px;font-size:12px;">WKV<br/>Version 1.0.72</span>
 					</div>
 					<p>WKV Application serves as a platform for of WKV’s member to obtain basic information and calculation method can easily obtain by accessing to the application.</p>
 					<p>For general usage, clock in and clock out is built in the application for employees of WKV to check in whenever they report to event venue.</p>
