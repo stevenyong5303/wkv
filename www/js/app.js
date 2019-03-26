@@ -6,7 +6,7 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.73",
+			  version: "1.0.74",
 			  rtl: false,
 			  language: "en-US"
 		  });
@@ -23,6 +23,34 @@ var app = {
 	
     onDeviceReady: function() {
         app.receivedEvent('deviceready');
+		
+		var fetchTask = function() {
+			console.log('fetch test');
+			navigator.notification.alert(
+				'OK Fetch!',
+				console.log('[js] BackgroundFetch event received'),
+				'Fetch?',
+				'Done'
+			);
+			window.SchedulerPlugin.finish();
+		};
+		 
+		var errorHandler = function(error) {
+			console.log('SchedulerPlugin error: ', error);
+			navigator.notification.alert(
+				error,
+				console.log('[js] BackgroundFetch event received'),
+				'Fetch?',
+				'OH NO'
+			);
+		};
+		 
+		window.SchedulerPlugin.configure(
+			fetchTask,
+			errorHandler,
+			{ minimumFetchInterval: 60 }  // run every hour
+		);
+		
 		document.addEventListener("backbutton", sys.onBackKeyDown, false);
     },
 	
@@ -32,6 +60,7 @@ var app = {
 };
 
 $(document).ready(function(){
+	console.log('doc ready');
 	var usr = STORAGE.getItem('usr'),
 		pwd = STORAGE.getItem('pwd');
 	
@@ -72,36 +101,6 @@ $(document).ready(function(){
 						}
 					}
 		});
-		
-	if(window.BackgroundFetch){
-		var BackgroundFetch = window.BackgroundFetch;
-		
-		var fetchCallback = function() {
-			navigator.notification.alert(
-				'OK Fetch!',
-				console.log('[js] BackgroundFetch event received'),
-				'Fetch?',
-				'Done'
-			);
-			BackgroundFetch.finish();
-		};
-
-		var failureCallback = function(error) {
-			navigator.notification.alert(
-				'Error Fetch!',
-				console.log('- BackgroundFetch failed', error),
-				'Fetch?',
-				'Bye'
-			);
-		};
-
-		BackgroundFetch.configure(fetchCallback, failureCallback, {
-			minimumFetchInterval: 15,
-			stopOnTerminate: false,
-			startOnBoot: true,
-			forceReload: true
-		});
-	}
 	
 	$('#lgn #lgn_sgn').on('click', function(){
 		usr = $('#lgn input[name="lgn_usr"]').val();
@@ -161,7 +160,7 @@ $(document).ready(function(){
 								for(var i=0; i<status.length; i++){
 									x += '<li><a href="#" class="item-link item-content" data-usr="' + status[i].user_id + '">';
 									x += '<div class="item-media"><i class="icon material-icons md-only">' + (status[i].clocked_in == 1 ? 'directions_run' : 'hotel') + '</i></div>';
-									x += '<div class="item-inner"><div class="item-title">' + status[i].nc_name + '</div></div></a></li>';
+									x += '<div class="item-inner"><div class="item-title">' + status[i].nc_name + (status[i].clocked_in == 1 ? ('<div class="item-footer">' + status[i].clocked_time + '</div>') : '') + '</div></div></a></li>';
 								}
 								$('#user-status').html(x);
 							}
@@ -497,7 +496,7 @@ $(document).ready(function(){
 					for(var i=0; i<status.length; i++){
 						x += '<li><a href="#" class="item-link item-content" data-usr="' + status[i].user_id + '">';
 						x += '<div class="item-media"><i class="icon material-icons md-only">' + (status[i].clocked_in == 1 ? 'directions_run' : 'hotel') + '</i></div>';
-						x += '<div class="item-inner"><div class="item-title">' + status[i].nc_name + (status[i].clocked_in == 1 ? ('<div class="item-footer">' + (status[i].clocked_time).substr(11) + '</div>') : '') + '</div></div></a></li>';
+						x += '<div class="item-inner"><div class="item-title">' + status[i].nc_name + (status[i].clocked_in == 1 ? ('<div class="item-footer">' + status[i].clocked_time + '</div>') : '') + '</div></div></a></li>';
 					}
 					$('#user-status').html(x);
 					sys.loading(0);
@@ -1121,8 +1120,10 @@ $(document).ready(function(){
 			$('body').data('user_level', inf['level']);
 			
 			if(inf['clocked']=='1'){
+				STORAGE.setItem('clock_in', (new Date(inf['time']).getTime()));
 				sys.clockToggle('in');
 			}else{
+				STORAGE.removeItem('clock_in');
 				sys.clockToggle('out');
 			}
 			
@@ -1152,7 +1153,7 @@ $(document).ready(function(){
 				for(var i=0; i<status.length; i++){
 					x += '<li><a href="#" class="item-link item-content" data-usr="' + status[i].user_id + '">';
 					x += '<div class="item-media"><i class="icon material-icons md-only">' + (status[i].clocked_in == 1 ? 'directions_run' : 'hotel') + '</i></div>';
-					x += '<div class="item-inner"><div class="item-title">' + status[i].nc_name + (status[i].clocked_in == 1 ? ('<div class="item-footer">' + (status[i].clocked_time).substr(11) + '</div>') : '') + '</div></div></a></li>';
+					x += '<div class="item-inner"><div class="item-title">' + status[i].nc_name + (status[i].clocked_in == 1 ? ('<div class="item-footer">' + status[i].clocked_time + '</div>') : '') + '</div></div></a></li>';
 				}
 				$('#user-status').html(x);
 			}
