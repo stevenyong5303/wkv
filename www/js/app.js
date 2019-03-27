@@ -6,7 +6,7 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.74",
+			  version: "1.0.75",
 			  rtl: false,
 			  language: "en-US"
 		  });
@@ -24,14 +24,23 @@ var app = {
     onDeviceReady: function() {
         app.receivedEvent('deviceready');
 		
+		cordova.plugins.notification.local.hasPermission(function(granted){
+			cordova.plugins.notification.local.schedule({
+				title: 'Notification Test',
+				text: 'Just a local notification test for WKV apps.',
+				foreground: true
+			});
+		});
+		
 		var fetchTask = function() {
 			console.log('fetch test');
-			navigator.notification.alert(
-				'OK Fetch!',
-				console.log('[js] BackgroundFetch event received'),
-				'Fetch?',
-				'Done'
-			);
+			cordova.plugins.notification.local.hasPermission(function(granted){
+				cordova.plugins.notification.local.schedule({
+					title: 'Notification Test',
+					text: 'Just a local notification test for WKV apps.',
+					foreground: true
+				});
+			});
 			window.SchedulerPlugin.finish();
 		};
 		 
@@ -48,7 +57,7 @@ var app = {
 		window.SchedulerPlugin.configure(
 			fetchTask,
 			errorHandler,
-			{ minimumFetchInterval: 60 }  // run every hour
+			{ minimumFetchInterval: 60 }
 		);
 		
 		document.addEventListener("backbutton", sys.onBackKeyDown, false);

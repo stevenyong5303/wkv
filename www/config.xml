@@ -4,7 +4,7 @@
 <widget xmlns     = "http://www.w3.org/ns/widgets"
         xmlns:gap = "http://phonegap.com/ns/1.0"
         id        = "com.wkv.manage"
-        version   = "1.0.74">
+        version   = "1.0.75">
 
     <name>WKV</name>
 
@@ -48,6 +48,7 @@
     <!-- Plugins -->
 	<plugin name="cordova-plugin-x-socialsharing" />
 	<plugin name="cordova-plugin-scheduler" />
+	<plugin name="cordova-plugin-local-notifications" />
 	
 	<plugin name="cordova-plugin-battery-status" />
     <plugin name="cordova-plugin-camera" />
