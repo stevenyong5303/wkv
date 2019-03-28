@@ -6,7 +6,7 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.76",
+			  version: "1.0.77",
 			  rtl: false,
 			  language: "en-US"
 		  });
@@ -24,40 +24,65 @@ var app = {
     onDeviceReady: function() {
         app.receivedEvent('deviceready');
 		
-		cordova.plugins.notification.local.hasPermission(function(granted){
-			cordova.plugins.notification.local.schedule({
-				title: 'Notification Test',
-				text: 'Just a local notification test for WKV apps.',
-				foreground: true
-			});
-		});
-		
 		var fetchTask = function() {
-			console.log('fetch test');
-			cordova.plugins.notification.local.hasPermission(function(granted){
-				cordova.plugins.notification.local.schedule({
-					title: 'Notification Test',
-					text: 'Just a local notification test for WKV apps.',
-					foreground: true
+			var DATA = {
+					'usr' : STORAGE.getItem('usr')
+				};
+			var post_data = "ACT=" + encodeURIComponent('msg_chk')
+						  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
+						  
+			if(STORAGE.getItem('usr')){
+				$.ajax({
+					type: 'POST',
+					url: 'http://app.wkvmusicstore.com/',
+					data: post_data,
+					success: function(str){
+						var inf = JSON.parse(str);
+					
+						if(inf['reply']==='200 OK'){
+							if(inf['new']){
+								cordova.plugins.notification.local.hasPermission(function(granted){
+									cordova.plugins.notification.local.schedule({
+										title: inf['title'],
+										text: inf['text'],
+										foreground: true
+									});
+								});
+							}else{
+								cordova.plugins.notification.local.hasPermission(function(granted){
+									cordova.plugins.notification.local.schedule({
+										title: 'No message found.',
+										text: 'Just a local notification test for WKV apps.',
+										foreground: true
+									});
+								});
+							}
+						}else{
+							navigator.notification.alert(
+								'Error occur',
+								console.log(('Error + ' + inf['reply'])),
+								('Contact administrator, Error code : [' + inf['reply'] + ']'),
+								'OK'
+							);
+						}
+					}
 				});
-			});
+			}
+			
 			window.SchedulerPlugin.finish();
 		};
 		 
 		var errorHandler = function(error) {
-			console.log('SchedulerPlugin error: ', error);
-			navigator.notification.alert(
-				error,
-				console.log('[js] BackgroundFetch event received'),
-				'Fetch?',
-				'OH NO'
-			);
+			'Error occur',
+			console.log('SchedulerPlugin error: ', error),
+			('Contact administrator, Error : [' + error + ']'),
+			'OK'
 		};
 		 
 		window.SchedulerPlugin.configure(
 			fetchTask,
 			errorHandler,
-			{ minimumFetchInterval: 60 }
+			{ minimumFetchInterval: 15 }
 		);
 		
 		document.addEventListener("backbutton", sys.onBackKeyDown, false);
@@ -131,7 +156,7 @@ $(document).ready(function(){
 					sys.loading(1);
 				},
 				success: function(str){
-					inf = JSON.parse(str);
+					var inf = JSON.parse(str);
 					sys.getLocation();
 					
 					if(inf['clocked']=='1'){
@@ -497,7 +522,7 @@ $(document).ready(function(){
 				sys.loading(1);
 			},
 			success: function(str){
-				inf = JSON.parse(str);
+				var inf = JSON.parse(str);
 			
 				if(inf['reply']==='200 OK'){
 					var status = inf['status'], x = '';
@@ -1124,7 +1149,7 @@ $(document).ready(function(){
 			apps.loginScreen.open('#error');
 		},
 		success: function(str){
-			inf = JSON.parse(str);
+			var inf = JSON.parse(str);
 			sys.getLocation();
 			$('body').data('user_level', inf['level']);
 			
