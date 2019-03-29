@@ -6,7 +6,7 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.77",
+			  version: "1.0.78",
 			  rtl: false,
 			  language: "en-US"
 		  });
@@ -45,15 +45,8 @@ var app = {
 									cordova.plugins.notification.local.schedule({
 										title: inf['title'],
 										text: inf['text'],
-										foreground: true
-									});
-								});
-							}else{
-								cordova.plugins.notification.local.hasPermission(function(granted){
-									cordova.plugins.notification.local.schedule({
-										title: 'No message found.',
-										text: 'Just a local notification test for WKV apps.',
-										foreground: true
+										foreground: false,
+										led: FF9900
 									});
 								});
 							}
