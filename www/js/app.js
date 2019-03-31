@@ -6,7 +6,7 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.78",
+			  version: "1.0.79",
 			  rtl: false,
 			  language: "en-US"
 		  });
@@ -45,8 +45,7 @@ var app = {
 									cordova.plugins.notification.local.schedule({
 										title: inf['title'],
 										text: inf['text'],
-										foreground: false,
-										led: FF9900
+										foreground: false
 									});
 								});
 							}
@@ -87,7 +86,6 @@ var app = {
 };
 
 $(document).ready(function(){
-	console.log('doc ready');
 	var usr = STORAGE.getItem('usr'),
 		pwd = STORAGE.getItem('pwd');
 	
@@ -307,18 +305,18 @@ $(document).ready(function(){
 									
 									if(parseInt($('body').data('user_level'))>=8){
 										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Person In Charge</div><div class="item-input-wrap">' + ((inf.pic==null) ? '-' : inf.pic) + '</div></div></div></li>';
-										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Luncheon/Dinner</div><div class="item-input-wrap"><input class="evtd_ld" type="text" autocomplete="off" value="' + ((inf.luncheon_dinner==null) ? '-' : inf.luncheon_dinner) + '"></div></div></div></li>';
-										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Venue</div><div class="item-input-wrap"><input class="evtd_venue" type="text" autocomplete="off" value="' + ((inf.venue==null) ? '-' : inf.venue) + '"></div></div></div></li>';
-										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Description</div><div class="item-input-wrap"><input class="evtd_desc" type="text" autocomplete="off" value="' + ((inf.description==null) ? '-' : inf.description) + '"></div></div></div></li>';
-										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Price</div><div class="item-input-wrap"><input class="evtd_price" type="text" autocomplete="off" value="' + ((inf.price==null) ? '-' : inf.price) + '"></div></div></div></li>';
-										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Mixer</div><div class="item-input-wrap"><input class="evtd_mixer" type="text" autocomplete="off" value="' + ((inf.mixer==null) ? '-' : inf.mixer) + '"></div></div></div></li>';
-										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Wireless Microphone</div><div class="item-input-wrap"><input class="evtd_wmic" type="text" autocomplete="off" value="' + ((inf.wireless_mic==null) ? '-' : inf.wireless_mic) + '"></div></div></div></li>';
-										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Speaker</div><div class="item-input-wrap"><input class="evtd_spkr" type="text" autocomplete="off" value="' + ((inf.speaker==null) ? '-' : inf.speaker) + '"></div></div></div></li>';
-										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Live Band Information</div><div class="item-input-wrap"><input class="evtd_band" type="text" autocomplete="off" value="' + ((inf.band==null) ? '-' : inf.band) + '"></div></div></div></li>';
-										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Crew</div><div class="item-input-wrap"><input class="evtd_crew" type="text" autocomplete="off" value="' + ((inf.crew==null) ? '-' : inf.crew) + '"></div></div></div></li>';
-										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Vehicle to Event</div><div class="item-input-wrap"><input class="evtd_cin" type="text" autocomplete="off" value="' + ((inf.car_in==null) ? '-' : inf.car_in) + '"></div></div></div></li>';
-										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Vehicle back from Event</div><div class="item-input-wrap"><input class="evtd_cout" type="text" autocomplete="off" value="' + ((inf.car_out==null) ? '-' : inf.car_out) + '"></div></div></div></li>';
-										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Client, Bride/Groom</div><div class="item-input-wrap"><input class="evtd_bng" type="text" autocomplete="off" value="' + ((inf.bride_groom==null) ? '-' : inf.bride_groom) + '"></div></div></div></li>';
+										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Luncheon/Dinner</div><div class="item-input-wrap"><input class="evtd_ld" type="text" autocomplete="off" value="' + ((inf.luncheon_dinner==null) ? '' : inf.luncheon_dinner) + '"></div></div></div></li>';
+										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Venue</div><div class="item-input-wrap"><input class="evtd_venue" type="text" autocomplete="off" value="' + ((inf.venue==null) ? '' : inf.venue) + '"></div></div></div></li>';
+										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Description</div><div class="item-input-wrap"><input class="evtd_desc" type="text" autocomplete="off" value="' + ((inf.description==null) ? '' : inf.description) + '"></div></div></div></li>';
+										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Price</div><div class="item-input-wrap"><input class="evtd_price" type="text" autocomplete="off" value="' + ((inf.price==null) ? '' : inf.price) + '"></div></div></div></li>';
+										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Mixer</div><div class="item-input-wrap"><input class="evtd_mixer" type="text" autocomplete="off" value="' + ((inf.mixer==null) ? '' : inf.mixer) + '"></div></div></div></li>';
+										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Wireless Microphone</div><div class="item-input-wrap"><input class="evtd_wmic" type="text" autocomplete="off" value="' + ((inf.wireless_mic==null) ? '' : inf.wireless_mic) + '"></div></div></div></li>';
+										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Speaker</div><div class="item-input-wrap"><input class="evtd_spkr" type="text" autocomplete="off" value="' + ((inf.speaker==null) ? '' : inf.speaker) + '"></div></div></div></li>';
+										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Live Band Information</div><div class="item-input-wrap"><input class="evtd_band" type="text" autocomplete="off" value="' + ((inf.band==null) ? '' : inf.band) + '"></div></div></div></li>';
+										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Crew</div><div class="item-input-wrap"><input class="evtd_crew" type="text" autocomplete="off" value="' + ((inf.crew==null) ? '' : inf.crew) + '"></div></div></div></li>';
+										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Vehicle to Event</div><div class="item-input-wrap"><input class="evtd_cin" type="text" autocomplete="off" value="' + ((inf.car_in==null) ? '' : inf.car_in) + '"></div></div></div></li>';
+										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Vehicle back from Event</div><div class="item-input-wrap"><input class="evtd_cout" type="text" autocomplete="off" value="' + ((inf.car_out==null) ? '' : inf.car_out) + '"></div></div></div></li>';
+										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Client, Bride/Groom</div><div class="item-input-wrap"><input class="evtd_bng" type="text" autocomplete="off" value="' + ((inf.bride_groom==null) ? '' : inf.bride_groom) + '"></div></div></div></li>';
 										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-input-wrap row"><button class="evtd_sve button col button-fill" data-eid="' + inf.primary_id + '">Save</button>';
 										if(parseInt($('body').data('user_level'))>=9){
 											x += '<button class="evtd_dlt button col button-fill" data-eid="' + inf.primary_id + '">Delete</button>';
@@ -346,148 +344,150 @@ $(document).ready(function(){
 									$('.details-popover ul').html(x);
 									$('div.details-popover').data('info', inf);
 									
-									$('.details-popover button.evtd_sve').on('click', function(){
-										var pid = $(this).data('eid'),
-											ld = $('input.evtd_ld').val(),
-											venue = $('input.evtd_venue').val(),
-											desc = $('input.evtd_desc').val(),
-											price = $('input.evtd_price').val(),
-											mixer = $('input.evtd_mixer').val(),
-											wmic = $('input.evtd_wmic').val(),
-											spkr = $('input.evtd_spkr').val(),
-											band = $('input.evtd_band').val(),
-											crew = $('input.evtd_crew').val(),
-											cin = $('input.evtd_cin').val(),
-											cout = $('input.evtd_cout').val(),
-											bng = $('input.evtd_bng').val();
-										
-										var DATA = {
-											'usr' : STORAGE.getItem('usr'),
-											'pid' : pid,
-											'ld' : ld,
-											'venue' : venue,
-											'desc' : desc,
-											'price' : price,
-											'mixer' : mixer,
-											'wmic' : wmic,
-											'spkr' : spkr,
-											'band' : band,
-											'crew' : crew,
-											'cin' : cin,
-											'cout' : cout,
-											'bng' : bng
-										};
-										var post_data = "ACT=" + encodeURIComponent('evd_udt')
-													  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
-													  
-										$.ajax({
-											type: 'POST',
-											url: 'http://app.wkvmusicstore.com/',
-											data: post_data,
-											beforeSend: function(){
-												sys.loading(1);
-											},
-											success: function(str){
-												sys.loading(0);
-												
-												if(str==='200 OK'){
-													inf.luncheon_dinner = ((ld == '-') ? 'Dinner' : ld);
-													inf.venue = ((venue == '-') ? null : venue);
-													inf.description = ((desc == '-') ? null : desc);
-													inf.price = ((price == '-') ? null : price);
-													inf.mixer = ((mixer == '-') ? null : mixer);
-													inf.wireless_mic = ((wmic == '-') ? null : wmic);
-													inf.speaker = ((spkr == '-') ? null : spkr);
-													inf.band = ((band == '-') ? null : band);
-													inf.crew = ((crew == '-') ? null : crew);
-													inf.car_in = ((cin == '-') ? null : cin);
-													inf.car_out = ((cout == '-') ? null : cout);
-													inf.bride_groom = ((bng == '-') ? null : bng);
-													$('tr[name="' + trName + '"]').data('info', inf);
-													$('div.details-popover').data('info', inf);
-													$('tr[name="' + trName + '"] td.tb-ld').text((ld == 'Lunch') ? 'L' : 'D');
-													$('tr[name="' + trName + '"] td.tb-venue').text(venue);
-													$('tr[name="' + trName + '"] td.tb-desc').text(desc);
-													$('tr[name="' + trName + '"] td.tb-price').text(price);
-													$('tr[name="' + trName + '"] td.tb-mixer').text(mixer);
-													$('tr[name="' + trName + '"] td.tb-wmic').text(wmic);
-													$('tr[name="' + trName + '"] td.tb-spkr').text(spkr);
-													$('tr[name="' + trName + '"] td.tb-band').text(band);
-													$('tr[name="' + trName + '"] td.tb-crew').text(crew);
-													$('tr[name="' + trName + '"] td.tb-cin').text(cin);
-													$('tr[name="' + trName + '"] td.tb-cout').text(cout);
-													$('tr[name="' + trName + '"] td.tb-bng').text(bng);									
-													
-													var success_toast = apps.toast.create({
-																		   icon: '<i class="material-icons">cloud_done</i>',
-																		   text: 'Details Successfully Saved',
-																		   position: 'center',
-																		   closeTimeout: 2000
-																	   });
-													success_toast.open();
-													
-													navigator.vibrate(100,200,100);
-												}else{
-													var failed_toast = apps.toast.create({
-																		   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
-																		   text: 'Oooppss, error',
-																		   position: 'center',
-																		   closeTimeout: 2000
-																	   });
-													failed_toast.open();
-													
-													navigator.vibrate(100);
-												}
-											}
-										});
-									});
-									
-									$('.details-popover button.evtd_dlt').on('click', function(){
-										var pid = $(this).data('eid');
-										
-										var DATA = {
+									if(parseInt($('body').data('user_level'))>=8){
+										$('.details-popover button.evtd_sve').data('trName', trName);
+										$('.details-popover button.evtd_sve').on('click', function(){
+											var pid = $(this).data('eid'),
+												ld = $('input.evtd_ld').val(),
+												venue = $('input.evtd_venue').val(),
+												desc = $('input.evtd_desc').val(),
+												price = $('input.evtd_price').val(),
+												mixer = $('input.evtd_mixer').val(),
+												wmic = $('input.evtd_wmic').val(),
+												spkr = $('input.evtd_spkr').val(),
+												band = $('input.evtd_band').val(),
+												crew = $('input.evtd_crew').val(),
+												cin = $('input.evtd_cin').val(),
+												cout = $('input.evtd_cout').val(),
+												bng = $('input.evtd_bng').val();
+											
+											var DATA = {
 												'usr' : STORAGE.getItem('usr'),
-												'pid' : pid
+												'pid' : pid,
+												'ld' : ld,
+												'venue' : venue,
+												'desc' : desc,
+												'price' : price,
+												'mixer' : mixer,
+												'wmic' : wmic,
+												'spkr' : spkr,
+												'band' : band,
+												'crew' : crew,
+												'cin' : cin,
+												'cout' : cout,
+												'bng' : bng
 											};
-										var post_data = "ACT=" + encodeURIComponent('evd_dlt')
-													  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
-													  
-										$.ajax({
-											type: 'POST',
-											url: 'http://app.wkvmusicstore.com/',
-											data: post_data,
-											beforeSend: function(){
-												sys.loading(1);
-											},
-											success: function(str){
-												sys.loading(0);
-												
-												if(str==='200 OK'){
-													$('tr[name="' + trName + '"]').remove();
-													$('.popover-backdrop')[0].click();
+											var post_data = "ACT=" + encodeURIComponent('evd_udt')
+														  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
+														  
+											$.ajax({
+												type: 'POST',
+												url: 'http://app.wkvmusicstore.com/',
+												data: post_data,
+												beforeSend: function(){
+													sys.loading(1);
+												},
+												success: function(str){
+													sys.loading(0);
 													
-													var success_toast = apps.toast.create({
-																		   icon: '<i class="material-icons">delete</i>',
-																		   text: 'Details Successfully Deleted',
-																		   position: 'center',
-																		   closeTimeout: 2000
-																	   });
-													success_toast.open();
-												}else{
-													var failed_toast = apps.toast.create({
-																		   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
-																		   text: 'Oooppss, error',
-																		   position: 'center',
-																		   closeTimeout: 2000
-																	   });
-													failed_toast.open();
-													
-													navigator.vibrate(100);
+													if(str==='200 OK'){
+														inf.luncheon_dinner = ((ld == '') ? 'Dinner' : ld);
+														inf.venue = ((venue == '') ? null : venue);
+														inf.description = ((desc == '') ? null : desc);
+														inf.price = ((price == '') ? null : price);
+														inf.mixer = ((mixer == '') ? null : mixer);
+														inf.wireless_mic = ((wmic == '') ? null : wmic);
+														inf.speaker = ((spkr == '') ? null : spkr);
+														inf.band = ((band == '') ? null : band);
+														inf.crew = ((crew == '') ? null : crew);
+														inf.car_in = ((cin == '') ? null : cin);
+														inf.car_out = ((cout == '') ? null : cout);
+														inf.bride_groom = ((bng == '') ? null : bng);
+														$('tr[name="' + trName + '"]').data('info', inf);
+														$('div.details-popover').data('info', inf);
+														$('tr[name="' + trName + '"] td.tb-ld').text((ld == 'Lunch') ? 'L' : 'D');
+														$('tr[name="' + trName + '"] td.tb-venue').text((venue == '' ? '-' : venue));
+														$('tr[name="' + trName + '"] td.tb-desc').text((desc == '' ? '-' : desc));
+														$('tr[name="' + trName + '"] td.tb-price').text((price == '' ? '-' : price));
+														$('tr[name="' + trName + '"] td.tb-mixer').text((mixer == '' ? '-' : mixer));
+														$('tr[name="' + trName + '"] td.tb-wmic').text((wmic == '' ? '-' : wmic));
+														$('tr[name="' + trName + '"] td.tb-spkr').text((spkr == '' ? '-' : spkr));
+														$('tr[name="' + trName + '"] td.tb-band').text((band == '' ? '-' : band));
+														$('tr[name="' + trName + '"] td.tb-crew').text((crew == '' ? '-' : crew));
+														$('tr[name="' + trName + '"] td.tb-cin').text((cin == '' ? '-' : cin));
+														$('tr[name="' + trName + '"] td.tb-cout').text((cout == '' ? '-' : cout));
+														$('tr[name="' + trName + '"] td.tb-bng').text((bng == '' ? '-' : bng));									
+														
+														var success_toast = apps.toast.create({
+																			   icon: '<i class="material-icons">cloud_done</i>',
+																			   text: 'Details Successfully Saved',
+																			   position: 'center',
+																			   closeTimeout: 2000
+																		   });
+														success_toast.open();
+														
+														navigator.vibrate(100,200,100);
+													}else{
+														var failed_toast = apps.toast.create({
+																			   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
+																			   text: 'Oooppss, error',
+																			   position: 'center',
+																			   closeTimeout: 2000
+																		   });
+														failed_toast.open();
+														
+														navigator.vibrate(100);
+													}
 												}
-											}
+											});
 										});
-									});
-									
+										
+										$('.details-popover button.evtd_dlt').on('click', function(){
+											var pid = $(this).data('eid');
+											
+											var DATA = {
+													'usr' : STORAGE.getItem('usr'),
+													'pid' : pid
+												};
+											var post_data = "ACT=" + encodeURIComponent('evd_dlt')
+														  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
+														  
+											$.ajax({
+												type: 'POST',
+												url: 'http://app.wkvmusicstore.com/',
+												data: post_data,
+												beforeSend: function(){
+													sys.loading(1);
+												},
+												success: function(str){
+													sys.loading(0);
+													
+													if(str==='200 OK'){
+														$('tr[name="' + trName + '"]').remove();
+														$('.popover-backdrop')[0].click();
+														
+														var success_toast = apps.toast.create({
+																			   icon: '<i class="material-icons">delete</i>',
+																			   text: 'Details Successfully Deleted',
+																			   position: 'center',
+																			   closeTimeout: 2000
+																		   });
+														success_toast.open();
+													}else{
+														var failed_toast = apps.toast.create({
+																			   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
+																			   text: 'Oooppss, error',
+																			   position: 'center',
+																			   closeTimeout: 2000
+																		   });
+														failed_toast.open();
+														
+														navigator.vibrate(100);
+													}
+												}
+											});
+										});
+									}
 									apps.popover.open('.details-popover');
 								});
 							}
@@ -904,7 +904,7 @@ $(document).ready(function(){
 		window.plugins.socialsharing.share(share);
 	});
 	
-	$('a.evtd_shr').on('click', function(){
+	$('a.evtd_shr').on('click', function(e){
 		var inf = $('.details-popover').data('info');
 		var share = sys.toMonth(inf.date) + ' ' + sys.toDay(inf.date) + ' (' + sys.toWeek(inf.date) + ')\n'
 				  + (sys.isEmpty(inf.description) ? 'Sound \n2 Top 2 Mon' : (inf.description).replace("  ", "\n")) + '\n'
@@ -917,6 +917,108 @@ $(document).ready(function(){
 				  + 'Sound Check : 5pm\n\n'
 				  + (sys.isEmpty(inf.car_in) ? '' : ('Use : ' + inf.car_in + '\n'));
 		window.plugins.socialsharing.share(share);
+	});
+	
+	$('.popover-backdrop').on('click', function(e){
+		if(this === e.target){
+			if(parseInt($('body').data('user_level')) > 7){
+				var trName = $('.details-popover button.evtd_sve').data('trName'),
+					inf = $('div.details-popover').data('info'),
+					pid = $('.details-popover button.evtd_sve').data('eid'),
+					ld = $('input.evtd_ld').val(),
+					venue = $('input.evtd_venue').val(),
+					desc = $('input.evtd_desc').val(),
+					price = $('input.evtd_price').val(),
+					mixer = $('input.evtd_mixer').val(),
+					wmic = $('input.evtd_wmic').val(),
+					spkr = $('input.evtd_spkr').val(),
+					band = $('input.evtd_band').val(),
+					crew = $('input.evtd_crew').val(),
+					cin = $('input.evtd_cin').val(),
+					cout = $('input.evtd_cout').val(),
+					bng = $('input.evtd_bng').val();
+				
+				var DATA = {
+					'usr' : STORAGE.getItem('usr'),
+					'pid' : pid,
+					'ld' : ld,
+					'venue' : venue,
+					'desc' : desc,
+					'price' : price,
+					'mixer' : mixer,
+					'wmic' : wmic,
+					'spkr' : spkr,
+					'band' : band,
+					'crew' : crew,
+					'cin' : cin,
+					'cout' : cout,
+					'bng' : bng
+				};
+				var post_data = "ACT=" + encodeURIComponent('evd_udt')
+							  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
+							  
+				$.ajax({
+					type: 'POST',
+					url: 'http://app.wkvmusicstore.com/',
+					data: post_data,
+					beforeSend: function(){
+						sys.loading(1);
+					},
+					success: function(str){
+						sys.loading(0);
+						
+						if(str==='200 OK'){
+							inf.luncheon_dinner = ((ld == '') ? 'Dinner' : ld);
+							inf.venue = ((venue == '') ? null : venue);
+							inf.description = ((desc == '') ? null : desc);
+							inf.price = ((price == '') ? null : price);
+							inf.mixer = ((mixer == '') ? null : mixer);
+							inf.wireless_mic = ((wmic == '') ? null : wmic);
+							inf.speaker = ((spkr == '') ? null : spkr);
+							inf.band = ((band == '') ? null : band);
+							inf.crew = ((crew == '') ? null : crew);
+							inf.car_in = ((cin == '') ? null : cin);
+							inf.car_out = ((cout == '') ? null : cout);
+							inf.bride_groom = ((bng == '') ? null : bng);
+							$('tr[name="' + trName + '"]').data('info', inf);
+							$('div.details-popover').data('info', inf);
+							$('tr[name="' + trName + '"] td.tb-ld').text((ld == 'Lunch') ? 'L' : 'D');
+							$('tr[name="' + trName + '"] td.tb-venue').text((venue == '' ? '-' : venue));
+							$('tr[name="' + trName + '"] td.tb-desc').text((desc == '' ? '-' : desc));
+							$('tr[name="' + trName + '"] td.tb-price').text((price == '' ? '-' : price));
+							$('tr[name="' + trName + '"] td.tb-mixer').text((mixer == '' ? '-' : mixer));
+							$('tr[name="' + trName + '"] td.tb-wmic').text((wmic == '' ? '-' : wmic));
+							$('tr[name="' + trName + '"] td.tb-spkr').text((spkr == '' ? '-' : spkr));
+							$('tr[name="' + trName + '"] td.tb-band').text((band == '' ? '-' : band));
+							$('tr[name="' + trName + '"] td.tb-crew').text((crew == '' ? '-' : crew));
+							$('tr[name="' + trName + '"] td.tb-cin').text((cin == '' ? '-' : cin));
+							$('tr[name="' + trName + '"] td.tb-cout').text((cout == '' ? '-' : cout));
+							$('tr[name="' + trName + '"] td.tb-bng').text((bng == '' ? '-' : bng));									
+							
+							var success_toast = apps.toast.create({
+												   icon: '<i class="material-icons">cloud_done</i>',
+												   text: 'Details Successfully Saved',
+												   position: 'center',
+												   closeTimeout: 2000
+											   });
+							success_toast.open();
+							
+							navigator.vibrate(100,200,100);
+						}else{
+							var failed_toast = apps.toast.create({
+												   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
+												   text: 'Oooppss, error',
+												   position: 'center',
+												   closeTimeout: 2000
+											   });
+							failed_toast.open();
+							
+							navigator.vibrate(100);
+						}
+					}
+				});
+			}
+		}
 	});
 	
 	var swiper = apps.swiper.create('.swiper-container', {
@@ -1525,7 +1627,7 @@ sys = {
 				return 'Fri';
 			case 6:
 				return 'Sat';
-			case 7:
+			case 0:
 				return 'Sun';
 		}
 		return false;
