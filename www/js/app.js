@@ -6,7 +6,7 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.79",
+			  version: "1.0.80",
 			  rtl: false,
 			  language: "en-US"
 		  });
@@ -25,40 +25,42 @@ var app = {
         app.receivedEvent('deviceready');
 		
 		var fetchTask = function() {
-			var DATA = {
-					'usr' : STORAGE.getItem('usr')
-				};
-			var post_data = "ACT=" + encodeURIComponent('msg_chk')
-						  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
+			// var DATA = {
+					// 'usr' : STORAGE.getItem('usr')
+				// };
+			// var post_data = "ACT=" + encodeURIComponent('msg_chk')
+						  // + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
 						  
 			if(STORAGE.getItem('usr')){
-				$.ajax({
-					type: 'POST',
-					url: 'http://app.wkvmusicstore.com/',
-					data: post_data,
-					success: function(str){
-						var inf = JSON.parse(str);
+				// $.ajax({
+					// type: 'POST',
+					// url: 'http://app.wkvmusicstore.com/',
+					// data: post_data,
+					// success: function(str){
+						// var inf = JSON.parse(str);
 					
-						if(inf['reply']==='200 OK'){
-							if(inf['new']){
+						// if(inf['reply']==='200 OK'){
+							// if(inf['new']){
+							if(STORAGE.getItem('usr')=='steven'){
 								cordova.plugins.notification.local.hasPermission(function(granted){
 									cordova.plugins.notification.local.schedule({
-										title: inf['title'],
-										text: inf['text'],
+										title: 'Test123456',
+										text: 'latest...',
 										foreground: false
 									});
 								});
 							}
-						}else{
-							navigator.notification.alert(
-								'Error occur',
-								console.log(('Error + ' + inf['reply'])),
-								('Contact administrator, Error code : [' + inf['reply'] + ']'),
-								'OK'
-							);
-						}
-					}
-				});
+							// }
+						// }else{
+							// navigator.notification.alert(
+								// 'Error occur',
+								// console.log(('Error + ' + inf['reply'])),
+								// ('Contact administrator, Error code : [' + inf['reply'] + ']'),
+								// 'OK'
+							// );
+						// }
+					// }
+				// });
 			}
 			
 			window.SchedulerPlugin.finish();
