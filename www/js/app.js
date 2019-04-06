@@ -6,7 +6,7 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.82",
+			  version: "1.0.83",
 			  rtl: false,
 			  language: "en-US"
 		  });
@@ -24,7 +24,7 @@ var app = {
     onDeviceReady: function() {
         app.receivedEvent('deviceready');
 		
-		var fetchTask = function() {
+		var fetchTask = function(){
 			var DATA = {
 					'usr' : STORAGE.getItem('usr')
 				};
@@ -67,7 +67,7 @@ var app = {
 						}
 					}
 				});
-			}
+			// }
 			
 			window.SchedulerPlugin.finish();
 		};
