@@ -6,7 +6,7 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.80",
+			  version: "1.0.81",
 			  rtl: false,
 			  language: "en-US"
 		  });
@@ -25,45 +25,51 @@ var app = {
         app.receivedEvent('deviceready');
 		
 		var fetchTask = function() {
-			// var DATA = {
-					// 'usr' : STORAGE.getItem('usr')
-				// };
-			// var post_data = "ACT=" + encodeURIComponent('msg_chk')
-						  // + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
+			var DATA = {
+					'usr' : STORAGE.getItem('usr')
+				};
+			var post_data = "ACT=" + encodeURIComponent('msg_chk')
+						  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
 						  
-			if(STORAGE.getItem('usr')){
-				// $.ajax({
-					// type: 'POST',
-					// url: 'http://app.wkvmusicstore.com/',
-					// data: post_data,
-					// success: function(str){
-						// var inf = JSON.parse(str);
+			// if(STORAGE.getItem('usr')){
+				$.ajax({
+					type: 'POST',
+					url: 'http://app.wkventertainment.com/',
+					data: post_data,
+					success: function(str){
+						var inf = JSON.parse(str);
 					
-						// if(inf['reply']==='200 OK'){
-							// if(inf['new']){
-							if(STORAGE.getItem('usr')=='steven'){
-								cordova.plugins.notification.local.hasPermission(function(granted){
-									cordova.plugins.notification.local.schedule({
-										title: 'Test123456',
-										text: 'latest...',
-										foreground: false
-									});
-								});
-							}
+						if(inf['reply']==='200 OK'){
+							if(inf['new']){
+								navigator.notification.alert(
+									inf['title'],
+									console.log(('Received text: ' + inf['text'])),
+									inf['text'],
+									'OK'
+								);
+							// if(STORAGE.getItem('usr')=='steven'){
+								// cordova.plugins.notification.local.hasPermission(function(granted){
+									// cordova.plugins.notification.local.schedule({
+										// title: 'Test123456',
+										// text: 'latest...',
+										// foreground: false
+									// });
+								// });
 							// }
-						// }else{
-							// navigator.notification.alert(
-								// 'Error occur',
-								// console.log(('Error + ' + inf['reply'])),
-								// ('Contact administrator, Error code : [' + inf['reply'] + ']'),
-								// 'OK'
-							// );
-						// }
-					// }
-				// });
+							}
+						}else{
+							navigator.notification.alert(
+								'Error occur',
+								console.log(('Error + ' + inf['reply'])),
+								('Contact administrator, Error code : [' + inf['reply'] + ']'),
+								'OK'
+							);
+						}
+					}
+				});
 			}
 			
-			window.SchedulerPlugin.finish();
+			// window.SchedulerPlugin.finish();
 		};
 		 
 		var errorHandler = function(error) {
@@ -143,7 +149,7 @@ $(document).ready(function(){
 					  
 			$.ajax({
 				type: 'POST',
-				url: 'http://app.wkvmusicstore.com/',
+				url: 'http://app.wkventertainment.com/',
 				data: post_data,
 				beforeSend: function(){
 					sys.loading(1);
@@ -246,7 +252,7 @@ $(document).ready(function(){
 								  
 						$.ajax({
 							type: 'POST',
-							url: 'http://app.wkvmusicstore.com/',
+							url: 'http://app.wkventertainment.com/',
 							data: post_data,
 							beforeSend: function(){
 								sys.loading(1);
@@ -384,7 +390,7 @@ $(document).ready(function(){
 														  
 											$.ajax({
 												type: 'POST',
-												url: 'http://app.wkvmusicstore.com/',
+												url: 'http://app.wkventertainment.com/',
 												data: post_data,
 												beforeSend: function(){
 													sys.loading(1);
@@ -456,7 +462,7 @@ $(document).ready(function(){
 														  
 											$.ajax({
 												type: 'POST',
-												url: 'http://app.wkvmusicstore.com/',
+												url: 'http://app.wkventertainment.com/',
 												data: post_data,
 												beforeSend: function(){
 													sys.loading(1);
@@ -511,7 +517,7 @@ $(document).ready(function(){
 					  
 		$.ajax({
 			type: 'POST',
-			url: 'http://app.wkvmusicstore.com/',
+			url: 'http://app.wkventertainment.com/',
 			data: post_data,
 			beforeSend: function(){
 				sys.loading(1);
@@ -554,7 +560,7 @@ $(document).ready(function(){
 					  
 		$.ajax({
 			type: 'POST',
-			url: 'http://app.wkvmusicstore.com/',
+			url: 'http://app.wkventertainment.com/',
 			data: post_data,
 			beforeSend: function(){
 				sys.loading(1);
@@ -772,7 +778,7 @@ $(document).ready(function(){
 			
 			$.ajax({
 				type: 'POST',
-				url: 'http://app.wkvmusicstore.com/',
+				url: 'http://app.wkventertainment.com/',
 				data: post_data,
 				beforeSend: function(){
 					sys.loading(1);
@@ -812,7 +818,7 @@ $(document).ready(function(){
 			
 			$.ajax({
 				type: 'POST',
-				url: 'http://app.wkvmusicstore.com/',
+				url: 'http://app.wkventertainment.com/',
 				data: post_data,
 				beforeSend: function(){
 					sys.loading(1);
@@ -855,7 +861,7 @@ $(document).ready(function(){
 			
 			$.ajax({
 				type: 'POST',
-				url: 'http://app.wkvmusicstore.com/',
+				url: 'http://app.wkventertainment.com/',
 				data: post_data,
 				beforeSend: function(){
 					sys.loading(1);
@@ -961,7 +967,7 @@ $(document).ready(function(){
 							  
 				$.ajax({
 					type: 'POST',
-					url: 'http://app.wkvmusicstore.com/',
+					url: 'http://app.wkventertainment.com/',
 					data: post_data,
 					beforeSend: function(){
 						sys.loading(1);
@@ -1039,7 +1045,7 @@ $(document).ready(function(){
 			
 			$.ajax({
 				type: 'POST',
-				url: 'http://app.wkvmusicstore.com/',
+				url: 'http://app.wkventertainment.com/',
 				data: post_data,
 				beforeSend: function(){
 					sys.loading(1);
@@ -1110,7 +1116,7 @@ $(document).ready(function(){
 						  
 			$.ajax({
 				type: 'POST',
-				url: 'http://app.wkvmusicstore.com/',
+				url: 'http://app.wkventertainment.com/',
 				data: post_data,
 				beforeSend: function(){
 					sys.loading(1);
@@ -1183,7 +1189,7 @@ $(document).ready(function(){
 						  
 			$.ajax({
 				type: 'POST',
-				url: 'http://app.wkvmusicstore.com/',
+				url: 'http://app.wkventertainment.com/',
 				data: post_data,
 				beforeSend: function(){
 					sys.loading(1);
@@ -1238,7 +1244,7 @@ $(document).ready(function(){
 	
 	$.ajax({
 		type: 'POST',
-		url: 'http://app.wkvmusicstore.com/',
+		url: 'http://app.wkventertainment.com/',
 		data: post_data,
 		timeout: 10000,
 		error: function(){
@@ -1431,7 +1437,7 @@ sys = {
 			
 			$.ajax({
 				type: 'POST',
-				url: 'http://app.wkvmusicstore.com/',
+				url: 'http://app.wkventertainment.com/',
 				data: post_data,
 				beforeSend: function(){
 					sys.loading(1);
@@ -1466,7 +1472,7 @@ sys = {
 			if(geoToken){
 				$.ajax({
 					type: 'POST',
-					url: 'http://app.wkvmusicstore.com/',
+					url: 'http://app.wkventertainment.com/',
 					data: post_data,
 					success: function(str){
 						$('iframe#gmap').data('loc', (position.coords.latitude+','+position.coords.longitude));
@@ -1489,7 +1495,7 @@ sys = {
 	
 		$.ajax({
 			type: 'POST',
-			url: 'http://app.wkvmusicstore.com/',
+			url: 'http://app.wkventertainment.com/',
 			data: post_data,
 			success: function(str){
 				$('#app-time').data('time', new Date(str));
