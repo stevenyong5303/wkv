@@ -6,7 +6,7 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.81",
+			  version: "1.0.82",
 			  rtl: false,
 			  language: "en-US"
 		  });
@@ -69,7 +69,7 @@ var app = {
 				});
 			}
 			
-			// window.SchedulerPlugin.finish();
+			window.SchedulerPlugin.finish();
 		};
 		 
 		var errorHandler = function(error) {
