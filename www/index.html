@@ -471,10 +471,65 @@
 				</div>
 				<div class="data-table">
 					<table class="event_list"></table>
-					<div class="fab fab-right-bottom evts_shr level8">
-						<a href="#" class="evts_shr">
-							<i class="icon material-icons md-only">share</i>
+					<div class="evts_input level8 fab-morph-target">
+						<div class="block-title">Event Information</div>
+						<div class="list">
+							<ul>
+								<li class="item-content item-input">
+									<div class="item-inner">
+										<div class="item-title item-label">Person In Charge</div>
+										<div class="item-input-wrap">
+											<input id="evts_ipic" type="text" placeholder="" autocomplete="off" required validate>
+											<span class="input-clear-button"></span>
+										</div>
+									</div>
+								</li>
+								<li class="item-content item-input">
+									<div class="item-inner">
+										<div class="item-title item-label">Description</div>
+										<div class="item-input-wrap">
+											<input id="evts_idesc" type="text" placeholder="" autocomplete="off">
+											<span class="input-clear-button"></span>
+										</div>
+									</div>
+								</li>
+								<li class="item-content item-input">
+									<div class="item-inner">
+										<div class="item-title item-label">L/D</div>
+										<div class="item-input-wrap input-dropdown-wrap">
+											<select  id="evts_ild" placeholder="" autocomplete="off">
+												<option value="Dinner">Dinner</option>
+												<option value="Lunch">Luncheon</option>
+											</select>
+										</div>
+									</div>
+								</li>
+								<li class="item-content item-input">
+									<div class="item-inner">
+										<div class="row">
+											<button class="col button button-fill evts_ok">OK</button>
+											<button class="col button button-fill fab-close">Cancel</button>
+										</div>
+									</div>
+								</li>
+							</ul>
+						</div>
+					</div>
+					<div class="fab fab-right-bottom level8">
+						<a href="#">
+							<i class="icon material-icons md-only">view_headline</i>
+							<i class="icon material-icons md-only">close</i>
 						</a>
+						<div class="fab-buttons fab-buttons-top">
+							<a href="#" class="evts_shr">
+								<i class="icon material-icons md-only">share</i>
+							</a>
+							<div class="fab fab-morph evts_add" data-morph-to=".evts_input">
+								<a href="#">
+									<i class="icon material-icons md-only">add</i>
+								</a>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -1655,7 +1710,7 @@
 				<div class="block">
 					<div align="center">
 						 <img src="icon.png" alt="WKV Logo" height="128" width="128">
-						 <span style="color:#999;position:absolute;top:40px;font-size:12px;">WKV<br/>Version 1.0.83</span>
+						 <span style="color:#999;position:absolute;top:40px;font-size:12px;">WKV<br/>Version 1.0.84</span>
 					</div>
 					<p>WKV Application serves as a platform for of WKV’s member to obtain basic information and calculation method can easily obtain by accessing to the application.</p>
 					<p>For general usage, clock in and clock out is built in the application for employees of WKV to check in whenever they report to event venue.</p>

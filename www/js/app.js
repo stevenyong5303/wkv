@@ -6,7 +6,7 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.83",
+			  version: "1.0.84",
 			  rtl: false,
 			  language: "en-US"
 		  });
@@ -24,29 +24,29 @@ var app = {
     onDeviceReady: function() {
         app.receivedEvent('deviceready');
 		
-		var fetchTask = function(){
-			var DATA = {
-					'usr' : STORAGE.getItem('usr')
-				};
-			var post_data = "ACT=" + encodeURIComponent('msg_chk')
-						  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
+		// var fetchTask = function(){
+			// var DATA = {
+					// 'usr' : STORAGE.getItem('usr')
+				// };
+			// var post_data = "ACT=" + encodeURIComponent('msg_chk')
+						  // + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
 						  
 			// if(STORAGE.getItem('usr')){
-				$.ajax({
-					type: 'POST',
-					url: 'http://app.wkventertainment.com/',
-					data: post_data,
-					success: function(str){
-						var inf = JSON.parse(str);
+				// $.ajax({
+					// type: 'POST',
+					// url: 'http://app.wkventertainment.com/',
+					// data: post_data,
+					// success: function(str){
+						// var inf = JSON.parse(str);
 					
-						if(inf['reply']==='200 OK'){
-							if(inf['new']){
-								navigator.notification.alert(
-									inf['title'],
-									console.log(('Received text: ' + inf['text'])),
-									inf['text'],
-									'OK'
-								);
+						// if(inf['reply']==='200 OK'){
+							// if(inf['new']){
+								// navigator.notification.alert(
+									// inf['title'],
+									// console.log(('Received text: ' + inf['text'])),
+									// inf['text'],
+									// 'OK'
+								// );
 							// if(STORAGE.getItem('usr')=='steven'){
 								// cordova.plugins.notification.local.hasPermission(function(granted){
 									// cordova.plugins.notification.local.schedule({
@@ -56,39 +56,49 @@ var app = {
 									// });
 								// });
 							// }
-							}
-						}else{
-							navigator.notification.alert(
-								'Error occur',
-								console.log(('Error + ' + inf['reply'])),
-								('Contact administrator, Error code : [' + inf['reply'] + ']'),
-								'OK'
-							);
-						}
-					}
-				});
+							// }
+						// }else{
+							// navigator.notification.alert(
+								// 'Error occur',
+								// console.log(('Error + ' + inf['reply'])),
+								// ('Contact administrator, Error code : [' + inf['reply'] + ']'),
+								// 'OK'
+							// );
+						// }
+					// }
+				// });
 			// }
 			
-			window.SchedulerPlugin.finish();
-		};
+			// window.SchedulerPlugin.finish();
+		// };
 		 
-		var errorHandler = function(error) {
-			'Error occur',
-			console.log('SchedulerPlugin error: ', error),
-			('Contact administrator, Error : [' + error + ']'),
-			'OK'
-		};
+		// var errorHandler = function(error){
+			// 'Error occur',
+			// console.log('SchedulerPlugin error: ', error),
+			// ('Contact administrator, Error : [' + error + ']'),
+			// 'OK'
+		// };
 		 
-		window.SchedulerPlugin.configure(
-			fetchTask,
-			errorHandler,
-			{ minimumFetchInterval: 15 }
-		);
+		// window.SchedulerPlugin.configure(
+			// fetchTask,
+			// errorHandler,
+			// { minimumFetchInterval: 15 }
+		// );
+		
+		if(STORAGE.getItem('usr')=='steven'){
+			cordova.plugins.notification.local.hasPermission(function(granted){
+				cordova.plugins.notification.local.schedule({
+					title: 'Test123456',
+					text: 'latest...',
+					trigger: { every: { minute: 15 } }
+				});
+			});
+		}
 		
 		document.addEventListener("backbutton", sys.onBackKeyDown, false);
     },
 	
-    receivedEvent: function(id) {
+    receivedEvent: function(id){
         console.log('Received Event: ' + id);
     }
 };
@@ -259,6 +269,7 @@ $(document).ready(function(){
 							},
 							success: function(str){
 								sys.loading(0);
+								$('.popup-event .event_list').data('date', tmp.toDateString().substr(4));
 								
 								if(str==='204 No Response'){
 									$('.popup-event .event_list').html('<p style="margin-left:10px;">No event found.</p>');
@@ -434,7 +445,7 @@ $(document).ready(function(){
 																		   });
 														success_toast.open();
 														
-														navigator.vibrate(100,200,100);
+														navigator.vibrate(100);
 													}else{
 														var failed_toast = apps.toast.create({
 																			   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
@@ -912,6 +923,321 @@ $(document).ready(function(){
 		window.plugins.socialsharing.share(share);
 	});
 	
+	$('button.evts_ok').on('click', function(){
+		var pic = $('#evts_ipic').val(),
+			desc = $('#evts_idesc').val(),
+			ld = $('#evts_ild').val(),
+			date = $('.popup-event .event_list').data('date');
+		
+		if(!sys.isEmpty(pic)){
+			var DATA = {
+				'usr' : STORAGE.getItem('usr'),
+				'date' : date,
+				'pic' : pic,
+				'desc' : desc,
+				'ld' : ld
+			};
+			var post_data = "ACT=" + encodeURIComponent('evd_add')
+						  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
+			
+			$.ajax({
+				type: 'POST',
+				url: 'http://app.wkventertainment.com/',
+				data: post_data,
+				beforeSend: function(){
+					sys.loading(1);
+				},
+				success: function(str){
+					sys.loading(0);
+					var inf = JSON.parse(str);
+			
+					if(inf['reply']==='200 OK'){
+						var num = $('.popup-event .event_list tbody tr').length;
+						if(num == 0){
+							var x = '<thead><tr><th class="label-cell"></th>'
+								  + '<th class="label-cell">&emsp;PIC&emsp;&emsp;&emsp;&emsp;&emsp;</th>'
+								  + '<th class="label-cell">L/D</th>'
+								  + '<th class="label-cell">&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Venue&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;</th>'
+								  + '<th class="tablet-only">Desc.</th>'
+								  + '<th class="tablet-only">Mixer</th>'
+								  + '<th class="tablet-only">W/L</th>'
+								  + '<th class="tablet-only">Speaker</th>'
+								  + '<th class="tablet-only">Band</th>'
+								  + '<th class="label-cell">Crew&emsp;&emsp;</th>'
+								  + '<th class="label-cell">IN&emsp;&emsp;</th>'
+								  + '<th class="label-cell">OUT&emsp;&emsp;</th>'
+								  + '<th class="tablet-only">B/G</th></tr></thead><tbody>';
+							
+							x += '<tr name="el1"><td class="label-cell"><span class="button button-fill" name="el1">1</span></td>';
+							x += '<td class="tb-pic label-cell">'+pic+'</td>';
+							x += '<td class="tb-ld label-cell">'+((ld=='Lunch') ? 'L' : 'D')+'</td>';
+							x += '<td class="tb-venue label-cell">-</td>';
+							x += '<td class="tb-desc tablet-only">'+((desc=='') ? '-' : desc)+'</td>';
+							x += '<td class="tb-mixer tablet-only">-</td>';
+							x += '<td class="tb-wmic tablet-only">-</td>';
+							x += '<td class="tb-spkr tablet-only">-</td>';
+							x += '<td class="tb-band tablet-only">-</td>';
+							x += '<td class="tb-crew label-cell">-</td>';
+							x += '<td class="tb-cin label-cell">-</td>';
+							x += '<td class="tb-cout label-cell">-</td>';
+							x += '<td class="tb-bng tablet-only">-</td>';
+							x += '</tr>';
+							x += '</tbody>';
+							$('.popup-event .event_list').html(x);
+							
+							$('table.event_list').data('info', inf[0]);
+							$('tr[name="el1"]').data('info', inf[0]);
+						}else{
+							var nnum = parseInt($('.popup-event .event_list tbody tr:nth-child('+ num +')').attr('name').substr(2)) + 1;
+							var x = '';
+							
+							x += '<tr name="el' + nnum + '"><td class="label-cell"><span class="button button-fill" name="el' + nnum + '">' + nnum + '</span></td>';
+							x += '<td class="tb-pic label-cell">'+pic+'</td>';
+							x += '<td class="tb-ld label-cell">'+((ld=='Lunch') ? 'L' : 'D')+'</td>';
+							x += '<td class="tb-venue label-cell">-</td>';
+							x += '<td class="tb-desc tablet-only">'+((desc=='') ? '-' : desc)+'</td>';
+							x += '<td class="tb-mixer tablet-only">-</td>';
+							x += '<td class="tb-wmic tablet-only">-</td>';
+							x += '<td class="tb-spkr tablet-only">-</td>';
+							x += '<td class="tb-band tablet-only">-</td>';
+							x += '<td class="tb-crew label-cell">-</td>';
+							x += '<td class="tb-cin label-cell">-</td>';
+							x += '<td class="tb-cout label-cell">-</td>';
+							x += '<td class="tb-bng tablet-only">-</td>';
+							x += '</tr>';
+							
+							$('.popup-event .event_list').append(x);
+							
+							var oinfo = $('table.event_list').data('info');
+							oinfo[oinfo.length] = inf[0];
+							
+							$('table.event_list').data('info', oinfo);
+							$('tr[name="el' + nnum + '"]').data('info', inf[0]);
+						}
+						
+						$('.event_list span').on('click', function(){
+							var x = '';
+							var inf = $('tr[name="' + $(this).attr('name') + '"]').data('info');
+							var trName = $(this).attr('name');
+							
+							if(parseInt($('body').data('user_level'))>=8){
+								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Person In Charge</div><div class="item-input-wrap">' + ((inf.pic==null) ? '-' : inf.pic) + '</div></div></div></li>';
+								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Luncheon/Dinner</div><div class="item-input-wrap"><input class="evtd_ld" type="text" autocomplete="off" value="' + ((inf.luncheon_dinner==null) ? '' : inf.luncheon_dinner) + '"></div></div></div></li>';
+								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Venue</div><div class="item-input-wrap"><input class="evtd_venue" type="text" autocomplete="off" value="' + ((inf.venue==null) ? '' : inf.venue) + '"></div></div></div></li>';
+								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Description</div><div class="item-input-wrap"><input class="evtd_desc" type="text" autocomplete="off" value="' + ((inf.description==null) ? '' : inf.description) + '"></div></div></div></li>';
+								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Price</div><div class="item-input-wrap"><input class="evtd_price" type="text" autocomplete="off" value="' + ((inf.price==null) ? '' : inf.price) + '"></div></div></div></li>';
+								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Mixer</div><div class="item-input-wrap"><input class="evtd_mixer" type="text" autocomplete="off" value="' + ((inf.mixer==null) ? '' : inf.mixer) + '"></div></div></div></li>';
+								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Wireless Microphone</div><div class="item-input-wrap"><input class="evtd_wmic" type="text" autocomplete="off" value="' + ((inf.wireless_mic==null) ? '' : inf.wireless_mic) + '"></div></div></div></li>';
+								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Speaker</div><div class="item-input-wrap"><input class="evtd_spkr" type="text" autocomplete="off" value="' + ((inf.speaker==null) ? '' : inf.speaker) + '"></div></div></div></li>';
+								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Live Band Information</div><div class="item-input-wrap"><input class="evtd_band" type="text" autocomplete="off" value="' + ((inf.band==null) ? '' : inf.band) + '"></div></div></div></li>';
+								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Crew</div><div class="item-input-wrap"><input class="evtd_crew" type="text" autocomplete="off" value="' + ((inf.crew==null) ? '' : inf.crew) + '"></div></div></div></li>';
+								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Vehicle to Event</div><div class="item-input-wrap"><input class="evtd_cin" type="text" autocomplete="off" value="' + ((inf.car_in==null) ? '' : inf.car_in) + '"></div></div></div></li>';
+								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Vehicle back from Event</div><div class="item-input-wrap"><input class="evtd_cout" type="text" autocomplete="off" value="' + ((inf.car_out==null) ? '' : inf.car_out) + '"></div></div></div></li>';
+								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Client, Bride/Groom</div><div class="item-input-wrap"><input class="evtd_bng" type="text" autocomplete="off" value="' + ((inf.bride_groom==null) ? '' : inf.bride_groom) + '"></div></div></div></li>';
+								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-input-wrap row"><button class="evtd_sve button col button-fill" data-eid="' + inf.primary_id + '">Save</button>';
+								if(parseInt($('body').data('user_level'))>=9){
+									x += '<button class="evtd_dlt button col button-fill" data-eid="' + inf.primary_id + '">Delete</button>';
+								}
+								x += '</div></div></div></li>';
+							}else{
+								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Person In Charge</div><div class="item-input-wrap">' + ((inf.pic==null) ? '-' : inf.pic) + '</div></div></div></li>';
+								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Luncheon/Dinner</div><div class="item-input-wrap">' + ((inf.luncheon_dinner==null) ? '-' : inf.luncheon_dinner) + '</div></div></div></li>';
+								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Venue</div><div class="item-input-wrap">' + ((inf.venue==null) ? '-' : inf.venue) + '</div></div></div></li>';
+								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Description</div><div class="item-input-wrap">' + ((inf.description==null) ? '-' : inf.description) + '</div></div></div></li>';
+								if(parseInt($('body').data('user_level'))>=7){
+									x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">price</div><div class="item-input-wrap">' + ((inf.price==null) ? '-' : inf.price) + '</div></div></div></li>';
+								}
+								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Mixer</div><div class="item-input-wrap">' + ((inf.mixer==null) ? '-' : inf.mixer) + '</div></div></div></li>';
+								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Wireless Microphone</div><div class="item-input-wrap">' + ((inf.wireless_mic==null) ? '-' : inf.wireless_mic) + '</div></div></div></li>';
+								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Speaker</div><div class="item-input-wrap">' + ((inf.speaker==null) ? '-' : inf.speaker) + '</div></div></div></li>';
+								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Live Band Information</div><div class="item-input-wrap">' + ((inf.band==null) ? '-' : inf.band) + '</div></div></div></li>';
+								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Crew</div><div class="item-input-wrap">' + ((inf.crew==null) ? '-' : inf.crew) + '</div></div></div></li>';
+								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Vehicle to Event</div><div class="item-input-wrap">' + ((inf.car_in==null) ? '-' : inf.car_in) + '</div></div></div></li>';
+								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Vehicle back from Event</div><div class="item-input-wrap">' + ((inf.car_out==null) ? '-' : inf.car_out) + '</div></div></div></li>';
+								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Client, Bride/Groom</div><div class="item-input-wrap">' + ((inf.bride_groom==null) ? '-' : inf.bride_groom) + '</div></div></div></li>';
+							}
+							
+							x = x.replace(/(?:\r\n|\r|\n)/g, '<br>');
+							$('.details-popover ul').html(x);
+							$('div.details-popover').data('info', inf);
+							
+							if(parseInt($('body').data('user_level'))>=8){
+								$('.details-popover button.evtd_sve').data('trName', trName);
+								$('.details-popover button.evtd_sve').on('click', function(){
+									var pid = $(this).data('eid'),
+										ld = $('input.evtd_ld').val(),
+										venue = $('input.evtd_venue').val(),
+										desc = $('input.evtd_desc').val(),
+										price = $('input.evtd_price').val(),
+										mixer = $('input.evtd_mixer').val(),
+										wmic = $('input.evtd_wmic').val(),
+										spkr = $('input.evtd_spkr').val(),
+										band = $('input.evtd_band').val(),
+										crew = $('input.evtd_crew').val(),
+										cin = $('input.evtd_cin').val(),
+										cout = $('input.evtd_cout').val(),
+										bng = $('input.evtd_bng').val();
+									
+									var DATA = {
+										'usr' : STORAGE.getItem('usr'),
+										'pid' : pid,
+										'ld' : ld,
+										'venue' : venue,
+										'desc' : desc,
+										'price' : price,
+										'mixer' : mixer,
+										'wmic' : wmic,
+										'spkr' : spkr,
+										'band' : band,
+										'crew' : crew,
+										'cin' : cin,
+										'cout' : cout,
+										'bng' : bng
+									};
+									var post_data = "ACT=" + encodeURIComponent('evd_udt')
+												  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
+												  
+									$.ajax({
+										type: 'POST',
+										url: 'http://app.wkventertainment.com/',
+										data: post_data,
+										beforeSend: function(){
+											sys.loading(1);
+										},
+										success: function(str){
+											sys.loading(0);
+											
+											if(str==='200 OK'){
+												inf.luncheon_dinner = ((ld == '') ? 'Dinner' : ld);
+												inf.venue = ((venue == '') ? null : venue);
+												inf.description = ((desc == '') ? null : desc);
+												inf.price = ((price == '') ? null : price);
+												inf.mixer = ((mixer == '') ? null : mixer);
+												inf.wireless_mic = ((wmic == '') ? null : wmic);
+												inf.speaker = ((spkr == '') ? null : spkr);
+												inf.band = ((band == '') ? null : band);
+												inf.crew = ((crew == '') ? null : crew);
+												inf.car_in = ((cin == '') ? null : cin);
+												inf.car_out = ((cout == '') ? null : cout);
+												inf.bride_groom = ((bng == '') ? null : bng);
+												$('tr[name="' + trName + '"]').data('info', inf);
+												$('div.details-popover').data('info', inf);
+												$('tr[name="' + trName + '"] td.tb-ld').text((ld == 'Lunch') ? 'L' : 'D');
+												$('tr[name="' + trName + '"] td.tb-venue').text((venue == '' ? '-' : venue));
+												$('tr[name="' + trName + '"] td.tb-desc').text((desc == '' ? '-' : desc));
+												$('tr[name="' + trName + '"] td.tb-price').text((price == '' ? '-' : price));
+												$('tr[name="' + trName + '"] td.tb-mixer').text((mixer == '' ? '-' : mixer));
+												$('tr[name="' + trName + '"] td.tb-wmic').text((wmic == '' ? '-' : wmic));
+												$('tr[name="' + trName + '"] td.tb-spkr').text((spkr == '' ? '-' : spkr));
+												$('tr[name="' + trName + '"] td.tb-band').text((band == '' ? '-' : band));
+												$('tr[name="' + trName + '"] td.tb-crew').text((crew == '' ? '-' : crew));
+												$('tr[name="' + trName + '"] td.tb-cin').text((cin == '' ? '-' : cin));
+												$('tr[name="' + trName + '"] td.tb-cout').text((cout == '' ? '-' : cout));
+												$('tr[name="' + trName + '"] td.tb-bng').text((bng == '' ? '-' : bng));									
+												
+												var success_toast = apps.toast.create({
+																	   icon: '<i class="material-icons">cloud_done</i>',
+																	   text: 'Details Successfully Saved',
+																	   position: 'center',
+																	   closeTimeout: 2000
+																   });
+												success_toast.open();
+												
+												navigator.vibrate(100);
+											}else{
+												var failed_toast = apps.toast.create({
+																	   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
+																	   text: 'Oooppss, error',
+																	   position: 'center',
+																	   closeTimeout: 2000
+																   });
+												failed_toast.open();
+												
+												navigator.vibrate(100);
+											}
+										}
+									});
+								});
+								
+								$('.details-popover button.evtd_dlt').on('click', function(){
+									var pid = $(this).data('eid');
+									
+									var DATA = {
+											'usr' : STORAGE.getItem('usr'),
+											'pid' : pid
+										};
+									var post_data = "ACT=" + encodeURIComponent('evd_dlt')
+												  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
+												  
+									$.ajax({
+										type: 'POST',
+										url: 'http://app.wkventertainment.com/',
+										data: post_data,
+										beforeSend: function(){
+											sys.loading(1);
+										},
+										success: function(str){
+											sys.loading(0);
+											
+											if(str==='200 OK'){
+												$('tr[name="' + trName + '"]').remove();
+												$('.popover-backdrop')[0].click();
+												
+												var success_toast = apps.toast.create({
+																	   icon: '<i class="material-icons">delete</i>',
+																	   text: 'Details Successfully Deleted',
+																	   position: 'center',
+																	   closeTimeout: 2000
+																   });
+												success_toast.open();
+											}else{
+												var failed_toast = apps.toast.create({
+																	   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
+																	   text: 'Oooppss, error',
+																	   position: 'center',
+																	   closeTimeout: 2000
+																   });
+												failed_toast.open();
+												
+												navigator.vibrate(100);
+											}
+										}
+									});
+								});
+							}
+							apps.popover.open('.details-popover');
+						});
+						
+						var success_toast = apps.toast.create({
+											   icon: '<i class="material-icons">cloud_done</i>',
+											   text: 'Details Successfully Added',
+											   position: 'center',
+											   closeTimeout: 2000
+										   });
+						success_toast.open();
+						
+						navigator.vibrate(100);
+						
+						$('.evts_input button.fab-close')[0].click();
+						$('#evts_ipic').val(''),
+						$('#evts_idesc').val(''),
+						$('#evts_ild').val('Dinner');
+					}else{
+						var failed_toast = apps.toast.create({
+											   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
+											   text: 'Oooppss, error',
+											   position: 'center',
+											   closeTimeout: 2000
+										   });
+						failed_toast.open();
+					}
+				}
+			});
+		}else{
+			navigator.vibrate(100);
+		}
+	});
+	
 	$('a.evtd_shr').on('click', function(e){
 		var inf = $('.details-popover').data('info');
 		var share = sys.toMonth(inf.date) + ' ' + sys.toDay(inf.date) + ' (' + sys.toWeek(inf.date) + ')\n'
@@ -1011,7 +1337,7 @@ $(document).ready(function(){
 											   });
 							success_toast.open();
 							
-							navigator.vibrate(100,200,100);
+							navigator.vibrate(100);
 						}else{
 							var failed_toast = apps.toast.create({
 												   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
