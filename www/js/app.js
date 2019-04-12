@@ -6,7 +6,7 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.84",
+			  version: "1.0.85",
 			  rtl: false,
 			  language: "en-US"
 		  });
@@ -89,8 +89,9 @@ var app = {
 			cordova.plugins.notification.local.hasPermission(function(granted){
 				cordova.plugins.notification.local.schedule({
 					title: 'Test123456',
-					text: 'latest...',
-					trigger: { every: { minute: 15 } }
+					text: (new Date().getHours() + ':' + new Date().getMinutes() + ':' + new Date().getSeconds()),
+					foreground: true,
+					trigger: { every: 'minute', count: 15 }
 				});
 			});
 		}
