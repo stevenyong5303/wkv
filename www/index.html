@@ -138,9 +138,9 @@
 							<i class="icon material-icons md-only">important_devices</i>
 							<span class="tabbar-label">Home</span>
 						</a>
-						<a id="status-btn" href="#pg-admin" class="tab-link level8">
-							<i class="icon material-icons md-only">supervisor_account</i>
-							<span class="tabbar-label">Status</span>
+						<a id="admin-btn" href="#pg-admin" class="tab-link level8">
+							<i class="icon material-icons md-only">security</i>
+							<span class="tabbar-label">Super</span>
 						</a>
 						<a href="#pg-schedule" class="tab-link">
 							<i class="icon material-icons md-only">today</i>
@@ -187,10 +187,45 @@
 						</div>
 						<div id="pg-admin" class="tab page-content level8">
 							<div class="block">
-								<div class="block-title">User Status</div>
+								<div class="block-title">Administrator</div>
 								<div class="list">
-									<ul id="user-status">
-										
+									<ul>
+										<li>
+											<div class="item-content">
+												<div class="item-media">
+													<i class="icon material-icons md-only">accessibility_new</i>
+												</div>
+												<div class="item-inner">
+													<div class="item-title">
+														<a id="status-btn" class="link popup-open" href="#" data-popup=".popup-ustatus">User Status</a>
+													</div>
+												</div>
+											</div>
+										</li>
+										<li>
+											<div class="item-content">
+												<div class="item-media">
+													<i class="icon material-icons md-only">recent_actors</i>
+												</div>
+												<div class="item-inner">
+													<div class="item-title">
+														<a id="crewl-btn" class="link popup-open" href="#" data-popup=".popup-crewl">Crew List</a>
+													</div>
+												</div>
+											</div>
+										</li>
+										<li>
+											<div class="item-content">
+												<div class="item-media">
+													<i class="icon material-icons md-only">place</i>
+												</div>
+												<div class="item-inner">
+													<div class="item-title">
+														<a class="link popup-open" href="#" data-popup=".popup-locl">Location List</a>
+													</div>
+												</div>
+											</div>
+										</li>
 									</ul>
 								</div>
 							</div>
@@ -442,7 +477,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="popup popup-status">
+			<div class="popup popup-ustatus level8">
 				<div class="toolbar">
 					<div class="toolbar-inner">
 						<div class="left">User Status</div>
@@ -450,14 +485,42 @@
 					</div>
 				</div>
 				<div class="block">
-					<div class="item-content" align="center">
-						<div class="workClock elevation-hover-7 elevation-5 elevation-pressed-2">
-							<span class="h1">0</span><span class="h2">0</span> :
-							<span class="m1">0</span><span class="m2">0</span> :
-							<span class="s1">0</span><span class="s2">0</span>
+					<div class="item-content">
+						<div class="list">
+							<ul id="user-status"></ul>
 						</div>
-						<div class="clk-loc">
-						
+					</div>
+				</div>
+			</div>
+			<div class="panel panel-status panel-right panel-cover">
+				<div class="content-block">
+					<div class="toolbar">
+						<div class="toolbar-inner">
+							<div class="left status-name"></div>
+							<div class="right"><a class="link panel-close" href="#">Close</a></div>
+						</div>
+					</div>
+					<div class="block">
+						<div class="item-content" align="center">
+							<div class="clk-time elevation-hover-7 elevation-5 elevation-pressed-2"></div>
+							<div class="clk-loc"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="popup popup-crewl level8">
+				<div class="toolbar">
+					<div class="toolbar-inner">
+						<div class="left">Crew List</div>
+						<div class="right"><a class="link popup-close" href="#">Close</a></div>
+					</div>
+				</div>
+				<div class="block">
+					<div class="item-content">
+						<div class="list crew_list">
+							<ul>
+							
+							</ul>
 						</div>
 					</div>
 				</div>
@@ -749,7 +812,7 @@
 														<input type="checkbox" name="cbmd-checkbox"/>
 														<i class="icon icon-checkbox"></i>
 														<div class="item-inner">
-															<div class="item-title">2 channel&emsp;-&emsp;DI Box</div>
+															<div class="item-title">1 u&emsp;-&emsp;2 CH DI Box</div>
 														</div>
 													</label>
 												</li>
@@ -881,7 +944,7 @@
 														<input type="checkbox" name="cbbs-checkbox"/>
 														<i class="icon icon-checkbox"></i>
 														<div class="item-inner">
-															<div class="item-title">2 channel&emsp;-&emsp;DI Box</div>
+															<div class="item-title">1 u&emsp;-&emsp;2 CH DI Box</div>
 														</div>
 													</label>
 												</li>
@@ -1710,7 +1773,7 @@
 				<div class="block">
 					<div align="center">
 						 <img src="icon.png" alt="WKV Logo" height="128" width="128">
-						 <span style="color:#999;position:absolute;top:40px;font-size:12px;">WKV<br/>Version 1.0.85</span>
+						 <span style="color:#999;position:absolute;top:40px;font-size:12px;">WKV<br/>Version 1.0.86</span>
 					</div>
 					<p>WKV Application serves as a platform for of WKV’s member to obtain basic information and calculation method can easily obtain by accessing to the application.</p>
 					<p>For general usage, clock in and clock out is built in the application for employees of WKV to check in whenever they report to event venue.</p>

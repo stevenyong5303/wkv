@@ -5,6 +5,9 @@
     font-weight: normal;
     font-style: normal;
 }
+.panel{
+	width: 350px;
+}
 .evts_input {
 	position: absolute;
 	left: 10px;
@@ -54,6 +57,15 @@
 	justify-content: center;
 	overflow: hidden;
 	z-index: 1;
+}
+.popup-packl .accordion-item-content .item-title{
+	font-size: 12px;
+}
+.panel-status{
+	z-index: 12000;
+}
+.panel-backdrop{
+	z-index: 11999;
 }
 .clk-loc {
 	margin-top: 20px;

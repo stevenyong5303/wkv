@@ -6,11 +6,11 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.85",
+			  version: "1.0.86",
 			  rtl: false,
 			  language: "en-US"
 		  });
-var geoToken = true, geoCount = 60;
+var geoToken = true, geoCount = 120;
 
 var app = {
     initialize: function() {
@@ -24,77 +24,58 @@ var app = {
     onDeviceReady: function() {
         app.receivedEvent('deviceready');
 		
-		// var fetchTask = function(){
-			// var DATA = {
-					// 'usr' : STORAGE.getItem('usr')
-				// };
-			// var post_data = "ACT=" + encodeURIComponent('msg_chk')
-						  // + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
+		var fetchTask = function(){
+			var DATA = {
+					'usr' : STORAGE.getItem('usr')
+				};
+			var post_data = "ACT=" + encodeURIComponent('msg_chk')
+						  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
 						  
-			// if(STORAGE.getItem('usr')){
-				// $.ajax({
-					// type: 'POST',
-					// url: 'http://app.wkventertainment.com/',
-					// data: post_data,
-					// success: function(str){
-						// var inf = JSON.parse(str);
+			if(STORAGE.getItem('usr')){
+				$.ajax({
+					type: 'POST',
+					url: 'http://app.wkventertainment.com/',
+					data: post_data,
+					success: function(str){
+						var inf = JSON.parse(str);
 					
-						// if(inf['reply']==='200 OK'){
-							// if(inf['new']){
-								// navigator.notification.alert(
-									// inf['title'],
-									// console.log(('Received text: ' + inf['text'])),
-									// inf['text'],
-									// 'OK'
-								// );
-							// if(STORAGE.getItem('usr')=='steven'){
-								// cordova.plugins.notification.local.hasPermission(function(granted){
-									// cordova.plugins.notification.local.schedule({
-										// title: 'Test123456',
-										// text: 'latest...',
-										// foreground: false
-									// });
-								// });
-							// }
-							// }
-						// }else{
-							// navigator.notification.alert(
-								// 'Error occur',
-								// console.log(('Error + ' + inf['reply'])),
-								// ('Contact administrator, Error code : [' + inf['reply'] + ']'),
-								// 'OK'
-							// );
-						// }
-					// }
-				// });
-			// }
-			
-			// window.SchedulerPlugin.finish();
-		// };
-		 
-		// var errorHandler = function(error){
-			// 'Error occur',
-			// console.log('SchedulerPlugin error: ', error),
-			// ('Contact administrator, Error : [' + error + ']'),
-			// 'OK'
-		// };
-		 
-		// window.SchedulerPlugin.configure(
-			// fetchTask,
-			// errorHandler,
-			// { minimumFetchInterval: 15 }
-		// );
-		
-		if(STORAGE.getItem('usr')=='steven'){
-			cordova.plugins.notification.local.hasPermission(function(granted){
-				cordova.plugins.notification.local.schedule({
-					title: 'Test123456',
-					text: (new Date().getHours() + ':' + new Date().getMinutes() + ':' + new Date().getSeconds()),
-					foreground: true,
-					trigger: { every: 'minute', count: 15 }
+						if(inf['reply']==='200 OK'){
+							if(inf['new']){
+								cordova.plugins.notification.local.hasPermission(function(granted){
+									cordova.plugins.notification.local.schedule({
+										title: inf['title'],
+										text: inf['text'],
+										foreground: false
+									});
+								});
+							}
+						}else{
+							navigator.notification.alert(
+								'Error occur',
+								console.log(('Error + ' + inf['reply'])),
+								('Contact administrator, Error code : [' + inf['reply'] + ']'),
+								'OK'
+							);
+						}
+					}
 				});
-			});
-		}
+			}
+			
+			window.SchedulerPlugin.finish();
+		};
+		 
+		var errorHandler = function(error){
+			'Error occur',
+			console.log('SchedulerPlugin error: ', error),
+			('Contact administrator, Error : [' + error + ']'),
+			'OK'
+		};
+		
+		window.SchedulerPlugin.configure(
+			fetchTask,
+			errorHandler,
+			{ minimumFetchInterval: 15 }
+		);
 		
 		document.addEventListener("backbutton", sys.onBackKeyDown, false);
     },
@@ -202,7 +183,7 @@ $(document).ready(function(){
 								var status = inf['status'], x = '';
 								
 								for(var i=0; i<status.length; i++){
-									x += '<li><a href="#" class="item-link item-content" data-usr="' + status[i].user_id + '">';
+									x += '<li><a href="#" class="item-link item-content" data-usr="' + status[i].user_id + '" data-who="' + status[i].nc_name + '">';
 									x += '<div class="item-media"><i class="icon material-icons md-only">' + (status[i].clocked_in == 1 ? 'directions_run' : 'hotel') + '</i></div>';
 									x += '<div class="item-inner"><div class="item-title">' + status[i].nc_name + (status[i].clocked_in == 1 ? ('<div class="item-footer">' + status[i].clocked_time + '</div>') : '') + '</div></div></a></li>';
 								}
@@ -539,11 +520,14 @@ $(document).ready(function(){
 			
 				if(inf['reply']==='200 OK'){
 					var status = inf['status'], x = '';
+					$('body').data('crew', inf['status']);
 						
 					for(var i=0; i<status.length; i++){
-						x += '<li><a href="#" class="item-link item-content" data-usr="' + status[i].user_id + '">';
-						x += '<div class="item-media"><i class="icon material-icons md-only">' + (status[i].clocked_in == 1 ? 'directions_run' : 'hotel') + '</i></div>';
-						x += '<div class="item-inner"><div class="item-title">' + status[i].nc_name + (status[i].clocked_in == 1 ? ('<div class="item-footer">' + status[i].clocked_time + '</div>') : '') + '</div></div></a></li>';
+						if(status[i].user_level > 0){
+							x += '<li><a href="#" class="item-link item-content" data-usr="' + status[i].user_id + '" data-who="' + status[i].nc_name + '">';
+							x += '<div class="item-media"><i class="icon material-icons md-only">' + (status[i].clocked_in == 1 ? 'directions_run' : 'hotel') + '</i></div>';
+							x += '<div class="item-inner"><div class="item-title">' + status[i].nc_name + (status[i].clocked_in == 1 ? ('<div class="item-footer">' + status[i].clocked_time + '</div>') : '') + '</div></div></a></li>';
+						}
 					}
 					$('#user-status').html(x);
 					sys.loading(0);
@@ -563,6 +547,7 @@ $(document).ready(function(){
 	
 	$('#user-status').on('click', 'a.item-link', function(){
 		var target = $(this).data('usr');
+		var who = $(this).data('who');
 		var DATA = {
 				'usr' : STORAGE.getItem('usr'),
 				'target' : target
@@ -576,43 +561,26 @@ $(document).ready(function(){
 			data: post_data,
 			beforeSend: function(){
 				sys.loading(1);
+				$('.status-name').text(who);
 			},
 			success: function(str){
 				if(sys.isEmpty(str)){
-					str = '{"clock_action":"OUT","reply":"200 OK"}';
+					str = '{"clock_action":"NO","reply":"200 OK"}';
 				}
 				var inf = JSON.parse(str);
 				
 				if(inf['reply']==='200 OK'){
-					if(inf['clock_action']=='IN'){
+					if(inf['clock_action']=='IN' || inf['clock_action']=='ADD' || inf['clock_action']=='OUT'){
 						var x = '';
-						var work = (Date.now() - new Date(inf['clock_in_out']).getTime())/1000;
-						var s = sys.pad(parseInt(work) % 60),
-							m = sys.pad(parseInt(work / 60) % 60),
-							h = sys.pad(parseInt(work / 3600));
-						
-						$('.popup-status .workClock .h1').text(h.substr(0,1));
-						$('.popup-status .workClock .m1').text(m.substr(0,1));
-						$('.popup-status .workClock .s1').text(s.substr(0,1));
-						$('.popup-status .workClock .h2').text(h.substr(1,1));
-						$('.popup-status .workClock .m2').text(m.substr(1,1));
-						$('.popup-status .workClock .s2').text(s.substr(1,1));
-						
 						x += '<iframe width="100%" height="300" frameborder="0" style="border:0;" src="https://www.google.com/maps/embed/v1/view?key=AIzaSyCRKiFjg2CA78cD09yIXuHFCxADjOh75rg&center=' + inf['clock_location'] + '&zoom=16"> </iframe>';
-						
-						$('.popup-status .clk-loc').html(x);
+						$('.panel-status .clk-loc').html(x);
+						$('.panel-status .clk-time').html(inf['clock_action'] + ' : ' + inf['clock_in_out']);
 					}else{
-						$('.popup-status .workClock .h1').text('0');
-						$('.popup-status .workClock .m1').text('0');
-						$('.popup-status .workClock .s1').text('0');
-						$('.popup-status .workClock .h2').text('0');
-						$('.popup-status .workClock .m2').text('0');
-						$('.popup-status .workClock .s2').text('0');
-						
-						$('.popup-status .clk-loc').html('');
+						$('.panel-status .clk-loc').html('');
+						$('.panel-status .clk-time').html('No record.');
 					}
 					sys.loading(0);
-					apps.popup.open('.popup-status');
+					apps.panel.open('right', true);
 				}else{
 					sys.loading(0);
 					var failed_toast = apps.toast.create({
@@ -625,6 +593,30 @@ $(document).ready(function(){
 				}
 			}
 		});
+	});
+	
+	$('#crewl-btn').on('click', function(){
+		var x = '', crews = $('body').data('crew');
+		
+		for(var i = 0; i < crews.length; i++){
+			x += '<li>';
+			x += '<a href="#" class="item-link item-content">';
+			x += '<div class="item-inner">';
+			x += '<div class="item-title">';
+			x += '<div class="item-header">' + crews[i]['user_id'] + '</div>';
+			x += crews[i]['nc_name'];
+			x += '<div class="item-footer">' + crews[i]['short_name'] + '</div>';
+			x += '</div>';
+			x += '</div>';
+			x += '</a>';
+			x += '</li>';
+		}
+		$('.crew_list ul').html(x);
+	});
+	
+	$('.crew_list').on('click', 'a.item-link', function(){
+		var target = $(this).find('.item-header').text();
+		
 	});
 	
 	$('input#ltcl_nme').on('keyup', function(){
@@ -1582,6 +1574,7 @@ $(document).ready(function(){
 			var inf = JSON.parse(str);
 			sys.getLocation();
 			$('body').data('user_level', inf['level']);
+			$('body').data('crew', inf['status']);
 			
 			if(inf['clocked']=='1'){
 				STORAGE.setItem('clock_in', (new Date(inf['time']).getTime()));
@@ -1615,7 +1608,7 @@ $(document).ready(function(){
 				var status = inf['status'], x = '';
 				
 				for(var i=0; i<status.length; i++){
-					x += '<li><a href="#" class="item-link item-content" data-usr="' + status[i].user_id + '">';
+					x += '<li><a href="#" class="item-link item-content" data-usr="' + status[i].user_id + '" data-who="' + status[i].nc_name + '">';
 					x += '<div class="item-media"><i class="icon material-icons md-only">' + (status[i].clocked_in == 1 ? 'directions_run' : 'hotel') + '</i></div>';
 					x += '<div class="item-inner"><div class="item-title">' + status[i].nc_name + (status[i].clocked_in == 1 ? ('<div class="item-footer">' + status[i].clocked_time + '</div>') : '') + '</div></div></a></li>';
 				}
@@ -1844,7 +1837,7 @@ sys = {
 		
 		if(geoCount==0){
 			geoToken = true;
-			geoCount = 60;
+			geoCount = 120;
 		}else{
 			geoCount--;
 		}
