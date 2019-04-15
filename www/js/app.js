@@ -6,7 +6,7 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.86",
+			  version: "1.0.87",
 			  rtl: false,
 			  language: "en-US"
 		  });
@@ -74,7 +74,7 @@ var app = {
 		window.SchedulerPlugin.configure(
 			fetchTask,
 			errorHandler,
-			{ minimumFetchInterval: 15 }
+			{ minimumFetchInterval: 30 }
 		);
 		
 		document.addEventListener("backbutton", sys.onBackKeyDown, false);
@@ -281,7 +281,7 @@ $(document).ready(function(){
 										x += '<td class="tb-wmic tablet-only">'+((inf[i].wireless_mic==null) ? '-' : inf[i].wireless_mic)+'</td>';
 										x += '<td class="tb-spkr tablet-only">'+((inf[i].speaker==null) ? '-' : inf[i].speaker)+'</td>';
 										x += '<td class="tb-band tablet-only">'+((inf[i].band==null) ? '-' : inf[i].band)+'</td>';
-										x += '<td class="tb-crew label-cell">'+((inf[i].crew==null) ? '-' : inf[i].crew)+'</td>';
+										x += '<td class="tb-crew label-cell">'+((inf[i].crew==null) ? '-' : sys.unameToSname(inf[i].crew))+'</td>';
 										x += '<td class="tb-cin label-cell">'+((inf[i].car_in==null) ? '-' : inf[i].car_in)+'</td>';
 										x += '<td class="tb-cout label-cell">'+((inf[i].car_out==null) ? '-' : inf[i].car_out)+'</td>';
 										x += '<td class="tb-bng tablet-only">'+((inf[i].bride_groom==null) ? '-' : inf[i].bride_groom)+'</td>';
@@ -305,6 +305,7 @@ $(document).ready(function(){
 									var trName = $(this).attr('name');
 									
 									if(parseInt($('body').data('user_level'))>=8){
+										var crews = $('body').data('crew');
 										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Person In Charge</div><div class="item-input-wrap">' + ((inf.pic==null) ? '-' : inf.pic) + '</div></div></div></li>';
 										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Luncheon/Dinner</div><div class="item-input-wrap"><input class="evtd_ld" type="text" autocomplete="off" value="' + ((inf.luncheon_dinner==null) ? '' : inf.luncheon_dinner) + '"></div></div></div></li>';
 										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Venue</div><div class="item-input-wrap"><input class="evtd_venue" type="text" autocomplete="off" value="' + ((inf.venue==null) ? '' : inf.venue) + '"></div></div></div></li>';
@@ -314,7 +315,7 @@ $(document).ready(function(){
 										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Wireless Microphone</div><div class="item-input-wrap"><input class="evtd_wmic" type="text" autocomplete="off" value="' + ((inf.wireless_mic==null) ? '' : inf.wireless_mic) + '"></div></div></div></li>';
 										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Speaker</div><div class="item-input-wrap"><input class="evtd_spkr" type="text" autocomplete="off" value="' + ((inf.speaker==null) ? '' : inf.speaker) + '"></div></div></div></li>';
 										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Live Band Information</div><div class="item-input-wrap"><input class="evtd_band" type="text" autocomplete="off" value="' + ((inf.band==null) ? '' : inf.band) + '"></div></div></div></li>';
-										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Crew</div><div class="item-input-wrap"><input class="evtd_crew" type="text" autocomplete="off" value="' + ((inf.crew==null) ? '' : inf.crew) + '"></div></div></div></li>';
+										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Crew</div><div class="item-input-wrap"><input class="evtd_crew" type="text" autocomplete="off" data-uname="' + inf.crew + '" value="' + ((inf.crew==null) ? '' : sys.unameToSname(inf.crew)) + '"></div></div></div></li>';
 										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Vehicle to Event</div><div class="item-input-wrap"><input class="evtd_cin" type="text" autocomplete="off" value="' + ((inf.car_in==null) ? '' : inf.car_in) + '"></div></div></div></li>';
 										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Vehicle back from Event</div><div class="item-input-wrap"><input class="evtd_cout" type="text" autocomplete="off" value="' + ((inf.car_out==null) ? '' : inf.car_out) + '"></div></div></div></li>';
 										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Client, Bride/Groom</div><div class="item-input-wrap"><input class="evtd_bng" type="text" autocomplete="off" value="' + ((inf.bride_groom==null) ? '' : inf.bride_groom) + '"></div></div></div></li>';
@@ -335,7 +336,7 @@ $(document).ready(function(){
 										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Wireless Microphone</div><div class="item-input-wrap">' + ((inf.wireless_mic==null) ? '-' : inf.wireless_mic) + '</div></div></div></li>';
 										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Speaker</div><div class="item-input-wrap">' + ((inf.speaker==null) ? '-' : inf.speaker) + '</div></div></div></li>';
 										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Live Band Information</div><div class="item-input-wrap">' + ((inf.band==null) ? '-' : inf.band) + '</div></div></div></li>';
-										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Crew</div><div class="item-input-wrap">' + ((inf.crew==null) ? '-' : inf.crew) + '</div></div></div></li>';
+										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Crew</div><div class="item-input-wrap">' + ((inf.crew==null) ? '-' : sys.unameToSname(inf.crew)) + '</div></div></div></li>';
 										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Vehicle to Event</div><div class="item-input-wrap">' + ((inf.car_in==null) ? '-' : inf.car_in) + '</div></div></div></li>';
 										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Vehicle back from Event</div><div class="item-input-wrap">' + ((inf.car_out==null) ? '-' : inf.car_out) + '</div></div></div></li>';
 										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Client, Bride/Groom</div><div class="item-input-wrap">' + ((inf.bride_groom==null) ? '-' : inf.bride_groom) + '</div></div></div></li>';
@@ -357,7 +358,7 @@ $(document).ready(function(){
 												wmic = $('input.evtd_wmic').val(),
 												spkr = $('input.evtd_spkr').val(),
 												band = $('input.evtd_band').val(),
-												crew = $('input.evtd_crew').val(),
+												crew = $('input.evtd_crew').data('uname'),
 												cin = $('input.evtd_cin').val(),
 												cout = $('input.evtd_cout').val(),
 												bng = $('input.evtd_bng').val();
@@ -414,10 +415,12 @@ $(document).ready(function(){
 														$('tr[name="' + trName + '"] td.tb-wmic').text((wmic == '' ? '-' : wmic));
 														$('tr[name="' + trName + '"] td.tb-spkr').text((spkr == '' ? '-' : spkr));
 														$('tr[name="' + trName + '"] td.tb-band').text((band == '' ? '-' : band));
-														$('tr[name="' + trName + '"] td.tb-crew').text((crew == '' ? '-' : crew));
+														$('tr[name="' + trName + '"] td.tb-crew').text((crew == '' ? '-' : sys.unameToSname(crew)));
 														$('tr[name="' + trName + '"] td.tb-cin').text((cin == '' ? '-' : cin));
 														$('tr[name="' + trName + '"] td.tb-cout').text((cout == '' ? '-' : cout));
 														$('tr[name="' + trName + '"] td.tb-bng').text((bng == '' ? '-' : bng));									
+														
+														$('.fab.evtd_shr').css('display', 'none');
 														
 														var success_toast = apps.toast.create({
 																			   icon: '<i class="material-icons">cloud_done</i>',
@@ -466,6 +469,7 @@ $(document).ready(function(){
 													if(str==='200 OK'){
 														$('tr[name="' + trName + '"]').remove();
 														$('.popover-backdrop')[0].click();
+														$('.fab.evtd_shr').css('display', 'none');
 														
 														var success_toast = apps.toast.create({
 																			   icon: '<i class="material-icons">delete</i>',
@@ -489,6 +493,7 @@ $(document).ready(function(){
 											});
 										});
 									}
+									$('.fab.evtd_shr').css('display', 'block');
 									apps.popover.open('.details-popover');
 								});
 							}
@@ -500,6 +505,37 @@ $(document).ready(function(){
 	};
 	sys.dayClick(usr);
 	sys.eventCheck(usr, (new Date().getMonth()), new Date().getYear()+1900);
+	
+	$('.details-popover').on('click', 'input.evtd_crew', function(){
+		var crews = $('body').data('crew'),
+			work = (sys.isEmpty($('input.evtd_crew').data('uname')) ? [] : $('input.evtd_crew').data('uname').split(','));
+			x = '';
+		
+		for(var i = 0; i < crews.length; i++){
+			var select = false;
+			for(var j = 0; j < work.length; j++){
+				if(crews[i]['user_id'] == work[j]){
+					select = true;
+					break;
+				}
+			}
+			x += '<li><label class="item-checkbox item-content"><input type="checkbox" ' + (select ? 'checked="checked"' : '') + ' name="evcw-checkbox" value="' + crews[i]['user_id'] + '" data-sn="' + crews[i]['short_name'] + '" />';
+			x += '<i class="icon icon-checkbox"></i><div class="item-inner"><div class="item-title">' + crews[i]['short_name'] + '</div></div></label></li>';
+		}
+		$('.evt-crew ul').html(x);
+		apps.panel.open('left', true);
+	});
+	
+	$('div.evt-crew').on('click', 'li', function(){
+		var wcrew = [], wcrewsn = [];
+
+		$.each($("input[name='evcw-checkbox']:checked"), function(){            
+			wcrew.push($(this).val());
+			wcrewsn.push($(this).data('sn'));
+		});
+		$('input.evtd_crew').data('uname', wcrew.join(','));
+		$('input.evtd_crew').val(wcrewsn.join(', '));
+	});
 	
 	$('#status-btn').on('click', function(){
 		var DATA = {
@@ -600,10 +636,9 @@ $(document).ready(function(){
 		
 		for(var i = 0; i < crews.length; i++){
 			x += '<li>';
-			x += '<a href="#" class="item-link item-content">';
+			x += '<a href="#" class="item-link item-content" data-num="' + i + '">';
 			x += '<div class="item-inner">';
 			x += '<div class="item-title">';
-			x += '<div class="item-header">' + crews[i]['user_id'] + '</div>';
 			x += crews[i]['nc_name'];
 			x += '<div class="item-footer">' + crews[i]['short_name'] + '</div>';
 			x += '</div>';
@@ -615,7 +650,16 @@ $(document).ready(function(){
 	});
 	
 	$('.crew_list').on('click', 'a.item-link', function(){
-		var target = $(this).find('.item-header').text();
+		var crew = $('body').data('crew')[$(this).data('num')];
+		
+		$('#crewld_dname').data('uid', crew['user_id']);
+		$('#crewld_dname').data('num', $(this).data('num'));
+		$('#crewld_dname').val(crew['nc_name']);
+		$('#crewld_sname').val(crew['short_name']);
+		apps.popover.open('.crewld-popover');
+	});
+	
+	$('.crewld_ok').on('click', function(){
 		
 	});
 	
@@ -623,11 +667,15 @@ $(document).ready(function(){
 		var tmp = ($(this).val()).toLowerCase();
 		
 		if(tmp.includes('beam') || tmp.includes('moving') || tmp.includes('wash') || tmp.includes('zoom')){
-			$('#ltcl_ads').val('16')
+			$('#ltcl_ads').val('16');
 		}else if(tmp.includes('par') || tmp.includes('pcc') || tmp.includes('pcw') || tmp.includes('small')){
-			$('#ltcl_ads').val('8')
+			$('#ltcl_ads').val('8');
 		}else if(tmp.includes('city')){
-			$('#ltcl_ads').val('3')
+			$('#ltcl_ads').val('3');
+		}else if(tmp.includes('led 200') || tmp.includes('200')){
+			$('#ltcl_ads').val('20');
+		}else if(tmp.includes('blinder')){
+			$('#ltcl_ads').val('12');
 		}
 	});
 	
@@ -1066,7 +1114,7 @@ $(document).ready(function(){
 										wmic = $('input.evtd_wmic').val(),
 										spkr = $('input.evtd_spkr').val(),
 										band = $('input.evtd_band').val(),
-										crew = $('input.evtd_crew').val(),
+										crew = $('input.evtd_crew').data('uname'),
 										cin = $('input.evtd_cin').val(),
 										cout = $('input.evtd_cout').val(),
 										bng = $('input.evtd_bng').val();
@@ -1123,10 +1171,12 @@ $(document).ready(function(){
 												$('tr[name="' + trName + '"] td.tb-wmic').text((wmic == '' ? '-' : wmic));
 												$('tr[name="' + trName + '"] td.tb-spkr').text((spkr == '' ? '-' : spkr));
 												$('tr[name="' + trName + '"] td.tb-band').text((band == '' ? '-' : band));
-												$('tr[name="' + trName + '"] td.tb-crew').text((crew == '' ? '-' : crew));
+												$('tr[name="' + trName + '"] td.tb-crew').text((crew == '' ? '-' : sys.unameToSname(crew)));
 												$('tr[name="' + trName + '"] td.tb-cin').text((cin == '' ? '-' : cin));
 												$('tr[name="' + trName + '"] td.tb-cout').text((cout == '' ? '-' : cout));
 												$('tr[name="' + trName + '"] td.tb-bng').text((bng == '' ? '-' : bng));									
+												
+												$('.fab.evtd_shr').css('display', 'none');
 												
 												var success_toast = apps.toast.create({
 																	   icon: '<i class="material-icons">cloud_done</i>',
@@ -1175,6 +1225,7 @@ $(document).ready(function(){
 											if(str==='200 OK'){
 												$('tr[name="' + trName + '"]').remove();
 												$('.popover-backdrop')[0].click();
+												$('.fab.evtd_shr').css('display', 'none');
 												
 												var success_toast = apps.toast.create({
 																	   icon: '<i class="material-icons">delete</i>',
@@ -1260,7 +1311,7 @@ $(document).ready(function(){
 					wmic = $('input.evtd_wmic').val(),
 					spkr = $('input.evtd_spkr').val(),
 					band = $('input.evtd_band').val(),
-					crew = $('input.evtd_crew').val(),
+					crew = $('input.evtd_crew').data('uname'),
 					cin = $('input.evtd_cin').val(),
 					cout = $('input.evtd_cout').val(),
 					bng = $('input.evtd_bng').val();
@@ -1317,10 +1368,12 @@ $(document).ready(function(){
 							$('tr[name="' + trName + '"] td.tb-wmic').text((wmic == '' ? '-' : wmic));
 							$('tr[name="' + trName + '"] td.tb-spkr').text((spkr == '' ? '-' : spkr));
 							$('tr[name="' + trName + '"] td.tb-band').text((band == '' ? '-' : band));
-							$('tr[name="' + trName + '"] td.tb-crew').text((crew == '' ? '-' : crew));
+							$('tr[name="' + trName + '"] td.tb-crew').text((crew == '' ? '-' : sys.unameToSname(crew)));
 							$('tr[name="' + trName + '"] td.tb-cin').text((cin == '' ? '-' : cin));
 							$('tr[name="' + trName + '"] td.tb-cout').text((cout == '' ? '-' : cout));
 							$('tr[name="' + trName + '"] td.tb-bng').text((bng == '' ? '-' : bng));									
+							
+							$('.fab.evtd_shr').css('display', 'none');
 							
 							var success_toast = apps.toast.create({
 												   icon: '<i class="material-icons">cloud_done</i>',
@@ -1740,6 +1793,20 @@ sys = {
 			val += ';';
 		}
 		return val;
+	},
+	'unameToSname' : function(str){
+		var aCrew = str.split(","), sCrew = [], all = $('body').data('crew');
+		
+		for(var i=0; i<aCrew.length; i++){
+			for(var j=0; j<all.length; j++){
+				if(aCrew[i] == all[j].user_id){
+					sCrew[i] = all[j].short_name;
+					break;
+				}
+			}
+		}
+		
+		return sCrew.join(', ');
 	},
 	'eventCheck' : function(user, month, year){
 		if(sys.isEmpty(user)){

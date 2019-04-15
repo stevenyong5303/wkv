@@ -5,6 +5,9 @@
     font-weight: normal;
     font-style: normal;
 }
+.fab.evtd_shr{
+	display: none;
+}
 .panel{
 	width: 350px;
 }
@@ -61,11 +64,11 @@
 .popup-packl .accordion-item-content .item-title{
 	font-size: 12px;
 }
-.panel-status{
-	z-index: 12000;
+.panel-status, .panel-evt-crew{
+	z-index: 14000;
 }
 .panel-backdrop{
-	z-index: 11999;
+	z-index: 13999;
 }
 .clk-loc {
 	margin-top: 20px;
