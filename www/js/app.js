@@ -6,7 +6,7 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.88",
+			  version: "1.0.89",
 			  rtl: false,
 			  language: "en-US"
 		  });
@@ -526,7 +526,7 @@ $(document).ready(function(){
 		apps.panel.open('left', true);
 	});
 	
-	$('div.evt-crew').on('click', 'li', function(){
+	$('div.evt-crew').on('change', 'input[name="evcw-checkbox"]', function(){
 		var wcrew = [], wcrewsn = [];
 		
 		for(var i=0; i<$('input[name="evcw-checkbox"]:checked').length; i++){
