@@ -6,7 +6,7 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.87",
+			  version: "1.0.88",
 			  rtl: false,
 			  language: "en-US"
 		  });
@@ -528,11 +528,12 @@ $(document).ready(function(){
 	
 	$('div.evt-crew').on('click', 'li', function(){
 		var wcrew = [], wcrewsn = [];
-
-		$.each($("input[name='evcw-checkbox']:checked"), function(){            
-			wcrew.push($(this).val());
-			wcrewsn.push($(this).data('sn'));
-		});
+		
+		for(var i=0; i<$('input[name="evcw-checkbox"]:checked').length; i++){
+			wcrew.push($('input[name="evcw-checkbox"]:checked:eq('+i+')').val());
+			wcrewsn.push($('input[name="evcw-checkbox"]:checked:eq('+i+')').data('sn'));
+		}
+		
 		$('input.evtd_crew').data('uname', wcrew.join(','));
 		$('input.evtd_crew').val(wcrewsn.join(', '));
 	});
