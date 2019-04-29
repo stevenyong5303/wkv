@@ -181,6 +181,12 @@ div.views {
 	display: inline-block;
 	width: 55px;
 }
+span.lpoint{
+	position: absolute;
+	top: 133px;
+	left: 123px;
+	color: #aa0000;
+}
 div.fab.fab-right-bottom.evtd_shr{
 	bottom: 75px;
 }

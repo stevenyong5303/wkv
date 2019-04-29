@@ -221,7 +221,7 @@
 												</div>
 												<div class="item-inner">
 													<div class="item-title">
-														<a class="link popup-open" href="#" data-popup=".popup-locl">Location List</a>
+														<a id="locl-btn" class="link popup-open" href="#" data-popup=".popup-locl">Location List</a>
 													</div>
 												</div>
 											</div>
@@ -433,7 +433,7 @@
 							<li>
 								<div class="item-content item-input">
 									<div class="item-inner">
-										<span class="map-locater">x</span>
+										<span class="map-locater">&#215;</span>
 										<iframe
 											id="gmap"
 											width="100%"
@@ -530,45 +530,119 @@
 						<div class="right"><a class="link popup-close" href="#">Close</a></div>
 					</div>
 				</div>
-				<div class="block">
-					<div class="item-content">
-						<div class="list crew_list">
+				<button class="button button-raised button-fill crewl_add" style="margin: 10px auto -20px;width: calc(100% - 30px);">
+					<i class="icon material-icons md-only">add</i>
+				</button>
+				<div class="list crew_list">
+					<ul></ul>
+				</div>
+				<div class="popover crewld-popover">
+					<div class="popover-inner">
+						<div class="list">
 							<ul>
-							
+								<li class="item-content item-input">
+									<div class="item-inner">
+										<div class="item-title item-label">Display Name</div>
+										<div class="item-input-wrap">
+											<input id="crewld_dname" type="text" value="" autocomplete="off" required validate>
+										</div>
+									</div>
+								</li>
+								<li class="item-content item-input">
+									<div class="item-inner">
+										<div class="item-title item-label">Short Name</div>
+										<div class="item-input-wrap">
+											<input id="crewld_sname" type="text" value="" autocomplete="off" required validate>
+											<span class="input-clear-button"></span>
+										</div>
+									</div>
+								</li>
+								<li class="item-content item-input">
+									<div class="item-inner">
+										<div class="row">
+											<button class="col button button-fill crewld_ok">OK</button>
+											<button class="col button button-fill popover-close">Cancel</button>
+										</div>
+									</div>
+								</li>
 							</ul>
 						</div>
 					</div>
-					<div class="popover crewld-popover">
-						<div class="popover-inner">
-							<div class="list">
-								<ul>
-									<li class="item-content item-input">
-										<div class="item-inner">
-											<div class="item-title item-label">Display Name</div>
-											<div class="item-input-wrap">
-												<input id="crewld_dname" type="text" value="" disabled="disabled">
-											</div>
-										</div>
-									</li>
-									<li class="item-content item-input">
-										<div class="item-inner">
-											<div class="item-title item-label">Short Name</div>
-											<div class="item-input-wrap">
-												<input id="crewld_sname" type="text" value="" autocomplete="off" required validate>
-												<span class="input-clear-button"></span>
-											</div>
-										</div>
-									</li>
-									<li class="item-content item-input">
-										<div class="item-inner">
-											<div class="row">
-												<button class="col button button-fill crewld_ok">OK</button>
-												<button class="col button button-fill popover-close">Cancel</button>
-											</div>
-										</div>
-									</li>
-								</ul>
+				</div>
+			</div>
+			<div class="popup popup-locl level8">
+				<div class="toolbar">
+					<div class="toolbar-inner">
+						<div class="left">Location List</div>
+						<div class="right"><a class="link popup-close" href="#">Close</a></div>
+					</div>
+				</div>
+				<button class="button button-raised button-fill locl_add" style="margin: 10px auto -20px;width: calc(100% - 30px);">
+					<i class="icon material-icons md-only">add</i>
+				</button>
+				<div class="list loc_list">
+					<ul></ul>
+				</div>
+				<div class="popover locld-popover">
+					<div class="popover-inner">
+						<div class="list">
+							<div>
+								<span class="lpoint lpoint_tl">&#215;</span>
+								<span class="lpoint lpoint_tr">&#215;</span>
+								<span class="lpoint lpoint_bl">&#215;</span>
+								<span class="lpoint lpoint_br">&#215;</span>
+								<div class="lmap"></div>
 							</div>
+							<ul>
+								<li class="item-content item-input">
+									<div class="item-inner">
+										<div class="item-title item-label">Name</div>
+										<div class="item-input-wrap">
+											<input id="locld_name" type="text" value="" autocomplete="off" required validate>
+										</div>
+									</div>
+								</li>
+								<li class="item-content item-input">
+									<div class="item-inner">
+										<div class="item-title item-label">Category</div>
+										<div class="item-input-wrap">
+											<input id="locld_cat" type="text" value="" autocomplete="off" required validate>
+										</div>
+									</div>
+								</li>
+								<li class="item-content item-input">
+									<div class="item-inner">
+										<div class="item-title item-label">Area</div>
+										<div class="item-input-wrap">
+											<input id="locld_state" type="text" value="" autocomplete="off" required validate>
+										</div>
+									</div>
+								</li>
+								<li class="item-content item-input">
+									<div class="item-inner">
+										<div class="item-title item-label">Point (Latitude, Longitude)</div>
+										<div class="item-input-wrap">
+											<input id="locld_point" type="text" value="" autocomplete="off" required validate>
+										</div>
+									</div>
+								</li>
+								<li class="item-content item-input">
+									<div class="item-inner">
+										<div class="item-title item-label">Range (Metre)</div>
+										<div class="item-input-wrap">
+											<input id="locld_range" type="number" value="" autocomplete="off" required validate>
+										</div>
+									</div>
+								</li>
+								<li class="item-content item-input">
+									<div class="item-inner">
+										<div class="row">
+											<button class="col button button-fill locld_ok">OK</button>
+											<button class="col button button-fill popover-close">Cancel</button>
+										</div>
+									</div>
+								</li>
+							</ul>
 						</div>
 					</div>
 				</div>
@@ -1821,7 +1895,7 @@
 				<div class="block">
 					<div align="center">
 						 <img src="icon.png" alt="WKV Logo" height="128" width="128">
-						 <span style="color:#999;position:absolute;top:40px;font-size:12px;">WKV<br/>Version 1.0.89</span>
+						 <span style="color:#999;position:absolute;top:40px;font-size:12px;">WKV<br/>Version 1.0.90</span>
 					</div>
 					<p>WKV Application serves as a platform for of WKV’s member to obtain basic information and calculation method can easily obtain by accessing to the application.</p>
 					<p>For general usage, clock in and clock out is built in the application for employees of WKV to check in whenever they report to event venue.</p>
