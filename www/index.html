@@ -577,10 +577,25 @@
 						<div class="right"><a class="link popup-close" href="#">Close</a></div>
 					</div>
 				</div>
-				<button class="button button-raised button-fill locl_add" style="margin: 10px auto -20px;width: calc(100% - 30px);">
-					<i class="icon material-icons md-only">add</i>
-				</button>
-				<div class="list loc_list">
+				<div class="block">
+					<form class="searchbar">
+						<div class="searchbar-inner">
+							<div class="searchbar-input-wrap">
+								<input type="search" placeholder="Search">
+								<i class="searchbar-icon"></i>
+								<span class="input-clear-button"></span>
+							</div>
+							<span class="searchbar-disable-button if-not-aurora">Cancel</span>
+						</div>
+					</form>
+				</div>
+				<div class="searchbar-backdrop"></div>
+				<div class="block searchbar-hide-on-search">
+					<button class="button button-raised button-fill locl_add" style="margin: 10px auto -20px;width: calc(100% - 30px);">
+						<i class="icon material-icons md-only">add</i>
+					</button>
+				</div>
+				<div class="searchbar-found list loc_list">
 					<ul></ul>
 				</div>
 				<div class="popover locld-popover">
@@ -1895,7 +1910,7 @@
 				<div class="block">
 					<div align="center">
 						 <img src="icon.png" alt="WKV Logo" height="128" width="128">
-						 <span style="color:#999;position:absolute;top:40px;font-size:12px;">WKV<br/>Version 1.0.90</span>
+						 <span style="color:#999;position:absolute;top:40px;font-size:12px;">WKV<br/>Version 1.0.91</span>
 					</div>
 					<p>WKV Application serves as a platform for of WKV’s member to obtain basic information and calculation method can easily obtain by accessing to the application.</p>
 					<p>For general usage, clock in and clock out is built in the application for employees of WKV to check in whenever they report to event venue.</p>

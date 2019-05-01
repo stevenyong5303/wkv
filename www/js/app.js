@@ -6,7 +6,7 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.90",
+			  version: "1.0.91",
 			  rtl: false,
 			  language: "en-US"
 		  });
@@ -725,6 +725,14 @@ $(document).ready(function(){
 							
 							$('.crew_list ul').append(x);
 							apps.popover.close('.crewld-popover');
+							
+							var success_toast = apps.toast.create({
+												   icon: '<i class="material-icons">cloud_done</i>',
+												   text: 'Details Successfully Saved',
+												   position: 'center',
+												   closeTimeout: 2000
+											   });
+							success_toast.open();
 						}else{
 							var failed_toast = apps.toast.create({
 												   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
@@ -765,6 +773,14 @@ $(document).ready(function(){
 							$('body').data('crew', crew);
 							$('.crew_list ul li:eq(' + cnum + ')').html(x);
 							apps.popover.close('.crewld-popover');
+							
+							var success_toast = apps.toast.create({
+												   icon: '<i class="material-icons">cloud_done</i>',
+												   text: 'Details Successfully Saved',
+												   position: 'center',
+												   closeTimeout: 2000
+											   });
+							success_toast.open();
 						}else{
 							var failed_toast = apps.toast.create({
 												   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
@@ -796,6 +812,17 @@ $(document).ready(function(){
 			x += '</li>';
 		}
 		$('.loc_list ul').html(x);
+		
+		var searchbar = apps.searchbar.create({
+				el: '.popup-locl .searchbar',
+				searchContainer: '.popup-locl .list.loc_list',
+				searchIn: '.item-title',
+				on: {
+					search(sb, query, previousQuery){
+						console.log('');
+					}
+				}
+			});
 	});
 	
 	$('.loc_list').on('click', 'a.item-link', function(){
@@ -821,8 +848,14 @@ $(document).ready(function(){
 	
 	$('#locld_point').on('change', function(){
 		var point = $(this).val();
+		var plat = parseFloat(point.split(',')[0]),
+			plon = parseFloat(point.split(',')[1]);
 		
-		$('.lmap').html('<iframe width="100%" height="300" frameborder="0" style="border:0;" src="https://www.google.com/maps/embed/v1/view?key=AIzaSyCRKiFjg2CA78cD09yIXuHFCxADjOh75rg&center=' + point + '&zoom=15"> </iframe>');
+		if((plat >= -90 && plat <= 90) && (plon >= -180 && plon <= 180)){
+			$('.lmap').html('<iframe width="100%" height="300" frameborder="0" style="border:0;" src="https://www.google.com/maps/embed/v1/view?key=AIzaSyCRKiFjg2CA78cD09yIXuHFCxADjOh75rg&center=' + point + '&zoom=15"> </iframe>');
+		}else{
+			navigator.vibrate(100);
+		}
 	});
 	
 	$('#locld_range').on('change', function(){
@@ -834,6 +867,177 @@ $(document).ready(function(){
 		$('span.lpoint_tr, span.lpoint_br').css('left', ((123 + parseInt(mpixel))+'px'));
 		$('span.lpoint_bl, span.lpoint_br').css('top', ((133 + parseInt(mpixel))+'px'));
 	});
+	
+	$('button.locl_add').on('click', function(){
+		$('.lmap').html('<iframe width="100%" height="300" frameborder="0" style="border:0;" src="https://www.google.com/maps/embed/v1/view?key=AIzaSyCRKiFjg2CA78cD09yIXuHFCxADjOh75rg&center=0,0&zoom=15"></iframe>');
+		$('#locld_name').removeData('pid');
+		$('#locld_name').removeData('num');
+		$('#locld_name').val('');
+		$('#locld_cat').val('');
+		$('#locld_state').val('');
+		$('#locld_point').val('0, 0');
+		$('#locld_range').val('100');
+		
+		$('span.lpoint_tl, span.lpoint_tr').css('top', ((133 - 25)+'px'));
+		$('span.lpoint_tl, span.lpoint_bl').css('left', ((123 - 25)+'px'));
+		$('span.lpoint_tr, span.lpoint_br').css('left', ((123 + 25)+'px'));
+		$('span.lpoint_bl, span.lpoint_br').css('top', ((133 + 25)+'px'));
+		
+		apps.popover.open('.locld-popover');
+	});	
+	
+	$('button.locld_ok').on('click', function(){
+		var lnme = $('#locld_name').val(),
+			lcat = $('#locld_cat').val(),
+			lstt = $('#locld_state').val(),
+			lpnt = $('#locld_point').val(),
+			lrgn = $('#locld_range').val();
+		
+		if(sys.isEmpty(lnme) || sys.isEmpty(lcat) ||  sys.isEmpty(lstt) ||  sys.isEmpty(lpnt) ||  sys.isEmpty(lrgn)){
+			navigator.vibrate(100);
+		}else{
+			var plat = parseFloat(lpnt.split(',')[0]),
+				plon = parseFloat(lpnt.split(',')[1]);
+		
+			if((plat >= -90 && plat <= 90) && (plon >= -180 && plon <= 180)){
+				var lpid = $('#locld_name').data('pid'),
+					locs = $('body').data('loc');
+				
+				if(sys.isEmpty(lpid)){
+					var DATA = {
+								'usr' : STORAGE.getItem('usr'),
+								'name' : lnme,
+								'category' : lcat,
+								'state' : lstt,
+								'point' : lpnt,
+								'range' : lrgn
+							};
+					var post_data = "ACT=" + encodeURIComponent('loc_add')
+								  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
+				
+					$.ajax({
+						type: 'POST',
+						url: 'http://app.wkventertainment.com/',
+						data: post_data,
+						beforeSend: function(){
+							sys.loading(1);
+						},
+						success: function(str){
+							sys.loading(0);
+							
+							var inf = JSON.parse(str);
+							
+							if(inf['reply']==='200 OK'){
+								var x = '<li>';
+									x += '<a href="#" class="item-link item-content" data-num="' + locs.length + '">';
+									x += '<div class="item-inner"><div class="item-title">' + lnme;
+									x += '<div class="item-footer">' + lstt + ' (' + lcat + ')</div>';
+									x += '</div></div></a></li>';
+									
+								var nloc = {
+										'primary_id' : inf['pid'],
+										'loc_name' : lnme,
+										'loc_category' : lcat,
+										'loc_state' : lstt,
+										'loc_point' : lpnt,
+										'loc_range' : lrgn
+									};
+									
+								locs.push(nloc);
+								$('body').data('loc', locs);
+								
+								$('.loc_list ul').append(x);
+								apps.popover.close('.locld-popover');
+								
+								var success_toast = apps.toast.create({
+													   icon: '<i class="material-icons">cloud_done</i>',
+													   text: 'Details Successfully Saved',
+													   position: 'center',
+													   closeTimeout: 2000
+												   });
+								success_toast.open();
+							}else{
+								var failed_toast = apps.toast.create({
+													   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
+													   text: 'Oooppss, error',
+													   position: 'center',
+													   closeTimeout: 2000
+												   });
+								failed_toast.open();
+							}
+						}
+					});
+				}else{
+					var DATA = {
+								'usr' : STORAGE.getItem('usr'),
+								'pid' : lpid,
+								'name' : lnme,
+								'category' : lcat,
+								'state' : lstt,
+								'point' : lpnt,
+								'range' : lrgn
+							};
+					var post_data = "ACT=" + encodeURIComponent('loc_udt')
+								  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
+								  
+					$.ajax({
+						type: 'POST',
+						url: 'http://app.wkventertainment.com/',
+						data: post_data,
+						beforeSend: function(){
+							sys.loading(1);
+						},
+						success: function(str){
+							sys.loading(0);
+							
+							var num = $('#locld_name').data('num');
+							
+							if(str == '200 OK'){
+								var x = '<a href="#" class="item-link item-content" data-num="' + num + '">';
+									x += '<div class="item-inner"><div class="item-title">' + lnme;
+									x += '<div class="item-footer">' + lstt + ' (' + lcat + ')</div>';
+									x += '</div></div></a>';
+									
+								var nloc = {
+										'primary_id' : lpid,
+										'loc_name' : lnme,
+										'loc_category' : lcat,
+										'loc_state' : lstt,
+										'loc_point' : lpnt,
+										'loc_range' : lrgn
+									};
+								
+								locs[num] = nloc;
+								$('body').data('loc', locs);
+								
+								$('.loc_list ul li:eq('+num+')').html(x);
+								apps.popover.close('.locld-popover');
+								
+								var success_toast = apps.toast.create({
+													   icon: '<i class="material-icons">cloud_done</i>',
+													   text: 'Details Successfully Saved',
+													   position: 'center',
+													   closeTimeout: 2000
+												   });
+								success_toast.open();
+							}else{
+								var failed_toast = apps.toast.create({
+													   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
+													   text: 'Oooppss, error',
+													   position: 'center',
+													   closeTimeout: 2000
+												   });
+								failed_toast.open();
+							}
+						}
+					});
+				}
+			}else{
+				navigator.vibrate(100);
+			}
+		}
+	});
+	
 	
 	$('input#ltcl_nme').on('keyup', function(){
 		var tmp = ($(this).val()).toLowerCase();
@@ -1129,7 +1333,7 @@ $(document).ready(function(){
 			
 			for(var i = 0; i < inf.length; i++){
 				share += (i+1) + '. ' + (sys.isEmpty(inf[i].description) ? '' : (inf[i].description + ', ')) + inf[i].venue + '.\n';
-				share += '< *' + (sys.isEmpty(inf[i].crew) ? '-' : (inf[i].crew)) + '* >\n';
+				share += '< *' + (sys.isEmpty(inf[i].crew) ? '-' : sys.unameToSname(inf[i].crew)) + '* >\n';
 			}
 		}
 
