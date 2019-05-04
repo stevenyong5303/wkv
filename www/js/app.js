@@ -6,7 +6,7 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.91",
+			  version: "1.0.92",
 			  rtl: false,
 			  language: "en-US"
 		  });
@@ -74,7 +74,7 @@ var app = {
 		window.SchedulerPlugin.configure(
 			fetchTask,
 			errorHandler,
-			{ minimumFetchInterval: 30 }
+			{ minimumFetchInterval: 60 }
 		);
 		
 		document.addEventListener("backbutton", sys.onBackKeyDown, false);
@@ -155,6 +155,9 @@ $(document).ready(function(){
 					}else{
 						sys.clockToggle('out');
 					}
+					$('body').data('user_level', inf['level']);
+					$('body').data('crew', inf['status']);
+					$('body').data('loc', inf['location']);
 					
 					setTimeout(function(){
 						sys.loading(0);
@@ -179,7 +182,7 @@ $(document).ready(function(){
 							
 							sys.eventCheck(usr, (new Date().getMonth()), new Date().getYear()+1900);
 							
-							if(inf['status'].length){
+							if(inf['status']){
 								var status = inf['status'], x = '';
 								
 								for(var i=0; i<status.length; i++){
@@ -259,15 +262,15 @@ $(document).ready(function(){
 									var x = '<thead><tr><th class="label-cell"></th>'
 										  + '<th class="label-cell">&emsp;PIC&emsp;&emsp;&emsp;&emsp;&emsp;</th>'
 										  + '<th class="label-cell">L/D</th>'
-										  + '<th class="label-cell">&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Venue&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;</th>'
-										  + '<th class="tablet-only">Desc.</th>'
+										  + '<th class="label-cell">&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Venue&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;</th>'
+										  + '<th class="label-cell">&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Desc.&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;</th>'
 										  + '<th class="tablet-only">Mixer</th>'
 										  + '<th class="tablet-only">W/L</th>'
 										  + '<th class="tablet-only">Speaker</th>'
 										  + '<th class="tablet-only">Band</th>'
-										  + '<th class="label-cell">Crew&emsp;&emsp;</th>'
-										  + '<th class="label-cell">IN&emsp;&emsp;</th>'
-										  + '<th class="label-cell">OUT&emsp;&emsp;</th>'
+										  + '<th class="label-cell">&emsp;&emsp;&emsp;Crew&emsp;&emsp;&emsp;</th>'
+										  + '<th class="label-cell">&emsp;IN&emsp;&emsp;</th>'
+										  + '<th class="label-cell">&emsp;OUT&emsp;&emsp;</th>'
 										  + '<th class="tablet-only">B/G</th></tr></thead><tbody>',
 										inf = JSON.parse(str);
 									
@@ -276,7 +279,7 @@ $(document).ready(function(){
 										x += '<td class="tb-pic label-cell">'+inf[i].pic+'</td>';
 										x += '<td class="tb-ld label-cell">'+((inf[i].luncheon_dinner==null) ? '-' : ((inf[i].luncheon_dinner=='Lunch') ? 'L' : 'D'))+'</td>';
 										x += '<td class="tb-venue label-cell">'+((inf[i].venue==null) ? '-' : inf[i].venue)+'</td>';
-										x += '<td class="tb-desc tablet-only">'+((inf[i].description==null) ? '-' : inf[i].description)+'</td>';
+										x += '<td class="tb-desc label-cell">'+((inf[i].description==null) ? '-' : inf[i].description)+'</td>';
 										x += '<td class="tb-mixer tablet-only">'+((inf[i].mixer==null) ? '-' : inf[i].mixer)+'</td>';
 										x += '<td class="tb-wmic tablet-only">'+((inf[i].wireless_mic==null) ? '-' : inf[i].wireless_mic)+'</td>';
 										x += '<td class="tb-spkr tablet-only">'+((inf[i].speaker==null) ? '-' : inf[i].speaker)+'</td>';
@@ -305,10 +308,9 @@ $(document).ready(function(){
 									var trName = $(this).attr('name');
 									
 									if(parseInt($('body').data('user_level'))>=8){
-										var crews = $('body').data('crew');
 										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Person In Charge</div><div class="item-input-wrap">' + ((inf.pic==null) ? '-' : inf.pic) + '</div></div></div></li>';
 										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Luncheon/Dinner</div><div class="item-input-wrap"><input class="evtd_ld" type="text" autocomplete="off" value="' + ((inf.luncheon_dinner==null) ? '' : inf.luncheon_dinner) + '"></div></div></div></li>';
-										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Venue</div><div class="item-input-wrap"><input class="evtd_venue" type="text" autocomplete="off" value="' + ((inf.venue==null) ? '' : inf.venue) + '"></div></div></div></li>';
+										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Venue</div><div class="item-input-wrap"><input class="evtd_venue" type="text" autocomplete="off" value="' + ((inf.venue==null) ? '' : inf.venue) + '"><span class="input-venue-search"><i class="icon material-icons md-only">search</i></span></div></div></div></li>';
 										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Description</div><div class="item-input-wrap"><input class="evtd_desc" type="text" autocomplete="off" value="' + ((inf.description==null) ? '' : inf.description) + '"></div></div></div></li>';
 										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Price</div><div class="item-input-wrap"><input class="evtd_price" type="text" autocomplete="off" value="' + ((inf.price==null) ? '' : inf.price) + '"></div></div></div></li>';
 										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Mixer</div><div class="item-input-wrap"><input class="evtd_mixer" type="text" autocomplete="off" value="' + ((inf.mixer==null) ? '' : inf.mixer) + '"></div></div></div></li>';
@@ -347,6 +349,30 @@ $(document).ready(function(){
 									x = x.replace(/(?:\r\n|\r|\n)/g, '<br>');
 									$('.details-popover ul').html(x);
 									$('div.details-popover').data('info', inf);
+									
+									var evtdVenueAutocomplete = apps.autocomplete.create({
+											openIn: 'dropdown',
+											inputEl: '.evtd_venue',
+											limit: 5,
+											source: function(query, render){
+												var results = [], locs = $('body').data('loc');
+												if(query.length === 0){
+													render(results);
+													return;
+												}
+												
+												for (var i = 0; i < locs.length; i++) {
+													if (locs[i].loc_name.toLowerCase().indexOf(query.toLowerCase()) >= 0) results.push(locs[i].loc_name);
+												}
+												
+												render(results);
+											},
+											off: { blur }
+										});
+									
+									$('.input-venue-search').on('click', function(){
+										apps.autocomplete.open('.evtd_venue');
+									});
 									
 									if(parseInt($('body').data('user_level'))>=8){
 										$('.details-popover button.evtd_sve').data('trName', trName);
@@ -1374,22 +1400,22 @@ $(document).ready(function(){
 							var x = '<thead><tr><th class="label-cell"></th>'
 								  + '<th class="label-cell">&emsp;PIC&emsp;&emsp;&emsp;&emsp;&emsp;</th>'
 								  + '<th class="label-cell">L/D</th>'
-								  + '<th class="label-cell">&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Venue&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;</th>'
-								  + '<th class="tablet-only">Desc.</th>'
+								  + '<th class="label-cell">&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Venue&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;</th>'
+								  + '<th class="label-cell">&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Desc.&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;</th>'
 								  + '<th class="tablet-only">Mixer</th>'
 								  + '<th class="tablet-only">W/L</th>'
 								  + '<th class="tablet-only">Speaker</th>'
 								  + '<th class="tablet-only">Band</th>'
-								  + '<th class="label-cell">Crew&emsp;&emsp;</th>'
-								  + '<th class="label-cell">IN&emsp;&emsp;</th>'
-								  + '<th class="label-cell">OUT&emsp;&emsp;</th>'
+								  + '<th class="label-cell">&emsp;&emsp;&emsp;Crew&emsp;&emsp;&emsp;</th>'
+								  + '<th class="label-cell">&emsp;IN&emsp;&emsp;</th>'
+								  + '<th class="label-cell">&emsp;OUT&emsp;&emsp;</th>'
 								  + '<th class="tablet-only">B/G</th></tr></thead><tbody>';
 							
 							x += '<tr name="el1"><td class="label-cell"><span class="button button-fill" name="el1">1</span></td>';
 							x += '<td class="tb-pic label-cell">'+pic+'</td>';
 							x += '<td class="tb-ld label-cell">'+((ld=='Lunch') ? 'L' : 'D')+'</td>';
 							x += '<td class="tb-venue label-cell">-</td>';
-							x += '<td class="tb-desc tablet-only">'+((desc=='') ? '-' : desc)+'</td>';
+							x += '<td class="tb-desc label-cell">'+((desc=='') ? '-' : desc)+'</td>';
 							x += '<td class="tb-mixer tablet-only">-</td>';
 							x += '<td class="tb-wmic tablet-only">-</td>';
 							x += '<td class="tb-spkr tablet-only">-</td>';
@@ -1412,7 +1438,7 @@ $(document).ready(function(){
 							x += '<td class="tb-pic label-cell">'+pic+'</td>';
 							x += '<td class="tb-ld label-cell">'+((ld=='Lunch') ? 'L' : 'D')+'</td>';
 							x += '<td class="tb-venue label-cell">-</td>';
-							x += '<td class="tb-desc tablet-only">'+((desc=='') ? '-' : desc)+'</td>';
+							x += '<td class="tb-desc label-cell">'+((desc=='') ? '-' : desc)+'</td>';
 							x += '<td class="tb-mixer tablet-only">-</td>';
 							x += '<td class="tb-wmic tablet-only">-</td>';
 							x += '<td class="tb-spkr tablet-only">-</td>';
@@ -2043,7 +2069,7 @@ $(document).ready(function(){
 			sys.startClock();
 			sys.loading(0);
 			
-			if(inf['status'].length){
+			if(inf['status']){
 				var status = inf['status'], x = '';
 				
 				for(var i=0; i<status.length; i++){
@@ -2193,6 +2219,31 @@ sys = {
 		}
 		
 		return sCrew.join(', ');
+	},
+	'coordinateCheck' : function(currentPoint, targetPoint, range){
+		var currentLAT = parseFloat(currentPoint.split(',')[0]),
+			currentLON = parseFloat(currentPoint.split(',')[1]),
+			targetLAT = parseFloat(targetPoint.split(',')[0]),
+			targetLON = parseFloat(targetPoint.split(',')[1]);
+		
+		var rangeLAT = parseFloat(range) * 0.000006773,
+			rangeLON = parseFloat(range) * 0.000009030;
+		
+		if(((currentLAT >= (targetLAT - rangeLAT)) && ((currentLAT <= (targetLAT + rangeLAT)))) && ((currentLON >= (targetLON - rangeLON)) && ((currentLON <= (targetLON + rangeLON))))){
+			return true;
+		}
+		
+		return false;
+	},
+	'pidToLoc' : function(pid){
+		var locs = $('body').data('loc');
+		
+		for(var i=0; i<locs.length; i++){
+			if(pid == locs[i].primary_id){
+				return locs[i];
+			}
+		}
+		return false;
 	},
 	'eventCheck' : function(user, month, year){
 		if(sys.isEmpty(user)){
