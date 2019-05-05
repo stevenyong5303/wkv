@@ -201,6 +201,9 @@ div.views {
 	width: 21px;
 	padding-left: 3px;
 }
+.popup-audiop audio{
+	width: 100%;
+}
 span.lpoint{
 	position: absolute;
 	top: 133px;

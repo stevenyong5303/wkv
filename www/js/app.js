@@ -6,7 +6,7 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.92",
+			  version: "1.0.93",
 			  rtl: false,
 			  language: "en-US"
 		  });
@@ -1064,6 +1064,12 @@ $(document).ready(function(){
 		}
 	});
 	
+	$('#audiop_slist a').on('click', function(){
+		var url = 'http://app.wkventertainment.com/files/music/' + $(this).data('url'),
+			x = '<audio src="' + url + '" controls="true" loop="true"></audio>';
+		
+		$('#audiop_plyr').html(x);
+	});
 	
 	$('input#ltcl_nme').on('keyup', function(){
 		var tmp = ($(this).val()).toLowerCase();
