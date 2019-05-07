@@ -6,7 +6,7 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.93",
+			  version: "1.0.94",
 			  rtl: false,
 			  language: "en-US"
 		  });
@@ -310,7 +310,8 @@ $(document).ready(function(){
 									if(parseInt($('body').data('user_level'))>=8){
 										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Person In Charge</div><div class="item-input-wrap">' + ((inf.pic==null) ? '-' : inf.pic) + '</div></div></div></li>';
 										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Luncheon/Dinner</div><div class="item-input-wrap"><input class="evtd_ld" type="text" autocomplete="off" value="' + ((inf.luncheon_dinner==null) ? '' : inf.luncheon_dinner) + '"></div></div></div></li>';
-										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Venue</div><div class="item-input-wrap"><input class="evtd_venue" type="text" autocomplete="off" value="' + ((inf.venue==null) ? '' : inf.venue) + '"><span class="input-venue-search"><i class="icon material-icons md-only">search</i></span></div></div></div></li>';
+										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Standby Time</div><div class="item-input-wrap"><input class="evtd_sbtm" type="text" autocomplete="off" value="' + ((inf.time==null) ? '' : inf.time) + '"></div></div></div></li>';
+										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Venue</div><div class="item-input-wrap"><input class="evtd_venue" type="text" autocomplete="off" value="' + ((inf.venue==null) ? '' : inf.venue) + '"></div></div></div></li>';
 										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Description</div><div class="item-input-wrap"><input class="evtd_desc" type="text" autocomplete="off" value="' + ((inf.description==null) ? '' : inf.description) + '"></div></div></div></li>';
 										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Price</div><div class="item-input-wrap"><input class="evtd_price" type="text" autocomplete="off" value="' + ((inf.price==null) ? '' : inf.price) + '"></div></div></div></li>';
 										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Mixer</div><div class="item-input-wrap"><input class="evtd_mixer" type="text" autocomplete="off" value="' + ((inf.mixer==null) ? '' : inf.mixer) + '"></div></div></div></li>';
@@ -330,6 +331,7 @@ $(document).ready(function(){
 									}else{
 										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Person In Charge</div><div class="item-input-wrap">' + ((inf.pic==null) ? '-' : inf.pic) + '</div></div></div></li>';
 										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Luncheon/Dinner</div><div class="item-input-wrap">' + ((inf.luncheon_dinner==null) ? '-' : inf.luncheon_dinner) + '</div></div></div></li>';
+										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Standby Time</div><div class="item-input-wrap">' + ((inf.time==null) ? '-' : inf.time) + '</div></div></div></li>';
 										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Venue</div><div class="item-input-wrap">' + ((inf.venue==null) ? '-' : inf.venue) + '</div></div></div></li>';
 										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Description</div><div class="item-input-wrap">' + ((inf.description==null) ? '-' : inf.description) + '</div></div></div></li>';
 										if(parseInt($('body').data('user_level'))>=7){
@@ -379,6 +381,7 @@ $(document).ready(function(){
 										$('.details-popover button.evtd_sve').on('click', function(){
 											var pid = $(this).data('eid'),
 												ld = $('input.evtd_ld').val(),
+												time = $('input.evtd_sbtm').val(),
 												venue = $('input.evtd_venue').val(),
 												desc = $('input.evtd_desc').val(),
 												price = $('input.evtd_price').val(),
@@ -396,6 +399,7 @@ $(document).ready(function(){
 												'usr' : STORAGE.getItem('usr'),
 												'pid' : pid,
 												'ld' : ld,
+												'time' : time,
 												'venue' : venue,
 												'desc' : desc,
 												'price' : price,
@@ -424,6 +428,7 @@ $(document).ready(function(){
 													
 													if(str==='200 OK'){
 														inf.luncheon_dinner = ((ld == '') ? 'Dinner' : ld);
+														inf.time = ((time == '') ? null : time);
 														inf.venue = ((venue == '') ? null : venue);
 														inf.description = ((desc == '') ? null : desc);
 														inf.price = ((price == '') ? null : price);
@@ -1066,7 +1071,7 @@ $(document).ready(function(){
 	
 	$('#audiop_slist a').on('click', function(){
 		var url = 'http://app.wkventertainment.com/files/music/' + $(this).data('url'),
-			x = '<audio src="' + url + '" controls="true" loop="true"></audio>';
+			x = '<audio src="' + url + '" controls="true" loop="true" autoplay="true"></audio>';
 		
 		$('#audiop_plyr').html(x);
 	});
@@ -1078,9 +1083,9 @@ $(document).ready(function(){
 			$('#ltcl_ads').val('16');
 		}else if(tmp.includes('par') || tmp.includes('pcc') || tmp.includes('pcw') || tmp.includes('small')){
 			$('#ltcl_ads').val('8');
-		}else if(tmp.includes('city')){
+		}else if(tmp.includes('city') || tmp.includes('profile')){
 			$('#ltcl_ads').val('3');
-		}else if(tmp.includes('led 200') || tmp.includes('200')){
+		}else if(tmp.includes('200')){
 			$('#ltcl_ads').val('20');
 		}else if(tmp.includes('blinder')){
 			$('#ltcl_ads').val('12');
@@ -1472,6 +1477,7 @@ $(document).ready(function(){
 							if(parseInt($('body').data('user_level'))>=8){
 								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Person In Charge</div><div class="item-input-wrap">' + ((inf.pic==null) ? '-' : inf.pic) + '</div></div></div></li>';
 								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Luncheon/Dinner</div><div class="item-input-wrap"><input class="evtd_ld" type="text" autocomplete="off" value="' + ((inf.luncheon_dinner==null) ? '' : inf.luncheon_dinner) + '"></div></div></div></li>';
+								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Standby Time</div><div class="item-input-wrap"><input class="evtd_sbtm" type="text" autocomplete="off" value="' + ((inf.time==null) ? '' : inf.time) + '"></div></div></div></li>';
 								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Venue</div><div class="item-input-wrap"><input class="evtd_venue" type="text" autocomplete="off" value="' + ((inf.venue==null) ? '' : inf.venue) + '"></div></div></div></li>';
 								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Description</div><div class="item-input-wrap"><input class="evtd_desc" type="text" autocomplete="off" value="' + ((inf.description==null) ? '' : inf.description) + '"></div></div></div></li>';
 								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Price</div><div class="item-input-wrap"><input class="evtd_price" type="text" autocomplete="off" value="' + ((inf.price==null) ? '' : inf.price) + '"></div></div></div></li>';
@@ -1492,6 +1498,7 @@ $(document).ready(function(){
 							}else{
 								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Person In Charge</div><div class="item-input-wrap">' + ((inf.pic==null) ? '-' : inf.pic) + '</div></div></div></li>';
 								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Luncheon/Dinner</div><div class="item-input-wrap">' + ((inf.luncheon_dinner==null) ? '-' : inf.luncheon_dinner) + '</div></div></div></li>';
+								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Standby Time</div><div class="item-input-wrap">' + ((inf.time==null) ? '-' : inf.time) + '</div></div></div></li>';
 								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Venue</div><div class="item-input-wrap">' + ((inf.venue==null) ? '-' : inf.venue) + '</div></div></div></li>';
 								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Description</div><div class="item-input-wrap">' + ((inf.description==null) ? '-' : inf.description) + '</div></div></div></li>';
 								if(parseInt($('body').data('user_level'))>=7){
@@ -1517,6 +1524,7 @@ $(document).ready(function(){
 								$('.details-popover button.evtd_sve').on('click', function(){
 									var pid = $(this).data('eid'),
 										ld = $('input.evtd_ld').val(),
+										time = $('input.evtd_sbtm').val()
 										venue = $('input.evtd_venue').val(),
 										desc = $('input.evtd_desc').val(),
 										price = $('input.evtd_price').val(),
@@ -1534,6 +1542,7 @@ $(document).ready(function(){
 										'usr' : STORAGE.getItem('usr'),
 										'pid' : pid,
 										'ld' : ld,
+										'time' : time,
 										'venue' : venue,
 										'desc' : desc,
 										'price' : price,
@@ -1562,6 +1571,7 @@ $(document).ready(function(){
 											
 											if(str==='200 OK'){
 												inf.luncheon_dinner = ((ld == '') ? 'Dinner' : ld);
+												inf.time = ((time == '') ? null : time);
 												inf.venue = ((venue == '') ? null : venue);
 												inf.description = ((desc == '') ? null : desc);
 												inf.price = ((price == '') ? null : price);
@@ -1718,6 +1728,7 @@ $(document).ready(function(){
 						inf = $('div.details-popover').data('info'),
 						pid = $('.details-popover button.evtd_sve').data('eid'),
 						ld = $('input.evtd_ld').val(),
+						time = $('input.evtd_sbtm').val(),
 						venue = $('input.evtd_venue').val(),
 						desc = $('input.evtd_desc').val(),
 						price = $('input.evtd_price').val(),
@@ -1735,6 +1746,7 @@ $(document).ready(function(){
 						'usr' : STORAGE.getItem('usr'),
 						'pid' : pid,
 						'ld' : ld,
+						'time' : time,
 						'venue' : venue,
 						'desc' : desc,
 						'price' : price,
@@ -1763,6 +1775,7 @@ $(document).ready(function(){
 							
 							if(str==='200 OK'){
 								inf.luncheon_dinner = ((ld == '') ? 'Dinner' : ld);
+								inf.time = ((time == '') ? null : time);
 								inf.venue = ((venue == '') ? null : venue);
 								inf.description = ((desc == '') ? null : desc);
 								inf.price = ((price == '') ? null : price);
@@ -2084,6 +2097,33 @@ $(document).ready(function(){
 					x += '<div class="item-inner"><div class="item-title">' + status[i].nc_name + (status[i].clocked_in == 1 ? ('<div class="item-footer">' + status[i].clocked_time + '</div>') : '') + '</div></div></a></li>';
 				}
 				$('#user-status').html(x);
+			}
+			
+			if(inf['task'][0] != 'none'){
+				var task = inf['task'], x = '', sameAs = 0;
+				
+				for(var i=0; i<task.length; i++){
+					if(task[i]['date'] != sameAs){
+						x += '<div class="timeline-item">';
+						x += '<div class="timeline-item-date">' + task[i]['date'].substr(8,2) + ' <small>' + sys.toMonth(task[i]['date']) + '</small></div>';
+						x += '<div class="timeline-item-divider"></div>';
+						x += '<div class="timeline-item-content">';
+					}
+					
+					x += '<div class="timeline-item-inner">';
+					x += '<div class="timeline-item-time">' + task[i]['time'].substr(0,2) + ':' + task[i]['time'].substr(2,2) + '</div>';
+					x += '<strong>' + task[i]['venue'] + '</strong>' + (task[i]['description'] ? ('<br/>' + task[i]['description']) : '') + (task[i]['bride_groom'] ? ('<br/>' + task[i]['bride_groom']) : '');
+					x += '</div>';
+					
+					if(task[i]['date'] != sameAs){
+						x += '</div></div>';
+					}
+					
+					sameAs = task[i]['date'];
+				}
+				$('#pg-home .timeline').html(x);
+			}else{
+				$('#pg-home .timeline').html('');
 			}
 			
 			for(var i=9; i>parseInt(inf['level']); i--){

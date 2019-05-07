@@ -5,6 +5,9 @@
     font-weight: normal;
     font-style: normal;
 }
+#pg-home .timeline-item-date{
+	background: none;
+}
 .fab.evtd_shr{
 	display: none;
 }
