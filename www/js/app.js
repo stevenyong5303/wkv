@@ -6,7 +6,7 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.95",
+			  version: "1.0.96",
 			  rtl: false,
 			  language: "en-US"
 		  });
@@ -204,8 +204,12 @@ $(document).ready(function(){
 										x += '<div class="timeline-item-content">';
 									}
 									
-									x += '<div class="timeline-item-inner">';
-									x += '<div class="timeline-item-time">' + task[i]['time'].substr(0,2) + ':' + task[i]['time'].substr(2,2) + '</div>';
+									x += '<div class="timeline-item-inner" data-locpid="' + (task[i]['venue'].indexOf('#PID#') != -1 ? task[i]['venue'] : 0) + '">';
+									
+									if(task[i]['time']){
+										x += '<div class="timeline-item-time">' + task[i]['time'].substr(0,2) + ':' + task[i]['time'].substr(2,2) + '</div>';
+									}
+									
 									x += '<strong>' + (task[i]['venue'].indexOf('#PID#') != -1 ? sys.pidToLoc(task[i]['venue']).loc_name : task[i]['venue']) + '</strong>' + (task[i]['description'] ? ('<br/>' + task[i]['description']) : '') + (task[i]['bride_groom'] ? ('<br/>' + task[i]['bride_groom']) : '');
 									x += '</div>';
 									
@@ -215,7 +219,7 @@ $(document).ready(function(){
 									
 									sameAs = task[i]['date'];
 								}
-								$('#pg-home .timeline').html(x);
+								$('#task_tl').html(x);
 							}
 							
 							for(var i=9; i>parseInt(inf['level']); i--){
@@ -561,6 +565,32 @@ $(document).ready(function(){
 	};
 	sys.dayClick(usr);
 	sys.eventCheck(usr, (new Date().getMonth()), new Date().getYear()+1900);
+	
+	$('#task_tl').on('click', '.timeline-item-inner', function(){
+		var pid = $(this).data('locpid');
+		
+		if(pid){
+			var loc = sys.pidToLoc(pid);
+			
+			apps.dialog.create({
+				title: 'Navigation',
+				text: 'Where are you heading to?',
+				buttons: [{
+						text: 'Lobby Entrance',
+						onClick: function(){
+							console.log('LE');
+						}
+					},{
+						text: 'Loading Bay',
+						onClick: function(){
+							console.log('LB');
+						}
+					}],
+				verticalButtons: true
+			}).open();
+			// window.open('https://www.waze.com/ul?ll=' + loc['loc_point'].split(', ')[0] + '%2C' + loc['loc_point'].split(', ')[1] + '&navigate=yes&zoom=16');
+		}
+	});
 	
 	$('.details-popover').on('click', 'input.evtd_crew', function(){
 		var crews = $('body').data('crew'),
@@ -2131,7 +2161,7 @@ $(document).ready(function(){
 						x += '<div class="timeline-item-content">';
 					}
 					
-					x += '<div class="timeline-item-inner">';
+					x += '<div class="timeline-item-inner" data-locpid="' + (task[i]['venue'].indexOf('#PID#') != -1 ? task[i]['venue'] : 0) + '">';
 					
 					if(task[i]['time']){
 						x += '<div class="timeline-item-time">' + task[i]['time'].substr(0,2) + ':' + task[i]['time'].substr(2,2) + '</div>';
@@ -2146,7 +2176,7 @@ $(document).ready(function(){
 					
 					sameAs = task[i]['date'];
 				}
-				$('#pg-home .timeline').html(x);
+				$('#task_tl').html(x);
 			}
 			
 			for(var i=9; i>parseInt(inf['level']); i--){
