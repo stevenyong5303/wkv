@@ -542,6 +542,18 @@
 						</div>
 					</div>
 					<div class="block">
+						<form class="searchbar">
+							<div class="searchbar-inner">
+								<div class="searchbar-input-wrap">
+									<input type="search" placeholder="Search">
+									<i class="searchbar-icon"></i>
+									<span class="input-clear-button"></span>
+								</div>
+								<span class="searchbar-disable-button if-not-aurora">Cancel</span>
+							</div>
+						</form>
+					</div>
+					<div class="block">
 						<div class="list evt-crew">
 							<ul></ul>
 						</div>
@@ -671,6 +683,22 @@
 										<div class="item-title item-label">Range (Metre)</div>
 										<div class="item-input-wrap">
 											<input id="locld_range" type="number" value="" autocomplete="off" required validate>
+										</div>
+									</div>
+								</li>
+								<li class="item-content item-input">
+									<div class="item-inner">
+										<div class="item-title item-label">Main Lobby (Latitude, Longitude)</div>
+										<div class="item-input-wrap">
+											<input id="locld_lobby" type="text" value="" autocomplete="off">
+										</div>
+									</div>
+								</li>
+								<li class="item-content item-input">
+									<div class="item-inner">
+										<div class="item-title item-label">Loading Bay (Latitude, Longitude)</div>
+										<div class="item-input-wrap">
+											<input id="locld_loading" type="text" value="" autocomplete="off">
 										</div>
 									</div>
 								</li>
@@ -1960,7 +1988,7 @@
 				<div class="block">
 					<div align="center">
 						 <img src="icon.png" alt="WKV Logo" height="128" width="128">
-						 <span style="color:#999;position:absolute;top:40px;font-size:12px;">WKV<br/>Version 1.0.95</span>
+						 <span style="color:#999;position:absolute;top:40px;font-size:12px;">WKV<br/>Version 1.0.96</span>
 					</div>
 					<p>WKV Application serves as a platform for of WKV’s member to obtain basic information and calculation method can easily obtain by accessing to the application.</p>
 					<p>For general usage, clock in and clock out is built in the application for employees of WKV to check in whenever they report to event venue.</p>

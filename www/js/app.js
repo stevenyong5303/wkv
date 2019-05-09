@@ -306,7 +306,7 @@ $(document).ready(function(){
 									for(var i=0; i<inf.length; i++){
 										x += '<tr name="el'+(i+1)+'"><td class="label-cell"><span class="button button-fill" name="el'+(i+1)+'">'+(i+1)+'</span></td>';
 										x += '<td class="tb-pic label-cell">'+inf[i].pic+'</td>';
-										x += '<td class="tb-ld label-cell">'+((inf[i].luncheon_dinner==null) ? '-' : ((inf[i].luncheon_dinner=='Lunch') ? 'L' : 'D'))+'</td>';
+										x += '<td class="tb-ld label-cell">'+(sys.ldToShort(inf[i].luncheon_dinner))+'</td>';
 										x += '<td class="tb-venue label-cell">'+((inf[i].venue==null) ? '-' : (inf[i].venue.indexOf('#PID#') != -1 ? sys.pidToLoc(inf[i].venue).loc_name : inf[i].venue))+'</td>';
 										x += '<td class="tb-desc label-cell">'+((inf[i].description==null) ? '-' : inf[i].description)+'</td>';
 										x += '<td class="tb-mixer tablet-only">'+((inf[i].mixer==null) ? '-' : inf[i].mixer)+'</td>';
@@ -468,7 +468,7 @@ $(document).ready(function(){
 														inf.remarks = ((rmk == '') ? null : rmk);
 														$('tr[name="' + trName + '"]').data('info', inf);
 														$('div.details-popover').data('info', inf);
-														$('tr[name="' + trName + '"] td.tb-ld').text((ld == 'Lunch') ? 'L' : 'D');
+														$('tr[name="' + trName + '"] td.tb-ld').text(sys.ldToShort(ld));
 														$('tr[name="' + trName + '"] td.tb-venue').text((venue == '' ? '-' : (venue.indexOf('#PID#') != -1 ? sys.pidToLoc(venue).loc_name : venue)));
 														$('tr[name="' + trName + '"] td.tb-desc').text((desc == '' ? '-' : desc));
 														$('tr[name="' + trName + '"] td.tb-mixer').text((mixer == '' ? '-' : mixer));
@@ -576,19 +576,28 @@ $(document).ready(function(){
 				title: 'Navigation',
 				text: 'Where are you heading to?',
 				buttons: [{
-						text: 'Lobby Entrance',
+						text: 'Main Lobby&emsp;',
 						onClick: function(){
-							console.log('LE');
+							if(loc['point_lobby']){
+								window.open('https://www.waze.com/ul?ll=' + loc['point_lobby'].split(', ')[0] + '%2C' + loc['point_lobby'].split(', ')[1] + '&navigate=yes&zoom=16');
+							}else{
+								window.open('https://www.waze.com/ul?ll=' + loc['loc_point'].split(', ')[0] + '%2C' + loc['loc_point'].split(', ')[1] + '&navigate=yes&zoom=16');
+							}
 						}
 					},{
-						text: 'Loading Bay',
+						text: '&emsp;Loading Bay',
 						onClick: function(){
-							console.log('LB');
+							if(loc['point_loading']){
+								window.open('https://www.waze.com/ul?ll=' + loc['point_loading'].split(', ')[0] + '%2C' + loc['point_loading'].split(', ')[1] + '&navigate=yes&zoom=16');
+							}else if(loc['point_lobby']){
+								window.open('https://www.waze.com/ul?ll=' + loc['point_lobby'].split(', ')[0] + '%2C' + loc['point_lobby'].split(', ')[1] + '&navigate=yes&zoom=16');
+							}else{
+								window.open('https://www.waze.com/ul?ll=' + loc['loc_point'].split(', ')[0] + '%2C' + loc['loc_point'].split(', ')[1] + '&navigate=yes&zoom=16');
+							}
 						}
 					}],
-				verticalButtons: true
+				closeByBackdropClick: true
 			}).open();
-			// window.open('https://www.waze.com/ul?ll=' + loc['loc_point'].split(', ')[0] + '%2C' + loc['loc_point'].split(', ')[1] + '&navigate=yes&zoom=16');
 		}
 	});
 	
@@ -610,6 +619,17 @@ $(document).ready(function(){
 		}
 		$('.evt-crew ul').html(x);
 		apps.panel.open('left', true);
+		
+		var searchbar = apps.searchbar.create({
+				el: '.panel-evt-crew .searchbar',
+				searchContainer: '.panel-evt-crew .list.evt-crew',
+				searchIn: '.item-title',
+				on: {
+					search(sb, query, previousQuery){
+						console.log('');
+					}
+				}
+			});
 	});
 	
 	$('div.evt-crew').on('change', 'input[name="evcw-checkbox"]', function(){
@@ -918,6 +938,8 @@ $(document).ready(function(){
 		$('#locld_state').val(locs['loc_state']);
 		$('#locld_point').val(locs['loc_point']);
 		$('#locld_range').val(locs['loc_range']);
+		$('#locld_lobby').val(locs['point_lobby']);
+		$('#locld_loading').val(locs['point_loading']);
 		
 		var mpixel = parseFloat(locs['loc_range']) * 0.25;
 		$('span.lpoint_tl, span.lpoint_tr').css('top', ((133 - parseInt(mpixel))+'px'));
@@ -959,6 +981,8 @@ $(document).ready(function(){
 		$('#locld_state').val('');
 		$('#locld_point').val('0, 0');
 		$('#locld_range').val('100');
+		$('#locld_lobby').val('');
+		$('#locld_loading').val('');
 		
 		$('span.lpoint_tl, span.lpoint_tr').css('top', ((133 - 25)+'px'));
 		$('span.lpoint_tl, span.lpoint_bl').css('left', ((123 - 25)+'px'));
@@ -973,7 +997,9 @@ $(document).ready(function(){
 			lcat = $('#locld_cat').val(),
 			lstt = $('#locld_state').val(),
 			lpnt = $('#locld_point').val(),
-			lrgn = $('#locld_range').val();
+			lrgn = $('#locld_range').val(),
+			llby = $('#locld_lobby').val(),
+			lldb = $('#locld_loading').val();
 		
 		if(sys.isEmpty(lnme) || sys.isEmpty(lcat) ||  sys.isEmpty(lstt) ||  sys.isEmpty(lpnt) ||  sys.isEmpty(lrgn)){
 			navigator.vibrate(100);
@@ -992,7 +1018,9 @@ $(document).ready(function(){
 								'category' : lcat,
 								'state' : lstt,
 								'point' : lpnt,
-								'range' : lrgn
+								'range' : lrgn,
+								'lobby' : llby,
+								'loading' : lldb
 							};
 					var post_data = "ACT=" + encodeURIComponent('loc_add')
 								  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
@@ -1022,7 +1050,9 @@ $(document).ready(function(){
 										'loc_category' : lcat,
 										'loc_state' : lstt,
 										'loc_point' : lpnt,
-										'loc_range' : lrgn
+										'loc_range' : lrgn,
+										'point_lobby' : llby,
+										'point_loading' : lldb
 									};
 									
 								locs.push(nloc);
@@ -1057,7 +1087,9 @@ $(document).ready(function(){
 								'category' : lcat,
 								'state' : lstt,
 								'point' : lpnt,
-								'range' : lrgn
+								'range' : lrgn,
+								'lobby' : llby,
+								'loading' : lldb
 							};
 					var post_data = "ACT=" + encodeURIComponent('loc_udt')
 								  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
@@ -1086,7 +1118,9 @@ $(document).ready(function(){
 										'loc_category' : lcat,
 										'loc_state' : lstt,
 										'loc_point' : lpnt,
-										'loc_range' : lrgn
+										'loc_range' : lrgn,
+										'point_lobby' : llby,
+										'point_loading' : lldb
 									};
 								
 								locs[num] = nloc;
@@ -1475,7 +1509,7 @@ $(document).ready(function(){
 							
 							x += '<tr name="el1"><td class="label-cell"><span class="button button-fill" name="el1">1</span></td>';
 							x += '<td class="tb-pic label-cell">'+pic+'</td>';
-							x += '<td class="tb-ld label-cell">'+((ld=='Lunch') ? 'L' : 'D')+'</td>';
+							x += '<td class="tb-ld label-cell">'+(sys.ldToShort(ld))+'</td>';
 							x += '<td class="tb-venue label-cell">-</td>';
 							x += '<td class="tb-desc label-cell">'+((desc=='') ? '-' : desc)+'</td>';
 							x += '<td class="tb-mixer tablet-only">-</td>';
@@ -1498,7 +1532,7 @@ $(document).ready(function(){
 							
 							x += '<tr name="el' + nnum + '"><td class="label-cell"><span class="button button-fill" name="el' + nnum + '">' + nnum + '</span></td>';
 							x += '<td class="tb-pic label-cell">'+pic+'</td>';
-							x += '<td class="tb-ld label-cell">'+((ld=='Lunch') ? 'L' : 'D')+'</td>';
+							x += '<td class="tb-ld label-cell">'+(sys.ldToShort(ld))+'</td>';
 							x += '<td class="tb-venue label-cell">-</td>';
 							x += '<td class="tb-desc label-cell">'+((desc=='') ? '-' : desc)+'</td>';
 							x += '<td class="tb-mixer tablet-only">-</td>';
@@ -1637,7 +1671,7 @@ $(document).ready(function(){
 												inf.remarks = ((rmk == '') ? null : rmk);
 												$('tr[name="' + trName + '"]').data('info', inf);
 												$('div.details-popover').data('info', inf);
-												$('tr[name="' + trName + '"] td.tb-ld').text((ld == 'Lunch') ? 'L' : 'D');
+												$('tr[name="' + trName + '"] td.tb-ld').text((sys.ldToShort(ld)));
 												$('tr[name="' + trName + '"] td.tb-venue').text((venue == '' ? '-' : (venue.indexOf('#PID#') != -1 ? sys.pidToLoc(venue).loc_name : venue)));
 												$('tr[name="' + trName + '"] td.tb-desc').text((desc == '' ? '-' : desc));
 												$('tr[name="' + trName + '"] td.tb-mixer').text((mixer == '' ? '-' : mixer));
@@ -1841,7 +1875,7 @@ $(document).ready(function(){
 								inf.remarks = ((rmk == '') ? null : rmk);
 								$('tr[name="' + trName + '"]').data('info', inf);
 								$('div.details-popover').data('info', inf);
-								$('tr[name="' + trName + '"] td.tb-ld').text((ld == 'Lunch') ? 'L' : 'D');
+								$('tr[name="' + trName + '"] td.tb-ld').text((sys.ldToShort(ld)));
 								$('tr[name="' + trName + '"] td.tb-venue').text((venue == '' ? '-' : (venue.indexOf('#PID#') != -1 ? sys.pidToLoc(venue).loc_name : venue)));
 								$('tr[name="' + trName + '"] td.tb-desc').text((desc == '' ? '-' : desc));
 								$('tr[name="' + trName + '"] td.tb-mixer').text((mixer == '' ? '-' : mixer));
@@ -2164,7 +2198,7 @@ $(document).ready(function(){
 					x += '<div class="timeline-item-inner" data-locpid="' + (task[i]['venue'].indexOf('#PID#') != -1 ? task[i]['venue'] : 0) + '">';
 					
 					if(task[i]['time']){
-						x += '<div class="timeline-item-time">' + task[i]['time'].substr(0,2) + ':' + task[i]['time'].substr(2,2) + '</div>';
+						x += '<div class="timeline-item-time">' + task[i]['time'] + '</div>';
 					}
 					
 					x += '<strong>' + (task[i]['venue'].indexOf('#PID#') != -1 ? sys.pidToLoc(task[i]['venue']).loc_name : task[i]['venue']) + '</strong>' + (task[i]['description'] ? ('<br/>' + task[i]['description']) : '') + (task[i]['bride_groom'] ? ('<br/>' + task[i]['bride_groom']) : '');
@@ -2354,6 +2388,22 @@ sys = {
 			}
 		}
 		return loc_name;
+	},
+	'ldToShort' : function(str){
+		if(str.toLowerCase() == 'lunch'){
+			return 'L';
+		}else if(str.toLowerCase() == 'dinner'){
+			return 'D';
+		}else if(str.toLowerCase() == 'setup'){
+			return 'ST';
+		}else if(str.toLowerCase().indexOf('board') != -1){
+			if(str.toLowerCase().indexOf('lunch') != -1){
+				return 'L:OB';
+			}else{
+				return 'D:OB';
+			}
+		}
+		return '-';
 	},
 	'eventCheck' : function(user, month, year){
 		if(sys.isEmpty(user)){
