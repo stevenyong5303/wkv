@@ -8,6 +8,9 @@
 #pg-home .timeline-item-date{
 	background: none;
 }
+span.wazeBtn {
+	margin-right: auto !important;
+}
 .fab.evtd_shr{
 	display: none;
 }
