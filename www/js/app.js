@@ -6,7 +6,7 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.99",
+			  version: "1.0.100",
 			  rtl: false,
 			  language: "en-US"
 		  });
@@ -1403,7 +1403,7 @@ $(document).ready(function(){
 			share = sys.toMonth(inf[0].date) + ' ' + sys.toDay(inf[0].date) + ' (' + sys.toWeek(inf[0].date) + ')\n\n';
 			
 			for(var i = 0; i < inf.length; i++){
-				share += (i+1) + '. ' + (sys.isEmpty(inf[i].description) ? '' : (inf[i].description + ', ')) + inf[i].venue + '.\n';
+				share += (i+1) + '. ' + (sys.isEmpty(inf[i].description) ? '' : (inf[i].description + ', ')) + (inf[i].venue.indexOf('#PID#') != -1 ? sys.pidToLoc(inf[i].venue).loc_name : inf[i].venue) + '.\n';
 				share += '< *' + (sys.isEmpty(inf[i].crew) ? '-' : sys.unameToSname(inf[i].crew)) + '* >\n';
 			}
 		}
@@ -1744,7 +1744,7 @@ $(document).ready(function(){
 				  + (sys.isEmpty(inf.description) ? 'Sound \n2 Top 2 Mon' : (inf.description).replace("  ", "\n")) + '\n'
 				  + 'Wedding Dinner \n' 
 				  + (sys.isEmpty(inf.bride_groom) ? '' : ('Couple Name : ' + inf.bride_groom + '\n'))
-				  + 'Venue : ' + inf.venue + '\n'
+				  + 'Venue : ' + (inf.venue.indexOf('#PID#') != -1 ? sys.pidToLoc(inf.venue).loc_name : inf.venue) + '\n'
 				  + 'PIC : ' + inf.pic + '\n'
 				  + (sys.isEmpty(inf.band) ? '' : (inf.band + '\n'))
 				  + 'Setup : 3pm\n' 
