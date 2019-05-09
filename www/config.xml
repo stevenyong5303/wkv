@@ -48,7 +48,6 @@
     <!-- Plugins -->
 	<plugin name="cordova-plugin-x-socialsharing" />
 	<plugin name="cordova-plugin-firebase" />
-	<plugin name="cordova-plugin-fcm-config" />
 	
 	<plugin name="cordova-plugin-battery-status" />
     <plugin name="cordova-plugin-camera" />
