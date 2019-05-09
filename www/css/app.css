@@ -70,7 +70,7 @@ span.wazeBtn {
 .popup-packl .accordion-item-content .item-title{
 	font-size: 12px;
 }
-.panel-status, .panel-evt-crew{
+.panel.panel-left, .panel.panel-right{
 	z-index: 14000;
 }
 .panel-backdrop{

@@ -6,7 +6,7 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.100",
+			  version: "1.0.101",
 			  rtl: false,
 			  language: "en-US"
 		  });
@@ -106,6 +106,7 @@ $(document).ready(function(){
 					$('body').data('user_level', inf['level']);
 					$('body').data('crew', inf['status']);
 					$('body').data('loc', inf['location']);
+					$('body').data('car', inf['car']);
 					
 					setTimeout(function(){
 						sys.loading(0);
@@ -155,7 +156,7 @@ $(document).ready(function(){
 									x += '<div class="timeline-item-inner" data-locpid="' + (task[i]['venue'].indexOf('#PID#') != -1 ? task[i]['venue'] : 0) + '">';
 									
 									if(task[i]['time']){
-										x += '<div class="timeline-item-time">' + task[i]['time'].substr(0,2) + ':' + task[i]['time'].substr(2,2) + '</div>';
+										x += '<div class="timeline-item-time">' + task[i]['time'] + '</div>';
 									}
 									
 									x += '<strong>' + (task[i]['venue'].indexOf('#PID#') != -1 ? sys.pidToLoc(task[i]['venue']).loc_name : task[i]['venue']) + '</strong>' + (task[i]['description'] ? ('<br/>' + task[i]['description']) : '') + (task[i]['bride_groom'] ? ('<br/>' + task[i]['bride_groom']) : '');
@@ -552,7 +553,7 @@ $(document).ready(function(){
 	
 	$('.details-popover').on('click', 'input.evtd_crew', function(){
 		var crews = $('body').data('crew'),
-			work = (sys.isEmpty($('input.evtd_crew').data('uname')) ? [] : $('input.evtd_crew').data('uname').split(','));
+			work = (sys.isEmpty($('input.evtd_crew').data('uname')) ? [] : ($('input.evtd_crew').data('uname').indexOf(',') != -1 ? $('input.evtd_crew').data('uname').split(',') : [$('input.evtd_crew').data('uname')])),
 			x = '';
 		
 		for(var i = 0; i < crews.length; i++){
@@ -567,6 +568,8 @@ $(document).ready(function(){
 			x += '<i class="icon icon-checkbox"></i><div class="item-inner"><div class="item-title">' + crews[i]['short_name'] + '</div></div></label></li>';
 		}
 		$('.evt-crew ul').html(x);
+		$('.panel-evt-car').hide();
+		$('.panel-evt-crew').show();
 		apps.panel.open('left', true);
 		
 		var searchbar = apps.searchbar.create({
@@ -591,6 +594,40 @@ $(document).ready(function(){
 		
 		$('input.evtd_crew').data('uname', wcrew.join(','));
 		$('input.evtd_crew').val(wcrewsn.join(', '));
+	});
+	
+	$('.details-popover').on('click', 'input.evtd_cin, input.evtd_cout', function(){
+		$('.evt-car-edit').removeClass('evt-car-edit');
+		var cars = $('body').data('car'),
+			selected = (($(this).val().indexOf(',') != -1) ? $(this).val().split(', ') : [$(this).val()]),
+			x = '';
+		
+		for(var i = 0; i < cars.length; i++){
+			var select = false;
+			for(var j = 0; j < selected.length; j++){
+				if(cars[i] == selected[j]){
+					select = true;
+					break;
+				}
+			}
+			x += '<li><label class="item-checkbox item-content"><input type="checkbox" ' + (select ? 'checked="checked"' : '') + ' name="evcr-checkbox" value="' + cars[i] + '" />';
+			x += '<i class="icon icon-checkbox"></i><div class="item-inner"><div class="item-title">' + cars[i] + '</div></div></label></li>';
+		}
+		$('.evt-car ul').html(x);
+		$('.panel-evt-crew').hide();
+		$('.panel-evt-car').show();
+		$(this).addClass('evt-car-edit');
+		apps.panel.open('left', true);
+	});
+	
+	$('div.evt-car').on('change', 'input[name="evcr-checkbox"]', function(){
+		var wcar = [];
+		
+		for(var i=0; i<$('input[name="evcr-checkbox"]:checked').length; i++){
+			wcar.push($('input[name="evcr-checkbox"]:checked:eq('+i+')').val());
+		}
+		
+		$('input.evt-car-edit').val(wcar.join(', '));
 	});
 	
 	$('#status-btn').on('click', function(){
@@ -2093,6 +2130,7 @@ $(document).ready(function(){
 			$('body').data('user_level', inf['level']);
 			$('body').data('crew', inf['status']);
 			$('body').data('loc', inf['location']);
+			$('body').data('car', inf['car']);
 			
 			if(inf['clocked']=='1'){
 				STORAGE.setItem('clock_in', (new Date(inf['time']).getTime()));
@@ -2289,18 +2327,25 @@ sys = {
 		return val;
 	},
 	'unameToSname' : function(str){
-		var aCrew = str.split(","), sCrew = [], all = $('body').data('crew');
+		if(str){
+			if(str.indexOf(',') != -1){
+				var aCrew = str.split(','), sCrew = [], all = $('body').data('crew');
 		
-		for(var i=0; i<aCrew.length; i++){
-			for(var j=0; j<all.length; j++){
-				if(aCrew[i] == all[j].user_id){
-					sCrew[i] = all[j].short_name;
-					break;
+				for(var i=0; i<aCrew.length; i++){
+					for(var j=0; j<all.length; j++){
+						if(aCrew[i] == all[j].user_id){
+							sCrew[i] = all[j].short_name;
+							break;
+						}
+					}
 				}
+				
+				return sCrew.join(', ');
+			}else{
+				return str;
 			}
 		}
-		
-		return sCrew.join(', ');
+		return null;
 	},
 	'coordinateCheck' : function(currentPoint, targetPoint, range){
 		var currentLAT = parseFloat(currentPoint.split(',')[0]),

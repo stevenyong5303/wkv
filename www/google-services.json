@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "326577735936",
+    "firebase_url": "https://wkv-app-87c47.firebaseio.com",
+    "project_id": "wkv-app-87c47",
+    "storage_bucket": "wkv-app-87c47.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:326577735936:android:a7fe905a8b875db7",
+        "android_client_info": {
+          "package_name": "com.wkv.manage"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "326577735936-9pvn3uuc6do6hv1180gv436e3sq09fmg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDOBgNlf5ry95nZMoozAQJiiBjs_vXJR0g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "326577735936-9pvn3uuc6do6hv1180gv436e3sq09fmg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
