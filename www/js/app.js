@@ -6,7 +6,7 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.97",
+			  version: "1.0.98",
 			  rtl: false,
 			  language: "en-US"
 		  });
@@ -23,59 +23,6 @@ var app = {
 	
     onDeviceReady: function() {
         app.receivedEvent('deviceready');
-		
-		var fetchTask = function(){
-			var DATA = {
-					'usr' : STORAGE.getItem('usr')
-				};
-			var post_data = "ACT=" + encodeURIComponent('msg_chk')
-						  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
-						  
-			if(STORAGE.getItem('usr')){
-				$.ajax({
-					type: 'POST',
-					url: 'http://app.wkventertainment.com/',
-					data: post_data,
-					success: function(str){
-						var inf = JSON.parse(str);
-					
-						if(inf['reply']==='200 OK'){
-							if(inf['new']){
-								cordova.plugins.notification.local.hasPermission(function(granted){
-									cordova.plugins.notification.local.schedule({
-										title: inf['title'],
-										text: inf['text'],
-										foreground: false
-									});
-								});
-							}
-						}else{
-							navigator.notification.alert(
-								'Error occur',
-								console.log(('Error + ' + inf['reply'])),
-								('Contact administrator, Error code : [' + inf['reply'] + ']'),
-								'OK'
-							);
-						}
-					}
-				});
-			}
-			
-			window.SchedulerPlugin.finish();
-		};
-		 
-		var errorHandler = function(error){
-			'Error occur',
-			console.log('SchedulerPlugin error: ', error),
-			('Contact administrator, Error : [' + error + ']'),
-			'OK'
-		};
-		
-		window.SchedulerPlugin.configure(
-			fetchTask,
-			errorHandler,
-			{ minimumFetchInterval: 60 }
-		);
 		
 		document.addEventListener("backbutton", sys.onBackKeyDown, false);
     },
@@ -579,20 +526,20 @@ $(document).ready(function(){
 						text: 'Main Lobby&emsp;',
 						onClick: function(){
 							if(loc['point_lobby']){
-								window.location.href = 'https://www.waze.com/ul?ll=' + loc['point_lobby'].split(', ')[0] + '%2C' + loc['point_lobby'].split(', ')[1] + '&navigate=yes&zoom=16';
+								window.open('https://www.waze.com/ul?ll=' + loc['point_lobby'].split(', ')[0] + '%2C' + loc['point_lobby'].split(', ')[1] + '&navigate=yes&zoom=16', '_blank');
 							}else{
-								window.location.href = 'https://www.waze.com/ul?ll=' + loc['loc_point'].split(', ')[0] + '%2C' + loc['loc_point'].split(', ')[1] + '&navigate=yes&zoom=16';
+								window.open('https://www.waze.com/ul?ll=' + loc['loc_point'].split(', ')[0] + '%2C' + loc['loc_point'].split(', ')[1] + '&navigate=yes&zoom=16', '_blank');
 							}
 						}
 					},{
 						text: '&emsp;Loading Bay',
 						onClick: function(){
 							if(loc['point_loading']){
-								window.location.replace('https://www.waze.com/ul?ll=' + loc['point_loading'].split(', ')[0] + '%2C' + loc['point_loading'].split(', ')[1] + '&navigate=yes&zoom=16');
+								window.open('https://www.waze.com/ul?ll=' + loc['point_loading'].split(', ')[0] + '%2C' + loc['point_loading'].split(', ')[1] + '&navigate=yes&zoom=16', '_blank');
 							}else if(loc['point_lobby']){
-								window.location.replace('https://www.waze.com/ul?ll=' + loc['point_lobby'].split(', ')[0] + '%2C' + loc['point_lobby'].split(', ')[1] + '&navigate=yes&zoom=16');
+								window.open('https://www.waze.com/ul?ll=' + loc['point_lobby'].split(', ')[0] + '%2C' + loc['point_lobby'].split(', ')[1] + '&navigate=yes&zoom=16', '_blank');
 							}else{
-								window.location.replace('https://www.waze.com/ul?ll=' + loc['loc_point'].split(', ')[0] + '%2C' + loc['loc_point'].split(', ')[1] + '&navigate=yes&zoom=16');
+								window.open('https://www.waze.com/ul?ll=' + loc['loc_point'].split(', ')[0] + '%2C' + loc['loc_point'].split(', ')[1] + '&navigate=yes&zoom=16', '_blank');
 							}
 						}
 					}],
