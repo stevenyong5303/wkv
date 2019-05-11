@@ -14,6 +14,10 @@ span.wazeBtn {
 .fab.evtd_shr{
 	display: none;
 }
+input.evtd_price, label.evtd_paid{
+	width: auto !important;
+	display: inline-block;
+}
 .panel{
 	width: 350px;
 }
@@ -115,6 +119,12 @@ div.views {
 }
 .toolbar-inner .left {
 	padding-left: 13px;
+}
+td.tb-pic.tb-paid{
+	border-right: 5px solid green;
+}
+td.tb-pic.tb-not-paid{
+	border-right: 5px solid red;
 }
 .rotate-180 {
 	-webkit-transform: rotate(180deg);
