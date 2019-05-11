@@ -6,7 +6,7 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.102",
+			  version: "1.0.103",
 			  rtl: false,
 			  language: "en-US"
 		  });
@@ -254,7 +254,7 @@ $(document).ready(function(){
 									
 									for(var i=0; i<inf.length; i++){
 										x += '<tr name="el'+(i+1)+'"><td class="label-cell"><span class="button button-fill" name="el'+(i+1)+'">'+(i+1)+'</span></td>';
-										x += '<td class="tb-pic label-cell '+(inf[i].paid=='1' ? 'tb-paid' : 'tb-not-paid')+'">'+inf[i].pic+'</td>';
+										x += '<td class="tb-pic label-cell '+(parseInt($('body').data('user_level'))>=8 ? (inf[i].paid=='1' ? 'tb-paid' : 'tb-not-paid') : '' )+'">'+inf[i].pic+'</td>';
 										x += '<td class="tb-ld label-cell">'+(sys.ldToShort(inf[i].luncheon_dinner))+'</td>';
 										x += '<td class="tb-venue label-cell">'+((inf[i].venue==null) ? '-' : (inf[i].venue.indexOf('#PID#') != -1 ? sys.pidToLoc(inf[i].venue).loc_name : inf[i].venue))+'</td>';
 										x += '<td class="tb-desc label-cell">'+((inf[i].description==null) ? '-' : inf[i].description)+'</td>';
@@ -422,12 +422,14 @@ $(document).ready(function(){
 														$('tr[name="' + trName + '"]').data('info', inf);
 														$('div.details-popover').data('info', inf);
 														
-														if(paid){
-															$('tr[name="' + trName + '"] td.tb-pic').removeClass('tb-not-paid');
-															$('tr[name="' + trName + '"] td.tb-pic').addClass('tb-paid');
-														}else{
-															$('tr[name="' + trName + '"] td.tb-pic').removeClass('tb-paid');
-															$('tr[name="' + trName + '"] td.tb-pic').addClass('tb-not-paid');
+														if(parseInt($('body').data('user_level'))>=8){
+															if(paid){
+																$('tr[name="' + trName + '"] td.tb-pic').removeClass('tb-not-paid');
+																$('tr[name="' + trName + '"] td.tb-pic').addClass('tb-paid');
+															}else{
+																$('tr[name="' + trName + '"] td.tb-pic').removeClass('tb-paid');
+																$('tr[name="' + trName + '"] td.tb-pic').addClass('tb-not-paid');
+															}
 														}
 														$('tr[name="' + trName + '"] td.tb-ld').text(sys.ldToShort(ld));
 														$('tr[name="' + trName + '"] td.tb-venue').text((venue == '' ? '-' : (venue.indexOf('#PID#') != -1 ? sys.pidToLoc(venue).loc_name : venue)));
@@ -1506,7 +1508,7 @@ $(document).ready(function(){
 								  + '<th class="tablet-only">B/G</th></tr></thead><tbody>';
 							
 							x += '<tr name="el1"><td class="label-cell"><span class="button button-fill" name="el1">1</span></td>';
-							x += '<td class="tb-pic label-cell tb-not-paid">'+pic+'</td>';
+							x += '<td class="tb-pic label-cell' + (parseInt($('body').data('user_level'))>=8 ? ' tb-not-paid' : '') + '">'+pic+'</td>';
 							x += '<td class="tb-ld label-cell">'+(sys.ldToShort(ld))+'</td>';
 							x += '<td class="tb-venue label-cell">-</td>';
 							x += '<td class="tb-desc label-cell">'+((desc=='') ? '-' : desc)+'</td>';
@@ -1529,7 +1531,7 @@ $(document).ready(function(){
 							var x = '';
 							
 							x += '<tr name="el' + nnum + '"><td class="label-cell"><span class="button button-fill" name="el' + nnum + '">' + nnum + '</span></td>';
-							x += '<td class="tb-pic label-cell tb-not-paid">'+pic+'</td>';
+							x += '<td class="tb-pic label-cell' + (parseInt($('body').data('user_level'))>=8 ? ' tb-not-paid' : '') + '">'+pic+'</td>';
 							x += '<td class="tb-ld label-cell">'+(sys.ldToShort(ld))+'</td>';
 							x += '<td class="tb-venue label-cell">-</td>';
 							x += '<td class="tb-desc label-cell">'+((desc=='') ? '-' : desc)+'</td>';
@@ -1674,12 +1676,14 @@ $(document).ready(function(){
 												$('tr[name="' + trName + '"]').data('info', inf);
 												$('div.details-popover').data('info', inf);
 												
-												if(paid){
-													$('tr[name="' + trName + '"] td.tb-pic').removeClass('tb-not-paid');
-													$('tr[name="' + trName + '"] td.tb-pic').addClass('tb-paid');
-												}else{
-													$('tr[name="' + trName + '"] td.tb-pic').removeClass('tb-paid');
-													$('tr[name="' + trName + '"] td.tb-pic').addClass('tb-not-paid');
+												if(parseInt($('body').data('user_level'))>=8){
+													if(paid){
+														$('tr[name="' + trName + '"] td.tb-pic').removeClass('tb-not-paid');
+														$('tr[name="' + trName + '"] td.tb-pic').addClass('tb-paid');
+													}else{
+														$('tr[name="' + trName + '"] td.tb-pic').removeClass('tb-paid');
+														$('tr[name="' + trName + '"] td.tb-pic').addClass('tb-not-paid');
+													}
 												}
 												$('tr[name="' + trName + '"] td.tb-ld').text((sys.ldToShort(ld)));
 												$('tr[name="' + trName + '"] td.tb-venue').text((venue == '' ? '-' : (venue.indexOf('#PID#') != -1 ? sys.pidToLoc(venue).loc_name : venue)));
@@ -1890,12 +1894,14 @@ $(document).ready(function(){
 								$('tr[name="' + trName + '"]').data('info', inf);
 								$('div.details-popover').data('info', inf);
 								
-								if(paid){
-									$('tr[name="' + trName + '"] td.tb-pic').removeClass('tb-not-paid');
-									$('tr[name="' + trName + '"] td.tb-pic').addClass('tb-paid');
-								}else{
-									$('tr[name="' + trName + '"] td.tb-pic').removeClass('tb-paid');
-									$('tr[name="' + trName + '"] td.tb-pic').addClass('tb-not-paid');
+								if(parseInt($('body').data('user_level'))>=8){
+									if(paid){
+										$('tr[name="' + trName + '"] td.tb-pic').removeClass('tb-not-paid');
+										$('tr[name="' + trName + '"] td.tb-pic').addClass('tb-paid');
+									}else{
+										$('tr[name="' + trName + '"] td.tb-pic').removeClass('tb-paid');
+										$('tr[name="' + trName + '"] td.tb-pic').addClass('tb-not-paid');
+									}
 								}
 								$('tr[name="' + trName + '"] td.tb-ld').text((sys.ldToShort(ld)));
 								$('tr[name="' + trName + '"] td.tb-venue').text((venue == '' ? '-' : (venue.indexOf('#PID#') != -1 ? sys.pidToLoc(venue).loc_name : venue)));
@@ -2364,9 +2370,9 @@ sys = {
 	},
 	'unameToSname' : function(str){
 		if(str){
+			var aCrew = str.split(','), sCrew = [], all = $('body').data('crew');
+			
 			if(str.indexOf(',') != -1){
-				var aCrew = str.split(','), sCrew = [], all = $('body').data('crew');
-		
 				for(var i=0; i<aCrew.length; i++){
 					for(var j=0; j<all.length; j++){
 						if(aCrew[i] == all[j].user_id){
@@ -2378,7 +2384,11 @@ sys = {
 				
 				return sCrew.join(', ');
 			}else{
-				return str;
+				for(var j=0; j<all.length; j++){
+					if(str == all[j].user_id){
+						return all[j].short_name;
+					}
+				}
 			}
 		}
 		return null;
