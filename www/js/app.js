@@ -6,7 +6,7 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.104",
+			  version: "1.0.105",
 			  rtl: false,
 			  language: "en-US"
 		  });
@@ -566,8 +566,6 @@ $(document).ready(function(){
 	});
 	
 	$('.details-popover').on('click', 'input.evtd_crew', function(){
-		$('.panel-evt-crew .searchbar input').focus();
-		
 		var crews = $('body').data('crew'),
 			work = (sys.isEmpty($('input.evtd_crew').data('uname')) ? [] : ($('input.evtd_crew').data('uname').indexOf(',') != -1 ? $('input.evtd_crew').data('uname').split(',') : [$('input.evtd_crew').data('uname')])),
 			x = '';
@@ -598,6 +596,8 @@ $(document).ready(function(){
 					}
 				}
 			});
+			
+		$('.panel-evt-crew .searchbar input').focus();
 	});
 	
 	$('div.evt-crew').on('change', 'input[name="evcw-checkbox"]', function(){
@@ -1160,7 +1160,8 @@ $(document).ready(function(){
 		var url = 'http://app.wkventertainment.com/files/music/' + $(this).data('url'),
 			x = '<audio src="' + url + '" controls="true" loop="true" autoplay="true"></audio>';
 		
-		$('#audiop_plyr').html(x);
+		$('#audiop_plyr div.item-inner').html(x);
+		$('#audiop_plyr span').html('<strong>' + $(this).text() + '</strong>' + (($(this).data('url').indexOf('bensound') != -1) ? '&emsp;from Bensound.com' : ''));
 	});
 	
 	$('input#ltcl_nme').on('keyup', function(){

@@ -5,8 +5,9 @@
     font-weight: normal;
     font-style: normal;
 }
-#audiop_plyr{
-	z-index: 25000;
+#audiop_plyr span{
+	margin-bottom: 10px;
+	display: block;
 }
 #pg-home .timeline-item-date{
 	background: none;
