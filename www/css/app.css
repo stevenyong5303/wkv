@@ -5,6 +5,9 @@
     font-weight: normal;
     font-style: normal;
 }
+#audiop_plyr{
+	z-index: 25000;
+}
 #pg-home .timeline-item-date{
 	background: none;
 }

@@ -6,7 +6,7 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.103",
+			  version: "1.0.104",
 			  rtl: false,
 			  language: "en-US"
 		  });
@@ -566,7 +566,7 @@ $(document).ready(function(){
 	});
 	
 	$('.details-popover').on('click', 'input.evtd_crew', function(){
-		$('input.evtd_crew').blur();
+		$('.panel-evt-crew .searchbar input').focus();
 		
 		var crews = $('body').data('crew'),
 			work = (sys.isEmpty($('input.evtd_crew').data('uname')) ? [] : ($('input.evtd_crew').data('uname').indexOf(',') != -1 ? $('input.evtd_crew').data('uname').split(',') : [$('input.evtd_crew').data('uname')])),
@@ -1156,7 +1156,7 @@ $(document).ready(function(){
 		}
 	});
 	
-	$('#audiop_slist a').on('click', function(){
+	$('#audiop_slist .links-list a').on('click', function(){
 		var url = 'http://app.wkventertainment.com/files/music/' + $(this).data('url'),
 			x = '<audio src="' + url + '" controls="true" loop="true" autoplay="true"></audio>';
 		
