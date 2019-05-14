@@ -566,6 +566,8 @@ $(document).ready(function(){
 	});
 	
 	$('.details-popover').on('click', 'input.evtd_crew', function(){
+		$('input.evtd_crew').blur();
+		
 		var crews = $('body').data('crew'),
 			work = (sys.isEmpty($('input.evtd_crew').data('uname')) ? [] : ($('input.evtd_crew').data('uname').indexOf(',') != -1 ? $('input.evtd_crew').data('uname').split(',') : [$('input.evtd_crew').data('uname')])),
 			x = '';
