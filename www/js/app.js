@@ -6,7 +6,7 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.105",
+			  version: "1.0.106",
 			  rtl: false,
 			  language: "en-US"
 		  });
@@ -153,20 +153,20 @@ $(document).ready(function(){
 										x += '<div class="timeline-item-content">';
 									}
 									
-									x += '<div class="timeline-item-inner" data-locpid="' + (task[i]['venue'].indexOf('#PID#') != -1 ? task[i]['venue'] : 0) + '">';
+									x += '<div class="timeline-item-inner" data-locpid="' + (sys.isEmpty(task[i]['venue']) ? 0 : (task[i]['venue'].indexOf('#PID#') != -1 ? task[i]['venue'] : 0)) + '">';
 									
 									if(task[i]['time']){
 										x += '<div class="timeline-item-time">' + task[i]['time'] + '</div>';
 									}
 									
-									x += '<strong>' + (task[i]['venue'].indexOf('#PID#') != -1 ? sys.pidToLoc(task[i]['venue']).loc_name : task[i]['venue']) + '</strong>' + (task[i]['description'] ? ('<br/>' + task[i]['description']) : '') + (task[i]['bride_groom'] ? ('<br/>' + task[i]['bride_groom']) : '');
+									x += '<strong>' + (sys.isEmpty(task[i]['venue']) ?  '-' : (task[i]['venue'].indexOf('#PID#') != -1 ? sys.pidToLoc(task[i]['venue']).loc_name : task[i]['venue'])) + '</strong>' + (task[i]['description'] ? ('<br/>' + task[i]['description']) : '') + (task[i]['bride_groom'] ? ('<br/>' + task[i]['bride_groom']) : '');
 									x += '</div>';
 									
-									if(task[i]['date'] != sameAs){
+									sameAs = task[i]['date'];
+									
+									if(sys.isEmpty(task[i+1]) || task[i+1]['date'] != sameAs){
 										x += '</div></div>';
 									}
-									
-									sameAs = task[i]['date'];
 								}
 								$('#task_tl').html(x);
 							}
@@ -634,6 +634,19 @@ $(document).ready(function(){
 		$('.panel-evt-car').show();
 		$(this).addClass('evt-car-edit');
 		apps.panel.open('left', true);
+		
+		var searchbar = apps.searchbar.create({
+				el: '.panel-evt-car .searchbar',
+				searchContainer: '.panel-evt-car .list.evt-car',
+				searchIn: '.item-title',
+				on: {
+					search(sb, query, previousQuery){
+						console.log('');
+					}
+				}
+			});
+			
+		$('.panel-evt-car .searchbar input').focus();
 	});
 	
 	$('div.evt-car').on('change', 'input[name="evcr-checkbox"]', function(){
@@ -2227,20 +2240,20 @@ $(document).ready(function(){
 						x += '<div class="timeline-item-content">';
 					}
 					
-					x += '<div class="timeline-item-inner" data-locpid="' + (task[i]['venue'].indexOf('#PID#') != -1 ? task[i]['venue'] : 0) + '">';
+					x += '<div class="timeline-item-inner" data-locpid="' + (sys.isEmpty(task[i]['venue']) ? 0 : (task[i]['venue'].indexOf('#PID#') != -1 ? task[i]['venue'] : 0)) + '">';
 					
 					if(task[i]['time']){
 						x += '<div class="timeline-item-time">' + task[i]['time'] + '</div>';
 					}
 					
-					x += '<strong>' + (task[i]['venue'].indexOf('#PID#') != -1 ? sys.pidToLoc(task[i]['venue']).loc_name : task[i]['venue']) + '</strong>' + (task[i]['description'] ? ('<br/>' + task[i]['description']) : '') + (task[i]['bride_groom'] ? ('<br/>' + task[i]['bride_groom']) : '');
+					x += '<strong>' + (sys.isEmpty(task[i]['venue']) ?  '-' : (task[i]['venue'].indexOf('#PID#') != -1 ? sys.pidToLoc(task[i]['venue']).loc_name : task[i]['venue'])) + '</strong>' + (task[i]['description'] ? ('<br/>' + task[i]['description']) : '') + (task[i]['bride_groom'] ? ('<br/>' + task[i]['bride_groom']) : '');
 					x += '</div>';
 					
-					if(task[i]['date'] != sameAs){
+					sameAs = task[i]['date'];
+					
+					if(sys.isEmpty(task[i+1]) || task[i+1]['date'] != sameAs){
 						x += '</div></div>';
 					}
-					
-					sameAs = task[i]['date'];
 				}
 				$('#task_tl').html(x);
 			}
