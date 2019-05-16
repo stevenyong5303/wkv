@@ -25,6 +25,9 @@ input.evtd_price, label.evtd_paid{
 	width: auto !important;
 	display: inline-block;
 }
+.calendar-day-today span{
+	border-radius: 0% !important;
+}
 .panel{
 	width: 350px;
 }

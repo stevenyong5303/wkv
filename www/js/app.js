@@ -6,7 +6,7 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.107",
+			  version: "1.0.108",
 			  rtl: false,
 			  language: "en-US"
 		  });
@@ -2513,33 +2513,35 @@ $(document).ready(function(){
 				$('#user-status').html(x);
 			}
 			
-			if(inf['task'][0] != 'none'){
-				var task = inf['task'], x = '', sameAs = 0;
-				
-				for(var i=0; i<task.length; i++){
-					if(task[i]['date'] != sameAs){
-						x += '<div class="timeline-item">';
-						x += '<div class="timeline-item-date">' + task[i]['date'].substr(8,2) + ' <small>' + sys.toMonth(task[i]['date']) + '</small></div>';
-						x += '<div class="timeline-item-divider"></div>';
-						x += '<div class="timeline-item-content">';
+			if(!sys.isEmpty(inf['task'])){
+				if(inf['task'][0] != 'none'){
+					var task = inf['task'], x = '', sameAs = 0;
+					
+					for(var i=0; i<task.length; i++){
+						if(task[i]['date'] != sameAs){
+							x += '<div class="timeline-item">';
+							x += '<div class="timeline-item-date">' + task[i]['date'].substr(8,2) + ' <small>' + sys.toMonth(task[i]['date']) + '</small></div>';
+							x += '<div class="timeline-item-divider"></div>';
+							x += '<div class="timeline-item-content">';
+						}
+						
+						x += '<div class="timeline-item-inner" data-locpid="' + (sys.isEmpty(task[i]['venue']) ? 0 : (task[i]['venue'].indexOf('#PID#') != -1 ? task[i]['venue'] : 0)) + '">';
+						
+						if(task[i]['time']){
+							x += '<div class="timeline-item-time">' + task[i]['time'] + '</div>';
+						}
+						
+						x += '<strong>' + (sys.isEmpty(task[i]['venue']) ?  '-' : (task[i]['venue'].indexOf('#PID#') != -1 ? sys.pidToLoc(task[i]['venue']).loc_name : task[i]['venue'])) + '</strong>' + (task[i]['description'] ? ('<br/>' + task[i]['description']) : '') + (task[i]['bride_groom'] ? ('<br/>' + task[i]['bride_groom']) : '');
+						x += '</div>';
+						
+						sameAs = task[i]['date'];
+						
+						if(sys.isEmpty(task[i+1]) || task[i+1]['date'] != sameAs){
+							x += '</div></div>';
+						}
 					}
-					
-					x += '<div class="timeline-item-inner" data-locpid="' + (sys.isEmpty(task[i]['venue']) ? 0 : (task[i]['venue'].indexOf('#PID#') != -1 ? task[i]['venue'] : 0)) + '">';
-					
-					if(task[i]['time']){
-						x += '<div class="timeline-item-time">' + task[i]['time'] + '</div>';
-					}
-					
-					x += '<strong>' + (sys.isEmpty(task[i]['venue']) ?  '-' : (task[i]['venue'].indexOf('#PID#') != -1 ? sys.pidToLoc(task[i]['venue']).loc_name : task[i]['venue'])) + '</strong>' + (task[i]['description'] ? ('<br/>' + task[i]['description']) : '') + (task[i]['bride_groom'] ? ('<br/>' + task[i]['bride_groom']) : '');
-					x += '</div>';
-					
-					sameAs = task[i]['date'];
-					
-					if(sys.isEmpty(task[i+1]) || task[i+1]['date'] != sameAs){
-						x += '</div></div>';
-					}
+					$('#task_tl').html(x);
 				}
-				$('#task_tl').html(x);
 			}
 			
 			for(var i=9; i>parseInt(inf['level']); i--){
