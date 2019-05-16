@@ -5,6 +5,9 @@
     font-weight: normal;
     font-style: normal;
 }
+#task_tl .timeline-item:last-child{
+	margin-bottom: 60px;
+}
 #audiop_plyr span{
 	margin-bottom: 10px;
 	display: block;
@@ -201,25 +204,12 @@ td.tb-pic.tb-not-paid{
 	display: inline-block;
 	width: 55px;
 }
-.details-popover .autocomplete-dropdown.autocomplete-dropdown-in ul{
-	padding-left: 0px;
+.autocomplete-dropdown.autocomplete-dropdown-in ul{
+	padding-left: 0px !important;
 	font-size: 12px;
 }
-.details-popover .autocomplete-dropdown.autocomplete-dropdown-in ul li{
+.autocomplete-dropdown.autocomplete-dropdown-in ul li{
 	height: 32px;
-}
-.input-venue-search{
-	position: absolute;
-	top: 2px;
-	left: 205px;
-	background-color: #3B2313;
-	color: #fff;
-	border-radius: 12px;
-}
-.input-venue-search i{
-	font-size: 21px;
-	width: 21px;
-	padding-left: 3px;
 }
 .popup-audiop audio{
 	width: 100%;

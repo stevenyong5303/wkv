@@ -6,7 +6,7 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.106",
+			  version: "1.0.107",
 			  rtl: false,
 			  language: "en-US"
 		  });
@@ -566,6 +566,8 @@ $(document).ready(function(){
 	});
 	
 	$('.details-popover').on('click', 'input.evtd_crew', function(){
+		$('.evt-crew-edit').removeClass('evt-crew-edit');
+		
 		var crews = $('body').data('crew'),
 			work = (sys.isEmpty($('input.evtd_crew').data('uname')) ? [] : ($('input.evtd_crew').data('uname').indexOf(',') != -1 ? $('input.evtd_crew').data('uname').split(',') : [$('input.evtd_crew').data('uname')])),
 			x = '';
@@ -584,6 +586,45 @@ $(document).ready(function(){
 		$('.evt-crew ul').html(x);
 		$('.panel-evt-car').hide();
 		$('.panel-evt-crew').show();
+		$(this).addClass('evt-crew-edit');
+		apps.panel.open('left', true);
+		
+		var searchbar = apps.searchbar.create({
+				el: '.panel-evt-crew .searchbar',
+				searchContainer: '.panel-evt-crew .list.evt-crew',
+				searchIn: '.item-title',
+				on: {
+					search(sb, query, previousQuery){
+						console.log('');
+					}
+				}
+			});
+			
+		$('.panel-evt-crew .searchbar input').focus();
+	});
+	
+	$('input#tskld_crew').on('click', function(){
+		$('.evt-crew-edit').removeClass('evt-crew-edit');
+		
+		var crews = $('body').data('crew'),
+			work = (sys.isEmpty($('input#tskld_crew').data('uname')) ? [] : ($('input#tskld_crew').data('uname').indexOf(',') != -1 ? $('input#tskld_crew').data('uname').split(',') : [$('input#tskld_crew').data('uname')])),
+			x = '';
+		
+		for(var i = 0; i < crews.length; i++){
+			var select = false;
+			for(var j = 0; j < work.length; j++){
+				if(crews[i]['user_id'] == work[j]){
+					select = true;
+					break;
+				}
+			}
+			x += '<li><label class="item-checkbox item-content"><input type="checkbox" ' + (select ? 'checked="checked"' : '') + ' name="evcw-checkbox" value="' + crews[i]['user_id'] + '" data-sn="' + crews[i]['short_name'] + '" />';
+			x += '<i class="icon icon-checkbox"></i><div class="item-inner"><div class="item-title">' + crews[i]['short_name'] + '</div></div></label></li>';
+		}
+		$('.evt-crew ul').html(x);
+		$('.panel-evt-car').hide();
+		$('.panel-evt-crew').show();
+		$(this).addClass('evt-crew-edit');
 		apps.panel.open('left', true);
 		
 		var searchbar = apps.searchbar.create({
@@ -608,8 +649,8 @@ $(document).ready(function(){
 			wcrewsn.push($('input[name="evcw-checkbox"]:checked:eq('+i+')').data('sn'));
 		}
 		
-		$('input.evtd_crew').data('uname', wcrew.join(','));
-		$('input.evtd_crew').val(wcrewsn.join(', '));
+		$('input.evt-crew-edit').data('uname', wcrew.join(','));
+		$('input.evt-crew-edit').val(wcrewsn.join(', '));
 	});
 	
 	$('.details-popover').on('click', 'input.evtd_cin, input.evtd_cout', function(){
@@ -1005,7 +1046,7 @@ $(document).ready(function(){
 		$('span.lpoint_bl, span.lpoint_br').css('top', ((133 + 25)+'px'));
 		
 		apps.popover.open('.locld-popover');
-	});	
+	});
 	
 	$('button.locld_ok').on('click', function(){
 		var lnme = $('#locld_name').val(),
@@ -1165,6 +1206,249 @@ $(document).ready(function(){
 				}
 			}else{
 				navigator.vibrate(100);
+			}
+		}
+	});
+	
+	$('#tskl-btn').on('click', function(){
+		var DATA = {
+					'usr' : STORAGE.getItem('usr')
+				};
+		var post_data = "ACT=" + encodeURIComponent('tsk_chk')
+					  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
+
+		$.ajax({
+			type: 'POST',
+			url: 'http://app.wkventertainment.com/',
+			data: post_data,
+			beforeSend: function(){
+				sys.loading(1);
+			},
+			success: function(str){
+				sys.loading(0);
+				
+				if(str==='204 No Response'){
+					$('.popup-tskl .tsk_list ul').html('<p style="margin-left:10px;">No task found.</p>');
+				}else{
+					var inf = JSON.parse(str), x = '';
+					
+					if(inf['reply']==='200 OK'){
+						for(var i=0; i<inf['task'].length; i++){
+							x += '<li><a href="#" class="item-link item-content" data-num="' + i + '" data-pid="' + inf['task'][i].primary_id + '">';
+							x += '<div class="item-inner"><div class="item-title">' + inf['task'][i].description;
+							x += '<div class="item-footer">' + sys.pidToLoc(inf['task'][i].venue).loc_name + '</div>';
+							x += '</div><div class="item-after">' + inf['task'][i].date.substr(0, 10) + ' (' + inf['task'][i].time + ')</div></div></a></li>';
+						}
+						
+						$('.tsk_list ul').html(x);
+						$('.tsk_list').data('info', inf['task']);
+					}
+				}
+			}
+		});
+		
+		var searchbar = apps.searchbar.create({
+				el: '.popup-tskl .searchbar',
+				searchContainer: '.popup-tskl .list.tsk_list',
+				searchIn: '.item-title',
+				on: {
+					search(sb, query, previousQuery){
+						console.log('');
+					}
+				}
+			});
+	});
+	
+	var tsklVenueAutocomplete = apps.autocomplete.create({
+			openIn: 'dropdown',
+			inputEl: '#tskld_venue',
+			limit: 5,
+			source: function(query, render){
+				var results = [], locs = $('body').data('loc');
+				if(query.length === 0){
+					render(results);
+					return;
+				}
+				
+				for (var i = 0; i < locs.length; i++) {
+					if (locs[i].loc_name.toLowerCase().indexOf(query.toLowerCase()) >= 0) results.push(locs[i].loc_name);
+				}
+				
+				render(results);
+			},
+			off: { blur }
+		});
+	
+	$('button.tskl_add').on('click', function(){
+		$('#tskld_date').val('');
+		$('#tskld_date').removeData('pid');
+		$('#tskld_date').removeData('num');
+		$('#tskld_time').val('');
+		$('#tskld_venue').val('');
+		$('#tskld_desc').val('');
+		$('#tskld_crew').val('');
+		$('#tskld_crew').removeData('uname');
+		
+		apps.popover.open('.tskld-popover');
+	});
+	
+	$('.tsk_list').on('click', 'a.item-link', function(){
+		var tskl = $('.tsk_list').data('info')[$(this).data('num')];
+		
+		$('#tskld_date').val(tskl.date.substr(0,10));
+		$('#tskld_date').data('pid', $(this).data('pid'));
+		$('#tskld_date').data('num', $(this).data('num'));
+		$('#tskld_time').val(tskl.time);
+		$('#tskld_venue').val(sys.pidToLoc(tskl.venue).loc_name);
+		$('#tskld_desc').val(tskl.description);
+		$('#tskld_crew').data('uname', tskl.crew);
+		$('#tskld_crew').val(sys.unameToSname(tskl.crew));
+		
+		apps.popover.open('.tskld-popover');
+	});
+	
+	$('button.tskld_ok').on('click', function(){
+		var tldt = $('#tskld_date').val(),
+			tltm = $('#tskld_time').val(),
+			tlvn = $('#tskld_venue').val(),
+			tlds = $('#tskld_desc').val(),
+			tlcw = $('#tskld_crew').data('uname');
+		
+		if(sys.isEmpty(tldt) || sys.isEmpty(tltm) ||  sys.isEmpty(tlvn) ||  sys.isEmpty(tlcw)){
+			navigator.vibrate(100);
+		}else{
+			var tpid = $('#tskld_date').data('pid'),
+				num = $('#tskld_date').data('num'),
+				tskl = (sys.isEmpty($('.tsk_list').data('info')) ? [] : $('.tsk_list').data('info'));
+			
+			if(sys.isEmpty(tpid)){
+				var DATA = {
+							'usr' : STORAGE.getItem('usr'),
+							'date' : tldt,
+							'time' : tltm,
+							'venue' : sys.locToPid(tlvn),
+							'desc' : tlds,
+							'crew' : tlcw
+						};
+				var post_data = "ACT=" + encodeURIComponent('tsk_add')
+							  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
+			
+				$.ajax({
+					type: 'POST',
+					url: 'http://app.wkventertainment.com/',
+					data: post_data,
+					beforeSend: function(){
+						sys.loading(1);
+					},
+					success: function(str){
+						sys.loading(0);
+						
+						var inf = JSON.parse(str);
+						
+						if(inf['reply']==='200 OK'){
+							var x = '<li><a href="#" class="item-link item-content" data-num="' + tskl.length + '" data-pid="' + inf['pid'] + '">';
+								x += '<div class="item-inner"><div class="item-title">' + tlds;
+								x += '<div class="item-footer">' + tlvn + '</div>';
+								x += '</div><div class="item-after">' + tldt + ' (' + tltm + ')</div></div></a></li>';
+								
+							var ntsk = {
+									'primary_id' : inf['pid'],
+									'date' : tldt,
+									'time' : tltm,
+									'venue' : sys.locToPid(tlvn),
+									'description' : tlds,
+									'crew' : tlcw
+								};
+							
+							if(tskl.length == 0){
+								$('.popup-tskl .tsk_list ul p').remove();
+							}
+							tskl.push(ntsk);
+							$('.tsk_list').data('info', tskl);
+							$('.tsk_list ul').append(x);
+							apps.popover.close('.tskld-popover');
+							
+							var success_toast = apps.toast.create({
+												   icon: '<i class="material-icons">cloud_done</i>',
+												   text: 'Details Successfully Saved',
+												   position: 'center',
+												   closeTimeout: 2000
+											   });
+							success_toast.open();
+						}else{
+							var failed_toast = apps.toast.create({
+												   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
+												   text: 'Oooppss, error',
+												   position: 'center',
+												   closeTimeout: 2000
+											   });
+							failed_toast.open();
+						}
+					}
+				});
+			}else{
+				var DATA = {
+							'pid' : tpid,
+							'usr' : STORAGE.getItem('usr'),
+							'date' : tldt,
+							'time' : tltm,
+							'venue' : sys.locToPid(tlvn),
+							'desc' : tlds,
+							'crew' : tlcw
+						};
+				var post_data = "ACT=" + encodeURIComponent('tsk_udt')
+							  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
+			
+				$.ajax({
+					type: 'POST',
+					url: 'http://app.wkventertainment.com/',
+					data: post_data,
+					beforeSend: function(){
+						sys.loading(1);
+					},
+					success: function(str){
+						sys.loading(0);
+						
+						var inf = JSON.parse(str);
+						
+						if(inf['reply']==='200 OK'){
+							var x = '<a href="#" class="item-link item-content" data-num="' + num + '" data-pid="' + tpid + '">';
+								x += '<div class="item-inner"><div class="item-title">' + tlds;
+								x += '<div class="item-footer">' + tlvn + '</div>';
+								x += '</div><div class="item-after">' + tldt + ' (' + tltm + ')</div></div></a>';
+								
+							var ntsk = {
+									'primary_id' : tpid,
+									'date' : tldt,
+									'time' : tltm,
+									'venue' : sys.locToPid(tlvn),
+									'description' : tlds,
+									'crew' : tlcw
+								};
+							
+							tskl[num] = ntsk;
+							$('.tsk_list').data('info', tskl);
+							$('.tsk_list ul li:eq('+num+')').html(x);
+							apps.popover.close('.tskld-popover');
+							
+							var success_toast = apps.toast.create({
+												   icon: '<i class="material-icons">cloud_done</i>',
+												   text: 'Details Successfully Saved',
+												   position: 'center',
+												   closeTimeout: 2000
+											   });
+							success_toast.open();
+						}else{
+							var failed_toast = apps.toast.create({
+												   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
+												   text: 'Oooppss, error',
+												   position: 'center',
+												   closeTimeout: 2000
+											   });
+							failed_toast.open();
+						}
+					}
+				});
 			}
 		}
 	});
@@ -2177,7 +2461,7 @@ $(document).ready(function(){
 		type: 'POST',
 		url: 'http://app.wkventertainment.com/',
 		data: post_data,
-		timeout: 10000,
+		timeout: 20000,
 		error: function(){
 			sys.loading(0);
 			apps.loginScreen.open('#error');

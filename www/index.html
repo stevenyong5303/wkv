@@ -234,7 +234,7 @@
 												</div>
 												<div class="item-inner">
 													<div class="item-title">
-														<a class="link popup-open" href="#" data-popup=".popup-tskl">Task List</a>
+														<a id="tskl-btn" class="link popup-open" href="#" data-popup=".popup-tskl">Task List</a>
 													</div>
 												</div>
 											</div>
@@ -752,6 +752,91 @@
 					</div>
 				</div>
 			</div>
+			<div class="popup popup-tskl level8">
+				<div class="toolbar">
+					<div class="toolbar-inner">
+						<div class="left">Task List</div>
+						<div class="right"><a class="link popup-close" href="#">Close</a></div>
+					</div>
+				</div>
+				<div class="block">
+					<form class="searchbar">
+						<div class="searchbar-inner">
+							<div class="searchbar-input-wrap">
+								<input type="search" placeholder="Search">
+								<i class="searchbar-icon"></i>
+								<span class="input-clear-button"></span>
+							</div>
+							<span class="searchbar-disable-button if-not-aurora">Cancel</span>
+						</div>
+					</form>
+				</div>
+				<div class="searchbar-backdrop"></div>
+				<div class="block searchbar-hide-on-search">
+					<button class="button button-raised button-fill tskl_add" style="margin: 10px auto -20px;width: calc(100% - 30px);">
+						<i class="icon material-icons md-only">add</i>
+					</button>
+				</div>
+				<div class="searchbar-found list tsk_list">
+					<ul></ul>
+				</div>
+				<div class="popover tskld-popover">
+					<div class="popover-inner">
+						<div class="list">
+							<ul>
+								<li class="item-content item-input">
+									<div class="item-inner">
+										<div class="item-title item-label">Date</div>
+										<div class="item-input-wrap">
+											<input id="tskld_date" type="date" value="" autocomplete="off" required validate>
+										</div>
+									</div>
+								</li>
+								<li class="item-content item-input">
+									<div class="item-inner">
+										<div class="item-title item-label">Standby Time</div>
+										<div class="item-input-wrap">
+											<input id="tskld_time" type="text" value="" autocomplete="off" required validate>
+										</div>
+									</div>
+								</li>
+								<li class="item-content item-input">
+									<div class="item-inner">
+										<div class="item-title item-label">Venue</div>
+										<div class="item-input-wrap">
+											<input id="tskld_venue" type="text" value="" autocomplete="off" required validate>
+										</div>
+									</div>
+								</li>
+								<li class="item-content item-input">
+									<div class="item-inner">
+										<div class="item-title item-label">Description</div>
+										<div class="item-input-wrap">
+											<input id="tskld_desc" type="text" value="" autocomplete="off">
+										</div>
+									</div>
+								</li>
+								<li class="item-content item-input">
+									<div class="item-inner">
+										<div class="item-title item-label">Crew</div>
+										<div class="item-input-wrap">
+											<input id="tskld_crew" type="text" value="" autocomplete="off">
+										</div>
+									</div>
+								</li>
+								<li class="item-content item-input">
+									<div class="item-inner">
+										<div class="row">
+											<button class="col button button-fill tskld_ok">OK</button>
+											<button class="col button button-fill popover-close">Cancel</button>
+										</div>
+									</div>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
 			<div class="popup popup-event">
 				<div class="toolbar">
 					<div class="toolbar-inner">
@@ -1237,7 +1322,7 @@
 														<input type="checkbox" name="cbmd-checkbox"/>
 														<i class="icon icon-checkbox"></i>
 														<div class="item-inner">
-															<div class="item-title">14 u&emsp;-&emsp;XLR</div>
+															<div class="item-title">20 u&emsp;-&emsp;XLR</div>
 														</div>
 													</label>
 												</li>
@@ -2252,7 +2337,7 @@
 				<div class="block">
 					<div align="center">
 						 <img src="icon.png" alt="WKV Logo" height="128" width="128">
-						 <span style="color:#999;position:absolute;top:40px;font-size:12px;">WKV<br/>Version 1.0.106</span>
+						 <span style="color:#999;position:absolute;top:40px;font-size:12px;">WKV<br/>Version 1.0.107</span>
 					</div>
 					<p>WKV Application serves as a platform for of WKV’s member to obtain basic information and calculation method can easily obtain by accessing to the application.</p>
 					<p>For general usage, clock in and clock out is built in the application for employees of WKV to check in whenever they report to event venue.</p>
