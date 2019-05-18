@@ -6,7 +6,7 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.108",
+			  version: "1.0.109",
 			  rtl: false,
 			  language: "en-US"
 		  });
@@ -153,7 +153,7 @@ $(document).ready(function(){
 										x += '<div class="timeline-item-content">';
 									}
 									
-									x += '<div class="timeline-item-inner" data-locpid="' + (sys.isEmpty(task[i]['venue']) ? 0 : (task[i]['venue'].indexOf('#PID#') != -1 ? task[i]['venue'] : 0)) + '">';
+									x += '<div class="timeline-item-inner" data-locpid="' + (sys.isEmpty(task[i]['venue']) ? 0 : (task[i]['venue'].indexOf('#PID#') != -1 ? task[i]['venue'] : 0)) + '" data-rmk="' + task[i]['remarks'] + '">';
 									
 									if(task[i]['time']){
 										x += '<div class="timeline-item-time">' + task[i]['time'] + '</div>';
@@ -536,8 +536,7 @@ $(document).ready(function(){
 			var loc = sys.pidToLoc(pid);
 			
 			apps.dialog.create({
-				title: 'Navigation',
-				text: 'Where are you heading to?',
+				text: (sys.commasToNextLine($(this).data('rmk'))),
 				buttons: [{
 						text: 'Main Lobby',
 						cssClass: 'wazeBtn',
@@ -2525,7 +2524,7 @@ $(document).ready(function(){
 							x += '<div class="timeline-item-content">';
 						}
 						
-						x += '<div class="timeline-item-inner" data-locpid="' + (sys.isEmpty(task[i]['venue']) ? 0 : (task[i]['venue'].indexOf('#PID#') != -1 ? task[i]['venue'] : 0)) + '">';
+						x += '<div class="timeline-item-inner" data-locpid="' + (sys.isEmpty(task[i]['venue']) ? 0 : (task[i]['venue'].indexOf('#PID#') != -1 ? task[i]['venue'] : 0)) + '" data-rmk="' + task[i]['remarks'] + '">';
 						
 						if(task[i]['time']){
 							x += '<div class="timeline-item-time">' + task[i]['time'] + '</div>';
@@ -2669,6 +2668,9 @@ sys = {
 			val += ';';
 		}
 		return val;
+	},
+	'commasToNextLine' : function(str){
+		return str.replace(/,,/g, '<br/>');
 	},
 	'unameToSname' : function(str){
 		if(str){

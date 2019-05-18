@@ -8,6 +8,9 @@
 #task_tl .timeline-item:last-child{
 	margin-bottom: 60px;
 }
+.dialog-buttons-2{
+	width: 360px !important;
+}
 #audiop_plyr span{
 	margin-bottom: 10px;
 	display: block;
