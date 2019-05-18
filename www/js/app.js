@@ -2670,7 +2670,10 @@ sys = {
 		return val;
 	},
 	'commasToNextLine' : function(str){
-		return str.replace(/,,/g, '<br/>');
+		if(str){
+			return str.replace(/,,/g, '<br/>');
+		}
+		return '';
 	},
 	'unameToSname' : function(str){
 		if(str){
