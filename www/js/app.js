@@ -6,7 +6,7 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.109",
+			  version: "1.0.110",
 			  rtl: false,
 			  language: "en-US"
 		  });
@@ -2737,17 +2737,19 @@ sys = {
 		return loc_name;
 	},
 	'ldToShort' : function(str){
-		if(str.toLowerCase() == 'lunch'){
-			return 'L';
-		}else if(str.toLowerCase() == 'dinner'){
-			return 'D';
-		}else if(str.toLowerCase() == 'setup'){
-			return 'ST';
-		}else if(str.toLowerCase().indexOf('board') != -1){
-			if(str.toLowerCase().indexOf('lunch') != -1){
-				return 'L:OB';
-			}else{
-				return 'D:OB';
+		if(str){
+			if(str.toLowerCase() == 'lunch'){
+				return 'L';
+			}else if(str.toLowerCase() == 'dinner'){
+				return 'D';
+			}else if(str.toLowerCase() == 'setup'){
+				return 'ST';
+			}else if(str.toLowerCase().indexOf('board') != -1){
+				if(str.toLowerCase().indexOf('lunch') != -1){
+					return 'L:OB';
+				}else{
+					return 'D:OB';
+				}
 			}
 		}
 		return '-';

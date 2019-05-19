@@ -10,6 +10,8 @@
 }
 .dialog-buttons-2{
 	width: 360px !important;
+	margin-left: auto !important;
+	left: calc(50% - 180px) !important;
 }
 #audiop_plyr span{
 	margin-bottom: 10px;
