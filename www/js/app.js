@@ -6,7 +6,7 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.110",
+			  version: "1.0.111",
 			  rtl: false,
 			  language: "en-US"
 		  });
@@ -564,6 +564,25 @@ $(document).ready(function(){
 		}
 	});
 	
+	$('.details-popover').on('click', 'input.evtd_rmk', function(){
+		var x = sys.commasToNextLine($(this).val(), 'n');
+		$('.panel-evt-rmk textarea').val(x);
+		
+		$('.panel-evt-car').hide();
+		$('.panel-evt-crew').hide();
+		$('.panel-evt-rmk').show();
+		
+		apps.panel.open('left', true);
+		
+		$('.panel-evt-rmk textarea').focus();
+	});
+	
+	$('.panel-evt-rmk textarea').on('paste keyup', function(){
+		var x = sys.commasToNextLine($(this).val(), 'r');
+		
+		$('.details-popover input.evtd_rmk').val(x);
+	});
+	
 	$('.details-popover').on('click', 'input.evtd_crew', function(){
 		$('.evt-crew-edit').removeClass('evt-crew-edit');
 		
@@ -583,6 +602,7 @@ $(document).ready(function(){
 			x += '<i class="icon icon-checkbox"></i><div class="item-inner"><div class="item-title">' + crews[i]['short_name'] + '</div></div></label></li>';
 		}
 		$('.evt-crew ul').html(x);
+		$('.panel-evt-rmk').hide();
 		$('.panel-evt-car').hide();
 		$('.panel-evt-crew').show();
 		$(this).addClass('evt-crew-edit');
@@ -621,6 +641,7 @@ $(document).ready(function(){
 			x += '<i class="icon icon-checkbox"></i><div class="item-inner"><div class="item-title">' + crews[i]['short_name'] + '</div></div></label></li>';
 		}
 		$('.evt-crew ul').html(x);
+		$('.panel-evt-rmk').hide();
 		$('.panel-evt-car').hide();
 		$('.panel-evt-crew').show();
 		$(this).addClass('evt-crew-edit');
@@ -671,6 +692,7 @@ $(document).ready(function(){
 		}
 		$('.evt-car ul').html(x);
 		$('.panel-evt-crew').hide();
+		$('.panel-evt-rmk').hide();
 		$('.panel-evt-car').show();
 		$(this).addClass('evt-car-edit');
 		apps.panel.open('left', true);
@@ -2669,9 +2691,15 @@ sys = {
 		}
 		return val;
 	},
-	'commasToNextLine' : function(str){
+	'commasToNextLine' : function(str, mode){
 		if(str){
-			return str.replace(/,,/g, '<br/>');
+			if(sys.isEmpty(mode)){
+				return str.replace(/,,/g, '<br/>');
+			}else if(mode == 'n'){
+				return str.replace(/,,/g, '\n');
+			}else if(mode == 'r'){
+				return str.replace(/\n/g, ',,');
+			}
 		}
 		return '';
 	},
