@@ -42,6 +42,7 @@ input.evtd_price, label.evtd_paid{
 }
 .calendar-day-today span{
 	border-radius: 0% !important;
+	background-color: #DDD;
 }
 .panel{
 	width: 350px;

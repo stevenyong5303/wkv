@@ -6,7 +6,7 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.111",
+			  version: "1.0.112",
 			  rtl: false,
 			  language: "en-US"
 		  });
@@ -256,7 +256,7 @@ $(document).ready(function(){
 										x += '<tr name="el'+(i+1)+'"><td class="label-cell"><span class="button button-fill" name="el'+(i+1)+'">'+(i+1)+'</span></td>';
 										x += '<td class="tb-pic label-cell '+(parseInt($('body').data('user_level'))>=8 ? (inf[i].paid=='1' ? 'tb-paid' : 'tb-not-paid') : '' )+'">'+inf[i].pic+'</td>';
 										x += '<td class="tb-ld label-cell">'+(sys.ldToShort(inf[i].luncheon_dinner))+'</td>';
-										x += '<td class="tb-venue label-cell">'+((inf[i].venue==null) ? '-' : (inf[i].venue.indexOf('#PID#') != -1 ? sys.pidToLoc(inf[i].venue).loc_name : inf[i].venue))+'</td>';
+										x += '<td class="tb-venue label-cell" data-pid="' + inf[i].venue + '">'+((inf[i].venue==null) ? '-' : (inf[i].venue.indexOf('#PID#') != -1 ? sys.pidToLoc(inf[i].venue).loc_name : inf[i].venue))+'</td>';
 										x += '<td class="tb-desc label-cell">'+((inf[i].description==null) ? '-' : inf[i].description)+'</td>';
 										x += '<td class="tb-mixer tablet-only">'+((inf[i].mixer==null) ? '-' : inf[i].mixer)+'</td>';
 										x += '<td class="tb-wmic tablet-only">'+((inf[i].wireless_mic==null) ? '-' : inf[i].wireless_mic)+'</td>';
@@ -433,6 +433,7 @@ $(document).ready(function(){
 														}
 														$('tr[name="' + trName + '"] td.tb-ld').text(sys.ldToShort(ld));
 														$('tr[name="' + trName + '"] td.tb-venue').text((venue == '' ? '-' : (venue.indexOf('#PID#') != -1 ? sys.pidToLoc(venue).loc_name : venue)));
+														$('tr[name="' + trName + '"] td.tb-venue').data('pid', venue);
 														$('tr[name="' + trName + '"] td.tb-desc').text((desc == '' ? '-' : desc));
 														$('tr[name="' + trName + '"] td.tb-mixer').text((mixer == '' ? '-' : mixer));
 														$('tr[name="' + trName + '"] td.tb-wmic').text((wmic == '' ? '-' : wmic));
@@ -528,6 +529,50 @@ $(document).ready(function(){
 	};
 	sys.dayClick(usr);
 	sys.eventCheck(usr, (new Date().getMonth()), new Date().getYear()+1900);
+	
+	$('.event_list').on('click', '.tb-venue', function(){
+		var pid = $(this).data('pid');
+		
+		if(pid){
+			if(pid.indexOf('#PID#') != -1){
+				var loc = sys.pidToLoc(pid);
+				
+				apps.dialog.create({
+					title: 'Navigate',
+					text: 'Where are you heading to?',
+					buttons: [{
+							text: 'Main Lobby',
+							cssClass: 'wazeBtn',
+							onClick: function(){
+								if(loc['point_lobby']){
+									window.open('https://www.waze.com/ul?ll=' + loc['point_lobby'].split(', ')[0] + '%2C' + loc['point_lobby'].split(', ')[1] + '&navigate=yes&zoom=16', '_system');
+								}else{
+									window.open('https://www.waze.com/ul?ll=' + loc['loc_point'].split(', ')[0] + '%2C' + loc['loc_point'].split(', ')[1] + '&navigate=yes&zoom=16', '_system');
+								}
+							}
+						},{
+							text: 'Loading Bay',
+							onClick: function(){
+								if(loc['point_loading']){
+									window.open('https://www.waze.com/ul?ll=' + loc['point_loading'].split(', ')[0] + '%2C' + loc['point_loading'].split(', ')[1] + '&navigate=yes&zoom=16', '_system');
+								}else if(loc['point_lobby']){
+									window.open('https://www.waze.com/ul?ll=' + loc['point_lobby'].split(', ')[0] + '%2C' + loc['point_lobby'].split(', ')[1] + '&navigate=yes&zoom=16', '_system');
+								}else{
+									window.open('https://www.waze.com/ul?ll=' + loc['loc_point'].split(', ')[0] + '%2C' + loc['loc_point'].split(', ')[1] + '&navigate=yes&zoom=16', '_system');
+								}
+							}
+						}],
+					closeByBackdropClick: true
+				}).open();
+			}
+		}
+	});
+	
+	$('a#schedule-btn').on('mousedown', function(){
+		if($(this).hasClass('tab-link-active')){
+			calendarInline.setYearMonth(((new Date).getYear()+1900), ((new Date).getMonth()), 500);
+		}
+	});
 	
 	$('#task_tl').on('click', '.timeline-item-inner', function(){
 		var pid = $(this).data('locpid');
@@ -1831,7 +1876,7 @@ $(document).ready(function(){
 							x += '<tr name="el1"><td class="label-cell"><span class="button button-fill" name="el1">1</span></td>';
 							x += '<td class="tb-pic label-cell' + (parseInt($('body').data('user_level'))>=8 ? ' tb-not-paid' : '') + '">'+pic+'</td>';
 							x += '<td class="tb-ld label-cell">'+(sys.ldToShort(ld))+'</td>';
-							x += '<td class="tb-venue label-cell">-</td>';
+							x += '<td class="tb-venue label-cell" data-pid="">-</td>';
 							x += '<td class="tb-desc label-cell">'+((desc=='') ? '-' : desc)+'</td>';
 							x += '<td class="tb-mixer tablet-only">-</td>';
 							x += '<td class="tb-wmic tablet-only">-</td>';
@@ -1854,7 +1899,7 @@ $(document).ready(function(){
 							x += '<tr name="el' + nnum + '"><td class="label-cell"><span class="button button-fill" name="el' + nnum + '">' + nnum + '</span></td>';
 							x += '<td class="tb-pic label-cell' + (parseInt($('body').data('user_level'))>=8 ? ' tb-not-paid' : '') + '">'+pic+'</td>';
 							x += '<td class="tb-ld label-cell">'+(sys.ldToShort(ld))+'</td>';
-							x += '<td class="tb-venue label-cell">-</td>';
+							x += '<td class="tb-venue label-cell" data-pid="">-</td>';
 							x += '<td class="tb-desc label-cell">'+((desc=='') ? '-' : desc)+'</td>';
 							x += '<td class="tb-mixer tablet-only">-</td>';
 							x += '<td class="tb-wmic tablet-only">-</td>';
@@ -2008,6 +2053,7 @@ $(document).ready(function(){
 												}
 												$('tr[name="' + trName + '"] td.tb-ld').text((sys.ldToShort(ld)));
 												$('tr[name="' + trName + '"] td.tb-venue').text((venue == '' ? '-' : (venue.indexOf('#PID#') != -1 ? sys.pidToLoc(venue).loc_name : venue)));
+												$('tr[name="' + trName + '"] td.tb-venue').data('pid', venue);
 												$('tr[name="' + trName + '"] td.tb-desc').text((desc == '' ? '-' : desc));
 												$('tr[name="' + trName + '"] td.tb-mixer').text((mixer == '' ? '-' : mixer));
 												$('tr[name="' + trName + '"] td.tb-wmic').text((wmic == '' ? '-' : wmic));
@@ -2226,6 +2272,7 @@ $(document).ready(function(){
 								}
 								$('tr[name="' + trName + '"] td.tb-ld').text((sys.ldToShort(ld)));
 								$('tr[name="' + trName + '"] td.tb-venue').text((venue == '' ? '-' : (venue.indexOf('#PID#') != -1 ? sys.pidToLoc(venue).loc_name : venue)));
+								$('tr[name="' + trName + '"] td.tb-venue').data('pid', venue);
 								$('tr[name="' + trName + '"] td.tb-desc').text((desc == '' ? '-' : desc));
 								$('tr[name="' + trName + '"] td.tb-mixer').text((mixer == '' ? '-' : mixer));
 								$('tr[name="' + trName + '"] td.tb-wmic').text((wmic == '' ? '-' : wmic));
