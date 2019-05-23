@@ -6,7 +6,7 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.112",
+			  version: "1.0.113",
 			  rtl: false,
 			  language: "en-US"
 		  });
@@ -539,7 +539,7 @@ $(document).ready(function(){
 				
 				apps.dialog.create({
 					title: 'Navigate',
-					text: 'Where are you heading to?',
+					text: 'Which are you heading to?',
 					buttons: [{
 							text: 'Main Lobby',
 							cssClass: 'wazeBtn',
@@ -568,7 +568,7 @@ $(document).ready(function(){
 		}
 	});
 	
-	$('a#schedule-btn').on('mousedown', function(){
+	$('a#schedule-btn').on('mousedown touchstart', function(){
 		if($(this).hasClass('tab-link-active')){
 			calendarInline.setYearMonth(((new Date).getYear()+1900), ((new Date).getMonth()), 500);
 		}
