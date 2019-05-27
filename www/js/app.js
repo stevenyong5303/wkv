@@ -6,7 +6,7 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.114",
+			  version: "1.0.115",
 			  rtl: false,
 			  language: "en-US"
 		  });
@@ -1747,10 +1747,31 @@ $(document).ready(function(){
 	});
 	
 	$('a#loc_refresh').on('click', function(){
-		var loc = $('iframe#gmap').data('loc');
+		var loc = $('iframe#gmap').data('loc'),
+			tasks = $('#task_tl').data('inf');
 		
 		$('iframe#gmap').attr('src', ('https://www.google.com/maps/embed/v1/view?key=AIzaSyCRKiFjg2CA78cD09yIXuHFCxADjOh75rg&center='+loc+'&zoom=17'));
 		sys.getTime();
+		$('.popup-clock button.clock-in').addClass('disabled');
+		
+		if(!sys.isEmpty(tasks) && $('.popup-clock button.clock-out').hasClass('disabled')){
+			for(var i=0; i<tasks.length; i++){
+				if(tasks[i].venue.indexOf('#PID#') != -1){
+					var wtime = (new Date(tasks[i].date.substr(0, 11) + tasks[i].time + ':00')).getTime();
+					var ctime = (new Date($('#app-time').data('time'))).getTime();
+					
+					console.log(wtime + ' ' + ctime);
+					if((ctime >= (wtime - 720000)) && (ctime <= wtime)){
+						var venue = sys.pidToLoc(tasks[i].venue);
+						
+						if(sys.coordinateCheck(loc, venue.loc_point, venue.loc_range)){
+							$('.popup-clock button.clock-in').removeClass('disabled');
+							break;
+						}
+					}
+				}
+			}
+		}
 	})
 	
 	$$('button.clock-check').on('click', function () {
@@ -2678,6 +2699,7 @@ $(document).ready(function(){
 							x += '</div></div>';
 						}
 					}
+					$('#task_tl').data('inf', task);
 					$('#task_tl').html(x);
 				}
 			}
@@ -3024,7 +3046,6 @@ sys = {
 	},
 	'clockToggle' : function(str){
 		if(str=='out'){
-			$('.popup-clock button.clock-in').removeClass('disabled');
 			$('.popup-clock button.clock-out').addClass('disabled');
 		}else if(str=='in'){
 			$('.popup-clock button.clock-in').addClass('disabled');
