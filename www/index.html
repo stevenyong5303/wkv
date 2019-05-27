@@ -222,7 +222,7 @@
 												</div>
 												<div class="item-inner">
 													<div class="item-title">
-														<a class="link popup-open" href="#" data-popup=".popup-rprt">Sales Reports</a>
+														<a id="rprt-btn" class="link popup-open" href="#" data-popup=".popup-rprt">Sales Reports</a>
 													</div>
 												</div>
 											</div>
@@ -761,6 +761,42 @@
 							</ul>
 						</div>
 					</div>
+				</div>
+			</div>
+			<div class="popup popup-rprt level8">
+				<div class="toolbar">
+					<div class="toolbar-inner">
+						<div class="left">Sales Reports</div>
+						<div class="right"><a class="link popup-close" href="#">Close</a></div>
+					</div>
+				</div>
+				<div class="list">
+					<ul>
+						<li class="item-content item-input">
+							<div class="item-inner">
+								<div class="item-title item-label">From</div>
+								<div class="item-input-wrap">
+									<input id="rprt_from" type="date" value="" autocomplete="off" required validate>
+								</div>
+							</div>
+						</li>
+						<li class="item-content item-input">
+							<div class="item-inner">
+								<div class="item-title item-label">To</div>
+								<div class="item-input-wrap">
+									<input id="rprt_to" type="date" value="" autocomplete="off" required validate>
+								</div>
+							</div>
+						</li>
+					</ul>
+				</div>
+				<div class="block">
+					<button class="button button-raised button-fill rprt_gen" style="margin: 10px auto -20px;width: calc(100% - 30px);">
+						<i class="icon material-icons md-only">timeline</i>
+					</button>
+				</div>
+				<div class="rprt-result list">
+					<ul></ul>
 				</div>
 			</div>
 			<div class="popup popup-tskl level8">
@@ -1343,7 +1379,7 @@
 																			<input type="checkbox" name="cbmd-checkbox"/>
 																			<i class="icon icon-checkbox"></i>
 																			<div class="item-inner">
-																				<div class="item-title">20 u&emsp;-&emsp;XLR</div>
+																				<div class="item-title">14 u&emsp;-&emsp;XLR</div>
 																			</div>
 																		</label>
 																	</li>
@@ -2828,7 +2864,7 @@
 				<div class="block">
 					<div align="center">
 						 <img src="icon.png" alt="WKV Logo" height="128" width="128">
-						 <span style="color:#999;position:absolute;top:40px;font-size:12px;">WKV<br/>Version 1.0.113</span>
+						 <span style="color:#999;position:absolute;top:40px;font-size:12px;">WKV<br/>Version 1.0.114</span>
 					</div>
 					<p>WKV Application serves as a platform for of WKV’s member to obtain basic information and calculation method can easily obtain by accessing to the application.</p>
 					<p>For general usage, clock in and clock out is built in the application for employees of WKV to check in whenever they report to event venue.</p>

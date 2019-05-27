@@ -6,7 +6,7 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.113",
+			  version: "1.0.114",
 			  rtl: false,
 			  language: "en-US"
 		  });
@@ -608,6 +608,76 @@ $(document).ready(function(){
 			}).open();
 		}
 	});
+	
+	$('#rprt-btn').on('click', function(){
+		var today = ((((new Date).getYear()+1900)) + '-' + (sys.pad((new Date).getMonth()+1)) + '-' + (sys.pad((new Date).getDate())));
+		
+		$('#rprt_from').val(today);
+		$('#rprt_to').val(today);
+	});
+	
+	$('.rprt_gen').on('click', function(){
+		var from = $('#rprt_from').val(),
+			to = $('#rprt_to').val();
+		
+		var DATA = {
+				'usr' : STORAGE.getItem('usr'),
+				'from' : from,
+				'to' : to
+			};
+		var post_data = "ACT=" + encodeURIComponent('rpt_chk')
+					  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
+					  
+		$.ajax({
+			type: 'POST',
+			url: 'http://app.wkventertainment.com/',
+			data: post_data,
+			beforeSend: function(){
+				sys.loading(1);
+			},
+			success: function(str){
+				var inf = JSON.parse(str);
+			
+				if(inf['reply']==='200 OK'){
+					var x = '', total = 0, patternD = new RegExp(/\((.*?)\)/), patternP = new RegExp(/[0-9.]*/);
+					
+					for(var i=0; i<inf['sales'].length; i++){
+						if(!sys.isEmpty(inf['sales'][i].price)){
+							if(patternD.test(inf['sales'][i].price)){
+								var day = patternD.exec(inf['sales'][i].price)[1];
+								var price = patternP.exec(inf['sales'][i].price)[0];
+								total += (parseFloat(price) / parseFloat(day));
+							}else{
+								total += parseFloat(inf['sales'][i].price);
+							}
+						}
+					}
+					x += '<li class="item-content"><div class="item-inner">Total sales: RM ' + total.toFixed(2) + '</div></li>';
+					$('.rprt-result ul').html(x);
+					sys.loading(0);
+				}else if(inf['reply']==='204 No Response'){
+					$('.rprt-result ul').html('<li class="item-content"><div class="item-inner">No report found.</div></li>');
+					var failed_toast = apps.toast.create({
+										   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
+										   text: 'No report found.',
+										   position: 'center',
+										   closeTimeout: 2000
+									   });
+					failed_toast.open();
+					sys.loading(0);
+				}else{
+					sys.loading(0);
+					var failed_toast = apps.toast.create({
+										   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
+										   text: 'Oooppss, error',
+										   position: 'center',
+										   closeTimeout: 2000
+									   });
+					failed_toast.open();
+				}
+			}
+		});
+	})
 	
 	$('.details-popover').on('click', 'input.evtd_rmk', function(){
 		var x = sys.commasToNextLine($(this).val(), 'n');
