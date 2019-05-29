@@ -6,7 +6,7 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.115",
+			  version: "1.0.116",
 			  rtl: false,
 			  language: "en-US"
 		  });
@@ -89,7 +89,7 @@ $(document).ready(function(){
 					  
 			$.ajax({
 				type: 'POST',
-				url: 'http://app.wkventertainment.com/',
+				url: 'https://app.wkventertainment.com/',
 				data: post_data,
 				beforeSend: function(){
 					sys.loading(1);
@@ -225,7 +225,7 @@ $(document).ready(function(){
 								  
 						$.ajax({
 							type: 'POST',
-							url: 'http://app.wkventertainment.com/',
+							url: 'https://app.wkventertainment.com/',
 							data: post_data,
 							beforeSend: function(){
 								sys.loading(1);
@@ -254,7 +254,7 @@ $(document).ready(function(){
 									
 									for(var i=0; i<inf.length; i++){
 										x += '<tr name="el'+(i+1)+'"><td class="label-cell"><span class="button button-fill" name="el'+(i+1)+'">'+(i+1)+'</span></td>';
-										x += '<td class="tb-pic label-cell '+(parseInt($('body').data('user_level'))>=8 ? (inf[i].paid=='1' ? 'tb-paid' : 'tb-not-paid') : '' )+'">'+inf[i].pic+'</td>';
+										x += '<td class="tb-pic label-cell '+(((parseInt($('body').data('user_level'))>=8) && (sys.ldToShort(inf[i].luncheon_dinner)!='ST')) ? (inf[i].paid=='1' ? 'tb-paid' : 'tb-not-paid') : '' )+'">'+inf[i].pic+'</td>';
 										x += '<td class="tb-ld label-cell">'+(sys.ldToShort(inf[i].luncheon_dinner))+'</td>';
 										x += '<td class="tb-venue label-cell" data-pid="' + inf[i].venue + '">'+((inf[i].venue==null) ? '-' : (inf[i].venue.indexOf('#PID#') != -1 ? sys.pidToLoc(inf[i].venue).loc_name : inf[i].venue))+'</td>';
 										x += '<td class="tb-desc label-cell">'+((inf[i].description==null) ? '-' : inf[i].description)+'</td>';
@@ -394,7 +394,7 @@ $(document).ready(function(){
 														  
 											$.ajax({
 												type: 'POST',
-												url: 'http://app.wkventertainment.com/',
+												url: 'https://app.wkventertainment.com/',
 												data: post_data,
 												beforeSend: function(){
 													sys.loading(1);
@@ -482,7 +482,7 @@ $(document).ready(function(){
 														  
 											$.ajax({
 												type: 'POST',
-												url: 'http://app.wkventertainment.com/',
+												url: 'https://app.wkventertainment.com/',
 												data: post_data,
 												beforeSend: function(){
 													sys.loading(1);
@@ -529,6 +529,12 @@ $(document).ready(function(){
 	};
 	sys.dayClick(usr);
 	sys.eventCheck(usr, (new Date().getMonth()), new Date().getYear()+1900);
+	
+	$('.details-popover').on('keyup', 'input.evtd_ld', function(){
+		if(($(this).val()).toLowerCase()=='setup'){
+			$('.evtd_price').val(0);
+		}
+	});
 	
 	$('.event_list').on('click', '.tb-venue', function(){
 		var pid = $(this).data('pid');
@@ -630,7 +636,7 @@ $(document).ready(function(){
 					  
 		$.ajax({
 			type: 'POST',
-			url: 'http://app.wkventertainment.com/',
+			url: 'https://app.wkventertainment.com/',
 			data: post_data,
 			beforeSend: function(){
 				sys.loading(1);
@@ -845,7 +851,7 @@ $(document).ready(function(){
 					  
 		$.ajax({
 			type: 'POST',
-			url: 'http://app.wkventertainment.com/',
+			url: 'https://app.wkventertainment.com/',
 			data: post_data,
 			beforeSend: function(){
 				sys.loading(1);
@@ -892,7 +898,7 @@ $(document).ready(function(){
 					  
 		$.ajax({
 			type: 'POST',
-			url: 'http://app.wkventertainment.com/',
+			url: 'https://app.wkventertainment.com/',
 			data: post_data,
 			beforeSend: function(){
 				sys.loading(1);
@@ -993,7 +999,7 @@ $(document).ready(function(){
 				
 				$.ajax({
 					type: 'POST',
-					url: 'http://app.wkventertainment.com/',
+					url: 'https://app.wkventertainment.com/',
 					data: post_data,
 					beforeSend: function(){
 						sys.loading(1);
@@ -1049,7 +1055,7 @@ $(document).ready(function(){
 				
 				$.ajax({
 					type: 'POST',
-					url: 'http://app.wkventertainment.com/',
+					url: 'https://app.wkventertainment.com/',
 					data: post_data,
 					beforeSend: function(){
 						sys.loading(1);
@@ -1219,7 +1225,7 @@ $(document).ready(function(){
 				
 					$.ajax({
 						type: 'POST',
-						url: 'http://app.wkventertainment.com/',
+						url: 'https://app.wkventertainment.com/',
 						data: post_data,
 						beforeSend: function(){
 							sys.loading(1);
@@ -1288,7 +1294,7 @@ $(document).ready(function(){
 								  
 					$.ajax({
 						type: 'POST',
-						url: 'http://app.wkventertainment.com/',
+						url: 'https://app.wkventertainment.com/',
 						data: post_data,
 						beforeSend: function(){
 							sys.loading(1);
@@ -1355,7 +1361,7 @@ $(document).ready(function(){
 
 		$.ajax({
 			type: 'POST',
-			url: 'http://app.wkventertainment.com/',
+			url: 'https://app.wkventertainment.com/',
 			data: post_data,
 			beforeSend: function(){
 				sys.loading(1);
@@ -1471,7 +1477,7 @@ $(document).ready(function(){
 			
 				$.ajax({
 					type: 'POST',
-					url: 'http://app.wkventertainment.com/',
+					url: 'https://app.wkventertainment.com/',
 					data: post_data,
 					beforeSend: function(){
 						sys.loading(1);
@@ -1537,7 +1543,7 @@ $(document).ready(function(){
 			
 				$.ajax({
 					type: 'POST',
-					url: 'http://app.wkventertainment.com/',
+					url: 'https://app.wkventertainment.com/',
 					data: post_data,
 					beforeSend: function(){
 						sys.loading(1);
@@ -1760,11 +1766,11 @@ $(document).ready(function(){
 					var wtime = (new Date(tasks[i].date.substr(0, 11) + tasks[i].time + ':00')).getTime();
 					var ctime = (new Date($('#app-time').data('time'))).getTime();
 					
-					console.log(wtime + ' ' + ctime);
-					if((ctime >= (wtime - 720000)) && (ctime <= wtime)){
+					if((ctime >= (wtime - 7200000)) && (ctime <= (wtime + 1800000))){
 						var venue = sys.pidToLoc(tasks[i].venue);
 						
 						if(sys.coordinateCheck(loc, venue.loc_point, venue.loc_range)){
+							$('button.clock-in').data('loc', venue);
 							$('.popup-clock button.clock-in').removeClass('disabled');
 							break;
 						}
@@ -1785,7 +1791,7 @@ $(document).ready(function(){
 			
 			$.ajax({
 				type: 'POST',
-				url: 'http://app.wkventertainment.com/',
+				url: 'https://app.wkventertainment.com/',
 				data: post_data,
 				beforeSend: function(){
 					sys.loading(1);
@@ -1815,7 +1821,8 @@ $(document).ready(function(){
 	});
 	
 	$$('button.clock-in').on('click', function () {
-		apps.dialog.confirm('Clock in to this location?', 'Confirmation', function(){
+		var loc = $(this).data('loc');
+		apps.dialog.confirm(('Clock in to ' + loc.loc_name + '?'), 'Confirmation', function(){
 			var DATA = {
 				'usr' : STORAGE.getItem('usr'),
 				'loc' : $('iframe#gmap').data('loc')
@@ -1825,7 +1832,7 @@ $(document).ready(function(){
 			
 			$.ajax({
 				type: 'POST',
-				url: 'http://app.wkventertainment.com/',
+				url: 'https://app.wkventertainment.com/',
 				data: post_data,
 				beforeSend: function(){
 					sys.loading(1);
@@ -1868,7 +1875,7 @@ $(document).ready(function(){
 			
 			$.ajax({
 				type: 'POST',
-				url: 'http://app.wkventertainment.com/',
+				url: 'https://app.wkventertainment.com/',
 				data: post_data,
 				beforeSend: function(){
 					sys.loading(1);
@@ -1938,7 +1945,7 @@ $(document).ready(function(){
 			
 			$.ajax({
 				type: 'POST',
-				url: 'http://app.wkventertainment.com/',
+				url: 'https://app.wkventertainment.com/',
 				data: post_data,
 				beforeSend: function(){
 					sys.loading(1);
@@ -2105,7 +2112,7 @@ $(document).ready(function(){
 												  
 									$.ajax({
 										type: 'POST',
-										url: 'http://app.wkventertainment.com/',
+										url: 'https://app.wkventertainment.com/',
 										data: post_data,
 										beforeSend: function(){
 											sys.loading(1);
@@ -2193,7 +2200,7 @@ $(document).ready(function(){
 												  
 									$.ajax({
 										type: 'POST',
-										url: 'http://app.wkventertainment.com/',
+										url: 'https://app.wkventertainment.com/',
 										data: post_data,
 										beforeSend: function(){
 											sys.loading(1);
@@ -2324,7 +2331,7 @@ $(document).ready(function(){
 								  
 					$.ajax({
 						type: 'POST',
-						url: 'http://app.wkventertainment.com/',
+						url: 'https://app.wkventertainment.com/',
 						data: post_data,
 						beforeSend: function(){
 							sys.loading(1);
@@ -2419,7 +2426,7 @@ $(document).ready(function(){
 			
 			$.ajax({
 				type: 'POST',
-				url: 'http://app.wkventertainment.com/',
+				url: 'https://app.wkventertainment.com/',
 				data: post_data,
 				beforeSend: function(){
 					sys.loading(1);
@@ -2490,7 +2497,7 @@ $(document).ready(function(){
 						  
 			$.ajax({
 				type: 'POST',
-				url: 'http://app.wkventertainment.com/',
+				url: 'https://app.wkventertainment.com/',
 				data: post_data,
 				beforeSend: function(){
 					sys.loading(1);
@@ -2563,7 +2570,7 @@ $(document).ready(function(){
 						  
 			$.ajax({
 				type: 'POST',
-				url: 'http://app.wkventertainment.com/',
+				url: 'https://app.wkventertainment.com/',
 				data: post_data,
 				beforeSend: function(){
 					sys.loading(1);
@@ -2618,7 +2625,7 @@ $(document).ready(function(){
 	
 	$.ajax({
 		type: 'POST',
-		url: 'http://app.wkventertainment.com/',
+		url: 'https://app.wkventertainment.com/',
 		data: post_data,
 		timeout: 20000,
 		error: function(){
@@ -2937,7 +2944,7 @@ sys = {
 			
 			$.ajax({
 				type: 'POST',
-				url: 'http://app.wkventertainment.com/',
+				url: 'https://app.wkventertainment.com/',
 				data: post_data,
 				beforeSend: function(){
 					sys.loading(1);
@@ -2972,7 +2979,7 @@ sys = {
 			if(geoToken){
 				$.ajax({
 					type: 'POST',
-					url: 'http://app.wkventertainment.com/',
+					url: 'https://app.wkventertainment.com/',
 					data: post_data,
 					success: function(str){
 						$('iframe#gmap').data('loc', (position.coords.latitude+','+position.coords.longitude));
@@ -2995,11 +3002,11 @@ sys = {
 	
 		$.ajax({
 			type: 'POST',
-			url: 'http://app.wkventertainment.com/',
+			url: 'https://app.wkventertainment.com/',
 			data: post_data,
 			success: function(str){
 				$('#app-time').data('time', new Date(str));
-				$('#app-time').text(new Date(str).toString().substr(4,20));
+				$('#app-time').text((new Date(str)).toString().substr(4,20));
 			}
 		});
 	},
