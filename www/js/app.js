@@ -6,7 +6,7 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.116",
+			  version: "1.0.117",
 			  rtl: false,
 			  language: "en-US"
 		  });
@@ -233,6 +233,7 @@ $(document).ready(function(){
 							success: function(str){
 								sys.loading(0);
 								$('.popup-event .event_list').data('date', tmp.toDateString().substr(4));
+								var hidden = (((tmp.getTime() - (new Date()).getTime()) > 86400000 ) ? ((parseInt($('body').data('user_level'))<7) ? true : false) : false);
 								
 								if(str==='204 No Response'){
 									$('.popup-event .event_list').html('<p style="margin-left:10px;">No event found.</p>');
@@ -262,9 +263,9 @@ $(document).ready(function(){
 										x += '<td class="tb-wmic tablet-only">'+((inf[i].wireless_mic==null) ? '-' : inf[i].wireless_mic)+'</td>';
 										x += '<td class="tb-spkr tablet-only">'+((inf[i].speaker==null) ? '-' : inf[i].speaker)+'</td>';
 										x += '<td class="tb-band tablet-only">'+((inf[i].band==null) ? '-' : inf[i].band)+'</td>';
-										x += '<td class="tb-crew label-cell">'+((inf[i].crew==null) ? '-' : sys.unameToSname(inf[i].crew))+'</td>';
-										x += '<td class="tb-cin label-cell">'+((inf[i].car_in==null) ? '-' : inf[i].car_in)+'</td>';
-										x += '<td class="tb-cout label-cell">'+((inf[i].car_out==null) ? '-' : inf[i].car_out)+'</td>';
+										x += '<td class="tb-crew label-cell">'+((hidden || inf[i].crew==null) ? '-' : sys.unameToSname(inf[i].crew))+'</td>';
+										x += '<td class="tb-cin label-cell">'+((hidden || inf[i].car_in==null) ? '-' : inf[i].car_in)+'</td>';
+										x += '<td class="tb-cout label-cell">'+((hidden || inf[i].car_out==null) ? '-' : inf[i].car_out)+'</td>';
 										x += '<td class="tb-bng tablet-only">'+((inf[i].bride_groom==null) ? '-' : inf[i].bride_groom)+'</td>';
 										x += '</tr>';
 									}
@@ -320,9 +321,9 @@ $(document).ready(function(){
 										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Wireless Microphone</div><div class="item-input-wrap">' + ((inf.wireless_mic==null) ? '-' : inf.wireless_mic) + '</div></div></div></li>';
 										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Speaker</div><div class="item-input-wrap">' + ((inf.speaker==null) ? '-' : inf.speaker) + '</div></div></div></li>';
 										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Live Band Information</div><div class="item-input-wrap">' + ((inf.band==null) ? '-' : inf.band) + '</div></div></div></li>';
-										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Crew</div><div class="item-input-wrap">' + ((inf.crew==null) ? '-' : sys.unameToSname(inf.crew)) + '</div></div></div></li>';
-										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Vehicle to Event</div><div class="item-input-wrap">' + ((inf.car_in==null) ? '-' : inf.car_in) + '</div></div></div></li>';
-										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Vehicle back from Event</div><div class="item-input-wrap">' + ((inf.car_out==null) ? '-' : inf.car_out) + '</div></div></div></li>';
+										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Crew</div><div class="item-input-wrap">' + ((hidden || inf.crew==null) ? '-' : sys.unameToSname(inf.crew)) + '</div></div></div></li>';
+										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Vehicle to Event</div><div class="item-input-wrap">' + ((hidden || inf.car_in==null) ? '-' : inf.car_in) + '</div></div></div></li>';
+										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Vehicle back from Event</div><div class="item-input-wrap">' + ((hidden || inf.car_out==null) ? '-' : inf.car_out) + '</div></div></div></li>';
 										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Client, Bride/Groom</div><div class="item-input-wrap">' + ((inf.bride_groom==null) ? '-' : inf.bride_groom) + '</div></div></div></li>';
 									}
 									
@@ -1907,6 +1908,12 @@ $(document).ready(function(){
 		});
 	});
 	
+	$('a.leave_app').on('click', function(){
+		apps.dialog.prompt('Reason :', 'Leave Application', function(reason){
+			
+		});
+	});
+	
 	$('a.evts_shr').on('click', function(){
 		var inf = $('table.event_list').data('info');
 
@@ -2140,7 +2147,7 @@ $(document).ready(function(){
 												$('tr[name="' + trName + '"]').data('info', inf);
 												$('div.details-popover').data('info', inf);
 												
-												if(parseInt($('body').data('user_level'))>=8){
+												if(parseInt($('body').data('user_level'))>=8 && (sys.ldToShort(ld) != 'ST')){
 													if(paid){
 														$('tr[name="' + trName + '"] td.tb-pic').removeClass('tb-not-paid');
 														$('tr[name="' + trName + '"] td.tb-pic').addClass('tb-paid');
@@ -2359,7 +2366,7 @@ $(document).ready(function(){
 								$('tr[name="' + trName + '"]').data('info', inf);
 								$('div.details-popover').data('info', inf);
 								
-								if(parseInt($('body').data('user_level'))>=8){
+								if(parseInt($('body').data('user_level'))>=8 && (sys.ldToShort(ld) != 'ST')){
 									if(paid){
 										$('tr[name="' + trName + '"] td.tb-pic').removeClass('tb-not-paid');
 										$('tr[name="' + trName + '"] td.tb-pic').addClass('tb-paid');
@@ -2606,13 +2613,14 @@ $(document).ready(function(){
 		}
 	});
 	
-	$('div.popup-staa .block img').on('click', function(){
+	$('div.popup-staa .block img, #update a.button').on('click', function(){
 		window.open("market://details?id=com.wkv.manage", "_system");
 	});
 	
 	DATA = {
 			'usr' : usr,
-			'pwd' : pwd
+			'pwd' : pwd,
+			'version' : 10117
 			// 'model' : device.model,
 			// 'platform' : device.platform,
 			// 'uuid' : device.uuid,
@@ -2648,8 +2656,10 @@ $(document).ready(function(){
 				sys.clockToggle('out');
 			}
 			
-			if(inf['reply']!=='200 OK'){
+			if(inf['reply']=='406 Not Acceptable'){
 				apps.loginScreen.open('#lgn');
+			}else if(inf['reply']=='426 Upgrade Required'){
+				apps.loginScreen.open('#update');
 			}else{
 				$('span.ncf-pos1').text(inf['pos1'].toLowerCase());
 				$('span.ncf-pos2').text(inf['pos2'].toLowerCase());
@@ -2714,6 +2724,12 @@ $(document).ready(function(){
 			for(var i=9; i>parseInt(inf['level']); i--){
 				if($('.level'+i).length > 0){
 					$('.level'+i).remove();
+				}
+			}
+			
+			for(var i=1; i<=parseInt(inf['level']); i++){
+				if($('.ltlevel'+i).length > 0){
+					$('.ltlevel'+i).remove();
 				}
 			}
 		}
