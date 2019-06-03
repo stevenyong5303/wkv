@@ -713,15 +713,17 @@ $(document).ready(function(){
 			x = '';
 		
 		for(var i = 0; i < crews.length; i++){
-			var select = false;
-			for(var j = 0; j < work.length; j++){
-				if(crews[i]['user_id'] == work[j]){
-					select = true;
-					break;
+			if(crews[i]['user_level'] > 0){
+				var select = false;
+				for(var j = 0; j < work.length; j++){
+					if(crews[i]['user_id'] == work[j]){
+						select = true;
+						break;
+					}
 				}
+				x += '<li><label class="item-checkbox item-content"><input type="checkbox" ' + (select ? 'checked="checked"' : '') + ' name="evcw-checkbox" value="' + crews[i]['user_id'] + '" data-sn="' + crews[i]['short_name'] + '" />';
+				x += '<i class="icon icon-checkbox"></i><div class="item-inner"><div class="item-title">' + crews[i]['short_name'] + '</div></div></label></li>';
 			}
-			x += '<li><label class="item-checkbox item-content"><input type="checkbox" ' + (select ? 'checked="checked"' : '') + ' name="evcw-checkbox" value="' + crews[i]['user_id'] + '" data-sn="' + crews[i]['short_name'] + '" />';
-			x += '<i class="icon icon-checkbox"></i><div class="item-inner"><div class="item-title">' + crews[i]['short_name'] + '</div></div></label></li>';
 		}
 		$('.evt-crew ul').html(x);
 		$('.panel-evt-rmk').hide();
@@ -865,7 +867,7 @@ $(document).ready(function(){
 					$('body').data('crew', inf['status']);
 						
 					for(var i=0; i<status.length; i++){
-						if(status[i].user_level > 0){
+						if(status[i].user_level > 1){
 							x += '<li><a href="#" class="item-link item-content" data-usr="' + status[i].user_id + '" data-who="' + status[i].nc_name + '">';
 							x += '<div class="item-media"><i class="icon material-icons md-only">' + (status[i].clocked_in == 1 ? 'directions_run' : 'hotel') + '</i></div>';
 							x += '<div class="item-inner"><div class="item-title">' + status[i].nc_name + (status[i].clocked_in == 1 ? ('<div class="item-footer">' + status[i].clocked_time + '</div>') : '') + '</div></div></a></li>';
@@ -940,17 +942,16 @@ $(document).ready(function(){
 	$('#crewl-btn').on('click', function(){
 		var x = '', crews = $('body').data('crew');
 		
-		for(var i = 0; i < crews.length; i++){
-			x += '<li>';
-			x += '<a href="#" class="item-link item-content" data-num="' + i + '">';
-			x += '<div class="item-inner">';
-			x += '<div class="item-title">';
-			x += crews[i]['nc_name'];
-			x += '<div class="item-footer">' + crews[i]['short_name'] + '</div>';
-			x += '</div>';
-			x += '</div>';
-			x += '</a>';
-			x += '</li>';
+		for(var i = 0, j = 0; i < crews.length; i++){
+			if(crews[i]['user_level'] > 0){
+				x += '<li>';
+				x += '<a href="#" class="item-link item-content" data-num="' + i + '" data-jnum"' + j + '" data-uid="' + crews[i]['user_id'] + '" data-dname="' + crews[i]['nc_name'] + '" data-sname="' + crews[i]['short_name'] + '">';
+				x += '<div class="item-inner"><div class="item-title">';
+				x += crews[i]['nc_name'];
+				x += '<div class="item-footer">' + crews[i]['short_name'] + '</div>';
+				x += '</div></div></a></li>';
+				j++;
+			}
 		}
 		$('.crew_list ul').html(x);
 	});
@@ -967,14 +968,13 @@ $(document).ready(function(){
 	});
 	
 	$('.crew_list').on('click', 'a.item-link', function(){
-		var crew = $('body').data('crew')[$(this).data('num')];
-		
 		$('#crewld_dname').prop('disabled', true);
 		$('#crewld_dname').parent().find('span').remove();
-		$('#crewld_dname').data('uid', crew['user_id']);
+		$('#crewld_dname').data('uid', $(this).data('uid'));
 		$('#crewld_dname').data('num', $(this).data('num'));
-		$('#crewld_dname').val(crew['nc_name']);
-		$('#crewld_sname').val(crew['short_name']);
+		$('#crewld_dname').data('jnum', $(this).data('jnum'));
+		$('#crewld_dname').val($(this).data('dname'));
+		$('#crewld_sname').val($(this).data('sname'));
 		apps.popover.open('.crewld-popover');
 	});
 	
@@ -1019,7 +1019,7 @@ $(document).ready(function(){
 								'nc_name' : dnm,
 								'short_name' : snm,
 								'user_id' : uid,
-								'user_level' : '0'
+								'user_level' : '1'
 							};
 							crew.push(ncrew);
 							$('body').data('crew', crew);
@@ -1065,14 +1065,14 @@ $(document).ready(function(){
 						sys.loading(0);
 						
 						if(str == '200 OK'){
-							var cnum = $('#crewld_dname').data('num');
-							var x = '<a href="#" class="item-link item-content" data-num="' + cnum + '">';
+							var cnum = $('#crewld_dname').data('num'), jnum = $('#crewld_dname').data('jnum');
+							var x = '<a href="#" class="item-link item-content" data-num="' + cnum + '" data-jnum="' + jnum + '" data-uid="' + $('#crewld_dname').data('uid') + '" data-dname="' + dnm + '" data-sname="' + snm + '">';
 								x += '<div class="item-inner"><div class="item-title">' + dnm + '<div class="item-footer">' + snm + '</div></div></div></a>';
 								
 							crew[cnum]['short_name'] = snm;
 							
 							$('body').data('crew', crew);
-							$('.crew_list ul li:eq(' + cnum + ')').html(x);
+							$('.crew_list ul li:eq(' + jnum + ')').html(x);
 							apps.popover.close('.crewld-popover');
 							
 							var success_toast = apps.toast.create({
@@ -1349,6 +1349,170 @@ $(document).ready(function(){
 				}
 			}else{
 				navigator.vibrate(100);
+			}
+		}
+	});
+	
+	$('#picl-btn').on('click', function(){
+		var x = '', crews = $('body').data('crew');
+		
+		for(var i = 0, j=0; i < crews.length; i++){
+			if(crews[i]['user_level'] == 0){
+				x += '<li>';
+				x += '<a href="#" class="item-link item-content" data-num="' + i + '" data-jnum="' + j + '" data-uid="' + crews[i]['user_id'] + '" data-dname="' + crews[i]['nc_name'] + '" data-comp="' + crews[i]['nc_pos1'] + '" data-con="' + crews[i]['nc_contact'] + '">';
+				x += '<div class="item-inner"><div class="item-title">';
+				x += crews[i]['nc_name'];
+				x += '<div class="item-footer">' + crews[i]['nc_contact'] + (sys.isEmpty(crews[i]['nc_pos1']) ? '' : (' (' + crews[i]['nc_pos1'] + ')')) + '</div>';
+				x += '</div></div></a></li>';
+				j++;
+			}
+		}
+		$('.pic_list ul').html(x);
+	});
+	
+	$('.picl_add').on('click', function(){
+		$('#picl_dname').removeData('uid');
+		$('#picl_dname').prop('disabled', false);
+		if($('#picl_dname').parent().find('span').length == 0){
+			$('#picl_dname').parent().append('<span class="input-clear-button"></span>');
+		}
+		$('#picl_dname').val('');
+		$('#picl_comp').val('');
+		$('#picl_con').val('');
+		apps.popover.open('.picl-popover');
+	});
+	
+	$('.pic_list').on('click', 'a.item-link', function(){
+		$('#picl_dname').prop('disabled', true);
+		$('#picl_dname').parent().find('span').remove();
+		$('#picl_dname').data('uid', $(this).data('uid'));
+		$('#picl_dname').data('num', $(this).data('num'));
+		$('#picl_dname').data('jnum', $(this).data('jnum'));
+		$('#picl_dname').val($(this).data('dname'));
+		$('#picl_comp').val($(this).data('comp'));
+		$('#picl_con').val($(this).data('con'));
+		apps.popover.open('.picl-popover');
+	});
+	
+	$('.picl_ok').on('click', function(){
+		var dnm = $('#picl_dname').val(), comp = $('#picl_comp').val(), con = $('#picl_con').val();
+		
+		if(sys.isEmpty(dnm) || sys.isEmpty(con)){
+			navigator.vibrate(100);
+		}else{
+			var crew = $('body').data('crew');
+			
+			if(sys.isEmpty($('#picl_dname').data('uid'))){
+				var uid = dnm.toLowerCase().replace(/\s/g, '');
+				
+				var DATA = {
+					'usr' : STORAGE.getItem('usr'),
+					'dnm' : dnm,
+					'comp' : comp,
+					'con' : con,
+					'uid' : uid
+				};
+				var post_data = "ACT=" + encodeURIComponent('pic_add')
+							  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
+				
+				$.ajax({
+					type: 'POST',
+					url: 'https://app.wkventertainment.com/',
+					data: post_data,
+					beforeSend: function(){
+						sys.loading(1);
+					},
+					success: function(str){
+						sys.loading(0);
+
+						if(str == '200 OK'){
+							var x = '<li>';
+								x += '<a href="#" class="item-link item-content" data-num="' + crew.length + '">';
+								x += '<div class="item-inner"><div class="item-title">' + dnm + '<div class="item-footer">' + con + (sys.isEmpty(comp) ? '' : (' (' + comp + ')')) + '</div></div></div></a></li>';
+								
+							var ncrew = {
+								'clocked_in' : '0',
+								'clocked_time' : '2019-01-01 00:00:00',
+								'nc_name' : dnm,
+								'user_id' : uid,
+								'nc_contact' : con,
+								'nc_pos1' : comp,
+								'user_level' : '0'
+							};
+							crew.push(ncrew);
+							$('body').data('crew', crew);
+							
+							$('.pic_list ul').append(x);
+							apps.popover.close('.picl-popover');
+							
+							var success_toast = apps.toast.create({
+												   icon: '<i class="material-icons">cloud_done</i>',
+												   text: 'Details Successfully Saved',
+												   position: 'center',
+												   closeTimeout: 2000
+											   });
+							success_toast.open();
+						}else{
+							var failed_toast = apps.toast.create({
+												   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
+												   text: 'Oooppss, error',
+												   position: 'center',
+												   closeTimeout: 2000
+											   });
+							failed_toast.open();
+						}
+					}
+				});
+			}else{
+				var DATA = {
+					'usr' : STORAGE.getItem('usr'),
+					'comp' : comp,
+					'con' : con,
+					'uid' : $('#picl_dname').data('uid')
+				};
+				var post_data = "ACT=" + encodeURIComponent('pic_udt')
+							  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
+				
+				$.ajax({
+					type: 'POST',
+					url: 'https://app.wkventertainment.com/',
+					data: post_data,
+					beforeSend: function(){
+						sys.loading(1);
+					},
+					success: function(str){
+						sys.loading(0);
+						
+						if(str == '200 OK'){
+							var pnum = $('#picl_dname').data('num'), jnum = $('#picl_dname').data('jnum');
+							var x = '<a href="#" class="item-link item-content" data-num="' + pnum + '" data-jnum="' + jnum + '" data-uid="' + $('#picl_dname').data('uid') + '" data-dname="' + dnm + '" data-comp="' + comp + '" data-con="' + con + '">';
+								x += '<div class="item-inner"><div class="item-title">' + dnm + '<div class="item-footer">' + con + (sys.isEmpty(comp) ? '' : (' (' + comp + ')')) + '</div></div></div></a>';
+							
+							crew[pnum]['nc_contact'] = con;
+							crew[pnum]['nc_pos1'] = comp;
+							
+							$('body').data('crew', crew);
+							$('.pic_list ul li:eq(' + jnum + ')').html(x);
+							apps.popover.close('.crewld-popover');
+							
+							var success_toast = apps.toast.create({
+												   icon: '<i class="material-icons">cloud_done</i>',
+												   text: 'Details Successfully Saved',
+												   position: 'center',
+												   closeTimeout: 2000
+											   });
+							success_toast.open();
+						}else{
+							var failed_toast = apps.toast.create({
+												   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
+												   text: 'Oooppss, error',
+												   position: 'center',
+												   closeTimeout: 2000
+											   });
+							failed_toast.open();
+						}
+					}
+				});
 			}
 		}
 	});
@@ -2620,7 +2784,7 @@ $(document).ready(function(){
 	DATA = {
 			'usr' : usr,
 			'pwd' : pwd,
-			'version' : 10117
+			'version' : 10118
 			// 'model' : device.model,
 			// 'platform' : device.platform,
 			// 'uuid' : device.uuid,
