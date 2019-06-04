@@ -6,7 +6,7 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.117",
+			  version: "1.0.119",
 			  rtl: false,
 			  language: "en-US"
 		  });
@@ -159,7 +159,7 @@ $(document).ready(function(){
 										x += '<div class="timeline-item-time">' + task[i]['time'] + '</div>';
 									}
 									
-									x += '<strong>' + (sys.isEmpty(task[i]['venue']) ?  '-' : (task[i]['venue'].indexOf('#PID#') != -1 ? sys.pidToLoc(task[i]['venue']).loc_name : task[i]['venue'])) + '</strong>' + (task[i]['description'] ? ('<br/>' + task[i]['description']) : '') + (task[i]['bride_groom'] ? ('<br/>' + task[i]['bride_groom']) : '');
+									x += '<strong>' + (sys.isEmpty(task[i]['venue']) ?  '-' : (task[i]['venue'].indexOf('#PID#') != -1 ? sys.pidToLoc(task[i]['venue']).loc_name : task[i]['venue'])) + '</strong>' + (task[i]['description'] ? ('<br/>' + task[i]['description']) : '');
 									x += '</div>';
 									
 									sameAs = task[i]['date'];
@@ -234,6 +234,7 @@ $(document).ready(function(){
 								sys.loading(0);
 								$('.popup-event .event_list').data('date', tmp.toDateString().substr(4));
 								var hidden = (((tmp.getTime() - (new Date()).getTime()) > 86400000 ) ? ((parseInt($('body').data('user_level'))<7) ? true : false) : false);
+								$('a.leave_app').removeClass('disabled');
 								
 								if(str==='204 No Response'){
 									$('.popup-event .event_list').html('<p style="margin-left:10px;">No event found.</p>');
@@ -243,14 +244,10 @@ $(document).ready(function(){
 										  + '<th class="label-cell">L/D</th>'
 										  + '<th class="label-cell">&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Venue&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;</th>'
 										  + '<th class="label-cell">&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Desc.&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;</th>'
-										  + '<th class="tablet-only">Mixer</th>'
-										  + '<th class="tablet-only">W/L</th>'
-										  + '<th class="tablet-only">Speaker</th>'
 										  + '<th class="tablet-only">Band</th>'
 										  + '<th class="label-cell">&emsp;&emsp;&emsp;Crew&emsp;&emsp;&emsp;</th>'
 										  + '<th class="label-cell">&emsp;IN&emsp;&emsp;</th>'
-										  + '<th class="label-cell">&emsp;OUT&emsp;&emsp;</th>'
-										  + '<th class="tablet-only">B/G</th></tr></thead><tbody>',
+										  + '<th class="label-cell">&emsp;OUT&emsp;&emsp;</th></tr></thead><tbody>',
 										inf = JSON.parse(str);
 									
 									for(var i=0; i<inf.length; i++){
@@ -259,14 +256,10 @@ $(document).ready(function(){
 										x += '<td class="tb-ld label-cell">'+(sys.ldToShort(inf[i].luncheon_dinner))+'</td>';
 										x += '<td class="tb-venue label-cell" data-pid="' + inf[i].venue + '">'+((inf[i].venue==null) ? '-' : (inf[i].venue.indexOf('#PID#') != -1 ? sys.pidToLoc(inf[i].venue).loc_name : inf[i].venue))+'</td>';
 										x += '<td class="tb-desc label-cell">'+((inf[i].description==null) ? '-' : inf[i].description)+'</td>';
-										x += '<td class="tb-mixer tablet-only">'+((inf[i].mixer==null) ? '-' : inf[i].mixer)+'</td>';
-										x += '<td class="tb-wmic tablet-only">'+((inf[i].wireless_mic==null) ? '-' : inf[i].wireless_mic)+'</td>';
-										x += '<td class="tb-spkr tablet-only">'+((inf[i].speaker==null) ? '-' : inf[i].speaker)+'</td>';
 										x += '<td class="tb-band tablet-only">'+((inf[i].band==null) ? '-' : inf[i].band)+'</td>';
 										x += '<td class="tb-crew label-cell">'+((hidden || inf[i].crew==null) ? '-' : sys.unameToSname(inf[i].crew))+'</td>';
 										x += '<td class="tb-cin label-cell">'+((hidden || inf[i].car_in==null) ? '-' : inf[i].car_in)+'</td>';
 										x += '<td class="tb-cout label-cell">'+((hidden || inf[i].car_out==null) ? '-' : inf[i].car_out)+'</td>';
-										x += '<td class="tb-bng tablet-only">'+((inf[i].bride_groom==null) ? '-' : inf[i].bride_groom)+'</td>';
 										x += '</tr>';
 									}
 									x += '</tbody>';
@@ -277,8 +270,13 @@ $(document).ready(function(){
 									for(var i=0; i<inf.length; i++){
 										$('tr[name="el'+(i+1)+'"]').data('info', inf[i]);
 									}
+									
+									if(inf.length > 10){
+										$('a.leave_app').addClass('disabled');
+									}
 								}
 								$('.popup-event .event_date').text(tmp.toDateString().substr(4));
+								
 								apps.popup.open('.popup-event');
 								
 								$('.event_list span').on('click', function(){
@@ -294,14 +292,10 @@ $(document).ready(function(){
 										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Description</div><div class="item-input-wrap"><input class="evtd_desc" type="text" autocomplete="off" value="' + ((inf.description==null) ? '' : inf.description) + '"></div></div></div></li>';
 										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Remarks</div><div class="item-input-wrap"><input class="evtd_rmk" type="text" autocomplete="off" value="' + ((inf.remarks==null) ? '' : inf.remarks) + '"></div></div></div></li>';
 										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Price</div><div class="item-input-wrap"><input class="evtd_price" type="text" autocomplete="off" value="' + ((inf.price==null) ? '' : inf.price) + '"><label class="toggle toggle-init color-green evtd_paid"><input type="checkbox"' + (inf.paid=='1' ? ' checked' : '') + '><span class="toggle-icon"></span></label></div></div></div></li>';
-										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Mixer</div><div class="item-input-wrap"><input class="evtd_mixer" type="text" autocomplete="off" value="' + ((inf.mixer==null) ? '' : inf.mixer) + '"></div></div></div></li>';
-										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Wireless Microphone</div><div class="item-input-wrap"><input class="evtd_wmic" type="text" autocomplete="off" value="' + ((inf.wireless_mic==null) ? '' : inf.wireless_mic) + '"></div></div></div></li>';
-										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Speaker</div><div class="item-input-wrap"><input class="evtd_spkr" type="text" autocomplete="off" value="' + ((inf.speaker==null) ? '' : inf.speaker) + '"></div></div></div></li>';
 										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Live Band Information</div><div class="item-input-wrap"><input class="evtd_band" type="text" autocomplete="off" value="' + ((inf.band==null) ? '' : inf.band) + '"></div></div></div></li>';
 										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Crew</div><div class="item-input-wrap"><input class="evtd_crew" type="text" autocomplete="off" data-uname="' + inf.crew + '" value="' + ((inf.crew==null) ? '' : sys.unameToSname(inf.crew)) + '"></div></div></div></li>';
 										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Vehicle to Event</div><div class="item-input-wrap"><input class="evtd_cin" type="text" autocomplete="off" value="' + ((inf.car_in==null) ? '' : inf.car_in) + '"></div></div></div></li>';
 										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Vehicle back from Event</div><div class="item-input-wrap"><input class="evtd_cout" type="text" autocomplete="off" value="' + ((inf.car_out==null) ? '' : inf.car_out) + '"></div></div></div></li>';
-										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Client, Bride/Groom</div><div class="item-input-wrap"><input class="evtd_bng" type="text" autocomplete="off" value="' + ((inf.bride_groom==null) ? '' : inf.bride_groom) + '"></div></div></div></li>';
 										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-input-wrap row"><button class="evtd_sve button col button-fill" data-eid="' + inf.primary_id + '">Save</button>';
 										if(parseInt($('body').data('user_level'))>=9){
 											x += '<button class="evtd_dlt button col button-fill" data-eid="' + inf.primary_id + '">Delete</button>';
@@ -317,14 +311,10 @@ $(document).ready(function(){
 										if(parseInt($('body').data('user_level'))>=7){
 											x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">price</div><div class="item-input-wrap">' + ((inf.price==null) ? '-' : inf.price) + '</div></div></div></li>';
 										}
-										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Mixer</div><div class="item-input-wrap">' + ((inf.mixer==null) ? '-' : inf.mixer) + '</div></div></div></li>';
-										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Wireless Microphone</div><div class="item-input-wrap">' + ((inf.wireless_mic==null) ? '-' : inf.wireless_mic) + '</div></div></div></li>';
-										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Speaker</div><div class="item-input-wrap">' + ((inf.speaker==null) ? '-' : inf.speaker) + '</div></div></div></li>';
 										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Live Band Information</div><div class="item-input-wrap">' + ((inf.band==null) ? '-' : inf.band) + '</div></div></div></li>';
 										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Crew</div><div class="item-input-wrap">' + ((hidden || inf.crew==null) ? '-' : sys.unameToSname(inf.crew)) + '</div></div></div></li>';
 										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Vehicle to Event</div><div class="item-input-wrap">' + ((hidden || inf.car_in==null) ? '-' : inf.car_in) + '</div></div></div></li>';
 										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Vehicle back from Event</div><div class="item-input-wrap">' + ((hidden || inf.car_out==null) ? '-' : inf.car_out) + '</div></div></div></li>';
-										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Client, Bride/Groom</div><div class="item-input-wrap">' + ((inf.bride_groom==null) ? '-' : inf.bride_groom) + '</div></div></div></li>';
 									}
 									
 									x = x.replace(/(?:\r\n|\r|\n)/g, '<br>');
@@ -361,14 +351,10 @@ $(document).ready(function(){
 												desc = $('input.evtd_desc').val(),
 												price = $('input.evtd_price').val(),
 												paid = $('.evtd_paid input')[0].checked,
-												mixer = $('input.evtd_mixer').val(),
-												wmic = $('input.evtd_wmic').val(),
-												spkr = $('input.evtd_spkr').val(),
 												band = $('input.evtd_band').val(),
 												crew = $('input.evtd_crew').data('uname'),
 												cin = $('input.evtd_cin').val(),
 												cout = $('input.evtd_cout').val(),
-												bng = $('input.evtd_bng').val(),
 												rmk = $('input.evtd_rmk').val();
 											
 											var DATA = {
@@ -380,14 +366,10 @@ $(document).ready(function(){
 												'desc' : desc,
 												'price' : price,
 												'paid' : paid,
-												'mixer' : mixer,
-												'wmic' : wmic,
-												'spkr' : spkr,
 												'band' : band,
 												'crew' : crew,
 												'cin' : cin,
 												'cout' : cout,
-												'bng' : bng,
 												'rmk' : rmk
 											};
 											var post_data = "ACT=" + encodeURIComponent('evd_udt')
@@ -410,14 +392,10 @@ $(document).ready(function(){
 														inf.description = ((desc == '') ? null : desc);
 														inf.price = ((price == '') ? null : price);
 														inf.paid = paid;
-														inf.mixer = ((mixer == '') ? null : mixer);
-														inf.wireless_mic = ((wmic == '') ? null : wmic);
-														inf.speaker = ((spkr == '') ? null : spkr);
 														inf.band = ((band == '') ? null : band);
 														inf.crew = ((crew == '') ? null : crew);
 														inf.car_in = ((cin == '') ? null : cin);
 														inf.car_out = ((cout == '') ? null : cout);
-														inf.bride_groom = ((bng == '') ? null : bng);
 														inf.remarks = ((rmk == '') ? null : rmk);
 														
 														$('tr[name="' + trName + '"]').data('info', inf);
@@ -436,14 +414,10 @@ $(document).ready(function(){
 														$('tr[name="' + trName + '"] td.tb-venue').text((venue == '' ? '-' : (venue.indexOf('#PID#') != -1 ? sys.pidToLoc(venue).loc_name : venue)));
 														$('tr[name="' + trName + '"] td.tb-venue').data('pid', venue);
 														$('tr[name="' + trName + '"] td.tb-desc').text((desc == '' ? '-' : desc));
-														$('tr[name="' + trName + '"] td.tb-mixer').text((mixer == '' ? '-' : mixer));
-														$('tr[name="' + trName + '"] td.tb-wmic').text((wmic == '' ? '-' : wmic));
-														$('tr[name="' + trName + '"] td.tb-spkr').text((spkr == '' ? '-' : spkr));
 														$('tr[name="' + trName + '"] td.tb-band').text((band == '' ? '-' : band));
 														$('tr[name="' + trName + '"] td.tb-crew').text((crew == '' ? '-' : sys.unameToSname(crew)));
 														$('tr[name="' + trName + '"] td.tb-cin').text((cin == '' ? '-' : cin));
 														$('tr[name="' + trName + '"] td.tb-cout').text((cout == '' ? '-' : cout));
-														$('tr[name="' + trName + '"] td.tb-bng').text((bng == '' ? '-' : bng));
 														
 														$('.fab.evtd_shr').css('display', 'none');
 														
@@ -687,7 +661,39 @@ $(document).ready(function(){
 	})
 	
 	$('.details-popover').on('click', 'input.evtd_rmk', function(){
-		var x = sys.commasToNextLine($(this).val(), 'n');
+		var x = '';
+		
+		if(!sys.isEmpty($(this).val())){
+			x = sys.commasToNextLine($(this).val(), 'n');
+		}else{
+			x = (sys.isEmpty($('.evtd_desc').val()) ? '2 Top 2 Mon\n' : ($('.evtd_desc').val()) + '\n');
+			x += 'Venue : ' + $('.evtd_venue').val() + '\n';
+			x += 'PIC : `' + $('.details-popover .list li:eq(0) .item-input-wrap').text() + '`\n\n';
+			x += (sys.isEmpty($('.evtd_band').val()) ? '' : ('Band : ' + $('.evtd_band').val() + '\n'));
+			x += 'Depart : \n';
+			x += 'Standby : ' + $('.evtd_sbtm').val();
+			
+			var car = (($('.evtd_cin').val().indexOf(',') != -1) ? $('.evtd_cin').val().split(', ') : [$('.evtd_cin').val()]);
+			var crew = (($('.evtd_crew').val().indexOf(',') != -1) ? $('.evtd_crew').val().split(', ') : [$('.evtd_crew').val()]);
+			
+			if(!sys.isEmpty(car)){
+				x += '\n\n';
+				
+				for(var i=0; i<car.length; i++){
+					x += car[i]  + ' : \n';
+				}
+			}
+			if(!sys.isEmpty(crew)){
+				x += '\n\n';
+				
+				for(var i=0; i<crew.length; i++){
+					x += '@' + crew[i] + (((i+1) == crew.length) ? '' : ' ');
+				}
+			}
+			
+			$(this).val(sys.commasToNextLine(x, 'r'));
+		}
+		
 		$('.panel-evt-rmk textarea').val(x);
 		
 		$('.panel-evt-car').hide();
@@ -2133,28 +2139,20 @@ $(document).ready(function(){
 								  + '<th class="label-cell">L/D</th>'
 								  + '<th class="label-cell">&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Venue&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;</th>'
 								  + '<th class="label-cell">&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Desc.&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;</th>'
-								  + '<th class="tablet-only">Mixer</th>'
-								  + '<th class="tablet-only">W/L</th>'
-								  + '<th class="tablet-only">Speaker</th>'
 								  + '<th class="tablet-only">Band</th>'
 								  + '<th class="label-cell">&emsp;&emsp;&emsp;Crew&emsp;&emsp;&emsp;</th>'
 								  + '<th class="label-cell">&emsp;IN&emsp;&emsp;</th>'
-								  + '<th class="label-cell">&emsp;OUT&emsp;&emsp;</th>'
-								  + '<th class="tablet-only">B/G</th></tr></thead><tbody>';
+								  + '<th class="label-cell">&emsp;OUT&emsp;&emsp;</th></tr></thead><tbody>';
 							
 							x += '<tr name="el1"><td class="label-cell"><span class="button button-fill" name="el1">1</span></td>';
 							x += '<td class="tb-pic label-cell' + (parseInt($('body').data('user_level'))>=8 ? ' tb-not-paid' : '') + '">'+pic+'</td>';
 							x += '<td class="tb-ld label-cell">'+(sys.ldToShort(ld))+'</td>';
 							x += '<td class="tb-venue label-cell" data-pid="">-</td>';
 							x += '<td class="tb-desc label-cell">'+((desc=='') ? '-' : desc)+'</td>';
-							x += '<td class="tb-mixer tablet-only">-</td>';
-							x += '<td class="tb-wmic tablet-only">-</td>';
-							x += '<td class="tb-spkr tablet-only">-</td>';
 							x += '<td class="tb-band tablet-only">-</td>';
 							x += '<td class="tb-crew label-cell">-</td>';
 							x += '<td class="tb-cin label-cell">-</td>';
 							x += '<td class="tb-cout label-cell">-</td>';
-							x += '<td class="tb-bng tablet-only">-</td>';
 							x += '</tr>';
 							x += '</tbody>';
 							$('.popup-event .event_list').html(x);
@@ -2170,14 +2168,10 @@ $(document).ready(function(){
 							x += '<td class="tb-ld label-cell">'+(sys.ldToShort(ld))+'</td>';
 							x += '<td class="tb-venue label-cell" data-pid="">-</td>';
 							x += '<td class="tb-desc label-cell">'+((desc=='') ? '-' : desc)+'</td>';
-							x += '<td class="tb-mixer tablet-only">-</td>';
-							x += '<td class="tb-wmic tablet-only">-</td>';
-							x += '<td class="tb-spkr tablet-only">-</td>';
 							x += '<td class="tb-band tablet-only">-</td>';
 							x += '<td class="tb-crew label-cell">-</td>';
 							x += '<td class="tb-cin label-cell">-</td>';
 							x += '<td class="tb-cout label-cell">-</td>';
-							x += '<td class="tb-bng tablet-only">-</td>';
 							x += '</tr>';
 							
 							$('.popup-event .event_list').append(x);
@@ -2202,14 +2196,10 @@ $(document).ready(function(){
 								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Description</div><div class="item-input-wrap"><input class="evtd_desc" type="text" autocomplete="off" value="' + ((inf.description==null) ? '' : inf.description) + '"></div></div></div></li>';
 								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Remarks</div><div class="item-input-wrap"><input class="evtd_rmk" type="text" autocomplete="off" value="' + ((inf.remarks==null) ? '' : inf.remarks) + '"></div></div></div></li>';
 								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Price</div><div class="item-input-wrap"><input class="evtd_price" type="text" autocomplete="off" value="' + ((inf.price==null) ? '' : inf.price) + '"><label class="toggle toggle-init color-green evtd_paid"><input type="checkbox"' + (inf.paid=='1' ? ' checked' : '') + '><span class="toggle-icon"></span></label></div></div></div></li>';
-								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Mixer</div><div class="item-input-wrap"><input class="evtd_mixer" type="text" autocomplete="off" value="' + ((inf.mixer==null) ? '' : inf.mixer) + '"></div></div></div></li>';
-								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Wireless Microphone</div><div class="item-input-wrap"><input class="evtd_wmic" type="text" autocomplete="off" value="' + ((inf.wireless_mic==null) ? '' : inf.wireless_mic) + '"></div></div></div></li>';
-								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Speaker</div><div class="item-input-wrap"><input class="evtd_spkr" type="text" autocomplete="off" value="' + ((inf.speaker==null) ? '' : inf.speaker) + '"></div></div></div></li>';
 								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Live Band Information</div><div class="item-input-wrap"><input class="evtd_band" type="text" autocomplete="off" value="' + ((inf.band==null) ? '' : inf.band) + '"></div></div></div></li>';
 								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Crew</div><div class="item-input-wrap"><input class="evtd_crew" type="text" autocomplete="off" value="' + ((inf.crew==null) ? '' : inf.crew) + '"></div></div></div></li>';
 								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Vehicle to Event</div><div class="item-input-wrap"><input class="evtd_cin" type="text" autocomplete="off" value="' + ((inf.car_in==null) ? '' : inf.car_in) + '"></div></div></div></li>';
 								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Vehicle back from Event</div><div class="item-input-wrap"><input class="evtd_cout" type="text" autocomplete="off" value="' + ((inf.car_out==null) ? '' : inf.car_out) + '"></div></div></div></li>';
-								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Client, Bride/Groom</div><div class="item-input-wrap"><input class="evtd_bng" type="text" autocomplete="off" value="' + ((inf.bride_groom==null) ? '' : inf.bride_groom) + '"></div></div></div></li>';
 								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-input-wrap row"><button class="evtd_sve button col button-fill" data-eid="' + inf.primary_id + '">Save</button>';
 								if(parseInt($('body').data('user_level'))>=9){
 									x += '<button class="evtd_dlt button col button-fill" data-eid="' + inf.primary_id + '">Delete</button>';
@@ -2225,14 +2215,10 @@ $(document).ready(function(){
 								if(parseInt($('body').data('user_level'))>=7){
 									x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">price</div><div class="item-input-wrap">' + ((inf.price==null) ? '-' : inf.price) + '</div></div></div></li>';
 								}
-								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Mixer</div><div class="item-input-wrap">' + ((inf.mixer==null) ? '-' : inf.mixer) + '</div></div></div></li>';
-								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Wireless Microphone</div><div class="item-input-wrap">' + ((inf.wireless_mic==null) ? '-' : inf.wireless_mic) + '</div></div></div></li>';
-								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Speaker</div><div class="item-input-wrap">' + ((inf.speaker==null) ? '-' : inf.speaker) + '</div></div></div></li>';
 								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Live Band Information</div><div class="item-input-wrap">' + ((inf.band==null) ? '-' : inf.band) + '</div></div></div></li>';
 								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Crew</div><div class="item-input-wrap">' + ((inf.crew==null) ? '-' : inf.crew) + '</div></div></div></li>';
 								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Vehicle to Event</div><div class="item-input-wrap">' + ((inf.car_in==null) ? '-' : inf.car_in) + '</div></div></div></li>';
 								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Vehicle back from Event</div><div class="item-input-wrap">' + ((inf.car_out==null) ? '-' : inf.car_out) + '</div></div></div></li>';
-								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Client, Bride/Groom</div><div class="item-input-wrap">' + ((inf.bride_groom==null) ? '-' : inf.bride_groom) + '</div></div></div></li>';
 							}
 							
 							x = x.replace(/(?:\r\n|\r|\n)/g, '<br>');
@@ -2249,14 +2235,10 @@ $(document).ready(function(){
 										desc = $('input.evtd_desc').val(),
 										price = $('input.evtd_price').val(),
 										paid = $('.evtd_paid input')[0].checked,
-										mixer = $('input.evtd_mixer').val(),
-										wmic = $('input.evtd_wmic').val(),
-										spkr = $('input.evtd_spkr').val(),
 										band = $('input.evtd_band').val(),
 										crew = $('input.evtd_crew').data('uname'),
 										cin = $('input.evtd_cin').val(),
 										cout = $('input.evtd_cout').val(),
-										bng = $('input.evtd_bng').val(),
 										rmk = $('input.evtd_rmk').val();
 									
 									var DATA = {
@@ -2268,14 +2250,10 @@ $(document).ready(function(){
 										'desc' : desc,
 										'price' : price,
 										'paid' : paid,
-										'mixer' : mixer,
-										'wmic' : wmic,
-										'spkr' : spkr,
 										'band' : band,
 										'crew' : crew,
 										'cin' : cin,
 										'cout' : cout,
-										'bng' : bng,
 										'rmk' : rmk
 									};
 									var post_data = "ACT=" + encodeURIComponent('evd_udt')
@@ -2298,14 +2276,10 @@ $(document).ready(function(){
 												inf.description = ((desc == '') ? null : desc);
 												inf.price = ((price == '') ? null : price);
 												inf.paid = paid;
-												inf.mixer = ((mixer == '') ? null : mixer);
-												inf.wireless_mic = ((wmic == '') ? null : wmic);
-												inf.speaker = ((spkr == '') ? null : spkr);
 												inf.band = ((band == '') ? null : band);
 												inf.crew = ((crew == '') ? null : crew);
 												inf.car_in = ((cin == '') ? null : cin);
 												inf.car_out = ((cout == '') ? null : cout);
-												inf.bride_groom = ((bng == '') ? null : bng);
 												inf.remarks = ((rmk == '') ? null : rmk);
 												
 												$('tr[name="' + trName + '"]').data('info', inf);
@@ -2324,14 +2298,10 @@ $(document).ready(function(){
 												$('tr[name="' + trName + '"] td.tb-venue').text((venue == '' ? '-' : (venue.indexOf('#PID#') != -1 ? sys.pidToLoc(venue).loc_name : venue)));
 												$('tr[name="' + trName + '"] td.tb-venue').data('pid', venue);
 												$('tr[name="' + trName + '"] td.tb-desc').text((desc == '' ? '-' : desc));
-												$('tr[name="' + trName + '"] td.tb-mixer').text((mixer == '' ? '-' : mixer));
-												$('tr[name="' + trName + '"] td.tb-wmic').text((wmic == '' ? '-' : wmic));
-												$('tr[name="' + trName + '"] td.tb-spkr').text((spkr == '' ? '-' : spkr));
 												$('tr[name="' + trName + '"] td.tb-band').text((band == '' ? '-' : band));
 												$('tr[name="' + trName + '"] td.tb-crew').text((crew == '' ? '-' : sys.unameToSname(crew)));
 												$('tr[name="' + trName + '"] td.tb-cin').text((cin == '' ? '-' : cin));
-												$('tr[name="' + trName + '"] td.tb-cout').text((cout == '' ? '-' : cout));
-												$('tr[name="' + trName + '"] td.tb-bng').text((bng == '' ? '-' : bng));									
+												$('tr[name="' + trName + '"] td.tb-cout').text((cout == '' ? '-' : cout));								
 												
 												$('.fab.evtd_shr').css('display', 'none');
 												
@@ -2444,7 +2414,6 @@ $(document).ready(function(){
 		var share = sys.toMonth(inf.date) + ' ' + sys.toDay(inf.date) + ' (' + sys.toWeek(inf.date) + ')\n'
 				  + (sys.isEmpty(inf.description) ? 'Sound \n2 Top 2 Mon' : (inf.description).replace("  ", "\n")) + '\n'
 				  + 'Wedding Dinner \n' 
-				  + (sys.isEmpty(inf.bride_groom) ? '' : ('Couple Name : ' + inf.bride_groom + '\n'))
 				  + 'Venue : ' + (inf.venue.indexOf('#PID#') != -1 ? sys.pidToLoc(inf.venue).loc_name : inf.venue) + '\n'
 				  + 'PIC : ' + inf.pic + '\n'
 				  + (sys.isEmpty(inf.band) ? '' : (inf.band + '\n'))
@@ -2468,14 +2437,10 @@ $(document).ready(function(){
 						desc = $('input.evtd_desc').val(),
 						price = $('input.evtd_price').val(),
 						paid = $('.evtd_paid input')[0].checked,
-						mixer = $('input.evtd_mixer').val(),
-						wmic = $('input.evtd_wmic').val(),
-						spkr = $('input.evtd_spkr').val(),
 						band = $('input.evtd_band').val(),
 						crew = $('input.evtd_crew').data('uname'),
 						cin = $('input.evtd_cin').val(),
 						cout = $('input.evtd_cout').val(),
-						bng = $('input.evtd_bng').val(),
 						rmk = $('input.evtd_rmk').val();
 					
 					var DATA = {
@@ -2487,14 +2452,10 @@ $(document).ready(function(){
 						'desc' : desc,
 						'price' : price,
 						'paid' : paid,
-						'mixer' : mixer,
-						'wmic' : wmic,
-						'spkr' : spkr,
 						'band' : band,
 						'crew' : crew,
 						'cin' : cin,
 						'cout' : cout,
-						'bng' : bng,
 						'rmk' : rmk
 					};
 					var post_data = "ACT=" + encodeURIComponent('evd_udt')
@@ -2517,14 +2478,10 @@ $(document).ready(function(){
 								inf.description = ((desc == '') ? null : desc);
 								inf.price = ((price == '') ? null : price);
 								inf.paid = paid;
-								inf.mixer = ((mixer == '') ? null : mixer);
-								inf.wireless_mic = ((wmic == '') ? null : wmic);
-								inf.speaker = ((spkr == '') ? null : spkr);
 								inf.band = ((band == '') ? null : band);
 								inf.crew = ((crew == '') ? null : crew);
 								inf.car_in = ((cin == '') ? null : cin);
 								inf.car_out = ((cout == '') ? null : cout);
-								inf.bride_groom = ((bng == '') ? null : bng);
 								inf.remarks = ((rmk == '') ? null : rmk);
 								
 								$('tr[name="' + trName + '"]').data('info', inf);
@@ -2543,14 +2500,10 @@ $(document).ready(function(){
 								$('tr[name="' + trName + '"] td.tb-venue').text((venue == '' ? '-' : (venue.indexOf('#PID#') != -1 ? sys.pidToLoc(venue).loc_name : venue)));
 								$('tr[name="' + trName + '"] td.tb-venue').data('pid', venue);
 								$('tr[name="' + trName + '"] td.tb-desc').text((desc == '' ? '-' : desc));
-								$('tr[name="' + trName + '"] td.tb-mixer').text((mixer == '' ? '-' : mixer));
-								$('tr[name="' + trName + '"] td.tb-wmic').text((wmic == '' ? '-' : wmic));
-								$('tr[name="' + trName + '"] td.tb-spkr').text((spkr == '' ? '-' : spkr));
 								$('tr[name="' + trName + '"] td.tb-band').text((band == '' ? '-' : band));
 								$('tr[name="' + trName + '"] td.tb-crew').text((crew == '' ? '-' : sys.unameToSname(crew)));
 								$('tr[name="' + trName + '"] td.tb-cin').text((cin == '' ? '-' : cin));
 								$('tr[name="' + trName + '"] td.tb-cout').text((cout == '' ? '-' : cout));
-								$('tr[name="' + trName + '"] td.tb-bng').text((bng == '' ? '-' : bng));									
 								
 								$('.fab.evtd_shr').css('display', 'none');
 								
@@ -2784,7 +2737,7 @@ $(document).ready(function(){
 	DATA = {
 			'usr' : usr,
 			'pwd' : pwd,
-			'version' : 10118
+			'version' : 10119
 			// 'model' : device.model,
 			// 'platform' : device.platform,
 			// 'uuid' : device.uuid,
@@ -2871,7 +2824,7 @@ $(document).ready(function(){
 							x += '<div class="timeline-item-time">' + task[i]['time'] + '</div>';
 						}
 						
-						x += '<strong>' + (sys.isEmpty(task[i]['venue']) ?  '-' : (task[i]['venue'].indexOf('#PID#') != -1 ? sys.pidToLoc(task[i]['venue']).loc_name : task[i]['venue'])) + '</strong>' + (task[i]['description'] ? ('<br/>' + task[i]['description']) : '') + (task[i]['bride_groom'] ? ('<br/>' + task[i]['bride_groom']) : '');
+						x += '<strong>' + (sys.isEmpty(task[i]['venue']) ?  '-' : (task[i]['venue'].indexOf('#PID#') != -1 ? sys.pidToLoc(task[i]['venue']).loc_name : task[i]['venue'])) + '</strong>' + (task[i]['description'] ? ('<br/>' + task[i]['description']) : '');
 						x += '</div>';
 						
 						sameAs = task[i]['date'];
