@@ -82,7 +82,8 @@ $(document).ready(function(){
 		if(!sys.isEmpty(usr) && !sys.isEmpty(pwd)){
 			DATA = {
 				'usr' : usr,
-				'pwd' : pwd
+				'pwd' : pwd,
+				'version' : 10119
 			};
 			post_data = "ACT=" + encodeURIComponent('lgn_chk')
 					  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
