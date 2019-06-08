@@ -6,7 +6,7 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.119",
+			  version: "1.0.120",
 			  rtl: false,
 			  language: "en-US"
 		  });
@@ -83,7 +83,7 @@ $(document).ready(function(){
 			DATA = {
 				'usr' : usr,
 				'pwd' : pwd,
-				'version' : 10119
+				'version' : 10120
 			};
 			post_data = "ACT=" + encodeURIComponent('lgn_chk')
 					  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
@@ -160,7 +160,7 @@ $(document).ready(function(){
 										x += '<div class="timeline-item-time">' + task[i]['time'] + '</div>';
 									}
 									
-									x += '<strong>' + (sys.isEmpty(task[i]['venue']) ?  '-' : (task[i]['venue'].indexOf('#PID#') != -1 ? sys.pidToLoc(task[i]['venue']).loc_name : task[i]['venue'])) + '</strong>' + (task[i]['description'] ? ('<br/>' + task[i]['description']) : '');
+									x += '<strong>' + (sys.isEmpty(task[i]['venue']) ?  '-' : (task[i]['venue'].indexOf('#PID#') != -1 ? sys.pidToLoc(task[i]['venue']).loc_name : task[i]['venue'])) + '</strong>' + (task[i]['description'] ? ('<br/><span>' + task[i]['description'] + '</span>') : '');
 									x += '</div>';
 									
 									sameAs = task[i]['date'];
@@ -550,6 +550,31 @@ $(document).ready(function(){
 		}
 	});
 	
+	$('#app').on('click', 'span.pic-call', function(){
+		var contact = $(this).data('con');
+		
+		if(contact){
+			apps.dialog.close();
+			apps.dialog.create({
+				title: 'Contact',
+				text: contact,
+				buttons: [{
+						text: 'Call',
+						cssClass: 'wazeBtn',
+						onClick: function(){
+							window.open(('tel:' + contact), '_system');
+						}
+					},{
+						text: 'Whatsapp',
+						onClick: function(){
+							window.open(('https://wa.me/' + contact.substr(1)), '_system');
+						}
+					}],
+				closeByBackdropClick: true
+			}).open();
+		}
+	});
+	
 	$('a#schedule-btn').on('mousedown touchstart', function(){
 		if($(this).hasClass('tab-link-active')){
 			calendarInline.setYearMonth(((new Date).getYear()+1900), ((new Date).getMonth()), 500);
@@ -557,13 +582,14 @@ $(document).ready(function(){
 	});
 	
 	$('#task_tl').on('click', '.timeline-item-inner', function(){
-		var pid = $(this).data('locpid');
+		var pid = $(this).data('locpid'),
+			rmk = sys.commasToNextLine($(this).data('rmk'));
 		
 		if(pid){
 			var loc = sys.pidToLoc(pid);
 			
 			apps.dialog.create({
-				text: (sys.commasToNextLine($(this).data('rmk'))),
+				text: (sys.isEmpty(rmk) ? (sys.isEmpty($(this).find('span').text()) ? 'No details found.' : $(this).find('span').text()) : rmk),
 				buttons: [{
 						text: 'Main Lobby',
 						cssClass: 'wazeBtn',
@@ -588,6 +614,8 @@ $(document).ready(function(){
 					}],
 				closeByBackdropClick: true
 			}).open();
+		}else if(!sys.isEmpty(rmk)){
+			apps.dialog.alert(rmk);
 		}
 	});
 	
@@ -761,15 +789,17 @@ $(document).ready(function(){
 			x = '';
 		
 		for(var i = 0; i < crews.length; i++){
-			var select = false;
-			for(var j = 0; j < work.length; j++){
-				if(crews[i]['user_id'] == work[j]){
-					select = true;
-					break;
+			if(crews[i]['user_level'] > 0){
+				var select = false;
+				for(var j = 0; j < work.length; j++){
+					if(crews[i]['user_id'] == work[j]){
+						select = true;
+						break;
+					}
 				}
+				x += '<li><label class="item-checkbox item-content"><input type="checkbox" ' + (select ? 'checked="checked"' : '') + ' name="evcw-checkbox" value="' + crews[i]['user_id'] + '" data-sn="' + crews[i]['short_name'] + '" />';
+				x += '<i class="icon icon-checkbox"></i><div class="item-inner"><div class="item-title">' + crews[i]['short_name'] + '</div></div></label></li>';
 			}
-			x += '<li><label class="item-checkbox item-content"><input type="checkbox" ' + (select ? 'checked="checked"' : '') + ' name="evcw-checkbox" value="' + crews[i]['user_id'] + '" data-sn="' + crews[i]['short_name'] + '" />';
-			x += '<i class="icon icon-checkbox"></i><div class="item-inner"><div class="item-title">' + crews[i]['short_name'] + '</div></div></label></li>';
 		}
 		$('.evt-crew ul').html(x);
 		$('.panel-evt-rmk').hide();
@@ -1434,7 +1464,7 @@ $(document).ready(function(){
 
 						if(str == '200 OK'){
 							var x = '<li>';
-								x += '<a href="#" class="item-link item-content" data-num="' + crew.length + '">';
+								x += '<a href="#" class="item-link item-content" data-num="' + crew.length + '" data-jnum="' + $('.pic_list ul li').length + '" data-uid="' + uid + '" data-dname="' + dnm + '" data-comp="' + comp + '" data-con="' + con + '">';
 								x += '<div class="item-inner"><div class="item-title">' + dnm + '<div class="item-footer">' + con + (sys.isEmpty(comp) ? '' : (' (' + comp + ')')) + '</div></div></div></a></li>';
 								
 							var ncrew = {
@@ -2825,7 +2855,7 @@ $(document).ready(function(){
 							x += '<div class="timeline-item-time">' + task[i]['time'] + '</div>';
 						}
 						
-						x += '<strong>' + (sys.isEmpty(task[i]['venue']) ?  '-' : (task[i]['venue'].indexOf('#PID#') != -1 ? sys.pidToLoc(task[i]['venue']).loc_name : task[i]['venue'])) + '</strong>' + (task[i]['description'] ? ('<br/>' + task[i]['description']) : '');
+						x += '<strong>' + (sys.isEmpty(task[i]['venue']) ?  '-' : (task[i]['venue'].indexOf('#PID#') != -1 ? sys.pidToLoc(task[i]['venue']).loc_name : task[i]['venue'])) + '</strong>' + (task[i]['description'] ? ('<br/><span>' + task[i]['description'] + '</span>') : '');
 						x += '</div>';
 						
 						sameAs = task[i]['date'];
@@ -2974,7 +3004,23 @@ sys = {
 	'commasToNextLine' : function(str, mode){
 		if(str){
 			if(sys.isEmpty(mode)){
-				return str.replace(/,,/g, '<br/>');
+				var x = str.replace(/,,/g, '<br/>'), pattern = new RegExp(/\`(.*?)\`/);
+				
+				if(pattern.test(x)){
+					var pic = pattern.exec(x)[1], crews = $('body').data('crew');
+					var uid = pic.toLowerCase().replace(/\s/g, '');
+					
+					for(var i=0; i < crews.length; i++){
+						if((crews[i]['user_id'] == uid) && (crews[i]['user_level'] == 0)){
+							var dialog = '<span class="pic-call" data-con="' + crews[i].nc_contact + '">' + pic + '</span>';
+							
+							x = x.replace(('`' + pic + '`'), dialog);
+							break;
+						}
+					}
+				}
+				
+				return x;
 			}else if(mode == 'n'){
 				return str.replace(/,,/g, '\n');
 			}else if(mode == 'r'){
