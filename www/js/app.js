@@ -6,11 +6,11 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.120",
+			  version: "1.0.121",
 			  rtl: false,
 			  language: "en-US"
 		  });
-var geoToken = true, geoCount = 120;
+var geoToken = true, geoCount = 120, APP_VERSION = 10121;
 
 var app = {
     initialize: function() {
@@ -23,6 +23,59 @@ var app = {
 	
     onDeviceReady: function() {
         app.receivedEvent('deviceready');
+		
+		var fetchTask = function(){
+			var DATA = {
+					'usr' : STORAGE.getItem('usr')
+				};
+			var post_data = "ACT=" + encodeURIComponent('msg_chk')
+						  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
+						  
+			if(STORAGE.getItem('usr')){
+				$.ajax({
+					type: 'POST',
+					url: 'https://app.wkventertainment.com/',
+					data: post_data,
+					success: function(str){
+						var inf = JSON.parse(str);
+					
+						if(inf['reply']==='200 OK'){
+							if(inf['new']){
+								cordova.plugins.notification.local.hasPermission(function(granted){
+									cordova.plugins.notification.local.schedule({
+										title: inf['title'],
+										text: inf['text'],
+										foreground: true
+									});
+								});
+							}
+						}else{
+							navigator.notification.alert(
+								'Error occur',
+								console.log(('Error + ' + inf['reply'])),
+								('Contact administrator, Error code : [' + inf['reply'] + ']'),
+								'OK'
+							);
+						}
+					}
+				});
+			}
+			
+			window.SchedulerPlugin.finish();
+		};
+		 
+		var errorHandler = function(error){
+			'Error occur',
+			console.log('SchedulerPlugin error: ', error),
+			('Contact administrator, Error : [' + error + ']'),
+			'OK'
+		};
+		
+		window.SchedulerPlugin.configure(
+			fetchTask,
+			errorHandler,
+			{ minimumFetchInterval: 15 }
+		);
 		
 		window.open = cordova.InAppBrowser.open;
 		document.addEventListener("backbutton", sys.onBackKeyDown, false);
@@ -83,7 +136,7 @@ $(document).ready(function(){
 			DATA = {
 				'usr' : usr,
 				'pwd' : pwd,
-				'version' : 10120
+				'version' : APP_VERSION
 			};
 			post_data = "ACT=" + encodeURIComponent('lgn_chk')
 					  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
@@ -239,6 +292,10 @@ $(document).ready(function(){
 								
 								if(str==='204 No Response'){
 									$('.popup-event .event_list').html('<p style="margin-left:10px;">No event found.</p>');
+									
+									if(((tmp.getTime() - (new Date()).getTime()) <= 0 )){
+										$('a.leave_app').addClass('disabled');
+									}
 								}else{
 									var x = '<thead><tr><th class="label-cell"></th>'
 										  + '<th class="label-cell">&emsp;PIC&emsp;&emsp;&emsp;&emsp;&emsp;</th>'
@@ -272,7 +329,7 @@ $(document).ready(function(){
 										$('tr[name="el'+(i+1)+'"]').data('info', inf[i]);
 									}
 									
-									if(inf.length > 10){
+									if(((tmp.getTime() - (new Date()).getTime()) <= 0 ) || inf.length > 10){
 										$('a.leave_app').addClass('disabled');
 									}
 								}
@@ -945,35 +1002,64 @@ $(document).ready(function(){
 				$('.status-name').text(who);
 			},
 			success: function(str){
-				if(sys.isEmpty(str)){
-					str = '{"clock_action":"NO","reply":"200 OK"}';
-				}
-				var inf = JSON.parse(str);
-				
-				if(inf['reply']==='200 OK'){
-					if(inf['clock_action']=='IN' || inf['clock_action']=='ADD' || inf['clock_action']=='OUT'){
-						var x = '';
-						x += '<iframe width="100%" height="300" frameborder="0" style="border:0;" src="https://www.google.com/maps/embed/v1/view?key=AIzaSyCRKiFjg2CA78cD09yIXuHFCxADjOh75rg&center=' + inf['clock_location'] + '&zoom=16"> </iframe>';
-						$('.panel-status .clk-loc').html(x);
-						$('.panel-status .clk-time').html(inf['clock_action'] + ' : ' + inf['clock_in_out']);
-					}else{
-						$('.panel-status .clk-loc').html('');
-						$('.panel-status .clk-time').html('No record.');
-					}
-					sys.loading(0);
+				if(str==='204 No Response'){
+					$('.panel-status .list ul').html('<p style="margin-left:10px;">No work history found.</p>');
+					
 					apps.panel.open('right', true);
 				}else{
-					sys.loading(0);
-					var failed_toast = apps.toast.create({
-										   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
-										   text: 'Oooppss, error',
-										   position: 'center',
-										   closeTimeout: 2000
-									   });
-					failed_toast.open();
+					var inf = JSON.parse(str);
+					
+					if(inf['reply']==='200 OK'){
+						var x ='',
+							work = inf['work'],
+							tmp_end = '';
+						
+						for(var i=0; i < work.length; i++){
+							if(work[i].clock_action == 'OUT'){
+								tmp_end = work[i].clock_in_out;
+							}else{
+								if(!sys.isEmpty(tmp_end)){
+									var duration = (((new Date(tmp_end)).getTime() - (new Date(work[i].clock_in_out)).getTime())/3600000).toFixed(2);
+									
+									x += '<li><a href="#" class="item-link item-content" data-location="' + work[i].clock_location + '" data-venue="' + work[i].status + '" data-in="' + work[i].clock_in_out + '" data-out="' + tmp_end + '">';
+									x += '<div class="item-inner"><div class="item-title">' + work[i].status;
+									x += '<div class="item-footer">' + tmp_end + '</div></div><div class="item-after">' + duration + ' Hr</div></div></a></li>';
+								}
+							}
+						}
+						if(sys.isEmpty(x)){
+							x = '<p style="margin-left:10px;">No work history found.</p>';
+						}
+						$('.panel-status .list ul').html(x);
+						
+						apps.panel.open('right', true);
+					}else{
+						var failed_toast = apps.toast.create({
+											   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
+											   text: 'Oooppss, error',
+											   position: 'center',
+											   closeTimeout: 2000
+										   });
+						failed_toast.open();
+						
+						navigator.vibrate(100);
+					}
 				}
+				sys.loading(0);
 			}
 		});
+	});
+	
+	$('.panel-status .list ul').on('click', 'a', function(){
+		var x = '';
+		
+		x += '<span class="dialog-label">In</span>: ' + $(this).data('in') + '<br/>';
+		x += '<span class="dialog-label">Out</span>: ' + $(this).data('out') + '<br/>';
+		x += 'Duration : ' + $(this).find('.item-after').text() + '<br/><br/>';
+		x += '<strong>' + $(this).data('venue') + '</strong><br/>';
+		x += '<iframe width="100%" height="250" frameborder="0" style="border:0;" src="https://www.google.com/maps/embed/v1/view?key=AIzaSyCRKiFjg2CA78cD09yIXuHFCxADjOh75rg&center=' + $(this).data('location') + '&zoom=17"> </iframe>';
+		
+		apps.dialog.alert(x, '');
 	});
 	
 	$('#crewl-btn').on('click', function(){
@@ -1797,6 +1883,123 @@ $(document).ready(function(){
 		}
 	});
 	
+	$('#alrl-btn').on('click', function(){
+		var DATA = {
+				'usr' : STORAGE.getItem('usr')
+			}
+		var post_data = "ACT=" + encodeURIComponent('alr_chk')
+					  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
+		
+		$.ajax({
+			type: 'POST',
+			url: 'https://app.wkventertainment.com/',
+			data: post_data,
+			beforeSend: function(){
+				sys.loading(1);
+			},
+			success: function(str){
+				if(str==='204 No Response'){
+					$('.popup-alrl .list ul').html('<p style="margin-left:10px;">No leave request found.</p>');
+				}else{
+					var inf = JSON.parse(str);
+					
+					if(inf['reply']==='200 OK'){
+						var x ='', leave = inf['leave'];
+						
+						for(var i=0; i < leave.length; i++){
+							x += '<li><a href="#" class="item-link item-content" data-num="' + i + '" data-pid="' + leave[i].primary_id + '" data-reason="' + leave[i].clock_location + '" data-status="' + leave[i].status + '">';
+							x += '<div class="item-media"><i class="icon material-icons md-only' + (leave[i].status=='0' ? '' : (leave[i].status=='1' ? ' green' : ' red')) + '">' + (leave[i].status=='0' ? 'access_time' : (leave[i].status=='1' ? 'thumb_up_alt' : 'assistant_photo')) + '</i></div>'
+							x += '<div class="item-inner"><div class="item-title">' + sys.unameToSname(leave[i].user_id) + '</div><div class="item-after">' + (leave[i].clock_in_out).substr(0,10) + '</div></div></a></li>';
+						}
+						$('.popup-alrl .alr_list ul').html(x);
+					}else{
+						var failed_toast = apps.toast.create({
+											   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
+											   text: 'Oooppss, error',
+											   position: 'center',
+											   closeTimeout: 2000
+										   });
+						failed_toast.open();
+						
+						navigator.vibrate(100);
+					}
+				}
+				sys.loading(0);
+			}
+		});
+		
+		var searchbar = apps.searchbar.create({
+				el: '.popup-alrl .searchbar',
+				searchContainer: '.popup-alrl .list.alr_list',
+				searchIn: '.item-title, .item-after',
+				on: {
+					search(sb, query, previousQuery){
+						console.log('');
+					}
+				}
+			});
+	});
+	
+	$('.alr_list').on('click', 'a.item-link', function(){
+		$('#alrd_date').val($(this).find('.item-after').text());
+		$('#alrd_date').data('pid', $(this).data('pid'));
+		$('#alrd_date').data('num', $(this).data('num'));
+		$('#alrd_user').val($(this).find('.item-title').text());
+		$('#alrd_reason').val($(this).data('reason'));
+		var status = (($(this).data('status') == '1') ? 'OK' : (($(this).data('status') == '0') ? '' : $(this).data('status')));
+		$('#alrd_status').val(status);
+		
+		apps.popover.open('.alrld-popover');
+	});
+	
+	$('.alrd_ok').on('click', function(){
+		var status = (($('#alrd_status').val().toLowerCase()=='ok') ? '1' : ((sys.isEmpty($('#alrd_status').val())) ? '0' : $('#alrd_status').val()));
+		var DATA = {
+					'pid' : $('#alrd_date').data('pid'),
+					'usr' : STORAGE.getItem('usr'),
+					'status' : status
+				};
+		var post_data = "ACT=" + encodeURIComponent('lrq_udt')
+					  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
+
+		$.ajax({
+			type: 'POST',
+			url: 'https://app.wkventertainment.com/',
+			data: post_data,
+			beforeSend: function(){
+				sys.loading(1);
+			},
+			success: function(str){
+				sys.loading(0);
+				
+				if(str==='200 OK'){
+					var x = '<a href="#" class="item-link item-content" data-num="' + $('#alrd_date').data('num') + '" data-pid="' + $('#alrd_date').data('pid') + '" data-reason="' + $('#alrd_reason').val() + '" data-status="' + status + '">';
+						x += '<div class="item-media"><i class="icon material-icons md-only' + (status=='0' ? '' : (status=='1' ? ' green' : ' red')) + '">' + (status=='0' ? 'access_time' : (status=='1' ? 'thumb_up_alt' : 'assistant_photo')) + '</i></div>'
+						x += '<div class="item-inner"><div class="item-title">' + $('#alrd_user').val() + '</div><div class="item-after">' + $('#alrd_date').val() + '</div></div></a>';
+						
+					$('.alr_list ul li:eq(' + $('#alrd_date').data('num') + ')').html(x);
+					apps.popover.close('.alrld-popover');
+					
+					var success_toast = apps.toast.create({
+										   icon: '<i class="material-icons">cloud_done</i>',
+										   text: 'Details Successfully Saved',
+										   position: 'center',
+										   closeTimeout: 2000
+									   });
+					success_toast.open();
+				}else{
+					var failed_toast = apps.toast.create({
+										   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
+										   text: 'Oooppss, error',
+										   position: 'center',
+										   closeTimeout: 2000
+									   });
+					failed_toast.open();
+				}
+			}
+		});
+	});
+	
 	$('#audiop_slist .links-list a').on('click', function(){
 		var url = 'http://app.wkventertainment.com/files/music/' + $(this).data('url'),
 			x = '<audio src="' + url + '" controls="true" loop="true" autoplay="true"></audio>';
@@ -1980,46 +2183,6 @@ $(document).ready(function(){
 				}
 			}
 		}
-	})
-	
-	$$('button.clock-check').on('click', function () {
-		apps.dialog.confirm('Clock to this location?', 'Confirmation', function(){
-			var DATA = {
-				'usr' : STORAGE.getItem('usr'),
-				'loc' : $('iframe#gmap').data('loc')
-			};
-			var post_data = "ACT=" + encodeURIComponent('clk_add')
-						  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
-			
-			$.ajax({
-				type: 'POST',
-				url: 'https://app.wkventertainment.com/',
-				data: post_data,
-				beforeSend: function(){
-					sys.loading(1);
-				},
-				success: function(str){
-					sys.loading(0);
-					if(str=='200 OK'){
-						var clockcheck_toast = apps.toast.create({
-												icon: '<i class="material-icons">alarm_add</i>',
-												text: 'Clocked',
-												position: 'center',
-												closeTimeout: 2000
-											});
-						clockcheck_toast.open();
-					}else{
-						var failed_toast = apps.toast.create({
-											   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
-											   text: 'Oooppss, error',
-											   position: 'center',
-											   closeTimeout: 2000
-										   });
-						failed_toast.open();
-					}
-				}
-			});
-		});
 	});
 	
 	$$('button.clock-in').on('click', function () {
@@ -2027,7 +2190,8 @@ $(document).ready(function(){
 		apps.dialog.confirm(('Clock in to ' + loc.loc_name + '?'), 'Confirmation', function(){
 			var DATA = {
 				'usr' : STORAGE.getItem('usr'),
-				'loc' : $('iframe#gmap').data('loc')
+				'loc' : $('iframe#gmap').data('loc'),
+				'lname' : loc.loc_name
 			};
 			var post_data = "ACT=" + encodeURIComponent('clk_in')
 						  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
@@ -2067,7 +2231,7 @@ $(document).ready(function(){
 	});
 	
 	$$('button.clock-out').on('click', function () {
-		apps.dialog.confirm('Clock out from this location?', 'Confirmation', function(){
+		apps.dialog.confirm('Clock out?', 'Confirmation', function(){
 			var DATA = {
 				'usr' : STORAGE.getItem('usr'),
 				'loc' : $('iframe#gmap').data('loc')
@@ -2110,8 +2274,47 @@ $(document).ready(function(){
 	});
 	
 	$('a.leave_app').on('click', function(){
-		apps.dialog.prompt('Reason :', 'Leave Application', function(reason){
-			
+		apps.dialog.prompt('Reason :', 'Leave Request', function(reason){
+			var date = $('.popup-event .event_list').data('date');
+			apps.dialog.confirm(('Date : ' + date + '<br/>Reason : <strong>' + reason + '</strong>'), 'Confirmation of Submission', function () {
+				var DATA = {
+					'usr' : STORAGE.getItem('usr'),
+					'date' : date,
+					'reason' : reason
+				};
+				var post_data = "ACT=" + encodeURIComponent('lrq_add')
+							  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
+				
+				$.ajax({
+					type: 'POST',
+					url: 'https://app.wkventertainment.com/',
+					data: post_data,
+					beforeSend: function(){
+						sys.loading(1);
+					},
+					success: function(str){
+						sys.loading(0);
+						
+						if(str==='200 OK'){
+							var success_toast = apps.toast.create({
+												   icon: '<i class="material-icons">hearing</i>',
+												   text: 'Leave request pending for approval.',
+												   position: 'center',
+												   closeTimeout: 2000
+											   });
+							success_toast.open();
+						}else{
+							var failed_toast = apps.toast.create({
+												   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
+												   text: 'Oooppss, error',
+												   position: 'center',
+												   closeTimeout: 2000
+											   });
+							failed_toast.open();
+						}
+					}
+				});
+			});
 		});
 	});
 	
@@ -2689,6 +2892,131 @@ $(document).ready(function(){
 		}
 	});
 	
+	$('#lvapv-btn').on('click', function(){
+		var DATA = {
+				'usr' : STORAGE.getItem('usr')
+			}
+		var post_data = "ACT=" + encodeURIComponent('lrq_chk')
+					  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
+		
+		$.ajax({
+			type: 'POST',
+			url: 'https://app.wkventertainment.com/',
+			data: post_data,
+			beforeSend: function(){
+				sys.loading(1);
+			},
+			success: function(str){
+				if(str==='204 No Response'){
+					$('.popup-stla .list ul').html('<p style="margin-left:10px;">No leave request found.</p>');
+				}else{
+					var inf = JSON.parse(str);
+					
+					if(inf['reply']==='200 OK'){
+						var x ='', leave = inf['leave'];
+						
+						for(var i=0; i < leave.length; i++){
+							x += '<li><a href="#" class="item-link item-content" data-reason="' + leave[i].clock_location + '" data-status="' + leave[i].status + '">';
+							x += '<div class="item-media"><i class="icon material-icons md-only' + (leave[i].status=='0' ? '' : (leave[i].status=='1' ? ' green' : ' red')) + '">' + (leave[i].status=='0' ? 'access_time' : (leave[i].status=='1' ? 'thumb_up_alt' : 'assistant_photo')) + '</i></div>'
+							x += '<div class="item-inner"><div class="item-title">' + (leave[i].clock_in_out).substr(0,10) + '</div></div></a></li>';
+						}
+						$('.popup-stla .list ul').html(x);
+					}else{
+						var failed_toast = apps.toast.create({
+											   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
+											   text: 'Oooppss, error',
+											   position: 'center',
+											   closeTimeout: 2000
+										   });
+						failed_toast.open();
+						
+						navigator.vibrate(100);
+					}
+				}
+				sys.loading(0);
+			}
+		});
+	});
+	
+	$('.popup-stla .list ul').on('click', 'a', function(){
+		var x = '';
+		x += 'Status : <strong>' + ($(this).data('status')=='0' ? 'Pending' : ($(this).data('status')=='1' ? 'Approved' : $(this).data('status'))) + '</strong><br/><br/>';
+		x += 'Date : ' + $(this).find('.item-title').text() + '<br/>';
+		x += 'Reason : ' + $(this).data('reason');
+		apps.dialog.alert(x, '');
+	});
+	
+	$('#wkhs-btn').on('click', function(){
+		var DATA = {
+				'usr' : STORAGE.getItem('usr')
+			}
+		var post_data = "ACT=" + encodeURIComponent('whs_chk')
+					  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
+		
+		$.ajax({
+			type: 'POST',
+			url: 'https://app.wkventertainment.com/',
+			data: post_data,
+			beforeSend: function(){
+				sys.loading(1);
+			},
+			success: function(str){
+				if(str==='204 No Response'){
+					$('.popup-stht .list ul').html('<p style="margin-left:10px;">No work history found.</p>');
+				}else{
+					var inf = JSON.parse(str);
+					
+					if(inf['reply']==='200 OK'){
+						var x ='',
+							work = inf['work'],
+							tmp_end = '';
+						
+						for(var i=0; i < work.length; i++){
+							if(work[i].clock_action == 'OUT'){
+								tmp_end = work[i].clock_in_out;
+							}else{
+								if(!sys.isEmpty(tmp_end)){
+									var duration = (((new Date(tmp_end)).getTime() - (new Date(work[i].clock_in_out)).getTime())/3600000).toFixed(2);
+									
+									x += '<li><a href="#" class="item-link item-content" data-location="' + work[i].clock_location + '" data-venue="' + work[i].status + '" data-in="' + work[i].clock_in_out + '" data-out="' + tmp_end + '">';
+									x += '<div class="item-inner"><div class="item-title">' + work[i].status;
+									x += '<div class="item-footer">' + tmp_end + '</div></div><div class="item-after">' + duration + ' Hr</div></div></a></li>';
+								}
+							}
+						}
+						if(sys.isEmpty(x)){
+							x = '<p style="margin-left:10px;">No work history found.</p>';
+						}
+						$('.popup-stht .list ul').html(x);
+					}else{
+						var failed_toast = apps.toast.create({
+											   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
+											   text: 'Oooppss, error',
+											   position: 'center',
+											   closeTimeout: 2000
+										   });
+						failed_toast.open();
+						
+						navigator.vibrate(100);
+					}
+				}
+				sys.loading(0);
+			}
+		});
+	});
+	
+	$('.popup-stht .list ul').on('click', 'a', function(){
+		var x = '';
+		
+		x += '<span class="dialog-label">In</span>: ' + $(this).data('in') + '<br/>';
+		x += '<span class="dialog-label">Out</span>: ' + $(this).data('out') + '<br/>';
+		x += 'Duration : ' + $(this).find('.item-after').text() + '<br/><br/>';
+		x += '<strong>' + $(this).data('venue') + '</strong><br/>';
+		x += '<iframe width="100%" height="250" frameborder="0" style="border:0;" src="https://www.google.com/maps/embed/v1/view?key=AIzaSyCRKiFjg2CA78cD09yIXuHFCxADjOh75rg&center=' + $(this).data('location') + '&zoom=17"> </iframe>';
+		
+		apps.dialog.alert(x, '');
+	});
+	
 	$('button#rspw_chg').on('click', function(){
 		var oldpwd = $('#rspw_old').val(),
 			newpwd = $('#rspw_new').val(),
@@ -2768,7 +3096,7 @@ $(document).ready(function(){
 	DATA = {
 			'usr' : usr,
 			'pwd' : pwd,
-			'version' : 10119
+			'version' : APP_VERSION
 			// 'model' : device.model,
 			// 'platform' : device.platform,
 			// 'uuid' : device.uuid,

@@ -206,8 +206,8 @@
 										</li>
 									</ul>
 								</div>
+								<div id="task_tl" class="timeline"></div>
 							</div>
-							<div id="task_tl" class="timeline"></div>
 						</div>
 						<div id="pg-admin" class="tab page-content level8">
 							<div class="block">
@@ -241,7 +241,7 @@
 										<li>
 											<div class="item-content">
 												<div class="item-media">
-													<i class="icon material-icons md-only">local_library</i>
+													<i class="icon material-icons md-only">face</i>
 												</div>
 												<div class="item-inner">
 													<div class="item-title">
@@ -277,7 +277,19 @@
 										<li>
 											<div class="item-content">
 												<div class="item-media">
-													<i class="icon material-icons md-only">accessibility_new</i>
+													<i class="icon material-icons md-only">transfer_within_a_station</i>
+												</div>
+												<div class="item-inner">
+													<div class="item-title">
+														<a id="alrl-btn" class="link popup-open" href="#" data-popup=".popup-alrl">Leave Request List</a>
+													</div>
+												</div>
+											</div>
+										</li>
+										<li>
+											<div class="item-content">
+												<div class="item-media">
+													<i class="icon material-icons md-only">favorite_border</i>
 												</div>
 												<div class="item-inner">
 													<div class="item-title">
@@ -434,7 +446,7 @@
 												</div>
 												<div class="item-inner">
 													<div class="item-title">
-														<a class="link popup-open" href="#" data-popup=".popup-stla">Leave Approval</a>
+														<a id="lvapv-btn" class="link popup-open" href="#" data-popup=".popup-stla">Leave Approval</a>
 													</div>
 												</div>
 											</div>
@@ -446,7 +458,7 @@
 												</div>
 												<div class="item-inner">
 													<div class="item-title">
-														<a class="link popup-open" href="#" data-popup=".popup-stht">Work History</a>
+														<a id="wkhs-btn" class="link popup-open" href="#" data-popup=".popup-stht">Work History</a>
 													</div>
 												</div>
 											</div>
@@ -573,9 +585,6 @@
 									<button class="col button button-fill clock-in disabled" >
 										<i class="icon material-icons md-only">alarm_on</i> IN
 									</button>
-									<button class="col button button-fill clock-check">
-										<i class="icon material-icons md-only">alarm_add</i> Add
-									</button>
 									<button class="col button button-fill clock-out disabled">
 										<i class="icon material-icons md-only">alarm_off</i> OUT
 									</button>
@@ -609,9 +618,10 @@
 						</div>
 					</div>
 					<div class="block">
-						<div class="item-content" align="center">
-							<div class="clk-time elevation-hover-7 elevation-5 elevation-pressed-2"></div>
-							<div class="clk-loc"></div>
+						<div class="item-content">
+							<div class="list">
+								<ul></ul>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -1002,6 +1012,79 @@
 									<div class="item-inner">
 										<div class="row">
 											<button class="col button button-fill tskld_ok">OK</button>
+											<button class="col button button-fill popover-close">Cancel</button>
+										</div>
+									</div>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="popup popup-alrl level8">
+				<div class="toolbar">
+					<div class="toolbar-inner">
+						<div class="left">Leave Request List</div>
+						<div class="right"><a class="link popup-close" href="#">Close</a></div>
+					</div>
+				</div>
+				<div class="block">
+					<form class="searchbar">
+						<div class="searchbar-inner">
+							<div class="searchbar-input-wrap">
+								<input type="search" placeholder="Search">
+								<i class="searchbar-icon"></i>
+								<span class="input-clear-button"></span>
+							</div>
+							<span class="searchbar-disable-button if-not-aurora">Cancel</span>
+						</div>
+					</form>
+				</div>
+				<div class="searchbar-backdrop"></div>
+				<div class="block searchbar-hide-on-search"></div>
+				<div class="searchbar-found list alr_list">
+					<ul></ul>
+				</div>
+				<div class="popover alrld-popover">
+					<div class="popover-inner">
+						<div class="list">
+							<ul>
+								<li class="item-content item-input">
+									<div class="item-inner">
+										<div class="item-title item-label">Date</div>
+										<div class="item-input-wrap">
+											<input id="alrd_date" class="disabled" type="text" value="">
+										</div>
+									</div>
+								</li>
+								<li class="item-content item-input">
+									<div class="item-inner">
+										<div class="item-title item-label">User</div>
+										<div class="item-input-wrap">
+											<input id="alrd_user" class="disabled" type="text" value="">
+										</div>
+									</div>
+								</li>
+								<li class="item-content item-input">
+									<div class="item-inner">
+										<div class="item-title item-label">Reason</div>
+										<div class="item-input-wrap">
+											<textarea id="alrd_reason" class="disabled" value=""></textarea>
+										</div>
+									</div>
+								</li>
+								<li class="item-content item-input">
+									<div class="item-inner">
+										<div class="item-title item-label">Status</div>
+										<div class="item-input-wrap">
+											<textarea id="alrd_status" value="" autocomplete="off"></textarea>
+										</div>
+									</div>
+								</li>
+								<li class="item-content item-input">
+									<div class="item-inner">
+										<div class="row">
+											<button class="col button button-fill alrd_ok">OK</button>
 											<button class="col button button-fill popover-close">Cancel</button>
 										</div>
 									</div>
@@ -2959,7 +3042,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="popup popup-stla">
+			<div class="popup popup-stla level3">
 				<div class="toolbar">
 					<div class="toolbar-inner">
 						<div class="left">Leave Approval</div>
@@ -3060,7 +3143,7 @@
 				<div class="block">
 					<div align="center">
 						 <img src="icon.png" alt="WKV Logo" height="128" width="128">
-						 <span style="color:#999;position:absolute;top:40px;font-size:12px;">WKV<br/>Version 1.0.120</span>
+						 <span style="color:#999;position:absolute;top:40px;font-size:12px;">WKV<br/>Version 1.0.121</span>
 					</div>
 					<p>WKV Application serves as a platform for of WKV’s member to obtain basic information and calculation method can easily obtain by accessing to the application.</p>
 					<p>For general usage, clock in and clock out is built in the application for employees of WKV to check in whenever they report to event venue.</p>

@@ -5,6 +5,25 @@
     font-weight: normal;
     font-style: normal;
 }
+.dialog{
+	z-index: 15500 !important;
+}
+.dialog-backdrop{
+	z-index: 15000 !important;
+}
+span.dialog-label{
+	display: inline-block;
+	width: 35px;
+}
+span.pic-call{
+	font-weight: bold;
+}
+div.list a div.item-media i.red{
+	color: #cc0000;
+}
+div.list a div.item-media i.green{
+	color: #009900;
+}
 #task_tl .timeline-item:last-child{
 	margin-bottom: 60px;
 }
