@@ -6,11 +6,11 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.124",
+			  version: "1.0.125",
 			  rtl: false,
 			  language: "en-US"
 		  });
-var geoToken = true, geoCount = 120, APP_VERSION = 10124, notify = false;
+var geoToken = true, geoCount = 120, APP_VERSION = 10125, notify = false;
 
 var app = {
     initialize: function() {
@@ -24,9 +24,10 @@ var app = {
     onDeviceReady: function() {
         app.receivedEvent('deviceready');
 		
+		cordova.plugins.backgroundMode.setDefaults({ hidden: true });
 		cordova.plugins.backgroundMode.enable();
 		cordova.plugins.backgroundMode.excludeFromTaskList();
-		cordova.plugins.backgroundMode.setDefaults({ hidden: true });
+		
 		if(!("Notification" in window)){
 			notify = 'PLUGIN';
 		}else if (Notification.permission === "granted"){
@@ -3608,12 +3609,12 @@ sys = {
 										var notification = new Notification(inf['text']);
 									}else if(notify=='PLUGIN'){
 										cordova.plugins.notification.local.hasPermission(function(granted){
-											cordova.plugins.notification.local.schedule({
-												id: (new Date()).getTime(),
+											cordova.plugins.notification.local.schedule([{
+												id: parseInt(((new Date()).getTime()/60000).toFixed(0).substr(4)),
 												title: inf['title'],
 												text: inf['text'],
 												foreground: true
-											});
+											}]);
 										});
 									}else{
 										Notification.requestPermission().then(function(permission) {
