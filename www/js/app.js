@@ -6,11 +6,11 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.121",
+			  version: "1.0.122",
 			  rtl: false,
 			  language: "en-US"
 		  });
-var geoToken = true, geoCount = 120, APP_VERSION = 10121;
+var geoToken = true, geoCount = 120, APP_VERSION = 10122, notify = false;
 
 var app = {
     initialize: function() {
@@ -24,58 +24,20 @@ var app = {
     onDeviceReady: function() {
         app.receivedEvent('deviceready');
 		
-		var fetchTask = function(){
-			var DATA = {
-					'usr' : STORAGE.getItem('usr')
-				};
-			var post_data = "ACT=" + encodeURIComponent('msg_chk')
-						  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
-						  
-			if(STORAGE.getItem('usr')){
-				$.ajax({
-					type: 'POST',
-					url: 'https://app.wkventertainment.com/',
-					data: post_data,
-					success: function(str){
-						var inf = JSON.parse(str);
-					
-						if(inf['reply']==='200 OK'){
-							if(inf['new']){
-								cordova.plugins.notification.local.hasPermission(function(granted){
-									cordova.plugins.notification.local.schedule({
-										title: inf['title'],
-										text: inf['text'],
-										foreground: true
-									});
-								});
-							}
-						}else{
-							navigator.notification.alert(
-								'Error occur',
-								console.log(('Error + ' + inf['reply'])),
-								('Contact administrator, Error code : [' + inf['reply'] + ']'),
-								'OK'
-							);
-						}
-					}
-				});
-			}
-			
-			window.SchedulerPlugin.finish();
-		};
-		 
-		var errorHandler = function(error){
-			'Error occur',
-			console.log('SchedulerPlugin error: ', error),
-			('Contact administrator, Error : [' + error + ']'),
-			'OK'
-		};
+		cordova.plugins.backgroundMode.enable();
+		cordova.plugins.backgroundMode.excludeFromTaskList();
 		
-		window.SchedulerPlugin.configure(
-			fetchTask,
-			errorHandler,
-			{ minimumFetchInterval: 15 }
-		);
+		if(!("Notification" in window)){
+			alert("This browser does not support desktop notification");
+		}else if (Notification.permission === "granted"){
+			notify = true;
+		}else if (Notification.permission !== "denied"){
+			Notification.requestPermission().then(function(permission){
+				if (permission === "granted") {
+					notify = true;
+				}
+			});
+		}
 		
 		window.open = cordova.InAppBrowser.open;
 		document.addEventListener("backbutton", sys.onBackKeyDown, false);
@@ -3533,6 +3495,55 @@ sys = {
 		if(geoCount==0){
 			geoToken = true;
 			geoCount = 120;
+			
+			var DATA = {
+					'usr' : STORAGE.getItem('usr')
+				};
+			var post_data = "ACT=" + encodeURIComponent('msg_chk')
+						  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
+						  
+			if(STORAGE.getItem('usr')){
+				$.ajax({
+					type: 'POST',
+					url: 'https://app.wkventertainment.com/',
+					data: post_data,
+					success: function(str){
+						var inf = JSON.parse(str);
+					
+						if(inf['reply']==='200 OK'){
+							if(inf['new']){
+								if(typeof cordova == 'undefined' || cordova.plugins.backgroundMode.isActive()){
+									if(notify){
+										var notification = new Notification(inf['text']);
+									}else{
+										Notification.requestPermission().then(function(permission) {
+											if(permission === "granted"){
+												var notification = new Notification(inf['text']);
+											}
+										});
+									}
+								}else{
+									var notificationFull = apps.notification.create({
+											title: 'WKV',
+											subtitle: inf['title'],
+											text: inf['text'],
+											closeTimeout: 3000,
+										});
+									
+									notificationFull.open();
+								}
+							}
+						}else{
+							navigator.notification.alert(
+								'Error occur',
+								console.log(('Error + ' + inf['reply'])),
+								('Contact administrator, Error code : [' + inf['reply'] + ']'),
+								'OK'
+							);
+						}
+					}
+				});
+			}
 		}else{
 			geoCount--;
 		}
