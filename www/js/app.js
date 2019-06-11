@@ -6,11 +6,11 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.127",
+			  version: "1.0.128",
 			  rtl: false,
 			  language: "en-US"
 		  });
-var geoToken = true, geoCount = 120, APP_VERSION = 10127, notify = false;
+var geoToken = true, geoCount = 120, APP_VERSION = 10128, notify = false;
 
 var app = {
     initialize: function() {
@@ -3612,16 +3612,20 @@ sys = {
 										var notification = new Notification(inf['text']);
 									}else if(notify=='PLUGIN'){
 										cordova.plugins.notification.local.hasPermission(function(granted){
-											cordova.plugins.notification.local.update([{
-												id: 0,
-												text: [inf['text']]
-											}]);
-											
-											cordova.plugins.notification.local.schedule({
-												id: 0,
-												title: inf['title'],
-												text: [inf['text']],
-												foreground: true
+											cordova.plugins.notification.local.isScheduled(0, function(isScheduled){
+												if(isScheduled){
+													cordova.plugins.notification.local.update({
+														id: 0,
+														text: [inf['text']]
+													});
+												}else{
+													cordova.plugins.notification.local.schedule({
+														id: 0,
+														title: inf['title'],
+														text: [inf['text']],
+														foreground: true
+													});
+												}
 											});
 										});
 									}else{
