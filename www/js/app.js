@@ -6,11 +6,11 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.123",
+			  version: "1.0.124",
 			  rtl: false,
 			  language: "en-US"
 		  });
-var geoToken = true, geoCount = 120, APP_VERSION = 10123, notify = false;
+var geoToken = true, geoCount = 120, APP_VERSION = 10124, notify = false;
 
 var app = {
     initialize: function() {
@@ -26,7 +26,7 @@ var app = {
 		
 		cordova.plugins.backgroundMode.enable();
 		cordova.plugins.backgroundMode.excludeFromTaskList();
-		
+		cordova.plugins.backgroundMode.setDefaults({ hidden: true });
 		if(!("Notification" in window)){
 			notify = 'PLUGIN';
 		}else if (Notification.permission === "granted"){
@@ -591,6 +591,97 @@ $(document).ready(function(){
 					}],
 				closeByBackdropClick: true
 			}).open();
+		}
+	});
+	
+	$('a#home-btn').on('mousedown touchstart', function(){
+		if($(this).hasClass('tab-link-active')){
+			DATA = {
+					'usr' : usr,
+					'pwd' : pwd,
+					'version' : APP_VERSION
+				};
+			post_data = "ACT=" + encodeURIComponent('ssn_chk')
+					  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
+			
+			$.ajax({
+				type: 'POST',
+				url: 'https://app.wkventertainment.com/',
+				data: post_data,
+				beforeSend: function(){
+					sys.loading(1);
+				},
+				success: function(str){
+					var inf = JSON.parse(str);
+					
+					$('body').data('user_level', inf['level']);
+					$('body').data('crew', inf['status']);
+					$('body').data('loc', inf['location']);
+					$('body').data('car', inf['car']);
+					
+					if(inf['reply']=='406 Not Acceptable'){
+						apps.loginScreen.open('#lgn');
+					}else if(inf['reply']=='426 Upgrade Required'){
+						apps.loginScreen.open('#update');
+					}else{
+						$('span.ncf-pos1').text(inf['pos1'].toLowerCase());
+						$('span.ncf-pos2').text(inf['pos2'].toLowerCase());
+						$('span.ncf-name').text(inf['name'].toLowerCase());
+						$('span.ncf-name').html($('span.ncf-name').text().replace(/ /g, '&nbsp;&nbsp;&nbsp;'));
+						$('#edpf_name').val(inf['name']);
+						$('span.ncf-tel').text(inf['contact'].toLowerCase());
+						$('#edpf_tel').val(inf['contact']);
+						$('span.ncf-email').text(inf['email'].toLowerCase());
+						$('#edpf_eml').val(inf['email']);
+						
+						$('div.views').css('opacity', '1');
+					}
+					
+					if(inf['status']){
+						var status = inf['status'], x = '';
+						
+						for(var i=0; i<status.length; i++){
+							x += '<li><a href="#" class="item-link item-content" data-usr="' + status[i].user_id + '" data-who="' + status[i].nc_name + '">';
+							x += '<div class="item-media"><i class="icon material-icons md-only">' + (status[i].clocked_in == 1 ? 'directions_run' : 'hotel') + '</i></div>';
+							x += '<div class="item-inner"><div class="item-title">' + status[i].nc_name + (status[i].clocked_in == 1 ? ('<div class="item-footer">' + status[i].clocked_time + '</div>') : '') + '</div></div></a></li>';
+						}
+						$('#user-status').html(x);
+					}
+					
+					if(!sys.isEmpty(inf['task'])){
+						if(inf['task'][0] != 'none'){
+							var task = inf['task'], x = '', sameAs = 0;
+							
+							for(var i=0; i<task.length; i++){
+								if(task[i]['date'] != sameAs){
+									x += '<div class="timeline-item">';
+									x += '<div class="timeline-item-date">' + task[i]['date'].substr(8,2) + ' <small>' + sys.toMonth(task[i]['date']) + '</small></div>';
+									x += '<div class="timeline-item-divider"></div>';
+									x += '<div class="timeline-item-content">';
+								}
+								
+								x += '<div class="timeline-item-inner" data-locpid="' + (sys.isEmpty(task[i]['venue']) ? 0 : (task[i]['venue'].indexOf('#PID#') != -1 ? task[i]['venue'] : 0)) + '" data-rmk="' + task[i]['remarks'] + '">';
+								
+								if(task[i]['time']){
+									x += '<div class="timeline-item-time">' + task[i]['time'] + '</div>';
+								}
+								
+								x += '<strong>' + (sys.isEmpty(task[i]['venue']) ?  '-' : (task[i]['venue'].indexOf('#PID#') != -1 ? sys.pidToLoc(task[i]['venue']).loc_name : task[i]['venue'])) + '</strong>' + (task[i]['description'] ? ('<br/><span>' + task[i]['description'] + '</span>') : '');
+								x += '</div>';
+								
+								sameAs = task[i]['date'];
+								
+								if(sys.isEmpty(task[i+1]) || task[i+1]['date'] != sameAs){
+									x += '</div></div>';
+								}
+							}
+							$('#task_tl').data('inf', task);
+							$('#task_tl').html(x);
+						}
+					}
+					sys.loading(0);
+				}
+			});
 		}
 	});
 	
@@ -3056,16 +3147,16 @@ $(document).ready(function(){
 	});
 	
 	DATA = {
-			'usr' : usr,
-			'pwd' : pwd,
-			'version' : APP_VERSION
-			// 'model' : device.model,
-			// 'platform' : device.platform,
-			// 'uuid' : device.uuid,
-			// 'version' : device.version,
-			// 'manufacturer' : device.manufacturer,
-			// 'serial' : device.serial
-		};
+		'usr' : usr,
+		'pwd' : pwd,
+		'version' : APP_VERSION
+		// 'model' : device.model,
+		// 'platform' : device.platform,
+		// 'uuid' : device.uuid,
+		// 'version' : device.version,
+		// 'manufacturer' : device.manufacturer,
+		// 'serial' : device.serial
+	};
 	post_data = "ACT=" + encodeURIComponent('ssn_chk')
 			  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
 	
@@ -3518,6 +3609,7 @@ sys = {
 									}else if(notify=='PLUGIN'){
 										cordova.plugins.notification.local.hasPermission(function(granted){
 											cordova.plugins.notification.local.schedule({
+												id: (new Date()).getTime(),
 												title: inf['title'],
 												text: inf['text'],
 												foreground: true
