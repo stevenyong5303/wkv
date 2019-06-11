@@ -6,11 +6,11 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.122",
+			  version: "1.0.123",
 			  rtl: false,
 			  language: "en-US"
 		  });
-var geoToken = true, geoCount = 120, APP_VERSION = 10122, notify = false;
+var geoToken = true, geoCount = 120, APP_VERSION = 10123, notify = false;
 
 var app = {
     initialize: function() {
@@ -28,13 +28,13 @@ var app = {
 		cordova.plugins.backgroundMode.excludeFromTaskList();
 		
 		if(!("Notification" in window)){
-			alert("This browser does not support desktop notification");
+			notify = 'PLUGIN';
 		}else if (Notification.permission === "granted"){
-			notify = true;
+			notify = 'BROWSER';
 		}else if (Notification.permission !== "denied"){
 			Notification.requestPermission().then(function(permission){
 				if (permission === "granted") {
-					notify = true;
+					notify = 'BROWSER';
 				}
 			});
 		}
@@ -3513,8 +3513,16 @@ sys = {
 						if(inf['reply']==='200 OK'){
 							if(inf['new']){
 								if(typeof cordova == 'undefined' || cordova.plugins.backgroundMode.isActive()){
-									if(notify){
+									if(notify=='BROWSER'){
 										var notification = new Notification(inf['text']);
+									}else if(notify=='PLUGIN'){
+										cordova.plugins.notification.local.hasPermission(function(granted){
+											cordova.plugins.notification.local.schedule({
+												title: inf['title'],
+												text: inf['text'],
+												foreground: true
+											});
+										});
 									}else{
 										Notification.requestPermission().then(function(permission) {
 											if(permission === "granted"){
