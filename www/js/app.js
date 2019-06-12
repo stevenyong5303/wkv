@@ -6,11 +6,11 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.132",
+			  version: "1.0.133",
 			  rtl: false,
 			  language: "en-US"
 		  });
-var geoToken = true, geoCount = 120, APP_VERSION = 10132, notify = false;
+var geoToken = true, geoCount = 120, APP_VERSION = 10133, notify = false;
 
 var app = {
     initialize: function() {
@@ -35,7 +35,7 @@ var app = {
 		}
 		
 		window.open = cordova.InAppBrowser.open;
-		document.addEventListener("backbutton", sys.onBackKeyDown, false);
+		// document.addEventListener("backbutton", sys.onBackKeyDown, false);
 		
 		cordova.plugins.backgroundMode.setDefaults({
 			title: 'WKV Entertainment',
@@ -3609,14 +3609,14 @@ sys = {
 								if(typeof cordova == 'undefined' || cordova.plugins.backgroundMode.isActive()){
 									if(notify){
 										var notification = new Notification(inf['title'], {
-												tag: 'msg1', 
+												tag: (((new Date()).getTime())/60000).toFixed(0), 
 												body: inf['text'] 
 											}); 
 									}else{
 										Notification.requestPermission(function(permission){
 											if(permission === "granted"){
 												var notification = new Notification(inf['title'], {
-													tag: 'msg1', 
+													tag: (((new Date()).getTime())/60000).toFixed(0), 
 													body: inf['text'] 
 												}); 
 											}
@@ -3627,7 +3627,7 @@ sys = {
 											title: 'WKV',
 											subtitle: inf['title'],
 											text: inf['text'],
-											closeTimeout: 3000,
+											closeTimeout: 10000,
 										});
 									
 									notificationFull.open();
