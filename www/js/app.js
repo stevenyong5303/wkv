@@ -6,11 +6,11 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.143",
+			  version: "1.0.144",
 			  rtl: false,
 			  language: "en-US"
 		  });
-var geoToken = true, geoCount = 120, APP_VERSION = 10143;
+var geoToken = true, geoCount = 120, APP_VERSION = 10144;
 
 var app = {
     initialize: function() {
@@ -3383,6 +3383,7 @@ sys = {
 				if(pattern.test(x)){
 					var pic = pattern.exec(x)[1], crews = $('body').data('crew');
 					var uid = pic.toLowerCase().replace(/\s/g, '');
+					var dialog = pic;
 					
 					for(var i=0; i < crews.length; i++){
 						if((crews[i]['user_id'] == uid) && (crews[i]['user_level'] == 0)){
@@ -3392,6 +3393,7 @@ sys = {
 							break;
 						}
 					}
+					x = x.replace(('`' + pic + '`'), dialog);
 				}
 				
 				return x;
