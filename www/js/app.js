@@ -6,11 +6,11 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.137",
+			  version: "1.0.138",
 			  rtl: false,
 			  language: "en-US"
 		  });
-var geoToken = true, geoCount = 120, APP_VERSION = 10137, notify = true;
+var geoToken = true, geoCount = 120, APP_VERSION = 10138, notify = true;
 
 var app = {
     initialize: function() {
@@ -64,6 +64,7 @@ var app = {
 			
 			window.SchedulerPlugin.finish();
 			notify = false;
+			navigator.app.exitApp();
 		};
 
 		var errorHandler = function(error) {
@@ -77,7 +78,7 @@ var app = {
 		);
 		
 		window.open = cordova.InAppBrowser.open;
-		// document.addEventListener("backbutton", sys.onBackKeyDown, false);
+		document.addEventListener("backbutton", sys.onBackKeyDown, false);
 		
 		// cordova.plugins.backgroundMode.setDefaults({
 			// title: 'WKV Entertainment',
