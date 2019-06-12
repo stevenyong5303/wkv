@@ -6,11 +6,11 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.131",
+			  version: "1.0.132",
 			  rtl: false,
 			  language: "en-US"
 		  });
-var geoToken = true, geoCount = 120, APP_VERSION = 10131, notify = false;
+var geoToken = true, geoCount = 120, APP_VERSION = 10132, notify = false;
 
 var app = {
     initialize: function() {
@@ -24,22 +24,10 @@ var app = {
     onDeviceReady: function() {
         app.receivedEvent('deviceready');
 		
-		cordova.plugins.backgroundMode.setDefaults({
-			title: 'WKV Entertainment',
-			text: ' '
-		});
-		cordova.plugins.backgroundMode.enable();
-		cordova.plugins.backgroundMode.excludeFromTaskList();
-		cordova.plugins.backgroundMode.overrideBackButton();
-		
 		if("Notification" in window){
 			Notification.requestPermission(function(permission){
 				if (permission === 'granted'){
-					if(navigator.oscpu.indexOf('Windows')!=-1){
-						notify = 'WINDOWS';
-					}else{
-						notify = 'ANDROID';
-					}
+					notify = true;
 				}
 			});
 		}else{
@@ -48,6 +36,14 @@ var app = {
 		
 		window.open = cordova.InAppBrowser.open;
 		document.addEventListener("backbutton", sys.onBackKeyDown, false);
+		
+		cordova.plugins.backgroundMode.setDefaults({
+			title: 'WKV Entertainment',
+			text: ' '
+		});
+		cordova.plugins.backgroundMode.enable();
+		cordova.plugins.backgroundMode.excludeFromTaskList();
+		cordova.plugins.backgroundMode.overrideBackButton();
     },
 	
     receivedEvent: function(id){
@@ -3611,17 +3607,18 @@ sys = {
 						if(inf['reply']==='200 OK'){
 							if(inf['new']){
 								if(typeof cordova == 'undefined' || cordova.plugins.backgroundMode.isActive()){
-									if(notify=='WINDOWS'){
-										var notification = new Notification(inf['text']);
-									}else if(notify=='ANDROID'){
+									if(notify){
 										var notification = new Notification(inf['title'], {
 												tag: 'msg1', 
 												body: inf['text'] 
 											}); 
 									}else{
-										Notification.requestPermission().then(function(permission) {
+										Notification.requestPermission(function(permission){
 											if(permission === "granted"){
-												var notification = new Notification(inf['text']);
+												var notification = new Notification(inf['title'], {
+													tag: 'msg1', 
+													body: inf['text'] 
+												}); 
 											}
 										});
 									}
