@@ -6,11 +6,11 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.141",
+			  version: "1.0.142",
 			  rtl: false,
 			  language: "en-US"
 		  });
-var geoToken = true, geoCount = 120, APP_VERSION = 10141;
+var geoToken = true, geoCount = 120, APP_VERSION = 10142;
 
 var app = {
     initialize: function() {
@@ -24,18 +24,16 @@ var app = {
     onDeviceReady: function(){
         app.receivedEvent('deviceready');
 		
-		window.plugins.BackgroundJS.LockBackgroundTime(function(){}, function(msg){console.log(msg);});
-		
 		window.open = cordova.InAppBrowser.open;
 		// document.addEventListener("backbutton", sys.onBackKeyDown, false);
 		
-		// cordova.plugins.backgroundMode.setDefaults({
-			// title: 'WKV Entertainment',
-			// text: ' '
-		// });
-		// cordova.plugins.backgroundMode.enable();
-		// cordova.plugins.backgroundMode.excludeFromTaskList();
-		// cordova.plugins.backgroundMode.overrideBackButton();
+		cordova.plugins.backgroundMode.setDefaults({
+			title: 'WKV Entertainment',
+			text: ' '
+		});
+		cordova.plugins.backgroundMode.enable();
+		cordova.plugins.backgroundMode.excludeFromTaskList();
+		cordova.plugins.backgroundMode.overrideBackButton();
     },
 	
     receivedEvent: function(id){
@@ -2049,7 +2047,7 @@ $(document).ready(function(){
 	});
 	
 	$('#audiop_slist .links-list a').on('click', function(){
-		var url = 'http://app.wkventertainment.com/files/music/' + $(this).data('url'),
+		var url = 'https://app.wkventertainment.com/files/music/' + $(this).data('url'),
 			x = '<audio src="' + url + '" controls="true" loop="true" autoplay="true"></audio>';
 		
 		$('#audiop_plyr div.item-inner').html(x);
@@ -3628,6 +3626,7 @@ sys = {
 						}
 					}
 				});
+				$('#lgn').find('audio')[0].play();
 			}
 		}else{
 			geoCount--;
