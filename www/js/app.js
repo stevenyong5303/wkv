@@ -6,11 +6,11 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.133",
+			  version: "1.0.134",
 			  rtl: false,
 			  language: "en-US"
 		  });
-var geoToken = true, geoCount = 120, APP_VERSION = 10133, notify = false;
+var geoToken = true, geoCount = 120, APP_VERSION = 10134, notify = true;
 
 var app = {
     initialize: function() {
@@ -24,15 +24,75 @@ var app = {
     onDeviceReady: function() {
         app.receivedEvent('deviceready');
 		
-		if("Notification" in window){
-			Notification.requestPermission(function(permission){
-				if (permission === 'granted'){
-					notify = true;
-				}
-			});
-		}else{
+		var fetchTask = function(){
+			var DATA = {
+					'usr' : STORAGE.getItem('usr')
+				};
+			var post_data = "ACT=" + encodeURIComponent('msg_chk')
+						  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
+						  
+			if(STORAGE.getItem('usr')){
+				$.ajax({
+					type: 'POST',
+					url: 'https://app.wkventertainment.com/',
+					data: post_data,
+					success: function(str){
+						var inf = JSON.parse(str);
+					
+						if(inf['reply']==='200 OK'){
+							if(inf['new']){
+								if(typeof cordova == 'undefined' || cordova.plugins.backgroundMode.isActive()){
+									if(notify){
+										var notification = new Notification(inf['title'], {
+												tag: (((new Date()).getTime())/60000).toFixed(0), 
+												body: inf['text'] 
+											}); 
+									}else{
+										Notification.requestPermission(function(permission){
+											if(permission === "granted"){
+												var notification = new Notification(inf['title'], {
+													tag: (((new Date()).getTime())/60000).toFixed(0), 
+													body: inf['text'] 
+												}); 
+											}
+										});
+									}
+								}else{
+									var notificationFull = apps.notification.create({
+											title: 'WKV',
+											subtitle: inf['title'],
+											text: inf['text'],
+											closeTimeout: 10000,
+										});
+									
+									notificationFull.open();
+								}
+							}
+						}else{
+							navigator.notification.alert(
+								'Error occur',
+								console.log(('Error + ' + inf['reply'])),
+								('Contact administrator, Error code : [' + inf['reply'] + ']'),
+								'OK'
+							);
+						}
+					}
+				});
+			}
+			
+			window.SchedulerPlugin.finish();
 			notify = false;
-		}
+		};
+
+		var errorHandler = function(error) {
+			console.log('SchedulerPlugin error: ', error);
+		};
+
+		window.SchedulerPlugin.configure(
+			fetchTask,
+			errorHandler,
+			{ minimumFetchInterval: 2 }
+		);
 		
 		window.open = cordova.InAppBrowser.open;
 		// document.addEventListener("backbutton", sys.onBackKeyDown, false);
@@ -3590,59 +3650,43 @@ sys = {
 			geoToken = true;
 			geoCount = 120;
 			
-			var DATA = {
-					'usr' : STORAGE.getItem('usr')
-				};
-			var post_data = "ACT=" + encodeURIComponent('msg_chk')
-						  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
-						  
-			if(STORAGE.getItem('usr')){
-				$.ajax({
-					type: 'POST',
-					url: 'https://app.wkventertainment.com/',
-					data: post_data,
-					success: function(str){
-						var inf = JSON.parse(str);
-					
-						if(inf['reply']==='200 OK'){
-							if(inf['new']){
-								if(typeof cordova == 'undefined' || cordova.plugins.backgroundMode.isActive()){
-									if(notify){
-										var notification = new Notification(inf['title'], {
+			if(notify){
+				var DATA = {
+						'usr' : STORAGE.getItem('usr')
+					};
+				var post_data = "ACT=" + encodeURIComponent('msg_chk')
+							  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
+							  
+				if(STORAGE.getItem('usr')){
+					$.ajax({
+						type: 'POST',
+						url: 'https://app.wkventertainment.com/',
+						data: post_data,
+						success: function(str){
+							var inf = JSON.parse(str);
+						
+							if(inf['reply']==='200 OK'){
+								if(inf['new']){
+									Notification.requestPermission(function(permission){
+										if(permission === "granted"){
+											var notification = new Notification(inf['title'], {
 												tag: (((new Date()).getTime())/60000).toFixed(0), 
 												body: inf['text'] 
 											}); 
-									}else{
-										Notification.requestPermission(function(permission){
-											if(permission === "granted"){
-												var notification = new Notification(inf['title'], {
-													tag: (((new Date()).getTime())/60000).toFixed(0), 
-													body: inf['text'] 
-												}); 
-											}
-										});
-									}
-								}else{
-									var notificationFull = apps.notification.create({
-											title: 'WKV',
-											subtitle: inf['title'],
-											text: inf['text'],
-											closeTimeout: 10000,
-										});
-									
-									notificationFull.open();
+										}
+									});
 								}
+							}else{
+								navigator.notification.alert(
+									'Error occur',
+									console.log(('Error + ' + inf['reply'])),
+									('Contact administrator, Error code : [' + inf['reply'] + ']'),
+									'OK'
+								);
 							}
-						}else{
-							navigator.notification.alert(
-								'Error occur',
-								console.log(('Error + ' + inf['reply'])),
-								('Contact administrator, Error code : [' + inf['reply'] + ']'),
-								'OK'
-							);
 						}
-					}
-				});
+					});
+				}
 			}
 		}else{
 			geoCount--;
