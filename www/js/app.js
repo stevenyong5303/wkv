@@ -6,7 +6,7 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.138",
+			  version: "1.0.139",
 			  rtl: false,
 			  language: "en-US"
 		  });
@@ -21,7 +21,7 @@ var app = {
         document.addEventListener('deviceready', this.onDeviceReady, false);
     },
 	
-    onDeviceReady: function() {
+    onDeviceReady: function(){
         app.receivedEvent('deviceready');
 		
 		var fetchTask = function(){
@@ -64,17 +64,16 @@ var app = {
 			
 			window.SchedulerPlugin.finish();
 			notify = false;
-			navigator.app.exitApp();
 		};
 
-		var errorHandler = function(error) {
+		var errorHandler = function(error){
 			console.log('SchedulerPlugin error: ', error);
 		};
 
 		window.SchedulerPlugin.configure(
 			fetchTask,
 			errorHandler,
-			{ minimumFetchInterval: 2 }
+			{ minimumFetchInterval: 15 }
 		);
 		
 		window.open = cordova.InAppBrowser.open;
