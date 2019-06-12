@@ -6,11 +6,11 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.142",
+			  version: "1.0.143",
 			  rtl: false,
 			  language: "en-US"
 		  });
-var geoToken = true, geoCount = 120, APP_VERSION = 10142;
+var geoToken = true, geoCount = 120, APP_VERSION = 10143;
 
 var app = {
     initialize: function() {
