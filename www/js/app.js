@@ -6,11 +6,11 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.135",
+			  version: "1.0.136",
 			  rtl: false,
 			  language: "en-US"
 		  });
-var geoToken = true, geoCount = 120, APP_VERSION = 10135, notify = true;
+var geoToken = true, geoCount = 120, APP_VERSION = 10136, notify = true;
 
 var app = {
     initialize: function() {
@@ -41,32 +41,14 @@ var app = {
 					
 						if(inf['reply']==='200 OK'){
 							if(inf['new']){
-								if(typeof cordova == 'undefined' || cordova.plugins.backgroundMode.isActive()){
-									if(notify){
+								Notification.requestPermission(function(permission){
+									if(permission === "granted"){
 										var notification = new Notification(inf['title'], {
-												tag: (((new Date()).getTime())/60000).toFixed(0), 
-												body: inf['text'] 
-											}); 
-									}else{
-										Notification.requestPermission(function(permission){
-											if(permission === "granted"){
-												var notification = new Notification(inf['title'], {
-													tag: (((new Date()).getTime())/60000).toFixed(0), 
-													body: inf['text'] 
-												}); 
-											}
-										});
+											tag: (((new Date()).getTime())/60000).toFixed(0), 
+											body: inf['text'] 
+										}); 
 									}
-								}else{
-									var notificationFull = apps.notification.create({
-											title: 'WKV',
-											subtitle: inf['title'],
-											text: inf['text'],
-											closeTimeout: 10000,
-										});
-									
-									notificationFull.open();
-								}
+								});
 							}
 						}else{
 							navigator.notification.alert(
@@ -97,13 +79,13 @@ var app = {
 		window.open = cordova.InAppBrowser.open;
 		// document.addEventListener("backbutton", sys.onBackKeyDown, false);
 		
-		cordova.plugins.backgroundMode.setDefaults({
-			title: 'WKV Entertainment',
-			text: ' '
-		});
-		cordova.plugins.backgroundMode.enable();
-		cordova.plugins.backgroundMode.excludeFromTaskList();
-		cordova.plugins.backgroundMode.overrideBackButton();
+		// cordova.plugins.backgroundMode.setDefaults({
+			// title: 'WKV Entertainment',
+			// text: ' '
+		// });
+		// cordova.plugins.backgroundMode.enable();
+		// cordova.plugins.backgroundMode.excludeFromTaskList();
+		// cordova.plugins.backgroundMode.overrideBackButton();
     },
 	
     receivedEvent: function(id){
