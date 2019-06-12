@@ -6,11 +6,11 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.130",
+			  version: "1.0.131",
 			  rtl: false,
 			  language: "en-US"
 		  });
-var geoToken = true, geoCount = 120, APP_VERSION = 10130, notify = false;
+var geoToken = true, geoCount = 120, APP_VERSION = 10131, notify = false;
 
 var app = {
     initialize: function() {
@@ -30,17 +30,20 @@ var app = {
 		});
 		cordova.plugins.backgroundMode.enable();
 		cordova.plugins.backgroundMode.excludeFromTaskList();
+		cordova.plugins.backgroundMode.overrideBackButton();
 		
-		if(!("Notification" in window)){
-			alert("This browser does not support desktop notification");
-		}else if (Notification.permission === "granted"){
-			notify = true;
-		}else if (Notification.permission !== "denied"){
-			Notification.requestPermission().then(function(permission){
-				if (permission === "granted") {
-					notify = true;
+		if("Notification" in window){
+			Notification.requestPermission(function(permission){
+				if (permission === 'granted'){
+					if(navigator.oscpu.indexOf('Windows')!=-1){
+						notify = 'WINDOWS';
+					}else{
+						notify = 'ANDROID';
+					}
 				}
 			});
+		}else{
+			notify = false;
 		}
 		
 		window.open = cordova.InAppBrowser.open;
@@ -3608,8 +3611,13 @@ sys = {
 						if(inf['reply']==='200 OK'){
 							if(inf['new']){
 								if(typeof cordova == 'undefined' || cordova.plugins.backgroundMode.isActive()){
-									if(notify){
+									if(notify=='WINDOWS'){
 										var notification = new Notification(inf['text']);
+									}else if(notify=='ANDROID'){
+										var notification = new Notification(inf['title'], {
+												tag: 'msg1', 
+												body: inf['text'] 
+											}); 
 									}else{
 										Notification.requestPermission().then(function(permission) {
 											if(permission === "granted"){
