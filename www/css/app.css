@@ -5,6 +5,10 @@
     font-weight: normal;
     font-style: normal;
 }
+.popup-cntd .fab.fab-right-bottom {
+	-webkit-transition-duration: 0s;
+	transition-duration: 0s;
+}
 .dialog{
 	z-index: 15500 !important;
 }

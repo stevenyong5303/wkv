@@ -6,11 +6,11 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.144",
+			  version: "1.0.145",
 			  rtl: false,
 			  language: "en-US"
 		  });
-var geoToken = true, geoCount = 120, APP_VERSION = 10144;
+var geoToken = true, geoCount = 120, APP_VERSION = 10145;
 
 var app = {
     initialize: function() {
@@ -1108,6 +1108,42 @@ $(document).ready(function(){
 		apps.dialog.alert(x, '');
 	});
 	
+	$('.popup-cntd').on('scroll', function(){
+		var offset = 15 - $('.popup-cntd')[0].scrollTop;
+		
+		$(this).find('.fab').css('bottom', (offset + 'px'));
+	});
+	
+	$('#cntd-btn').on('click', function(){
+		$('.popup-cntd input').val('');
+		$('.popup-cntd input[name="cnv-checkbox"]').prop('checked', false);
+		
+		var searchbar = apps.searchbar.create({
+				el: '.popup-cntd .searchbar',
+				searchContainer: '.popup-cntd .list',
+				searchIn: '.item-title',
+				on: {
+					search(sb, query, previousQuery){
+						console.log('');
+					}
+				}
+			});
+	});
+	
+	$('a.cnv-share').on('click', function(){
+		var cnv = [], share = '';
+		
+		for(var i=0; i<$('input[name="cnv-checkbox"]:checked').length; i++){
+			if(i != 0){
+				share += '\n\n';
+			}
+			share += ($('input[name="cnv-checkbox"]:checked:eq('+i+')').data('fn')) + '\n';
+			share += ($('input[name="cnv-checkbox"]:checked:eq('+i+')').data('ic'));
+		}
+		
+		window.plugins.socialsharing.share(share);
+	})
+	
 	$('#crewl-btn').on('click', function(){
 		var x = '', crews = $('body').data('crew');
 		
@@ -1712,7 +1748,7 @@ $(document).ready(function(){
 						for(var i=0; i<inf['task'].length; i++){
 							x += '<li><a href="#" class="item-link item-content" data-num="' + i + '" data-pid="' + inf['task'][i].primary_id + '">';
 							x += '<div class="item-inner"><div class="item-title">' + inf['task'][i].description;
-							x += '<div class="item-footer">' + sys.pidToLoc(inf['task'][i].venue).loc_name + '</div>';
+							x += '<div class="item-footer">' + ((inf['task'][i].venue.indexOf('#PID#') != -1) ? sys.pidToLoc(inf['task'][i].venue).loc_name : inf['task'][i].venue) + '</div>';
 							x += '</div><div class="item-after">' + inf['task'][i].date.substr(0, 10) + ' (' + inf['task'][i].time + ')</div></div></a></li>';
 						}
 						
@@ -3378,22 +3414,26 @@ sys = {
 	'commasToNextLine' : function(str, mode){
 		if(str){
 			if(sys.isEmpty(mode)){
-				var x = str.replace(/,,/g, '<br/>'), pattern = new RegExp(/\`(.*?)\`/);
+				var x = str.replace(/,,/g, '<br/>'), pattern = new RegExp(/\`(.*?)\`/g);
 				
 				if(pattern.test(x)){
-					var pic = pattern.exec(x)[1], crews = $('body').data('crew');
-					var uid = pic.toLowerCase().replace(/\s/g, '');
-					var dialog = pic;
-					
-					for(var i=0; i < crews.length; i++){
-						if((crews[i]['user_id'] == uid) && (crews[i]['user_level'] == 0)){
-							var dialog = '<span class="pic-call" data-con="' + crews[i].nc_contact + '">' + pic + '</span>';
-							
-							x = x.replace(('`' + pic + '`'), dialog);
-							break;
+					var pic = x.match(pattern), crews = $('body').data('crew');
+					console.log(pic);
+					for(var j=0; j<pic.length; j++){
+						var spic = pic[j].substr(1, (pic[j].length - 2));
+						var uid = spic.toLowerCase().replace(/\s/g, '');
+						var dialog = spic;
+						
+						for(var i=0; i < crews.length; i++){
+							if((crews[i]['user_id'] == uid) && (crews[i]['user_level'] == 0)){
+								var dialog = '<span class="pic-call" data-con="' + crews[i].nc_contact + '">' + spic + '</span>';
+								
+								x = x.replace(pic[j], dialog);
+								break;
+							}
 						}
+						x = x.replace(pic[j], dialog);
 					}
-					x = x.replace(('`' + pic + '`'), dialog);
 				}
 				
 				return x;
