@@ -1110,7 +1110,6 @@ $(document).ready(function(){
 	
 	$('.popup-cntd').on('scroll', function(){
 		var offset = 15 - $('.popup-cntd')[0].scrollTop;
-		
 		$(this).find('.fab').css('bottom', (offset + 'px'));
 	});
 	
@@ -3418,7 +3417,7 @@ sys = {
 				
 				if(pattern.test(x)){
 					var pic = x.match(pattern), crews = $('body').data('crew');
-					console.log(pic);
+					
 					for(var j=0; j<pic.length; j++){
 						var spic = pic[j].substr(1, (pic[j].length - 2));
 						var uid = spic.toLowerCase().replace(/\s/g, '');
