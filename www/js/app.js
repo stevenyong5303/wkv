@@ -6,11 +6,11 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.146",
+			  version: "1.0.147",
 			  rtl: false,
 			  language: "en-US"
 		  });
-var geoToken = true, geoCount = 120, APP_VERSION = 10146;
+var geoToken = true, geoCount = 120, APP_VERSION = 10147;
 
 var app = {
     initialize: function() {
@@ -271,8 +271,8 @@ $(document).ready(function(){
 										x += '<td class="tb-desc label-cell">'+((inf[i].description==null) ? '-' : inf[i].description)+'</td>';
 										x += '<td class="tb-band tablet-only">'+((inf[i].band==null) ? '-' : inf[i].band)+'</td>';
 										x += '<td class="tb-crew label-cell">'+((hidden || inf[i].crew==null) ? '-' : sys.unameToSname(inf[i].crew))+'</td>';
-										x += '<td class="tb-cin label-cell">'+((hidden || inf[i].car_in==null) ? '-' : inf[i].car_in)+'</td>';
-										x += '<td class="tb-cout label-cell">'+((hidden || inf[i].car_out==null) ? '-' : inf[i].car_out)+'</td>';
+										x += '<td class="tb-cin label-cell">'+((hidden || inf[i].car_in==null) ? '-' : sys.carToTcar(inf[i].car_in))+'</td>';
+										x += '<td class="tb-cout label-cell">'+((hidden || inf[i].car_out==null) ? '-' : sys.carToTcar(inf[i].car_out))+'</td>';
 										x += '</tr>';
 									}
 									x += '</tbody>';
@@ -292,7 +292,7 @@ $(document).ready(function(){
 								
 								apps.popup.open('.popup-event');
 								
-								$('.event_list span').on('click', function(){
+								$('.event_list span.button').on('click', function(){
 									var x = '';
 									var inf = $('tr[name="' + $(this).attr('name') + '"]').data('info');
 									var trName = $(this).attr('name');
@@ -307,8 +307,8 @@ $(document).ready(function(){
 										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Price</div><div class="item-input-wrap"><input class="evtd_price" type="text" autocomplete="off" value="' + ((inf.price==null) ? '' : inf.price) + '"><label class="toggle toggle-init color-green evtd_paid"><input type="checkbox"' + (inf.paid=='1' ? ' checked' : '') + '><span class="toggle-icon"></span></label></div></div></div></li>';
 										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Live Band Information</div><div class="item-input-wrap"><input class="evtd_band" type="text" autocomplete="off" value="' + ((inf.band==null) ? '' : inf.band) + '"></div></div></div></li>';
 										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Crew</div><div class="item-input-wrap"><input class="evtd_crew" type="text" autocomplete="off" data-uname="' + inf.crew + '" value="' + ((inf.crew==null) ? '' : sys.unameToSname(inf.crew)) + '"></div></div></div></li>';
-										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Vehicle to Event</div><div class="item-input-wrap"><input class="evtd_cin" type="text" autocomplete="off" value="' + ((inf.car_in==null) ? '' : inf.car_in) + '"></div></div></div></li>';
-										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Vehicle back from Event</div><div class="item-input-wrap"><input class="evtd_cout" type="text" autocomplete="off" value="' + ((inf.car_out==null) ? '' : inf.car_out) + '"></div></div></div></li>';
+										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Vehicle to Event</div><div class="item-input-wrap"><input class="evtd_cin" type="text" autocomplete="off" value="' + ((inf.car_in==null) ? '' : sys.carToTcar(inf.car_in, 'r')) + '" data-ori="' + ((inf.car_in==null) ? '' : inf.car_in) + '" data-val="' + ((inf.car_in==null) ? '' : sys.carToTcar(inf.car_in, 'r')) + '"></div></div></div></li>';
+										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Vehicle back from Event</div><div class="item-input-wrap"><input class="evtd_cout" type="text" autocomplete="off" value="' + ((inf.car_out==null) ? '' : sys.carToTcar(inf.car_out, 'r')) + '" data-ori="' + ((inf.car_out==null) ? '' : inf.car_out) + '" data-val="' + ((inf.car_out==null) ? '' : sys.carToTcar(inf.car_out, 'r')) + '"></div></div></div></li>';
 										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-input-wrap row"><button class="evtd_sve button col button-fill" data-eid="' + inf.primary_id + '">Save</button>';
 										if(parseInt($('body').data('user_level'))>=9){
 											x += '<button class="evtd_dlt button col button-fill" data-eid="' + inf.primary_id + '">Delete</button>';
@@ -326,8 +326,8 @@ $(document).ready(function(){
 										}
 										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Live Band Information</div><div class="item-input-wrap">' + ((inf.band==null) ? '-' : inf.band) + '</div></div></div></li>';
 										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Crew</div><div class="item-input-wrap">' + ((hidden || inf.crew==null) ? '-' : sys.unameToSname(inf.crew)) + '</div></div></div></li>';
-										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Vehicle to Event</div><div class="item-input-wrap">' + ((hidden || inf.car_in==null) ? '-' : inf.car_in) + '</div></div></div></li>';
-										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Vehicle back from Event</div><div class="item-input-wrap">' + ((hidden || inf.car_out==null) ? '-' : inf.car_out) + '</div></div></div></li>';
+										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Vehicle to Event</div><div class="item-input-wrap">' + ((hidden || inf.car_in==null) ? '-' : sys.carToTcar(inf.car_in, 'r')) + '</div></div></div></li>';
+										x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Vehicle back from Event</div><div class="item-input-wrap">' + ((hidden || inf.car_out==null) ? '-' : sys.carToTcar(inf.car_out, 'r')) + '</div></div></div></li>';
 									}
 									
 									x = x.replace(/(?:\r\n|\r|\n)/g, '<br>');
@@ -366,8 +366,8 @@ $(document).ready(function(){
 												paid = $('.evtd_paid input')[0].checked,
 												band = $('input.evtd_band').val(),
 												crew = $('input.evtd_crew').data('uname'),
-												cin = $('input.evtd_cin').val(),
-												cout = $('input.evtd_cout').val(),
+												cin = ($('input.evtd_cin').val() == $('input.evtd_cin').data('val')) ? $('input.evtd_cin').data('ori') : $('input.evtd_cin').val(),
+												cout = ($('input.evtd_cout').val() == $('input.evtd_cout').data('val')) ? $('input.evtd_cout').data('ori') : $('input.evtd_cout').val(),
 												rmk = $('input.evtd_rmk').val();
 											
 											var DATA = {
@@ -429,8 +429,8 @@ $(document).ready(function(){
 														$('tr[name="' + trName + '"] td.tb-desc').text((desc == '' ? '-' : desc));
 														$('tr[name="' + trName + '"] td.tb-band').text((band == '' ? '-' : band));
 														$('tr[name="' + trName + '"] td.tb-crew').text((crew == '' ? '-' : sys.unameToSname(crew)));
-														$('tr[name="' + trName + '"] td.tb-cin').text((cin == '' ? '-' : cin));
-														$('tr[name="' + trName + '"] td.tb-cout').text((cout == '' ? '-' : cout));
+														$('tr[name="' + trName + '"] td.tb-cin').html((cin == '' ? '-' : sys.carToTcar(cin)));
+														$('tr[name="' + trName + '"] td.tb-cout').html((cout == '' ? '-' : sys.carToTcar(cout)));
 														
 														$('.fab.evtd_shr').css('display', 'none');
 														
@@ -517,6 +517,124 @@ $(document).ready(function(){
 	};
 	sys.dayClick(usr);
 	sys.eventCheck(usr, (new Date().getMonth()), new Date().getYear()+1900);
+	
+	$('.event_list').on('click', '.tb-cin span, .tb-cout span', function(){
+		if(parseInt($('body').data('user_level')) > 7){
+			var inf = $(this).closest('tr').data('info'),
+				trName = $(this).closest('tr').attr('name'),
+				carIn = $(this).closest('td').hasClass('tb-cin'),
+				text = $(this).text().split('\xa0')[0];
+				
+			apps.dialog.prompt('Sequence for ' + text + '?', function(num){
+				var pid = inf.primary_id,
+					cin = inf.car_in,
+					cout = inf.car_out,
+					pattern = new RegExp(/\^F(.*?)\^B/),
+					cars = [],
+					x = '';
+				
+				if(carIn){
+					if(cin.indexOf(', ')!=-1){
+						cars = cin.split(', ');
+					}else{
+						cars = [cin];
+					}
+					
+					for(var i=0; i<cars.length; i++){
+						if(cars[i].indexOf(text)!=-1){
+							if(num!=0){
+								if(cars[i].indexOf('^F')!=-1){
+									cars[i] = cars[i].replace((pattern.exec(cars[i])[0]), ('^F' + num + '^B'));
+								}else{
+									cars[i] = (text + ('^F' + num + '^B'));
+								}
+							}else{
+								if(cars[i].indexOf('^F')!=-1){
+									cars[i] = cars[i].replace((pattern.exec(cars[i])[0]), '');
+								}
+							}
+						}
+						x += (((i != 0 ) ? ', ' : '') + (cars[i]));
+					}
+					
+					cin = x;
+				}else{
+					if(cout.indexOf(', ')!=-1){
+						cars = cout.split(', ');
+					}else{
+						cars = [cout];
+					}
+					
+					for(var i=0; i<cars.length; i++){
+						if(cars[i].indexOf(text)!=-1){
+							if(num!=0){
+								if(cars[i].indexOf('^F')!=-1){
+									cars[i] = cars[i].replace((pattern.exec(cars[i])[0]), ('^F' + num + '^B'));
+								}else{
+									cars[i] = (text + ('^F' + num + '^B'));
+								}
+							}else{
+								if(cars[i].indexOf('^F')!=-1){
+									cars[i] = cars[i].replace((pattern.exec(cars[i])[0]), '');
+								}
+							}
+						}
+						x += (((i != 0 ) ? ', ' : '') + (cars[i]));
+					}
+					
+					cout = x;
+				}
+				
+				var DATA = {
+					'usr' : STORAGE.getItem('usr'),
+					'pid' : pid,
+					'cin' : cin,
+					'cout' : cout
+				};
+				var post_data = "ACT=" + encodeURIComponent('evc_udt')
+							  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
+							  
+				$.ajax({
+					type: 'POST',
+					url: 'https://app.wkventertainment.com/',
+					data: post_data,
+					beforeSend: function(){
+						sys.loading(1);
+					},
+					success: function(str){
+						sys.loading(0);
+						
+						if(str==='200 OK'){
+							inf.car_in = ((cin == '') ? null : cin);
+							inf.car_out = ((cout == '') ? null : cout);
+							
+							$('tr[name="' + trName + '"]').data('info', inf);
+							$('tr[name="' + trName + '"] td.tb-cin').html((cin == '' ? '-' : sys.carToTcar(cin)));
+							$('tr[name="' + trName + '"] td.tb-cout').html((cout == '' ? '-' : sys.carToTcar(cout)));
+							
+							var success_toast = apps.toast.create({
+												   icon: '<i class="material-icons">cloud_done</i>',
+												   text: 'Details Successfully Saved',
+												   position: 'center',
+												   closeTimeout: 2000
+											   });
+							success_toast.open();
+						}else{
+							var failed_toast = apps.toast.create({
+												   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
+												   text: 'Oooppss, error',
+												   position: 'center',
+												   closeTimeout: 2000
+											   });
+							failed_toast.open();
+							
+							navigator.vibrate(100);
+						}
+					}
+				});
+			});
+		}
+	});
 	
 	$('.details-popover').on('keyup', 'input.evtd_ld', function(){
 		if(($(this).val()).toLowerCase()=='setup'){
@@ -2552,8 +2670,8 @@ $(document).ready(function(){
 										paid = $('.evtd_paid input')[0].checked,
 										band = $('input.evtd_band').val(),
 										crew = $('input.evtd_crew').data('uname'),
-										cin = $('input.evtd_cin').val(),
-										cout = $('input.evtd_cout').val(),
+										cin = ($('input.evtd_cin').val() == $('input.evtd_cin').data('val')) ? $('input.evtd_cin').data('ori') : $('input.evtd_cin').val(),
+										cout = ($('input.evtd_cout').val() == $('input.evtd_cout').data('val')) ? $('input.evtd_cout').data('ori') : $('input.evtd_cout').val(),
 										rmk = $('input.evtd_rmk').val();
 									
 									var DATA = {
@@ -2615,8 +2733,8 @@ $(document).ready(function(){
 												$('tr[name="' + trName + '"] td.tb-desc').text((desc == '' ? '-' : desc));
 												$('tr[name="' + trName + '"] td.tb-band').text((band == '' ? '-' : band));
 												$('tr[name="' + trName + '"] td.tb-crew').text((crew == '' ? '-' : sys.unameToSname(crew)));
-												$('tr[name="' + trName + '"] td.tb-cin').text((cin == '' ? '-' : cin));
-												$('tr[name="' + trName + '"] td.tb-cout').text((cout == '' ? '-' : cout));								
+												$('tr[name="' + trName + '"] td.tb-cin').html((cin == '' ? '-' : sys.carToTcar(cin)));
+												$('tr[name="' + trName + '"] td.tb-cout').html((cout == '' ? '-' : sys.carToTcar(cout)));								
 												
 												$('.fab.evtd_shr').css('display', 'none');
 												
@@ -2754,8 +2872,8 @@ $(document).ready(function(){
 						paid = $('.evtd_paid input')[0].checked,
 						band = $('input.evtd_band').val(),
 						crew = $('input.evtd_crew').data('uname'),
-						cin = $('input.evtd_cin').val(),
-						cout = $('input.evtd_cout').val(),
+						cin = ($('input.evtd_cin').val() == $('input.evtd_cin').data('val')) ? $('input.evtd_cin').data('ori') : $('input.evtd_cin').val(),
+						cout = ($('input.evtd_cout').val() == $('input.evtd_cout').data('val')) ? $('input.evtd_cout').data('ori') : $('input.evtd_cout').val(),
 						rmk = $('input.evtd_rmk').val();
 					
 					var DATA = {
@@ -2817,8 +2935,8 @@ $(document).ready(function(){
 								$('tr[name="' + trName + '"] td.tb-desc').text((desc == '' ? '-' : desc));
 								$('tr[name="' + trName + '"] td.tb-band').text((band == '' ? '-' : band));
 								$('tr[name="' + trName + '"] td.tb-crew').text((crew == '' ? '-' : sys.unameToSname(crew)));
-								$('tr[name="' + trName + '"] td.tb-cin').text((cin == '' ? '-' : cin));
-								$('tr[name="' + trName + '"] td.tb-cout').text((cout == '' ? '-' : cout));
+								$('tr[name="' + trName + '"] td.tb-cin').html((cin == '' ? '-' : sys.carToTcar(cin)));
+								$('tr[name="' + trName + '"] td.tb-cout').html((cout == '' ? '-' : sys.carToTcar(cout)));
 								
 								$('.fab.evtd_shr').css('display', 'none');
 								
@@ -3469,6 +3587,41 @@ sys = {
 		}
 		return null;
 	},
+	'carToTcar' : function(str, mode){
+		var Tcar = '';
+		if(sys.isEmpty(mode)){
+			if(str){
+				if(str.indexOf(', ') != '-1'){
+					var cars = str.split(', ');
+					
+					for(var i=0; i<cars.length; i++){
+						if(i != 0){
+							Tcar += ', ';
+						}
+						Tcar += '<span>' + cars[i] + '</span>';
+					}
+				}else{
+					Tcar += '<span>' + str + '</span>';
+				}
+				Tcar = Tcar.replace(/\^F/g, '&nbsp;<sup>');
+				Tcar = Tcar.replace(/\^B/g, '</sup>');
+				return Tcar;
+			}
+		}else if(mode=='r'){
+			if(str){
+				var pattern = new RegExp(/\^F(.*?)\^B/);
+				
+				if(str.indexOf('^F')!=-1){
+					Tcar = str.replace((pattern.exec(str)[0]), '');
+					Tcar = Tcar.replace(('\xa0'), '');
+				}else{
+					Tcar = str;
+				}
+				return Tcar;
+			}
+		}
+		return null;
+	},
 	'coordinateCheck' : function(currentPoint, targetPoint, range){
 		var currentLAT = parseFloat(currentPoint.split(',')[0]),
 			currentLON = parseFloat(currentPoint.split(',')[1]),
@@ -3617,12 +3770,13 @@ sys = {
 		$('#app-time').data('time', ntime);
 		$('#app-time').text(ntime.toString().substr(4,20));
 		
-		if(geoCount == 0){
+		if(geoCount <= 0){
 			geoToken = true;
 			geoCount = 120;
 			
 			var DATA = {
-					'usr' : STORAGE.getItem('usr')
+					'usr' : STORAGE.getItem('usr'),
+					'loc' : $('iframe#gmap').data('loc')
 				};
 			var post_data = "ACT=" + encodeURIComponent('msg_chk')
 						  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
@@ -3637,6 +3791,7 @@ sys = {
 					
 						if(inf['reply']==='200 OK'){
 							if(inf['new']){
+								navigator.vibrate(500);
 								if(typeof cordova == 'undefined' || cordova.plugins.backgroundMode.isActive()){
 									Notification.requestPermission(function(permission){
 										if(permission === "granted"){
