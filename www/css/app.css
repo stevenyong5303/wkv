@@ -5,7 +5,17 @@
     font-weight: normal;
     font-style: normal;
 }
-.popup-cntd .fab.fab-right-bottom {
+img.itml{
+	width:100%;
+}
+div.dialog.itm-dialog{
+	width: 96%;
+	top: 20%;
+	left: 29%;
+	max-height: 84%;
+	overflow: auto;
+}
+.popup-cntd .fa1b.fab-right-bottom {
 	-webkit-transition-duration: 0s;
 	transition-duration: 0s;
 }
@@ -56,7 +66,7 @@ div.list a div.item-media i.green{
 span.wazeBtn {
 	margin-right: auto !important;
 }
-.fab.evtd_shr{
+.fab.evtd_shr, .eqls{
 	display: none;
 }
 input.evtd_price, label.evtd_paid{
@@ -246,11 +256,11 @@ td.tb-pic.tb-not-paid{
 	display: inline-block;
 	width: 55px;
 }
-.autocomplete-dropdown.autocomplete-dropdown-in ul{
+.details-popover .autocomplete-dropdown.autocomplete-dropdown-in ul{
 	padding-left: 0px !important;
 	font-size: 12px;
 }
-.autocomplete-dropdown.autocomplete-dropdown-in ul li{
+.details-popover .autocomplete-dropdown.autocomplete-dropdown-in ul li{
 	height: 32px;
 }
 .popup-audiop audio{

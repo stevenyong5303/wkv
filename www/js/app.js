@@ -6,11 +6,11 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.148",
+			  version: "1.0.149",
 			  rtl: false,
 			  language: "en-US"
 		  });
-var geoToken = true, geoCount = 120, APP_VERSION = 10148;
+var geoToken = true, geoCount = 120, APP_VERSION = 10149;
 
 var app = {
     initialize: function() {
@@ -334,7 +334,7 @@ $(document).ready(function(){
 											x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Standby Time</div><div class="item-input-wrap">' + ((inf.time==null) ? '-' : inf.time) + '</div></div></div></li>';
 											x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Venue</div><div class="item-input-wrap">' + ((inf.venue==null) ? '-' : (inf.venue.indexOf('#PID#') != -1 ? sys.pidToLoc(inf.venue).loc_name : inf.venue)) + '</div></div></div></li>';
 											x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Description</div><div class="item-input-wrap">' + ((inf.description==null) ? '-' : inf.description) + '</div></div></div></li>';
-											x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Remarks</div><div class="item-input-wrap">' + ((inf.remarks==null) ? '-' : inf.remarks) + '</div></div></div></li>';
+											x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Remarks</div><div class="item-input-wrap">' + ((inf.remarks==null) ? '-' : sys.commasToNextLine(inf.remarks, 'h')) + '</div></div></div></li>';
 											if(parseInt($('body').data('user_level'))>=7){
 												x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">price</div><div class="item-input-wrap">' + ((inf.price==null) ? '-' : inf.price) + '</div></div></div></li>';
 											}
@@ -359,7 +359,7 @@ $(document).ready(function(){
 														return;
 													}
 													
-													for (var i = 0; i < locs.length; i++) {
+													for(var i = 0; i < locs.length; i++){
 														if (locs[i].loc_name.toLowerCase().indexOf(query.toLowerCase()) >= 0) results.push(locs[i].loc_name);
 													}
 													
@@ -1196,6 +1196,48 @@ $(document).ready(function(){
 		});
 	});
 	
+	$('#itml-btn').on('click', function(){
+		var searchbar = apps.searchbar.create({
+				el: '.popup-itml .searchbar',
+				searchContainer: '.popup-itml .list.itm_list',
+				searchIn: '.item-title',
+				on: {
+					search(sb, query, previousQuery){
+						console.log('');
+					}
+				}
+			});
+		
+		var inv = $('body').data('inv'), x ='';
+		
+		for(var i=0; i<inv.length; i++){
+			if(!sys.isEmpty(inv[i].photo_url)){
+				x += '<li><a href="#" class="item-link item-content" data-url="' + inv[i].photo_url + '"><div class="item-inner"><div class="item-title">' + ((sys.isEmpty(inv[i].brand) ? '' : ( inv[i].brand + ' ')) + inv[i].description) + '</div></div></a></li>';
+			}
+		}
+		
+		$('.itm_list ul').html(x);
+	});
+	
+	$('.popup-itml .itm_list ul').on('click', 'a.item-link', function(){
+		var x = '';
+		
+		x += '<strong>' + $(this).find('.item-title').text() + '</strong><br/>';
+		x += '<img class="itml" src="https://app.wkventertainment.com/files/photo/' + $(this).data('url') + '" alt="' + $(this).find('.item-title').text() + '">';
+		
+		apps.dialog.create({
+			title: '',
+			text: x,
+			cssClass: 'itm-dialog',
+			buttons: [
+				{
+					text: 'Close',
+				}
+			],
+			closeByBackdropClick: true
+		}).open();
+	});
+	
 	$('#user-status').on('click', 'a.item-link', function(){
 		var target = $(this).data('usr');
 		var who = $(this).data('who');
@@ -1308,7 +1350,71 @@ $(document).ready(function(){
 		}
 		
 		window.plugins.socialsharing.share(share);
-	})
+	});
+	
+	$('#clrdl-btn').on('click', function(){
+		apps.dialog.confirm(('Are you sure?'), 'Confirmation', function(){
+			var DATA = {
+				'usr' : STORAGE.getItem('usr')
+			};
+			var post_data = "ACT=" + encodeURIComponent('clr_dt')
+						  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
+			
+			$.ajax({
+				type: 'POST',
+				url: 'https://app.wkventertainment.com/',
+				data: post_data,
+				beforeSend: function(){
+					sys.loading(1);
+				},
+				success: function(str){
+					sys.loading(0);
+					if(str=='200 OK'){
+						var success_toast = apps.toast.create({
+											   icon: '<i class="material-icons">delete_forever</i>',
+											   text: 'All details unlocked.',
+											   position: 'center',
+											   closeTimeout: 2000
+										   });
+						success_toast.open();
+					}else{
+						var failed_toast = apps.toast.create({
+											   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
+											   text: 'Oooppss, error',
+											   position: 'center',
+											   closeTimeout: 2000
+										   });
+						failed_toast.open();
+					}
+				}
+			});
+		});
+	});
+	
+	$('#brcsn-btn').on('click', function(){
+		cordova.plugins.barcodeScanner.scan(
+			function(result){
+				alert("We got a barcode\n" + 
+					  "Result: " + result.text + "\n" + 
+					  "Format: " + result.format + "\n" + 
+					  "Cancelled: " + result.cancelled);
+			}, function (error) {
+				alert("Scanning failed: " + error);
+			}, {
+				preferFrontCamera : false, // iOS and Android
+				showFlipCameraButton : true, // iOS and Android
+				showTorchButton : true, // iOS and Android
+				torchOn: false, // Android, launch with the torch switched on (if available)
+				saveHistory: false, // Android, save scan history (default false)
+				prompt : "Place a barcode inside the scan area", // Android
+				resultDisplayDuration: 2000, // Android, display scanned text for X ms. 0 suppresses it entirely, default 1500
+				formats : "QR_CODE,DATA_MATRIX", // default: all but PDF_417 and RSS_EXPANDED
+				orientation : "portrait", // Android only (portrait|landscape), default unset so it rotates with the device
+				disableAnimations : true, // iOS
+				disableSuccessBeep: false // iOS and Android
+			}
+		);
+	});
 	
 	$('#crewl-btn').on('click', function(){
 		var x = '', crews = $('body').data('crew');
@@ -1739,6 +1845,17 @@ $(document).ready(function(){
 			}
 		}
 		$('.pic_list ul').html(x);
+		
+		var searchbar = apps.searchbar.create({
+				el: '.popup-picl .searchbar',
+				searchContainer: '.popup-picl .list.pic_list',
+				searchIn: '.item-title',
+				on: {
+					search(sb, query, previousQuery){
+						console.log('');
+					}
+				}
+			});
 	});
 	
 	$('.picl_add').on('click', function(){
@@ -2131,7 +2248,7 @@ $(document).ready(function(){
 		}
 	});
 	
-	$('#alrl-btn').on('click', function(){
+	$('#alrl-btn, #lrq_rl').on('click', function(){
 		var DATA = {
 				'usr' : STORAGE.getItem('usr')
 			}
@@ -2521,6 +2638,76 @@ $(document).ready(function(){
 		});
 	});
 	
+	$('#ivtk-btn').on('click', function(){
+		$('.ivt_list ul').find('li').remove();
+		
+		var searchbar = apps.searchbar.create({
+				el: '.popup-ivtk .searchbar',
+				searchContainer: '.popup-ivtk .list.ivt_list',
+				searchIn: '.eqls',
+				on: {
+					search(sb, query, previousQuery){
+						console.log('');
+					}
+				}
+			});
+			
+		var inv = $('body').data('inv'), equip = [], place = {};
+		
+		for(var i=0; i < inv.length; i++){
+			var point = inv[i].point;
+			equip[i] = ((sys.isEmpty(inv[i].brand) ? '' : ( inv[i].brand + ' ')) + inv[i].description);
+			
+			if(!sys.isEmpty(point)){
+				var pnt = JSON.parse(point.replace(/\\/g, ""));
+				
+				for(var j=0; j < pnt.length; j++){
+					var tmp_c = $('.eqls[name="' + pnt[j].p + '"]').text(),
+						tmp = {
+								'name': equip[i],
+								'qty' : pnt[j].q
+							  };
+					if(sys.isEmpty(place[pnt[j].p])){
+						place[pnt[j].p] = [];
+						
+						var x = '';
+						
+						x += '<li><a href="#" class="item-link item-content"><div class="item-inner"><div class="item-title">' + sys.capFirst(pnt[j].p);
+						x += '<span name="' + pnt[j].p + '" class="eqls"></span></div></div></a></li>';
+						
+						$('.ivt_list ul').append(x);
+					}else{
+						tmp_c += ', ';
+					}
+					place[pnt[j].p].push(tmp);
+					$('.eqls[name="' + pnt[j].p + '"]').text((tmp_c + equip[i]));
+					$('.eqls[name="' + pnt[j].p + '"]').data('equip', place[pnt[j].p]);
+				}
+			}
+		}
+
+		var autoSearch = apps.autocomplete.create({
+			openIn: 'dropdown',
+			inputEl: '.ivtk-search',
+			limit: 5,
+			source: function(query, render){
+				var results = [];
+				
+				if(query.length === 0){
+					render(results);
+					return;
+				}
+				
+				for(var i = 0; i < equip.length; i++){
+					if (equip[i].toLowerCase().indexOf(query.toLowerCase()) >= 0) results.push(equip[i]);
+				}
+				
+				render(results);
+			},
+			off: { blur }
+		});
+	});
+	
 	$('a.leave_app').on('click', function(){
 		apps.dialog.prompt('Reason :', 'Leave Request', function(reason){
 			var date = $('.popup-event .event_list').data('date');
@@ -2670,7 +2857,7 @@ $(document).ready(function(){
 							var inf = $('tr[name="' + $(this).attr('name') + '"]').data('info');
 							var trName = $(this).attr('name');
 							
-							if(parseInt($('body').data('user_level'))>=8){
+							if(parseInt($('body').data('user_level'))>=9 && inf1.lock==0){
 								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Person In Charge</div><div class="item-input-wrap">' + ((inf.pic==null) ? '-' : inf.pic) + '</div></div></div></li>';
 								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Luncheon/Dinner</div><div class="item-input-wrap"><input class="evtd_ld" type="text" autocomplete="off" value="' + ((inf.luncheon_dinner==null) ? '' : inf.luncheon_dinner) + '"></div></div></div></li>';
 								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Standby Time</div><div class="item-input-wrap"><input class="evtd_sbtm" type="text" autocomplete="off" value="' + ((inf.time==null) ? '' : inf.time) + '"></div></div></div></li>';
@@ -2693,7 +2880,7 @@ $(document).ready(function(){
 								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Standby Time</div><div class="item-input-wrap">' + ((inf.time==null) ? '-' : inf.time) + '</div></div></div></li>';
 								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Venue</div><div class="item-input-wrap">' + ((inf.venue==null) ? '-' : (inf.venue.indexOf('#PID#') != -1 ? sys.pidToLoc(inf.venue).loc_name : inf.venue)) + '</div></div></div></li>';
 								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Description</div><div class="item-input-wrap">' + ((inf.description==null) ? '-' : inf.description) + '</div></div></div></li>';
-								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Remarks</div><div class="item-input-wrap">' + ((inf.remarks==null) ? '-' : inf.remarks) + '</div></div></div></li>';
+								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Remarks</div><div class="item-input-wrap">' + ((inf.remarks==null) ? '-' : sys.commasToNextLine(inf.remarks, 'h')) + '</div></div></div></li>';
 								if(parseInt($('body').data('user_level'))>=7){
 									x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">price</div><div class="item-input-wrap">' + ((inf.price==null) ? '-' : inf.price) + '</div></div></div></li>';
 								}
@@ -2902,7 +3089,7 @@ $(document).ready(function(){
 				  + 'Setup : 3pm\n' 
 				  + 'Sound Check : 5pm\n\n'
 				  + (sys.isEmpty(inf.car_in) ? '' : ('Use : ' + inf.car_in + '\n'))
-				  + (sys.isEmpty(inf.remarks) ? '' : ('Remarks : ' + inf.remarks + '\n'));
+				  + (sys.isEmpty(inf.remarks) ? '' : ('Remarks : ' + sys.commasToNextLine(inf.remarks, 'n') + '\n'));
 		window.plugins.socialsharing.share(share);
 	});
 	
@@ -3371,6 +3558,7 @@ $(document).ready(function(){
 			$('body').data('crew', inf['status']);
 			$('body').data('loc', inf['location']);
 			$('body').data('car', inf['car']);
+			$('body').data('inv', inf['inventory']);
 			
 			if(inf['clocked']=='1'){
 				STORAGE.setItem('clock_in', (new Date(inf['time']).getTime()));
@@ -3400,7 +3588,6 @@ $(document).ready(function(){
 			
 			sys.getTime();
 			sys.startClock();
-			sys.loading(0);
 			
 			if(inf['status']){
 				var status = inf['status'], x = '';
@@ -3411,6 +3598,11 @@ $(document).ready(function(){
 					x += '<div class="item-inner"><div class="item-title">' + status[i].nc_name + (status[i].clocked_in == 1 ? ('<div class="item-footer">' + status[i].clocked_time + '</div>') : '') + '</div></div></a></li>';
 				}
 				$('#user-status').html(x);
+			}
+			
+			if(inf['level']>8 && inf['leave']){
+				var x = '<div class="card popup-open" style="background-color:#f8f8f8;" data-popup=".popup-alrl"><div class="card-content card-content-padding"><i class="icon material-icons md-only">notifications_active</i>&emsp;&emsp;Pending leave request.</div></div>';
+				$('#lrq_rl').html(x);
 			}
 			
 			if(!sys.isEmpty(inf['task'])){
@@ -3445,7 +3637,7 @@ $(document).ready(function(){
 				}
 			}
 			
-			for(var i=9; i>parseInt(inf['level']); i--){
+			for(var i=10; i>parseInt(inf['level']); i--){
 				if($('.level'+i).length > 0){
 					$('.level'+i).remove();
 				}
@@ -3456,6 +3648,8 @@ $(document).ready(function(){
 					$('.ltlevel'+i).remove();
 				}
 			}
+			
+			sys.loading(0);
 		}
 	});
 });
@@ -3603,6 +3797,11 @@ sys = {
 				}
 				
 				return x;
+			}else if(mode == 'h'){
+				var x = str.replace(/,,/g, '<br/>');
+				var y = x.replace(/`/g, '');
+				
+				return y;
 			}else if(mode == 'n'){
 				return str.replace(/,,/g, '\n');
 			}else if(mode == 'r'){
@@ -3793,6 +3992,13 @@ sys = {
 	},
 	'pad' : function(d){
 		return (d < 10) ? '0' + d.toString() : d.toString();
+	},
+	'capFirst' : function(str){
+		var x = str.toLowerCase().replace(/\b[a-z]/g, function(letter){
+			return letter.toUpperCase();
+		});
+		
+		return x;
 	},
 	'getTime' : function(){
 		var post_data = "ACT=" + encodeURIComponent('tme_chk');
