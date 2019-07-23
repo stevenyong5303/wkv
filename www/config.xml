@@ -4,7 +4,7 @@
 <widget xmlns     = "http://www.w3.org/ns/widgets"
         xmlns:gap = "http://phonegap.com/ns/1.0"
         id        = "com.wkv.manage"
-        version   = "1.0.149">
+        version   = "1.0.150">
 
     <name>WKV</name>
 
@@ -48,7 +48,6 @@
     <!-- Plugins -->
 	<plugin name="cordova-plugin-x-socialsharing" />
 	<plugin name="phonegap-plugin-local-notification" />
-	<plugin name="cordova-plugin-background-mode" />
 	<plugin name="phonegap-plugin-barcodescanner" />
 	
 	<plugin name="cordova-plugin-battery-status" />
@@ -122,7 +121,7 @@
     <!-- <gap:splash src="res/screen/windows-phone/screen-portrait.png"      gap:platform="winphone" /> -->
 
     <gap:config-file platform="ios" parent="CFBundleShortVersionString">
-    <string>149</string>
+    <string>150</string>
     </gap:config-file>
 
     <!--
@@ -149,7 +148,7 @@
     <platform name="android">
         <allow-intent href="market:*" />
 		<preference name="android-minSdkVersion" value="19" /> 
-		<preference name="android-targetSdkVersion" value="26" /> 
+		<preference name="android-targetSdkVersion" value="28" /> 
     </platform>
     <platform name="ios">
         <allow-intent href="itms:*" />

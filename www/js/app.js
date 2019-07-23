@@ -6,11 +6,11 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.149",
+			  version: "1.0.150",
 			  rtl: false,
 			  language: "en-US"
 		  });
-var geoToken = true, geoCount = 120, APP_VERSION = 10149;
+var geoToken = true, geoCount = 120, APP_VERSION = 10150;
 
 var app = {
     initialize: function() {
@@ -25,14 +25,7 @@ var app = {
         app.receivedEvent('deviceready');
 		
 		window.open = cordova.InAppBrowser.open;
-		// document.addEventListener("backbutton", sys.onBackKeyDown, false);
-		
-		cordova.plugins.backgroundMode.setDefaults({
-			title: 'WKV Entertainment',
-			text: ' '
-		});
-		cordova.plugins.backgroundMode.enable();
-		cordova.plugins.backgroundMode.overrideBackButton();
+		document.addEventListener("backbutton", sys.onBackKeyDown, false);
     },
 	
     receivedEvent: function(id){
@@ -1236,6 +1229,66 @@ $(document).ready(function(){
 			],
 			closeByBackdropClick: true
 		}).open();
+	});
+	
+	$('#itid-btn').on('click', function(){
+		if(typeof cordova != 'undefined'){
+			cordova.plugins.barcodeScanner.scan(
+				function(result){
+					if(!result.cancelled){
+						if(sys.isEmpty((result.text).match(/w:([A-Z])...([0-9]).../))){
+							var failed_toast = apps.toast.create({
+												   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
+												   text: 'Invalid Barcode',
+												   position: 'center',
+												   closeTimeout: 2000
+											   });
+								failed_toast.open();
+						}else{
+							var inv = $('body').data('inv'), uid = (result.text).substr(2, 4), found = false;
+						
+							for(var i=0; i<inv.length; i++){
+								if(inv[i].unique_id == uid){
+									found = true;
+									var success_toast = apps.toast.create({
+														   icon: '<i class="material-icons">check</i>',
+														   text: ((sys.isEmpty(inv[i].brand) ? '' : ( inv[i].brand + ' ')) + inv[i].description),
+														   position: 'center',
+														   closeTimeout: 6000
+													   });
+										success_toast.open();
+									break;
+								}
+							}
+							
+							if(!found){
+								var failed_toast = apps.toast.create({
+												   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
+												   text: 'No item found.',
+												   position: 'center',
+												   closeTimeout: 2000
+											   });
+								failed_toast.open();
+							}
+						}
+					}	  
+				}, function (error) {
+					alert("Scanning failed: " + error);
+				}, {
+					preferFrontCamera : false,
+					showFlipCameraButton : false,
+					showTorchButton : true,
+					torchOn: false,
+					saveHistory: false,
+					prompt : "Place a barcode inside the scan area",
+					resultDisplayDuration: 0,
+					formats : "DATA_MATRIX",
+					orientation : "portrait",
+					disableAnimations : true,
+					disableSuccessBeep: false
+				}
+			);
+		}
 	});
 	
 	$('#user-status').on('click', 'a.item-link', function(){
@@ -4047,7 +4100,8 @@ sys = {
 						if(inf['reply']==='200 OK'){
 							if(inf['new']){
 								navigator.vibrate(500);
-								if(typeof cordova == 'undefined' || cordova.plugins.backgroundMode.isActive()){
+								
+								if(typeof cordova != 'undefined' && typeof Notification != 'undefined'){
 									Notification.requestPermission(function(permission){
 										if(permission === "granted"){
 											var notification = new Notification(inf['title'], {

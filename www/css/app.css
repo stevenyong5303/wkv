@@ -10,8 +10,8 @@ img.itml{
 }
 div.dialog.itm-dialog{
 	width: 96%;
-	top: 20%;
-	left: 29%;
+	top: calc(10% + 70px);
+	left: calc(10% + 140px);
 	max-height: 84%;
 	overflow: auto;
 }
