@@ -6,11 +6,11 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.150",
+			  version: "1.0.151",
 			  rtl: false,
 			  language: "en-US"
 		  });
-var geoToken = true, geoCount = 120, APP_VERSION = 10150;
+var geoToken = true, geoCount = 120, APP_VERSION = 10151;
 
 var app = {
     initialize: function() {
@@ -1236,12 +1236,10 @@ $(document).ready(function(){
 			cordova.plugins.barcodeScanner.scan(
 				function(result){
 					if(!result.cancelled){
-						if(sys.isEmpty((result.text).match(/w:([A-Z])...([0-9]).../))){
+						if(sys.isEmpty((result.text).match(/w:[A-Z0-9]{4}\d{4}/))){
 							var failed_toast = apps.toast.create({
-												   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
 												   text: 'Invalid Barcode',
-												   position: 'center',
-												   closeTimeout: 2000
+												   closeTimeout: 1000
 											   });
 								failed_toast.open();
 						}else{
@@ -1251,9 +1249,7 @@ $(document).ready(function(){
 								if(inv[i].unique_id == uid){
 									found = true;
 									var success_toast = apps.toast.create({
-														   icon: '<i class="material-icons">check</i>',
 														   text: ((sys.isEmpty(inv[i].brand) ? '' : ( inv[i].brand + ' ')) + inv[i].description),
-														   position: 'center',
 														   closeTimeout: 6000
 													   });
 										success_toast.open();
@@ -1263,10 +1259,8 @@ $(document).ready(function(){
 							
 							if(!found){
 								var failed_toast = apps.toast.create({
-												   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
-												   text: 'No item found.',
-												   position: 'center',
-												   closeTimeout: 2000
+												   text: 'No item found',
+												   closeTimeout: 1000
 											   });
 								failed_toast.open();
 							}
@@ -1288,6 +1282,14 @@ $(document).ready(function(){
 					disableSuccessBeep: false
 				}
 			);
+		}else{
+			var failed_toast = apps.toast.create({
+								   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
+								   text: 'Barcode scanner not supported.',
+								   position: 'center',
+								   closeTimeout: 2000
+							   });
+			failed_toast.open();
 		}
 	});
 	

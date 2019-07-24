@@ -9,11 +9,12 @@ img.itml{
 	width:100%;
 }
 div.dialog.itm-dialog{
-	width: 96%;
+	width: calc(100% - 70px);
 	top: calc(10% + 70px);
-	left: calc(10% + 140px);
+	left: 175px;
 	max-height: 84%;
 	overflow: auto;
+	margin-top: -130px !important;
 }
 .popup-cntd .fa1b.fab-right-bottom {
 	-webkit-transition-duration: 0s;
