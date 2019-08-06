@@ -6,11 +6,11 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.151",
+			  version: "1.0.152",
 			  rtl: false,
 			  language: "en-US"
 		  });
-var geoToken = true, geoCount = 120, APP_VERSION = 10151;
+var geoToken = true, geoCount = 120, APP_VERSION = 10152;
 
 var app = {
     initialize: function() {
@@ -883,10 +883,40 @@ $(document).ready(function(){
 	});
 	
 	$('#rprt-btn').on('click', function(){
-		var today = ((((new Date).getYear()+1900)) + '-' + (sys.pad((new Date).getMonth()+1)) + '-' + (sys.pad((new Date).getDate())));
+		var today = ((((new Date).getYear()+1900)) + '-' + (sys.pad((new Date).getMonth()+1)) + '-' + (sys.pad((new Date).getDate()))), pic = [];
 		
 		$('#rprt_from').val(today);
 		$('#rprt_to').val(today);
+		
+		var crews = $('body').data('crew');
+		
+		for(var i = 0, j=0; i < crews.length; i++){
+			if(crews[i]['user_level'] == 0){
+				pic[j] = crews[i]['nc_name'];
+				j++;
+			}
+		}
+		
+		var autoSearch = apps.autocomplete.create({
+			openIn: 'dropdown',
+			inputEl: '#rprt_pic',
+			limit: 5,
+			source: function(query, render){
+				var results = [];
+				
+				if(query.length === 0){
+					render(results);
+					return;
+				}
+				
+				for(var i = 0; i < pic.length; i++){
+					if (pic[i].toLowerCase().indexOf(query.toLowerCase()) >= 0) results.push(pic[i]);
+				}
+				
+				render(results);
+			},
+			off: { blur }
+		});
 	});
 	
 	$('.rprt_gen').on('click', function(){
@@ -912,21 +942,71 @@ $(document).ready(function(){
 				var inf = JSON.parse(str);
 			
 				if(inf['reply']==='200 OK'){
-					var x = '', total = 0, patternD = new RegExp(/\((.*?)\)/), patternP = new RegExp(/[0-9.]*/);
+					if(!sys.isEmpty($('#rprt_pic').val())){
+						var match = false, x = '', total = 0, patternD = new RegExp(/\((.*?)\)/), patternP = new RegExp(/[0-9.]*/), pic = ($('#rprt_pic').val()).toLowerCase().replace(/\s/g, '');
 					
-					for(var i=0; i<inf['sales'].length; i++){
-						if(!sys.isEmpty(inf['sales'][i].price)){
-							if(patternD.test(inf['sales'][i].price)){
-								var day = patternD.exec(inf['sales'][i].price)[1];
-								var price = patternP.exec(inf['sales'][i].price)[0];
-								total += (parseFloat(price) / parseFloat(day));
-							}else{
-								total += parseFloat(inf['sales'][i].price);
+						for(var i=0, j=0; i<inf['sales'].length; i++){
+							if((inf['sales'][i].pic).toLowerCase().replace(/\s/g, '') == pic){
+								if(sys.isEmpty(inf['sales'][i].price)){
+									inf['sales'][i].price = 0;
+								}
+								
+								var tprice = 0;
+								
+								if(patternD.test(inf['sales'][i].price)){
+									var day = patternD.exec(inf['sales'][i].price)[1];
+									var price = patternP.exec(inf['sales'][i].price)[0];
+									
+									tprice = (parseFloat(price) / parseFloat(day));
+									total += tprice;
+								}else{
+									tprice = parseFloat(inf['sales'][i].price);
+									total += tprice;
+								}
+								
+								x += '<li class="item-content"><div class="item-inner"><div class="row small-font"><div class="tt col-10 ' + (inf['sales'][i].paid=='1' ? 'tb-paid' : 'tb-not-paid') + '" data-pid="' + inf['sales'][i].primary_id + '" data-rmk="' + inf['sales'][i].remarks + '">' + (j+1) + '</div><div class="col-20">' + (inf['sales'][i].date).substr(0,10) + '</div><div class="col-45">' + sys.pidToLoc(inf['sales'][i].venue).loc_name + '</div><div class="col-15">RM ' + tprice + '</div></div></div></li>';
+								j++;
+								match = true;
 							}
 						}
+						x += '<li class="item-content"><div class="item-inner">Total sales: RM ' + total.toFixed(2) + '</div></li>';
+						
+						if(match){
+							$('.rprt-result ul').html(x);
+							
+							$('.rprt-result ul .tt').each(function(){
+								apps.tooltip.create({
+									targetEl: $(this),
+									text: sys.commasToNextLine($(this).data('rmk'), 'h')
+								});
+							});
+						}else{
+							$('.rprt-result ul').html('<li class="item-content"><div class="item-inner">No report found.</div></li>');
+							var failed_toast = apps.toast.create({
+												   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
+												   text: 'No report found.',
+												   position: 'center',
+												   closeTimeout: 2000
+											   });
+							failed_toast.open();
+						}
+					}else{
+						var x = '', total = 0, patternD = new RegExp(/\((.*?)\)/), patternP = new RegExp(/[0-9.]*/);
+					
+						for(var i=0; i<inf['sales'].length; i++){
+							if(!sys.isEmpty(inf['sales'][i].price)){
+								if(patternD.test(inf['sales'][i].price)){
+									var day = patternD.exec(inf['sales'][i].price)[1];
+									var price = patternP.exec(inf['sales'][i].price)[0];
+									total += (parseFloat(price) / parseFloat(day));
+								}else{
+									total += parseFloat(inf['sales'][i].price);
+								}
+							}
+						}
+						x += '<li class="item-content"><div class="item-inner">Total sales: RM ' + total.toFixed(2) + '</div></li>';
+						$('.rprt-result ul').html(x);
 					}
-					x += '<li class="item-content"><div class="item-inner">Total sales: RM ' + total.toFixed(2) + '</div></li>';
-					$('.rprt-result ul').html(x);
 					sys.loading(0);
 				}else if(inf['reply']==='204 No Response'){
 					$('.rprt-result ul').html('<li class="item-content"><div class="item-inner">No report found.</div></li>');
@@ -1239,6 +1319,7 @@ $(document).ready(function(){
 						if(sys.isEmpty((result.text).match(/w:[A-Z0-9]{4}\d{4}/))){
 							var failed_toast = apps.toast.create({
 												   text: 'Invalid Barcode',
+												   position: 'center',
 												   closeTimeout: 1000
 											   });
 								failed_toast.open();
@@ -1250,6 +1331,7 @@ $(document).ready(function(){
 									found = true;
 									var success_toast = apps.toast.create({
 														   text: ((sys.isEmpty(inv[i].brand) ? '' : ( inv[i].brand + ' ')) + inv[i].description),
+														   position: 'center',
 														   closeTimeout: 6000
 													   });
 										success_toast.open();
@@ -1260,6 +1342,7 @@ $(document).ready(function(){
 							if(!found){
 								var failed_toast = apps.toast.create({
 												   text: 'No item found',
+												   position: 'center',
 												   closeTimeout: 1000
 											   });
 								failed_toast.open();
@@ -2428,24 +2511,24 @@ $(document).ready(function(){
 		$('#audiop_plyr span').html('<strong>' + $(this).text() + '</strong>' + (($(this).data('url').indexOf('bensound') != -1) ? '&emsp;from Bensound.com' : ''));
 	});
 	
-	$('input#ltcl_nme').on('keyup', function(){
-		var tmp = ($(this).val()).toLowerCase();
+	$('select#ltcl_nme').on('change', function(){
+		var tmp = $(this).val();
 		
-		if(tmp.includes('beam') || tmp.includes('moving') || tmp.includes('wash') || tmp.includes('zoom')){
+		if(tmp=='Wash' || tmp=='LT Beam' || tmp=='EF Beam' || tmp=='CN Beam'){
 			$('#ltcl_ads').val('16');
-		}else if(tmp.includes('par') || tmp.includes('pcc') || tmp.includes('pcw') || tmp.includes('small')){
+		}else if(tmp=='PAR' || tmp=='S City'){
 			$('#ltcl_ads').val('8');
-		}else if(tmp.includes('city') || tmp.includes('profile')){
+		}else if(tmp=='City' || tmp=='Profile'){
 			$('#ltcl_ads').val('3');
-		}else if(tmp.includes('200')){
+		}else if(tmp=='Gobo'){
 			$('#ltcl_ads').val('20');
-		}else if(tmp.includes('blinder')){
+		}else if(tmp=='Blinder'){
 			$('#ltcl_ads').val('12');
 		}
 	});
 	
 	$('button#ltcl_add').on('click', function(){
-		var name = $('#ltcl_nme').val(),
+		var name = $('#ltcl_nme option:selected').val(),
 			addr = parseInt($('#ltcl_ads').val()),
 			qnty = parseInt($('#ltcl_qty').val());
 		
@@ -2455,12 +2538,18 @@ $(document).ready(function(){
 			for(var x=0; x<qnty; x++){
 				var dmx = ('000' + tmp_add).slice(-3);
 				
-				tmp += '<span class="badge">' + name + '<br/>[ ' + dmx + ' ]</span> ';
+				tmp = '<span class="badge fix_index' + (x) + '">' + name + '<br/>[ ' + dmx + ' ]</span> ';
 				tmp_add += addr;
 				$('#ltcl_spc').data('dmx', tmp_add);
+				
+				$('#ltcl_spc').append(tmp);
+				
+				apps.tooltip.destroy(('.fix_index'+x));
+				apps.tooltip.create({
+					targetEl: ('.fix_index'+x),
+					text: (x+1)
+				});
 			}
-			
-			$('#ltcl_spc').append(tmp);
 			
 			$('#ltcl_nme').val('');
 			$('#ltcl_ads').val('');

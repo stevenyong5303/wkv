@@ -5,7 +5,15 @@
     font-weight: normal;
     font-style: normal;
 }
-img.itml{
+.noselect {
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+img.itml, div.row{
 	width:100%;
 }
 div.dialog.itm-dialog{
@@ -131,7 +139,7 @@ input.evtd_price, label.evtd_paid{
 	overflow: hidden;
 	z-index: 1;
 }
-.popup-packl .accordion-item-content .item-title{
+.popup-packl .accordion-item-content .item-title, .small-font{
 	font-size: 12px;
 }
 .panel.panel-left, .panel.panel-right{
@@ -180,10 +188,10 @@ div.views {
 .toolbar-inner .left {
 	padding-left: 13px;
 }
-td.tb-pic.tb-paid{
+td.tb-pic.tb-paid, div.col-10.tb-paid{
 	border-right: 5px solid green;
 }
-td.tb-pic.tb-not-paid{
+td.tb-pic.tb-not-paid, div.col-10.tb-not-paid{
 	border-right: 5px solid red;
 }
 .rotate-180 {

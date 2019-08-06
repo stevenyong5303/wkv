@@ -793,15 +793,6 @@
 								</li>
 								<li>
 									<label class="item-checkbox item-content">
-										<input type="checkbox" name="cnv-checkbox" data-fn="Ng Pui Yee" data-ic="000628-10-1684">
-										<i class="icon icon-checkbox"></i>
-										<div class="item-inner">
-											<div class="item-title">Xiao Yu</div>
-										</div>
-									</label>
-								</li>
-								<li>
-									<label class="item-checkbox item-content">
 										<input type="checkbox" name="cnv-checkbox" data-fn="Ng Yoke Kei" data-ic="000617-10-0678">
 										<i class="icon icon-checkbox"></i>
 										<div class="item-inner">
@@ -811,7 +802,7 @@
 								</li>
 								<li>
 									<label class="item-checkbox item-content">
-										<input type="checkbox" name="cnv-checkbox" data-fn="Lee Yi Ling" data-ic="000625-10-0624">
+										<input type="checkbox" name="cnv-checkbox" data-fn="Lee Yi Ling" data-ic="000625-10-0264">
 										<i class="icon icon-checkbox"></i>
 										<div class="item-inner">
 											<div class="item-title">Yi Ling</div>
@@ -824,6 +815,15 @@
 										<i class="icon icon-checkbox"></i>
 										<div class="item-inner">
 											<div class="item-title">Han Yao</div>
+										</div>
+									</label>
+								</li>
+								<li>
+									<label class="item-checkbox item-content">
+										<input type="checkbox" name="cnv-checkbox" data-fn="Ng Pui Yee" data-ic="000628-10-1684">
+										<i class="icon icon-checkbox"></i>
+										<div class="item-inner">
+											<div class="item-title">Xiao Yu</div>
 										</div>
 									</label>
 								</li>
@@ -1320,14 +1320,22 @@
 								</div>
 							</div>
 						</li>
+						<li class="item-content item-input">
+							<div class="item-inner">
+								<div class="item-title item-label">Person In Charge</div>
+								<div class="item-input-wrap">
+									<input id="rprt_pic" type="text" value="" autocomplete="off">
+								</div>
+							</div>
+						</li>
 					</ul>
 				</div>
-				<div class="block">
+				<div class="block" style="z-index:0;">
 					<button class="button button-raised button-fill rprt_gen" style="margin: 10px auto -20px;width: calc(100% - 30px);">
 						<i class="icon material-icons md-only">timeline</i>
 					</button>
 				</div>
-				<div class="rprt-result list">
+				<div class="rprt-result list" style="z-index:0;">
 					<ul></ul>
 				</div>
 			</div>
@@ -2007,7 +2015,18 @@
 											<i class="icon material-icons md-only">create</i> Fixture Legend
 										</div>
 										<div class="item-input-wrap">
-											<input id="ltcl_nme" type="text" autocomplete="off" placeholder="Name">
+											<select id="ltcl_nme">
+												<option value="PAR" selected>Par Can</option>
+												<option value="Gobo">LED 200 (Gobo Beam)</option>
+												<option value="Wash">LED Zoom (Wash)</option>
+												<option value="LT Beam">LT Beam</option>
+												<option value="EF Beam">EF Beam</option>
+												<option value="CN Beam">CN Beam</option>
+												<option value="Profile">Profile Light</option>
+												<option value="City">City Light</option>
+												<option value="S City">Small City Light</option>
+												<option value="Blinder">Blinder</option>
+											</select>
 										</div>
 									</div>
 								</div>
@@ -2019,7 +2038,7 @@
 											<i class="icon material-icons md-only">dialpad</i> Fixture DMX Channel
 										</div>
 										<div class="item-input-wrap">
-											<input id="ltcl_ads" type="number" autocomplete="off" placeholder="001 - 016">
+											<input id="ltcl_ads" type="number" autocomplete="off" placeholder="0" value="8" disabled>
 										</div>
 									</div>
 								</div>
@@ -2050,7 +2069,7 @@
 							</li>
 						</ul>
 					</div>
-					<div id="ltcl_spc" class="block" data-dmx="1"></div>
+					<div id="ltcl_spc" class="block noselect" data-dmx="1"></div>
 				</div>
 			</div>
 			<div class="popup popup-packl level3">
@@ -3681,7 +3700,7 @@
 				<div class="block">
 					<div align="center">
 						 <img src="icon.png" alt="WKV Logo" height="128" width="128">
-						 <span style="color:#999;position:absolute;top:40px;font-size:12px;">WKV<br/>Version 1.0.151</span>
+						 <span style="color:#999;position:absolute;top:40px;font-size:12px;">WKV<br/>Version 1.0.152</span>
 					</div>
 					<p>WKV Application serves as a platform for of WKV’s member to obtain basic information and calculation method can easily obtain by accessing to the application.</p>
 					<p>For general usage, clock in and clock out is built in the application for employees of WKV to check in whenever they report to event venue.</p>
