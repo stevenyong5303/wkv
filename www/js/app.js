@@ -6,11 +6,11 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.152",
+			  version: "1.0.153",
 			  rtl: false,
 			  language: "en-US"
 		  });
-var geoToken = true, geoCount = 120, APP_VERSION = 10152;
+var geoToken = true, geoCount = 120, APP_VERSION = 10153;
 
 var app = {
     initialize: function() {
@@ -1458,6 +1458,10 @@ $(document).ready(function(){
 	$('.popup-cntd').on('scroll', function(){
 		var offset = 15 - $('.popup-cntd')[0].scrollTop;
 		$(this).find('.fab').css('bottom', (offset + 'px'));
+	});
+	
+	$('.popup-amtl').on('click', '.link.popup-open', function(){
+		apps.popup.close('.popup-amtl', true);
 	});
 	
 	$('#cntd-btn').on('click', function(){
@@ -4222,7 +4226,6 @@ sys = {
 						}
 					}
 				});
-				// $('#lgn').find('audio')[0].play();
 			}
 		}else{
 			geoCount--;

@@ -4,7 +4,7 @@
 <widget xmlns     = "http://www.w3.org/ns/widgets"
         xmlns:gap = "http://phonegap.com/ns/1.0"
         id        = "com.wkv.manage"
-        version   = "1.0.152">
+        version   = "1.0.153">
 
     <name>WKV</name>
 
@@ -43,7 +43,7 @@
 	<!--
         Define a specific version of PhoneGap to build into your app.
     -->
-	<preference name="phonegap-version"       value="cli-8.1.1" />
+	<preference name="phonegap-version"       value="cli-9.0.0" />
 
     <!-- Plugins -->
 	<plugin name="cordova-plugin-x-socialsharing" />
@@ -121,7 +121,7 @@
     <!-- <gap:splash src="res/screen/windows-phone/screen-portrait.png"      gap:platform="winphone" /> -->
 
     <gap:config-file platform="ios" parent="CFBundleShortVersionString">
-    <string>152</string>
+    <string>153</string>
     </gap:config-file>
 
     <!--
