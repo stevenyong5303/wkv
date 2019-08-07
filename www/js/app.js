@@ -6,11 +6,11 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.153",
+			  version: "1.0.154",
 			  rtl: false,
 			  language: "en-US"
 		  });
-var geoToken = true, geoCount = 120, APP_VERSION = 10153;
+var geoToken = true, geoCount = 120, APP_VERSION = 10154;
 
 var app = {
     initialize: function() {
@@ -1492,6 +1492,114 @@ $(document).ready(function(){
 		}
 		
 		window.plugins.socialsharing.share(share);
+	});
+	
+	$('#abctg-btn').on('click', function(){
+		if(typeof cordova != 'undefined'){
+			cordova.plugins.barcodeScanner.scan(
+				function(result){
+					if(!result.cancelled){
+						if(sys.isEmpty((result.text).match(/w:[A-Z0-9]{4}\d{4}/))){
+							var failed_toast = apps.toast.create({
+												   text: 'Invalid Barcode',
+												   position: 'center',
+												   closeTimeout: 1000
+											   });
+								failed_toast.open();
+						}else{
+							var inv = $('body').data('inv'), uid = (result.text).substr(2, 4), found = false, target = parseInt((result.text).substr(-4));
+						
+							for(var i=0; i<inv.length; i++){
+								if(inv[i].unique_id == uid){
+									var points = JSON.parse(inv[i].point);
+									
+									if(['XLRC', 'CCPE', '3PPC'].indexOf(uid) != -1){
+										apps.dialog.prompt('What is the length of cable in metre?', function(lngt){
+											points[target] = {'p':'Basement', 'l':lngt, 'c':'2'};
+										});
+									}else{
+										points[target] = {'p':'Basement', 'c':'2'};
+									}
+									
+									var DATA = {
+											'usr' : STORAGE.getItem('usr'),
+											'pid' : inv[i].primary_id,
+											'point' : JSON.stringify(points)
+										};
+									var post_data = "ACT=" + encodeURIComponent('rst_btg')
+												  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
+									
+									$.ajax({
+										type: 'POST',
+										url: 'https://app.wkventertainment.com/',
+										data: post_data,
+										beforeSend: function(){
+											sys.loading(1);
+										},
+										success: function(str){
+											sys.loading(0);
+											if(str=='200 OK'){
+												inv[i].point = JSON.stringify(points);
+												$('body').data('inv', inv);
+												
+												var success_toast = apps.toast.create({
+																	   icon: '<i class="material-icons">cloud_done</i>',
+																	   text: 'Tag Details Successfully Saved.',
+																	   position: 'center',
+																	   closeTimeout: 2000
+																   });
+												success_toast.open();
+											}else{
+												var failed_toast = apps.toast.create({
+																	   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
+																	   text: 'Oooppss, error',
+																	   position: 'center',
+																	   closeTimeout: 2000
+																   });
+												failed_toast.open();
+											}
+										}
+									});
+									found = true;
+									break;
+								}
+							}
+							
+							if(!found){
+								var failed_toast = apps.toast.create({
+												   text: 'No valid item found',
+												   position: 'center',
+												   closeTimeout: 1000
+											   });
+								failed_toast.open();
+							}
+						}
+					}	  
+				}, function (error) {
+					alert("Scanning failed: " + error);
+				}, {
+					preferFrontCamera : false,
+					showFlipCameraButton : false,
+					showTorchButton : true,
+					torchOn: false,
+					saveHistory: false,
+					prompt : "Place a barcode inside the scan area",
+					resultDisplayDuration: 0,
+					formats : "DATA_MATRIX",
+					orientation : "portrait",
+					disableAnimations : true,
+					disableSuccessBeep: false
+				}
+			);
+		}else{
+			var failed_toast = apps.toast.create({
+								   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
+								   text: 'Barcode scanner not supported.',
+								   position: 'center',
+								   closeTimeout: 2000
+							   });
+			failed_toast.open();
+		}
 	});
 	
 	$('#clrdl-btn').on('click', function(){
