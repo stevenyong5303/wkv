@@ -6,11 +6,11 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.155",
+			  version: "1.0.156",
 			  rtl: false,
 			  language: "en-US"
 		  });
-var geoToken = true, geoCount = 120, APP_VERSION = 10155;
+var geoToken = true, geoCount = 120, APP_VERSION = 10156;
 
 var app = {
     initialize: function() {
@@ -1324,13 +1324,21 @@ $(document).ready(function(){
 											   });
 								failed_toast.open();
 						}else{
-							var inv = $('body').data('inv'), uid = (result.text).substr(2, 4), found = false;
+							var inv = $('body').data('inv'), uid = (result.text).substr(2, 4), found = false, target = parseInt((result.text).substr(-4));
 						
 							for(var i=0; i<inv.length; i++){
 								if(inv[i].unique_id == uid){
 									found = true;
+									var point = JSON.parse(inv[i].point);
+									var x = ((sys.isEmpty(inv[i].brand) ? '' : ( inv[i].brand + ' ')) + inv[i].description);
+									
+									if(!sys.isEmpty(point[target])){
+										x += ('<br/><br/>Condition :&nbsp;&nbsp;&nbsp;' + ((point[target].c == '2') ? 'Check Pending' : ((point[target].c == '1') ? 'OK' : 'Spoilt')));
+										x += ('<br/>Locate :&nbsp;&nbsp;&nbsp;' + (point[target].p));
+										x += ((typeof point[target].l == 'undefined') ? '' : ('<br/>Length :&nbsp;&nbsp;&nbsp;' + (point[target].l) + 'm'));
+									}
 									var success_toast = apps.toast.create({
-														   text: ((sys.isEmpty(inv[i].brand) ? '' : ( inv[i].brand + ' ')) + inv[i].description),
+														   text: x,
 														   position: 'center',
 														   closeTimeout: 6000
 													   });
@@ -1511,6 +1519,8 @@ $(document).ready(function(){
 						
 							for(var i=0; i<inv.length; i++){
 								if(inv[i].unique_id == uid){
+									if(sys.isEmpty(inv[i].point)){ inv[i].point = '[]'; }
+									
 									var points = JSON.parse(inv[i].point);
 									
 									if(['XLRC', 'CCPE', '3PPC'].indexOf(uid) != -1){

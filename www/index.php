@@ -1,3 +1,1318 @@
+<?php
+	header('Access-Control-Allow-Origin: *');
+	header('Access-Control-Allow-Methods: GET, POST, PATCH, PUT, DELETE, OPTIONS');
+
+	include 'functions.php';
+	
+	if($_POST){
+		if(isset($_POST['ACT'])){
+			switch($_POST['ACT']){
+				case 'event_add_through_whatsapp_message_system':
+					$DATA = unserialize(stripslashes($_POST['DATA']));
+					$desc = ($DATA['desc'] == 'NULL' ? 'NULL' : ('"' . $DATA['desc'] . '"'));
+					$ld = ($DATA['ld'] == 'NULL' ? '"Dinner"' : (($DATA['ld'] == 'L' || $DATA['ld'] == 'Lunch') ? '"Lunch"' : '"Dinner"'));
+					
+					$sql = ' INSERT INTO 14RuVPJV6GmH_app_evt ' .
+						   ' (date, pic, description, luncheon_dinner) ' .
+						   ' VALUES ( "' . $DATA['year'] . '-' . $DATA['month'] . '-' . $DATA['day'] . ' 00:00:00", "' . $DATA['PIC'] . '", ' . $desc . ', ' . $ld . '); ';
+						   
+					if($result = $mysqli->query($sql)){
+						echo '200 OK';
+					}else{
+						echo '500 Internal Server Error';
+					}
+					break;
+					
+				case 'msg_chk':
+					$DATA = unserialize(stripslashes($_POST['DATA']));
+					$report['new'] = false;
+					
+					$sql = ' SELECT primary_id, title, text FROM 14RuVPJV6GmH_app_not ' .
+						   ' WHERE notify_flag = TRUE ' .
+						   ' AND user_id = "' . strtolower($DATA['usr']) . '" ' .
+						   ' AND date < "' . date("Y-m-d H:i:s") . '" ' .
+						   ' ORDER BY `date` ASC; ';
+						   
+					if($result = $mysqli->query($sql)){
+						if($row = $result->fetch_array(MYSQLI_ASSOC)){
+							$report['title'] = $row['title'];
+							$report['text'] = $row['text'];
+							$result->close();
+							
+							$sql = ' UPDATE 14RuVPJV6GmH_app_not ' .
+								   ' SET notify_flag = FALSE ' .
+								   ' WHERE primary_id = ' . $row['primary_id'] . '; ';
+							   
+							if($result = $mysqli->query($sql)){
+								$report['new'] = true;
+							}else{
+								echo '406 Not Acceptable';
+							}
+						}else{
+							$report['new'] = false;
+						}
+					}else{
+						echo '400 Bad Request';
+					}
+					
+					$sql = ' INSERT INTO 14RuVPJV6GmH_app_act ' .
+						   ' (act, user_id, data) ' .
+						   ' VALUES ( "' . $_POST['ACT'] . '", ' . addQuotes(strtolower($DATA['usr'])) . ', ' . addQuotes($_POST['DATA']) .' ); ';
+						   
+					if($result = $mysqli->query($sql)){
+						$report['reply'] = '200 OK';
+					}else{
+						echo '500 Internal Server Error';
+					}
+					
+					echo json_encode($report);
+					break;
+				
+				case 'tme_chk':
+					echo (date("Y/m/d") . ' ' . date("H:i:s"));
+					break;
+					
+				case 'evt_chk':
+					$DATA = unserialize(stripslashes($_POST['DATA']));
+					
+					if(($DATA['month']+1)<10){
+						$DATA['month'] = '0'.($DATA['month']+1);
+					}else{
+						$DATA['month'] = $DATA['month']+1;
+					}
+					$yearMonth = $DATA['year'].'-'.$DATA['month'];
+					
+					$sql = ' SELECT * FROM 14RuVPJV6GmH_app_evt ' .
+						   ' WHERE cancelled_flag = FALSE ' .
+						   ' AND event = TRUE ' .
+						   ' AND date BETWEEN "' . $yearMonth . '-01 00:00:00" AND "' . $yearMonth . '-31 23:59:59"; ';
+						   
+					if($result = $mysqli->query($sql)){
+						if($row = $result->fetch_array(MYSQLI_ASSOC)){
+							$report[substr($row['date'], 8, 2)] = 1;
+							
+							while($row = $result->fetch_array(MYSQLI_ASSOC)){
+								if($report[substr($row['date'], 8, 2)]>0){
+									$report[substr($row['date'], 8, 2)]++;
+								}else{
+									$report[substr($row['date'], 8, 2)] = 1;
+								}
+							}
+							$result->close();
+							
+							$sql = ' INSERT INTO 14RuVPJV6GmH_app_act ' .
+								   ' (act, user_id, data) ' .
+								   ' VALUES ( "' . $_POST['ACT'] . '", ' . addQuotes(strtolower($DATA['usr'])) . ', ' . addQuotes($_POST['DATA']) .' ); ';
+								   
+							if($result = $mysqli->query($sql)){
+								echo json_encode($report);
+							}else{
+								echo '500 Internal Server Error';
+							}
+						}else{
+							echo '204 No Response';
+						}
+					}else{
+						echo '400 Bad Request';
+					}
+					break;
+					
+				case 'evt_lck':
+					$DATA = unserialize(stripslashes($_POST['DATA']));
+					$pid = addQuotes($DATA['pid']);
+					
+					if($DATA['level']<9){
+						$report['reply'] = '200 OK';
+						$report['lock'] = 0;
+						echo json_encode($report);
+					}else{
+						$sql = ' SELECT event, locked FROM 14RuVPJV6GmH_app_evt ' .
+							   ' WHERE primary_id = ' . $pid . '; ';
+							   
+						if($result = $mysqli->query($sql)){
+							if($row = $result->fetch_array(MYSQLI_ASSOC)){
+								$result->close();
+								
+								if(($row['locked'] == '0') || ($row['locked'] == strtolower($DATA['usr']))){
+									$sql = ' UPDATE 14RuVPJV6GmH_app_evt ' .
+										   ' SET locked = ' . addQuotes(strtolower($DATA['usr'])) . ' ' .
+										   ' WHERE primary_id = '.$pid.'; ';
+									
+									if($result = $mysqli->query($sql)){
+										$sql = ' INSERT INTO 14RuVPJV6GmH_app_act ' .
+											   ' (act, user_id, data) ' .
+											   ' VALUES ( "' . $_POST['ACT'] . '", ' . addQuotes(strtolower($DATA['usr'])) . ', ' . addQuotes($_POST['DATA']) .' ); ';
+											   
+										if($result = $mysqli->query($sql)){
+											$report['reply'] = '200 OK';
+											$report['lock'] = 0;
+											echo json_encode($report);
+										}else{
+											echo '500 Internal Server Error';
+										}
+									}else{
+										echo '500 Internal Server Error';
+									}
+								}else{
+									$report['reply'] = '200 OK';
+									$report['lock'] = $row['locked'];
+									echo json_encode($report);
+								}
+							}else{
+								echo '204 No Response';
+							}
+						}else{
+							echo '400 Bad Request';
+						}
+					}
+					break;
+					
+				case 'usr_chk':
+					$DATA = unserialize(stripslashes($_POST['DATA']));
+					
+					$sql = ' SELECT user_id, nc_name, clocked_in, clocked_time, short_name, user_level, nc_contact, nc_pos1 FROM 14RuVPJV6GmH_app_usr ' .
+						   ' WHERE user_level >= 0 ' . 
+						   ' ORDER BY `user_level` DESC, `nc_name` ASC; ';
+						   
+					if($result = $mysqli->query($sql)){
+						if($row = $result->fetch_array(MYSQLI_ASSOC)){
+							$i = 0;
+							$status[$i] = $row;
+							$i++;
+							
+							while($row = $result->fetch_array(MYSQLI_ASSOC)){
+								$status[$i] = $row;
+								$i++;
+							}
+							
+							$result->close();
+							$report['status'] = $status;
+							
+							$sql = ' INSERT INTO 14RuVPJV6GmH_app_act ' .
+								   ' (act, user_id, data) ' .
+								   ' VALUES ( "' . $_POST['ACT'] . '", ' . addQuotes(strtolower($DATA['usr'])) . ', ' . addQuotes($_POST['DATA']) .' ); ';
+								   
+							if($result = $mysqli->query($sql)){
+								$report['reply'] = '200 OK';
+							}else{
+								$report['reply'] = '500 Internal Server Error';
+							}
+							echo json_encode($report);
+						}else{
+							echo '204 No Response';
+						}
+					}else{
+						echo '400 Bad Request';
+					}
+					break;
+					
+				case 'clk_chk':
+					$DATA = unserialize(stripslashes($_POST['DATA']));
+					
+					$sql = ' SELECT clock_action, clock_in_out, clock_location, status FROM 14RuVPJV6GmH_app_clk ' .
+						   ' WHERE user_id = ' . addQuotes(strtolower($DATA['target'])) . ' ' .
+						   ' AND ( clock_action = "IN" OR clock_action = "OUT" ) ' .
+						   ' AND clock_in_out >= "' . date('Y-m-d', strtotime("-6 week")) . ' 00:00:00" ' .
+						   ' ORDER BY `clock_in_out` DESC; ';
+						   
+					if($result = $mysqli->query($sql)){
+						if($row = $result->fetch_array(MYSQLI_ASSOC)){
+							$i = 0;
+							$work[$i] = $row;
+							$i++;
+							
+							while($row = $result->fetch_array(MYSQLI_ASSOC)){
+								$work[$i] = $row;
+								$i++;
+							}
+							
+							$result->close();
+							
+							$sql = ' INSERT INTO 14RuVPJV6GmH_app_act ' .
+								   ' (act, user_id, data) ' .
+								   ' VALUES ( "' . $_POST['ACT'] . '", ' . addQuotes(strtolower($DATA['usr'])) . ', ' . addQuotes($_POST['DATA']) .' ); ';
+								   
+							if($result = $mysqli->query($sql)){
+								$report['work'] = $work;
+								$report['reply'] = '200 OK';
+								echo json_encode($report);
+							}else{
+								echo '500 Internal Server Error';
+							}
+						}else{
+							echo '204 No Response';
+						}
+					}else{
+						echo '400 Bad Request';
+					}
+					break;
+					
+				case 'clk_in':
+					$DATA = unserialize(stripslashes($_POST['DATA']));
+					$user_id = addQuotes(strtolower($DATA['usr']));
+					
+					$sql = ' INSERT INTO 14RuVPJV6GmH_app_clk ' .
+						   ' (user_id, clock_action, clock_location, status) ' .
+						   ' VALUES ( ' . $user_id . ', "IN", "' . $DATA['loc'] . '", "' . $DATA['lname'] . '"); ';
+						   
+					if($result = $mysqli->query($sql)){
+						$sql = ' UPDATE 14RuVPJV6GmH_app_usr ' .
+							   ' SET clocked_in = TRUE, ' .
+							   ' clocked_time = NOW() ' .
+							   ' WHERE user_id = '.$user_id.'; ';
+							   
+						if($result = $mysqli->query($sql)){
+							echo '200 OK';
+						}else{
+							echo '406 Not Acceptable';
+						}
+					}else{
+						echo '406 Not Acceptable';
+					}
+					break;
+					
+				case 'clk_out':
+					$DATA = unserialize(stripslashes($_POST['DATA']));
+					$user_id = addQuotes(strtolower($DATA['usr']));
+					
+					$sql = ' INSERT INTO 14RuVPJV6GmH_app_clk ' .
+						   ' (user_id, clock_action, clock_location) ' .
+						   ' VALUES ( ' . $user_id . ', "OUT", "' . $DATA['loc'] .'"); ';
+						   
+					if($result = $mysqli->query($sql)){
+						$sql = ' UPDATE 14RuVPJV6GmH_app_usr ' .
+							   ' SET clocked_in = FALSE, ' .
+							   ' clocked_time = NOW() ' .
+							   ' WHERE user_id = '.$user_id.'; ';
+							   
+						if($result = $mysqli->query($sql)){
+							echo '200 OK';
+						}else{
+							echo '406 Not Acceptable';
+						}
+					}else{
+						echo '406 Not Acceptable';
+					}
+					break;
+					
+				case 'ssn_chk':
+				case 'lgn_chk':
+					$DATA = unserialize(stripslashes($_POST['DATA']));
+					$user_id = addQuotes(strtolower($DATA['usr']));
+					$user_password = addQuotes($DATA['pwd']);
+					
+					$sql = ' SELECT * FROM 14RuVPJV6GmH_app_usr ' .
+						   ' WHERE user_id = '.$user_id.' ' .
+						   ' AND user_password = '.$user_password.'; ';
+						   
+					if($result = $mysqli->query($sql)){
+						if($result->num_rows==1){
+							if($DATA['version'] >= 10154){
+								$row = $result->fetch_array(MYSQLI_ASSOC);
+								$result->close();
+								
+								$report['reply'] = '200 OK';
+								$report['clocked'] = $row['clocked_in'];
+								$report['time'] = $row['clocked_time'];
+								$report['level'] = $row['user_level'];
+								$report['name'] = $row['nc_name'];
+								$report['contact'] = $row['nc_contact'];
+								$report['email'] = $row['nc_email'];
+								$report['pos1'] = $row['nc_pos1'];
+								$report['pos2'] = $row['nc_pos2'];
+								
+								$sql = ' SELECT user_id, nc_name, clocked_in, clocked_time, short_name, user_level, nc_contact, nc_pos1 FROM 14RuVPJV6GmH_app_usr ' .
+									   ' WHERE user_level >= 0 ' . 
+									   ' ORDER BY `user_level` DESC, `nc_name` ASC; ';
+									   
+								if($result = $mysqli->query($sql)){
+									if($row = $result->fetch_array(MYSQLI_ASSOC)){
+										$i = 0;
+										$status[$i] = $row;
+										$i++;
+										
+										while($row = $result->fetch_array(MYSQLI_ASSOC)){
+											$status[$i] = $row;
+											$i++;
+										}
+										
+										$result->close();
+										$report['status'] = $status;
+									}else{
+										echo '204 No Response';
+									}
+								}else{
+									echo '400 Bad Request';
+								}
+								
+								$sql = ' SELECT * FROM 14RuVPJV6GmH_app_loc ' .
+									   ' WHERE cancelled_flag = FALSE ' .
+									   ' ORDER BY `loc_state` ASC, `loc_category` ASC, `loc_name` ASC; ';
+									   
+								if($result = $mysqli->query($sql)){
+									if($row = $result->fetch_array(MYSQLI_ASSOC)){
+										$i = 0;
+										$location[$i] = $row;
+										$i++;
+										
+										while($row = $result->fetch_array(MYSQLI_ASSOC)){
+											$location[$i] = $row;
+											$i++;
+										}
+										
+										$result->close();
+										$report['location'] = $location;
+									}else{
+										echo '204 No Response';
+									}
+								}else{
+									echo '400 Bad Request';
+								}
+								
+								
+								if($report['level'] > 3){
+									$sql = ' SELECT date, venue, description, time, crew, remarks FROM 14RuVPJV6GmH_app_evt ' .
+										   ' WHERE cancelled_flag = FALSE ' .
+										   ' AND date BETWEEN "' . date("Y-m-d") . ' 00:00:00" AND "' . date("Y-m-d", strtotime("+1 week")) . ' 23:59:59" ' .
+										   ' ORDER BY `date` ASC, `time` ASC; ';
+								}else{
+									$sql = ' SELECT date, venue, description, time, crew, remarks FROM 14RuVPJV6GmH_app_evt ' .
+										   ' WHERE cancelled_flag = FALSE ' .
+										   ' AND date BETWEEN "' . date("Y-m-d") . ' 00:00:00" AND "' . date("Y-m-d", strtotime("+2 day")) . ' 23:59:59" ' .
+										   ' ORDER BY `date` ASC, `time` ASC; ';
+								}
+								
+								if($result = $mysqli->query($sql)){
+									if($row = $result->fetch_array(MYSQLI_ASSOC)){
+										$i = 0;
+										$task[0] = 'none';
+										$crewl = explode(',', $row['crew']);
+										
+										if(in_array(strtolower($DATA['usr']), $crewl)){
+											$task[$i] = $row;
+											$i++;
+										}
+										
+										while($row = $result->fetch_array(MYSQLI_ASSOC)){
+											$crewl = explode(',', $row['crew']);
+											
+											if(in_array(strtolower($DATA['usr']), $crewl)){
+												$task[$i] = $row;
+												$i++;
+											}
+										}
+										
+										$result->close();
+										$report['task'] = $task;
+									}else{
+										$report['task'][0] = 'none';
+									}
+								}else{
+									echo '400 Bad Request';
+								}
+								
+								$sql = ' SELECT * FROM 14RuVPJV6GmH_app_inv ' .
+									   ' ORDER BY `category` ASC, `brand` ASC, `description` ASC; ';
+								
+								if($result = $mysqli->query($sql)){
+									if($row = $result->fetch_array(MYSQLI_ASSOC)){
+										$i = 0;
+										$inventory[$i] = $row;
+										$i++;
+										
+										while($row = $result->fetch_array(MYSQLI_ASSOC)){
+											$inventory[$i] = $row;
+											$i++;
+										}
+										
+										$result->close();
+										$report['inventory'] = $inventory;
+									}else{
+										$report['inventory'][0] = 'none';
+									}
+								}else{
+									echo '400 Bad Request';
+								}
+								
+								$leave = false;
+								if($report['level'] > 8){
+									$sql = ' SELECT primary_id, status FROM 14RuVPJV6GmH_app_clk ' .
+										   ' WHERE clock_action = "LRQ" ' .
+										   ' AND clock_in_out >= "' . date('Y-m-d') . ' 00:00:00" ' .
+										   ' ORDER BY `clock_in_out` ASC; ';
+										   
+									if($result = $mysqli->query($sql)){
+										if($row = $result->fetch_array(MYSQLI_ASSOC)){
+											if($row['status']==0){
+												$leave = true;
+											}
+											
+											while($row = $result->fetch_array(MYSQLI_ASSOC)){
+												if($row['status']==0){
+													$leave = true;
+													break;
+												}
+											}
+											
+											$result->close();
+										}
+									}
+								}
+								$report['leave'] = $leave;
+								
+								$report['car'] = array('Avanza', 'City', 'Dmax', 'Elantra', 'Kancil', 'Kembara', 'Myvi', 'Mazda', 'Lorry', 'New Lorry', 'YX Avanza', 'Own Car', 'Grab Car','Arasu Lorry', 'Jason Lorry');
+								
+								$sql = ' INSERT INTO 14RuVPJV6GmH_app_act ' .
+									   ' (act, user_id, data) ' .
+									   ' VALUES ( "' . $_POST['ACT'] . '", ' . addQuotes(strtolower($DATA['usr'])) . ', ' . addQuotes($_POST['DATA']) .' ); ';
+									   
+								if($result = $mysqli->query($sql)){
+									echo json_encode($report);
+								}else{
+									echo '500 Internal Server Error';
+								}
+							}else{
+								$report['reply'] = '426 Upgrade Required';
+								echo json_encode($report);
+							}
+						}else{
+							$report['reply'] = '406 Not Acceptable';
+							$report['clocked'] = '0';
+							
+							echo json_encode($report);
+						}
+					}else{
+						echo '400 Bad Request';
+					}
+					break;
+					
+				case 'loc_chk':
+					$DATA = unserialize(stripslashes($_POST['DATA']));
+					$user_id = addQuotes(strtolower($DATA['usr']));
+				
+					$sql = ' UPDATE 14RuVPJV6GmH_app_usr ' .
+						   ' SET login_location = "'.$DATA['lat'].', '.$DATA['lon'].'", ' .
+						   ' login_date = CURRENT_TIMESTAMP ' .
+						   ' WHERE user_id = '.$user_id.'; ';
+						   
+					if($result = $mysqli->query($sql)){
+						$sql = ' INSERT INTO 14RuVPJV6GmH_app_act ' .
+							   ' (act, user_id, data) ' .
+							   ' VALUES ( "' . $_POST['ACT'] . '", ' . addQuotes(strtolower($DATA['usr'])) . ', ' . addQuotes($_POST['DATA']) .' ); ';
+							   
+						if($result = $mysqli->query($sql)){
+							echo '200 OK';
+						}else{
+							echo '500 Internal Server Error';
+						}
+					}else{
+						echo '406 Not Acceptable';
+					}
+					break;
+					
+				case 'cal_get':
+					$DATA = unserialize(stripslashes($_POST['DATA']));
+					$date = strtotime($DATA['date']);
+					
+					$date_str = date('Y-m-d', $date);
+					
+					$sql = ' SELECT * FROM 14RuVPJV6GmH_app_evt ' .
+						   ' WHERE cancelled_flag = FALSE ' .
+						   ' AND event = TRUE ' .
+						   ' AND date BETWEEN "' . $date_str . ' 00:00:00" AND "' . $date_str . ' 23:59:59"; ';
+					
+					if($result = $mysqli->query($sql)){
+						if($row = $result->fetch_array(MYSQLI_ASSOC)){
+							$i = 0;
+							$report[$i] = $row;
+							$i++;
+							
+							while($row = $result->fetch_array(MYSQLI_ASSOC)){
+								$report[$i] = $row;
+								$i++;
+							}
+							
+							$result->close();
+							
+							$sql = ' INSERT INTO 14RuVPJV6GmH_app_act ' .
+								   ' (act, user_id, data) ' .
+								   ' VALUES ( "' . $_POST['ACT'] . '", ' . addQuotes(strtolower($DATA['usr'])) . ', ' . addQuotes($_POST['DATA']) .' ); ';
+								   
+							if($result = $mysqli->query($sql)){
+								echo json_encode($report);
+							}else{
+								echo '500 Internal Server Error';
+							}
+						}else{
+							echo '204 No Response';
+						}
+					}else{
+						echo '400 Bad Request';
+					}
+					break;
+					
+				case 'evc_udt':
+					$DATA = unserialize(stripslashes($_POST['DATA']));
+					$pid = addQuotes($DATA['pid']);
+					$car_in = ($DATA['cin'] == '' ? 'NULL' : addQuotes($DATA['cin']));
+					$car_out = ($DATA['cout'] == '' ? 'NULL' : addQuotes($DATA['cout']));
+					
+					$sql = ' UPDATE 14RuVPJV6GmH_app_evt ' .
+						   ' SET car_in = '.$car_in.', ' .
+						   ' car_out = '.$car_out.' ' .
+						   ' WHERE primary_id = '.$pid.'; ';
+					
+					if($result = $mysqli->query($sql)){
+						$sql = ' INSERT INTO 14RuVPJV6GmH_app_act ' .
+							   ' (act, user_id, data) ' .
+							   ' VALUES ( "' . $_POST['ACT'] . '", ' . addQuotes(strtolower($DATA['usr'])) . ', ' . addQuotes($_POST['DATA']) .' ); ';
+						   
+						if($result = $mysqli->query($sql)){
+							echo '200 OK';
+						}else{
+							echo '500 Internal Server Error';
+						}
+					}else{
+						echo '400 Bad Request';
+					}
+					break;
+					
+				case 'evd_udt':
+					$DATA = unserialize(stripslashes($_POST['DATA']));
+					$pid = addQuotes($DATA['pid']);
+					$luncheon_dinner = ($DATA['ld'] == '' ? 'NULL' : addQuotes($DATA['ld']));
+					$time = ($DATA['time'] == '' ? 'NULL' : addQuotes($DATA['time']));
+					$venue = ($DATA['venue'] == '' ? 'NULL' : addQuotes($DATA['venue']));
+					$description = ($DATA['desc'] == '' ? 'NULL' : addQuotes($DATA['desc']));
+					$price = ($DATA['price'] == '' ? 'NULL' : addQuotes($DATA['price']));
+					$paid = ($DATA['paid'] ? 'TRUE' : 'FALSE');
+					$band = ($DATA['band'] == '' ? 'NULL' : addQuotes($DATA['band']));
+					$crew = ($DATA['crew'] == '' ? 'NULL' : addQuotes($DATA['crew']));
+					$car_in = ($DATA['cin'] == '' ? 'NULL' : addQuotes($DATA['cin']));
+					$car_out = ($DATA['cout'] == '' ? 'NULL' : addQuotes($DATA['cout']));
+					$remarks = ($DATA['rmk'] == '' ? 'NULL' : addQuotes($DATA['rmk']));
+					
+					$sql = ' UPDATE 14RuVPJV6GmH_app_evt ' .
+						   ' SET luncheon_dinner = '.$luncheon_dinner.', ' .
+						   ' time = '.$time.', ' .
+						   ' venue = '.$venue.', ' .
+						   ' description = '.$description.', ' .
+						   ' price = '.$price.', ' .
+						   ' paid = '.$paid.', ' .
+						   ' band = '.$band.', ' .
+						   ' crew = '.$crew.', ' .
+						   ' car_in = '.$car_in.', ' .
+						   ' car_out = '.$car_out.', ' .
+						   ' remarks = '.$remarks.', ' .
+						   ' locked = 0 ' .
+						   ' WHERE primary_id = '.$pid.'; ';
+						   
+					if($result = $mysqli->query($sql)){
+						$sql = ' INSERT INTO 14RuVPJV6GmH_app_act ' .
+							   ' (act, user_id, data) ' .
+							   ' VALUES ( "' . $_POST['ACT'] . '", ' . addQuotes(strtolower($DATA['usr'])) . ', ' . addQuotes($_POST['DATA']) .' ); ';
+						   
+						if($result = $mysqli->query($sql)){
+							echo '200 OK';
+						}else{
+							echo '500 Internal Server Error';
+						}
+					}else{
+						echo '400 Bad Request';
+					}
+					break;
+					
+				case 'evd_dlt':
+					$DATA = unserialize(stripslashes($_POST['DATA']));
+					$pid = addQuotes($DATA['pid']);
+					
+					$sql = ' UPDATE 14RuVPJV6GmH_app_evt ' .
+						   ' SET cancelled_flag = TRUE ' .
+						   ' WHERE primary_id = '.$pid.'; ';
+						   
+					if($result = $mysqli->query($sql)){
+						$sql = ' INSERT INTO 14RuVPJV6GmH_app_act ' .
+							   ' (act, user_id, data) ' .
+							   ' VALUES ( "' . $_POST['ACT'] . '", ' . addQuotes(strtolower($DATA['usr'])) . ', ' . addQuotes($_POST['DATA']) .' ); ';
+						   
+						if($result = $mysqli->query($sql)){
+							echo '200 OK';
+						}else{
+							echo '500 Internal Server Error';
+						}
+					}else{
+						echo '400 Bad Request';
+					}
+					break;
+					
+				case 'evd_add':
+					$DATA = unserialize(stripslashes($_POST['DATA']));
+					$desc = ($DATA['desc'] == 'NULL' ? 'NULL' : ('"' . $DATA['desc'] . '"'));
+					$ld = ($DATA['ld'] == 'NULL' ? '"Dinner"' : (($DATA['ld'] == 'L' || $DATA['ld'] == 'Lunch') ? '"Lunch"' : '"Dinner"'));
+					
+					$sql = ' INSERT INTO 14RuVPJV6GmH_app_evt ' .
+						   ' (date, pic, description, luncheon_dinner) ' .
+						   ' VALUES ( "' . date("Y-m-d", strtotime($DATA['date'])) . ' 00:00:00", "' . $DATA['pic'] . '", ' . $desc . ', ' . $ld . '); ';
+						   
+					if($result = $mysqli->query($sql)){
+						$pid = $mysqli->insert_id;
+						
+						$sql = ' INSERT INTO 14RuVPJV6GmH_app_act ' .
+							   ' (act, user_id, data) ' .
+							   ' VALUES ( "' . $_POST['ACT'] . '", ' . addQuotes(strtolower($DATA['usr'])) . ', ' . addQuotes($_POST['DATA']) .' ); ';
+						   
+						if($result = $mysqli->query($sql)){
+							$report[0]['band'] = '';
+							$report[0]['cancelled_flag'] = '0';
+							$report[0]['car_in'] = '';
+							$report[0]['car_out'] = '';
+							$report[0]['crew'] = '';
+							$report[0]['date'] = date("Y-m-d", strtotime($DATA['date'])) . ' 00:00:00';
+							$report[0]['description'] = $DATA['desc'];
+							$report[0]['luncheon_dinner'] = $DATA['ld'];
+							$report[0]['pic'] = $DATA['pic'];
+							$report[0]['price'] = '600';
+							$report[0]['primary_id'] = $pid;
+							$report[0]['remarks'] = '';
+							$report[0]['venue'] = '';
+							$report['reply'] = '200 OK';
+							
+							echo json_encode($report);
+						}else{
+							echo '500 Internal Server Error';
+						}
+					}else{
+						echo '400 Bad Request';
+					}
+					break;
+					
+				case 'lrq_add':
+					$DATA = unserialize(stripslashes($_POST['DATA']));
+					$user_id = addQuotes(strtolower($DATA['usr']));
+					$reason = ($DATA['reason'] == '' ? 'NULL' : addQuotes($DATA['reason']));
+					
+					$sql = ' INSERT INTO 14RuVPJV6GmH_app_clk ' .
+						   ' (user_id, clock_action, clock_in_out, clock_location) ' .
+						   ' VALUES ( ' . $user_id . ', "LRQ", "' . date("Y-m-d", strtotime($DATA['date'])) . ' 00:00:00", ' . $reason . '); ';
+						   
+					if($result = $mysqli->query($sql)){
+						$sql = ' INSERT INTO 14RuVPJV6GmH_app_act ' .
+							   ' (act, user_id, data) ' .
+							   ' VALUES ( "' . $_POST['ACT'] . '", ' . addQuotes(strtolower($DATA['usr'])) . ', ' . addQuotes($_POST['DATA']) .' ); ';
+							   
+						if($result = $mysqli->query($sql)){
+							echo '200 OK';
+						}else{
+							echo '406 Not Acceptable';
+						}
+					}else{
+						echo '406 Not Acceptable';
+					}
+					break;
+				
+				case 'lrq_chk':
+					$DATA = unserialize(stripslashes($_POST['DATA']));
+					$user_id = addQuotes(strtolower($DATA['usr']));
+					
+					$sql = ' SELECT clock_in_out, clock_location, status FROM 14RuVPJV6GmH_app_clk ' .
+						   ' WHERE user_id = ' . $user_id . ' ' .
+						   ' AND clock_action = "LRQ" ' .
+						   ' AND clock_in_out >= "' . date('Y-m-d') . ' 00:00:00" ' .
+						   ' ORDER BY `clock_in_out` ASC; ';
+						   
+					if($result = $mysqli->query($sql)){
+						if($row = $result->fetch_array(MYSQLI_ASSOC)){
+							$i = 0;
+							$leave[$i] = $row;
+							$i++;
+							
+							while($row = $result->fetch_array(MYSQLI_ASSOC)){
+								$leave[$i] = $row;
+								$i++;
+							}
+							
+							$result->close();
+							
+							$sql = ' INSERT INTO 14RuVPJV6GmH_app_act ' .
+								   ' (act, user_id, data) ' .
+								   ' VALUES ( "' . $_POST['ACT'] . '", ' . addQuotes(strtolower($DATA['usr'])) . ', ' . addQuotes($_POST['DATA']) .' ); ';
+								   
+							if($result = $mysqli->query($sql)){
+								$report['leave'] = $leave;
+								$report['reply'] = '200 OK';
+								echo json_encode($report);
+							}else{
+								echo '500 Internal Server Error';
+							}
+						}else{
+							echo '204 No Response';
+						}
+					}else{
+						echo '400 Bad Request';
+					}
+					break;
+					
+				case 'lrq_udt':
+					$DATA = unserialize(stripslashes($_POST['DATA']));
+					$pid = addQuotes($DATA['pid']);
+					$status = addQuotes($DATA['status']);
+					
+					$sql = ' UPDATE 14RuVPJV6GmH_app_clk ' .
+						   ' SET status = '.$status.' ' .
+						   ' WHERE primary_id = '.$pid.'; ';
+					if($result = $mysqli->query($sql)){
+						$sql = ' INSERT INTO 14RuVPJV6GmH_app_act ' .
+							   ' (act, user_id, data) ' .
+							   ' VALUES ( "' . $_POST['ACT'] . '", ' . addQuotes(strtolower($DATA['usr'])) . ', ' . addQuotes($_POST['DATA']) .' ); ';
+						   
+						if($result = $mysqli->query($sql)){
+							echo '200 OK';
+						}else{
+							echo '500 Internal Server Error';
+						}
+					}else{
+						echo '400 Bad Request';
+					}
+					break;
+					
+				case 'alr_chk':
+					$DATA = unserialize(stripslashes($_POST['DATA']));
+					
+					$sql = ' SELECT primary_id, user_id, clock_in_out, clock_location, status FROM 14RuVPJV6GmH_app_clk ' .
+						   ' WHERE clock_action = "LRQ" ' .
+						   ' AND clock_in_out >= "' . date('Y-m-d') . ' 00:00:00" ' .
+						   ' ORDER BY `clock_in_out` ASC; ';
+						   
+					if($result = $mysqli->query($sql)){
+						if($row = $result->fetch_array(MYSQLI_ASSOC)){
+							$i = 0;
+							$leave[$i] = $row;
+							$i++;
+							
+							while($row = $result->fetch_array(MYSQLI_ASSOC)){
+								$leave[$i] = $row;
+								$i++;
+							}
+							
+							$result->close();
+							
+							$sql = ' INSERT INTO 14RuVPJV6GmH_app_act ' .
+								   ' (act, user_id, data) ' .
+								   ' VALUES ( "' . $_POST['ACT'] . '", ' . addQuotes(strtolower($DATA['usr'])) . ', ' . addQuotes($_POST['DATA']) .' ); ';
+								   
+							if($result = $mysqli->query($sql)){
+								$report['leave'] = $leave;
+								$report['reply'] = '200 OK';
+								echo json_encode($report);
+							}else{
+								echo '500 Internal Server Error';
+							}
+						}else{
+							echo '204 No Response';
+						}
+					}else{
+						echo '400 Bad Request';
+					}
+					break;
+					
+				case 'whs_chk':
+					$DATA = unserialize(stripslashes($_POST['DATA']));
+					$user_id = addQuotes(strtolower($DATA['usr']));
+					
+					$sql = ' SELECT clock_action, clock_in_out, clock_location, status FROM 14RuVPJV6GmH_app_clk ' .
+						   ' WHERE user_id = ' . $user_id . ' ' .
+						   ' AND ( clock_action = "IN" OR clock_action = "OUT" ) ' .
+						   ' AND clock_in_out >= "' . date('Y-m-d', strtotime("-6 week")) . ' 00:00:00" ' .
+						   ' ORDER BY `clock_in_out` DESC; ';
+						   
+					if($result = $mysqli->query($sql)){
+						if($row = $result->fetch_array(MYSQLI_ASSOC)){
+							$i = 0;
+							$work[$i] = $row;
+							$i++;
+							
+							while($row = $result->fetch_array(MYSQLI_ASSOC)){
+								$work[$i] = $row;
+								$i++;
+							}
+							
+							$result->close();
+							
+							$sql = ' INSERT INTO 14RuVPJV6GmH_app_act ' .
+								   ' (act, user_id, data) ' .
+								   ' VALUES ( "' . $_POST['ACT'] . '", ' . addQuotes(strtolower($DATA['usr'])) . ', ' . addQuotes($_POST['DATA']) .' ); ';
+								   
+							if($result = $mysqli->query($sql)){
+								$report['work'] = $work;
+								$report['reply'] = '200 OK';
+								echo json_encode($report);
+							}else{
+								echo '500 Internal Server Error';
+							}
+						}else{
+							echo '204 No Response';
+						}
+					}else{
+						echo '400 Bad Request';
+					}
+					break;
+					
+				case 'rpt_chk':
+					$DATA = unserialize(stripslashes($_POST['DATA']));
+					
+					$date_from = $DATA['from'];
+					$date_to = $DATA['to'];
+					
+					$sql = ' SELECT primary_id, venue, date, price, paid, pic, remarks FROM 14RuVPJV6GmH_app_evt ' .
+						   ' WHERE cancelled_flag = FALSE ' .
+						   ' AND event = TRUE ' .
+						   ' AND date BETWEEN "' . $date_from . ' 00:00:00" AND "' . $date_to . ' 23:59:59" ' .
+						   ' ORDER BY date ASC; ';
+						   
+					if($result = $mysqli->query($sql)){
+						if($row = $result->fetch_array(MYSQLI_ASSOC)){
+							$i = 0;
+							$report['sales'][$i] = $row;
+							$i++;
+							
+							while($row = $result->fetch_array(MYSQLI_ASSOC)){
+								$report['sales'][$i] = $row;
+								$i++;
+							}
+							
+							$result->close();
+							
+							$sql = ' INSERT INTO 14RuVPJV6GmH_app_act ' .
+								   ' (act, user_id, data) ' .
+								   ' VALUES ( "' . $_POST['ACT'] . '", ' . addQuotes(strtolower($DATA['usr'])) . ', ' . addQuotes($_POST['DATA']) .' ); ';
+								   
+							if($result = $mysqli->query($sql)){
+								$report['reply'] = '200 OK';
+								echo json_encode($report);
+							}else{
+								echo '500 Internal Server Error';
+							}
+						}else{
+							$report['reply'] = '204 No Response';
+							echo json_encode($report);
+						}
+					}else{
+						echo '400 Bad Request';
+					}	   
+					break;
+					
+				case 'tsk_chk':
+					$DATA = unserialize(stripslashes($_POST['DATA']));
+					
+					$sql = ' SELECT primary_id, date, time, venue, description, crew FROM 14RuVPJV6GmH_app_evt ' .
+						   ' WHERE cancelled_flag = FALSE ' .
+						   ' AND event = FALSE ' .
+						   ' AND date >= "' . date('Y-m-d') . ' 00:00:00" ' .
+						   ' ORDER BY `date` ASC, `time` ASC; ';
+						   
+					if($result = $mysqli->query($sql)){
+						if($row = $result->fetch_array(MYSQLI_ASSOC)){
+							$i = 0;
+							$report['task'][$i] = $row;
+							$i++;
+							
+							while($row = $result->fetch_array(MYSQLI_ASSOC)){
+								$report['task'][$i] = $row;
+								$i++;
+							}
+							
+							$result->close();
+							
+							$sql = ' INSERT INTO 14RuVPJV6GmH_app_act ' .
+								   ' (act, user_id, data) ' .
+								   ' VALUES ( "' . $_POST['ACT'] . '", ' . addQuotes(strtolower($DATA['usr'])) . ', ' . addQuotes($_POST['DATA']) .' ); ';
+								   
+							if($result = $mysqli->query($sql)){
+								$report['reply'] = '200 OK';
+								echo json_encode($report);
+							}else{
+								echo '500 Internal Server Error';
+							}
+						}else{
+							echo '204 No Response';
+						}
+					}else{
+						echo '400 Bad Request';
+					}
+					break;
+					
+				case 'tsk_add':
+					$DATA = unserialize(stripslashes($_POST['DATA']));
+					$time = ($DATA['time'] == '' ? 'NULL' : addQuotes($DATA['time']));
+					$venue = ($DATA['venue'] == '' ? 'NULL' : addQuotes($DATA['venue']));
+					$description = ($DATA['desc'] == '' ? 'NULL' : addQuotes($DATA['desc']));
+					$crew = ($DATA['crew'] == '' ? 'NULL' : addQuotes($DATA['crew']));
+					
+					$sql = ' INSERT INTO 14RuVPJV6GmH_app_evt ' .
+						   ' (date, time, venue, description, crew, event) ' .
+						   ' VALUES ( "' . date("Y-m-d", strtotime($DATA['date'])) . ' 00:00:00", ' . $time . ', ' . $venue . ', ' . $description . ', ' . $crew . ', FALSE ); ';
+						   
+					if($result = $mysqli->query($sql)){
+						$pid = $mysqli->insert_id;
+						
+						$sql = ' INSERT INTO 14RuVPJV6GmH_app_act ' .
+							   ' (act, user_id, data) ' .
+							   ' VALUES ( "' . $_POST['ACT'] . '", ' . addQuotes(strtolower($DATA['usr'])) . ', ' . addQuotes($_POST['DATA']) .' ); ';
+						   
+						if($result = $mysqli->query($sql)){
+							$report['reply'] = '200 OK';
+							$report['pid'] = $pid;
+							
+							echo json_encode($report);
+						}else{
+							echo '500 Internal Server Error';
+						}
+					}else{
+						echo '400 Bad Request';
+					}
+					break;
+					
+				case 'tsk_udt':
+					$DATA = unserialize(stripslashes($_POST['DATA']));
+					$pid = addQuotes($DATA['pid']);
+					$time = ($DATA['time'] == '' ? 'NULL' : addQuotes($DATA['time']));
+					$venue = ($DATA['venue'] == '' ? 'NULL' : addQuotes($DATA['venue']));
+					$description = ($DATA['desc'] == '' ? 'NULL' : addQuotes($DATA['desc']));
+					$crew = ($DATA['crew'] == '' ? 'NULL' : addQuotes($DATA['crew']));
+					
+					$sql = ' UPDATE 14RuVPJV6GmH_app_evt ' .
+						   ' SET date = "' . date("Y-m-d", strtotime($DATA['date'])) . ' 00:00:00", ' .
+						   ' time = ' . $time . ', ' .
+						   ' venue = ' . $venue . ', ' .
+						   ' description = ' . $description . ', ' .
+						   ' crew = ' . $crew . ' ' .
+						   ' WHERE primary_id = '.$pid.'; ';
+					   
+					if($result = $mysqli->query($sql)){
+						
+						$sql = ' INSERT INTO 14RuVPJV6GmH_app_act ' .
+							   ' (act, user_id, data) ' .
+							   ' VALUES ( "' . $_POST['ACT'] . '", ' . addQuotes(strtolower($DATA['usr'])) . ', ' . addQuotes($_POST['DATA']) .' ); ';
+						   
+						if($result = $mysqli->query($sql)){
+							$report['reply'] = '200 OK';
+							
+							echo json_encode($report);
+						}else{
+							echo '500 Internal Server Error';
+						}
+					}else{
+						echo '400 Bad Request';
+					}
+					
+					break;
+					
+				case 'crw_add':
+					$DATA = unserialize(stripslashes($_POST['DATA']));
+					$tuid = addQuotes(strtolower($DATA['uid']));
+					$dname = addQuotes($DATA['dnm']);
+					$sname = addQuotes($DATA['snm']);
+					
+					$sql = ' INSERT INTO 14RuVPJV6GmH_app_usr ' .
+						   ' (user_id, user_level, nc_name, short_name) ' .
+						   ' VALUES ( '.$tuid.', 1, '.$dname.', '.$sname.' ); ';
+						   
+					if($result = $mysqli->query($sql)){
+						$sql = ' INSERT INTO 14RuVPJV6GmH_app_act ' .
+							   ' (act, user_id, data) ' .
+							   ' VALUES ( "' . $_POST['ACT'] . '", ' . addQuotes(strtolower($DATA['usr'])) . ', ' . addQuotes($_POST['DATA']) .' ); ';
+						   
+						if($result = $mysqli->query($sql)){
+							echo '200 OK';
+						}else{
+							echo '500 Internal Server Error';
+						}
+					}else{
+						echo '400 Bad Request';
+					}
+					break;
+					
+				case 'crw_udt':
+					$DATA = unserialize(stripslashes($_POST['DATA']));
+					$tuid = addQuotes(strtolower($DATA['uid']));
+					$sname = addQuotes($DATA['snm']);
+					
+					$sql = ' UPDATE 14RuVPJV6GmH_app_usr ' .
+						   ' SET short_name = '.$sname.' ' .
+						   ' WHERE user_id = '.$tuid.'; ';
+					
+					if($result = $mysqli->query($sql)){
+						$sql = ' INSERT INTO 14RuVPJV6GmH_app_act ' .
+							   ' (act, user_id, data) ' .
+							   ' VALUES ( "' . $_POST['ACT'] . '", ' . addQuotes(strtolower($DATA['usr'])) . ', ' . addQuotes($_POST['DATA']) .' ); ';
+						   
+						if($result = $mysqli->query($sql)){
+							echo '200 OK';
+						}else{
+							echo '500 Internal Server Error';
+						}
+					}else{
+						echo '400 Bad Request';
+					}
+					break;
+					
+				case 'loc_add':
+					$DATA = unserialize(stripslashes($_POST['DATA']));
+					$name = addQuotes($DATA['name']);
+					$category = addQuotes($DATA['category']);
+					$state = addQuotes($DATA['state']);
+					$point = addQuotes($DATA['point']);
+					$range = addQuotes($DATA['range']);
+					$lobby = addQuotes($DATA['lobby']);
+					$loading = addQuotes($DATA['loading']);
+					
+					$sql = ' INSERT INTO 14RuVPJV6GmH_app_loc ' .
+						   ' (loc_name, loc_category, loc_state, loc_point, loc_range, point_lobby, point_loading) ' .
+						   ' VALUES ( '.$name.', '.$category.', '.$state.', '.$point.', '.$range.', '.$lobby.', '.$loading.' ); ';
+						   
+					if($result = $mysqli->query($sql)){
+						$report['pid'] = $mysqli->insert_id;
+						
+						$sql = ' INSERT INTO 14RuVPJV6GmH_app_act ' .
+							   ' (act, user_id, data) ' .
+							   ' VALUES ( "' . $_POST['ACT'] . '", ' . addQuotes(strtolower($DATA['usr'])) . ', ' . addQuotes($_POST['DATA']) .' ); ';
+						   
+						if($result = $mysqli->query($sql)){
+							$report['reply'] = '200 OK';
+							
+							echo json_encode($report);
+						}else{
+							echo '500 Internal Server Error';
+						}
+					}else{
+						echo '400 Bad Request';
+					}
+					break;
+					
+				case 'loc_udt':
+					$DATA = unserialize(stripslashes($_POST['DATA']));
+					$pid = addQuotes($DATA['pid']);
+					$name = addQuotes($DATA['name']);
+					$category = addQuotes($DATA['category']);
+					$state = addQuotes($DATA['state']);
+					$point = addQuotes($DATA['point']);
+					$range = addQuotes($DATA['range']);
+					$lobby = addQuotes($DATA['lobby']);
+					$loading = addQuotes($DATA['loading']);
+					
+					$sql = ' UPDATE 14RuVPJV6GmH_app_loc ' .
+						   ' SET loc_name = '.$name.', ' .
+						   ' loc_category = '.$category.', ' .
+						   ' loc_state = '.$state.', ' .
+						   ' loc_point = '.$point.', ' .
+						   ' loc_range = '.$range.', ' .
+						   ' point_lobby = '.$lobby.', ' .
+						   ' point_loading = '.$loading.' ' .
+						   ' WHERE primary_id = '.$pid.'; ';
+						   
+					if($result = $mysqli->query($sql)){
+						$sql = ' INSERT INTO 14RuVPJV6GmH_app_act ' .
+							   ' (act, user_id, data) ' .
+							   ' VALUES ( "' . $_POST['ACT'] . '", ' . addQuotes(strtolower($DATA['usr'])) . ', ' . addQuotes($_POST['DATA']) .' ); ';
+						   
+						if($result = $mysqli->query($sql)){
+							echo '200 OK';
+						}else{
+							echo '500 Internal Server Error';
+						}
+					}else{
+						echo '400 Bad Request';
+					}
+					break;
+					
+				case 'pic_add':
+					$DATA = unserialize(stripslashes($_POST['DATA']));
+					$tuid = addQuotes(strtolower($DATA['uid']));
+					$dname = addQuotes($DATA['dnm']);
+					$con = addQuotes($DATA['con']);
+					$comp = addQuotes($DATA['comp']);
+					
+					$sql = ' INSERT INTO 14RuVPJV6GmH_app_usr ' .
+						   ' (user_id, user_level, nc_name, nc_contact, nc_pos1) ' .
+						   ' VALUES ( '.$tuid.', 0, '.$dname.', '.$con.', '.$comp.' ); ';
+					
+					if($result = $mysqli->query($sql)){
+						$sql = ' INSERT INTO 14RuVPJV6GmH_app_act ' .
+							   ' (act, user_id, data) ' .
+							   ' VALUES ( "' . $_POST['ACT'] . '", ' . addQuotes(strtolower($DATA['usr'])) . ', ' . addQuotes($_POST['DATA']) .' ); ';
+						   
+						if($result = $mysqli->query($sql)){
+							echo '200 OK';
+						}else{
+							echo '500 Internal Server Error';
+						}
+					}else{
+						echo '400 Bad Request';
+					}
+					break;
+					
+				case 'pic_udt':
+					$DATA = unserialize(stripslashes($_POST['DATA']));
+					$tuid = addQuotes(strtolower($DATA['uid']));
+					$con = addQuotes($DATA['con']);
+					$comp = addQuotes($DATA['comp']);
+					
+					$sql = ' UPDATE 14RuVPJV6GmH_app_usr ' .
+						   ' SET nc_contact = '.$con.', ' .
+						   ' nc_pos1 = '.$comp.' ' .
+						   ' WHERE user_id = '.$tuid.'; ';
+					
+					if($result = $mysqli->query($sql)){
+						$sql = ' INSERT INTO 14RuVPJV6GmH_app_act ' .
+							   ' (act, user_id, data) ' .
+							   ' VALUES ( "' . $_POST['ACT'] . '", ' . addQuotes(strtolower($DATA['usr'])) . ', ' . addQuotes($_POST['DATA']) .' ); ';
+						   
+						if($result = $mysqli->query($sql)){
+							echo '200 OK';
+						}else{
+							echo '500 Internal Server Error';
+						}
+					}else{
+						echo '400 Bad Request';
+					}
+					break;
+					
+				case 'rst_btg':
+					$DATA = unserialize(stripslashes($_POST['DATA']));
+					
+					$sql = ' UPDATE 14RuVPJV6GmH_app_inv ' .
+						   ' SET point = ' . addQuotes($DATA['point']) . ' ' .
+						   ' WHERE primary_id = "' . $DATA['pid'] . '"; ';
+						   
+					if($result = $mysqli->query($sql)){
+						$sql = ' INSERT INTO 14RuVPJV6GmH_app_act ' .
+							   ' (act, user_id, data) ' .
+							   ' VALUES ( "' . $_POST['ACT'] . '", ' . addQuotes(strtolower($DATA['usr'])) . ', ' . addQuotes($_POST['DATA']) .' ); ';
+						   
+						if($result = $mysqli->query($sql)){
+							echo '200 OK';
+						}else{
+							echo '500 Internal Server Error';
+						}
+					}else{
+						echo '400 Bad Request';
+					}
+					break;
+					
+				case 'clr_dt':
+					$DATA = unserialize(stripslashes($_POST['DATA']));
+					
+					$sql = ' UPDATE 14RuVPJV6GmH_app_evt ' .
+						   ' SET locked = 0 ' .
+						   ' WHERE event = TRUE; ';
+						   
+					if($result = $mysqli->query($sql)){
+						$sql = ' INSERT INTO 14RuVPJV6GmH_app_act ' .
+							   ' (act, user_id, data) ' .
+							   ' VALUES ( "' . $_POST['ACT'] . '", ' . addQuotes(strtolower($DATA['usr'])) . ', ' . addQuotes($_POST['DATA']) .' ); ';
+						   
+						if($result = $mysqli->query($sql)){
+							echo '200 OK';
+						}else{
+							echo '500 Internal Server Error';
+						}
+					}else{
+						echo '400 Bad Request';
+					}
+					break;
+					
+				case 'chg_prf':
+					$DATA = unserialize(stripslashes($_POST['DATA']));
+					$user_id = addQuotes(strtolower($DATA['usr']));
+					$name = addQuotes($DATA['name']);
+					$tel = addQuotes($DATA['tel']);
+					$email = addQuotes($DATA['email']);
+					
+					$sql = ' UPDATE 14RuVPJV6GmH_app_usr ' .
+						   ' SET nc_name = '.$name.', ' .
+						   ' nc_contact = '.$tel.', ' .
+						   ' nc_email = '.$email.' ' .
+						   ' WHERE user_id = '.$user_id.'; ';
+						   
+					if($result = $mysqli->query($sql)){
+						$sql = ' INSERT INTO 14RuVPJV6GmH_app_act ' .
+							   ' (act, user_id, data) ' .
+							   ' VALUES ( "' . $_POST['ACT'] . '", ' . addQuotes(strtolower($DATA['usr'])) . ', ' . addQuotes($_POST['DATA']) .' ); ';
+						   
+						if($result = $mysqli->query($sql)){
+							echo '200 OK';
+						}else{
+							echo '500 Internal Server Error';
+						}
+					}else{
+						echo '400 Bad Request';
+					}
+					break;
+					
+				case 'rst_pwd':
+					$DATA = unserialize(stripslashes($_POST['DATA']));
+					$user_id = addQuotes(strtolower($DATA['usr']));
+					$user_password = addQuotes($DATA['old']);
+					$new_password = addQuotes($DATA['new']);
+					
+					$sql = ' SELECT * FROM 14RuVPJV6GmH_app_usr ' .
+						   ' WHERE user_id = '.$user_id.' ' .
+						   ' AND user_password = '.$user_password.'; ';
+						   
+					if($result = $mysqli->query($sql)){
+						if($result->num_rows==1){
+							$row = $result->fetch_array(MYSQLI_ASSOC);
+							$result->close();
+							
+							$sql = ' UPDATE 14RuVPJV6GmH_app_usr ' .
+								   ' SET user_password = '.$new_password.' ' .
+								   ' WHERE user_id = '.$user_id.'; ';
+								   
+							if($result = $mysqli->query($sql)){
+								$sql = ' INSERT INTO 14RuVPJV6GmH_app_act ' .
+									   ' (act, user_id, data) ' .
+									   ' VALUES ( "' . $_POST['ACT'] . '", ' . addQuotes(strtolower($DATA['usr'])) . ', ' . addQuotes($_POST['DATA']) .' ); ';
+								   
+								if($result = $mysqli->query($sql)){
+									echo '200 OK';
+								}else{
+									echo '500 Internal Server Error';
+								}
+							}else{
+								echo '400 Bad Request';
+							}
+						}else{
+							echo '406 Not Acceptable';
+						}
+					}else{
+						echo '400 Bad Request';
+					}
+					
+					break;
+					
+				case 'log_out':
+					$DATA = unserialize(stripslashes($_POST['DATA']));
+					
+					$sql = ' INSERT INTO 14RuVPJV6GmH_app_act ' .
+						   ' (act, user_id, data) ' .
+						   ' VALUES ( "' . $_POST['ACT'] . '", ' . addQuotes(strtolower($DATA['usr'])) . ', ' . addQuotes($_POST['DATA']) .' ); ';
+					   
+					if($result = $mysqli->query($sql)){
+						echo '200 OK';
+					}else{
+						echo '500 Internal Server Error';
+					}
+					
+					break;
+				default:
+					echo '400 Bad Request';
+					break;
+			}
+		}
+	}else{
+		if(stristr($_SERVER['HTTP_USER_AGENT'],'iPhone') || stristr($_SERVER['HTTP_USER_AGENT'],'iPad') || stristr($_SERVER['HTTP_USER_AGENT'],'Windows NT 10.0')){ 
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -3720,7 +5035,7 @@
 				<div class="block">
 					<div align="center">
 						 <img src="icon.png" alt="WKV Logo" height="128" width="128">
-						 <span style="color:#999;position:absolute;top:40px;font-size:12px;">&emsp;Version 1.0.156</span>
+						 <span style="color:#999;position:absolute;top:40px;font-size:12px;">&emsp;Version 1.0.154</span>
 					</div>
 					<p>WKV Application serves as a platform for of WKV’s member to obtain basic information and calculation method can easily obtain by accessing to the application.</p>
 					<p>For general usage, clock in and clock out is built in the application for employees of WKV to check in whenever they report to event venue.</p>
@@ -3905,7 +5220,6 @@
 		</div>
 		<div class="panel-backdrop" style=""></div>
 	</div>
-	<script type="text/javascript" src="cordova.js"></script>
 	<script src="framework7/js/framework7.min.js"></script>
 	<script src="js/jquery-3.3.1.min.js"></script>
 	<script src="js/routes.js"></script>
@@ -3915,3 +5229,14 @@
 	</script>
 </body>
 </html>
+
+<?php
+		}elseif(stristr($_SERVER['HTTP_USER_AGENT'],'android')){
+			header("Location: https://play.google.com/store/apps/details?id=com.wkv.manage");
+			die();
+		}else{
+			header("Location: http://www.wkventertainment.com");
+			die();
+		}
+	}
+?>
