@@ -6,11 +6,11 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.156",
+			  version: "1.0.157",
 			  rtl: false,
 			  language: "en-US"
 		  });
-var geoToken = true, geoCount = 120, APP_VERSION = 10156;
+var geoToken = true, geoCount = 120, APP_VERSION = 10157;
 
 var app = {
     initialize: function() {
@@ -1470,6 +1470,7 @@ $(document).ready(function(){
 	
 	$('.popup-amtl').on('click', '.link.popup-open', function(){
 		apps.popup.close('.popup-amtl', true);
+		$('.popup-backdrop').addClass('backdrop-in');
 	});
 	
 	$('#cntd-btn').on('click', function(){
@@ -2548,7 +2549,7 @@ $(document).ready(function(){
 		}
 	});
 	
-	$('#alrl-btn, #lrq_rl').on('click', function(){
+	$('#alrl-btn').on('click', function(){
 		var DATA = {
 				'usr' : STORAGE.getItem('usr')
 			}
@@ -3907,8 +3908,19 @@ $(document).ready(function(){
 			}
 			
 			if(inf['level']>8 && inf['leave']){
-				var x = '<div class="card popup-open" style="background-color:#f8f8f8;" data-popup=".popup-alrl"><div class="card-content card-content-padding"><i class="icon material-icons md-only">notifications_active</i>&emsp;&emsp;Pending leave request.</div></div>';
-				$('#lrq_rl').html(x);
+				apps.notification.create({
+					icon: '<img src="https://app.wkventertainment.com/icon.png" width="16px" height="16px"/>',
+					title: 'WKV',
+					titleRightText: 'now',
+					subtitle: 'Pending leave request',
+					text: ('From ' + sys.unameToSname(inf['leave'].toString())),
+					on:{
+						click: function(){
+							$('div.notification').slideUp();
+							$('#alrl-btn')[0].click();
+						}
+					}
+				}).open();
 			}
 			
 			if(!sys.isEmpty(inf['task'])){
@@ -4354,25 +4366,18 @@ sys = {
 							if(inf['new']){
 								navigator.vibrate(500);
 								
-								if(typeof cordova != 'undefined' && typeof Notification != 'undefined'){
-									Notification.requestPermission(function(permission){
-										if(permission === "granted"){
-											var notification = new Notification(inf['title'], {
-													tag: (((new Date()).getTime())/60000).toFixed(0), 
-													body: inf['text'] 
-												}); 
+								apps.notification.create({
+									icon: '<img src="https://app.wkventertainment.com/icon.png" width="16px" height="16px"/>',
+									title: 'WKV',
+									titleRightText: 'now',
+									subtitle: inf['title'],
+									text: inf['text'],
+									on:{
+										click: function(){
+											$('div.notification').slideUp();
 										}
-									});
-								}else{
-									var notificationFull = apps.notification.create({
-											title: 'WKV',
-											subtitle: inf['title'],
-											text: inf['text'],
-											closeTimeout: 10000,
-										});
-								
-									notificationFull.open();
-								}
+									}
+								}).open();
 							}
 						}else{
 							navigator.notification.alert(
