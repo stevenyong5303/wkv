@@ -6,11 +6,11 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.154",
+			  version: "1.0.155",
 			  rtl: false,
 			  language: "en-US"
 		  });
-var geoToken = true, geoCount = 120, APP_VERSION = 10154;
+var geoToken = true, geoCount = 120, APP_VERSION = 10155;
 
 var app = {
     initialize: function() {
@@ -1516,50 +1516,90 @@ $(document).ready(function(){
 									if(['XLRC', 'CCPE', '3PPC'].indexOf(uid) != -1){
 										apps.dialog.prompt('What is the length of cable in metre?', function(lngt){
 											points[target] = {'p':'Basement', 'l':lngt, 'c':'2'};
+											
+											var DATA = {
+													'usr' : STORAGE.getItem('usr'),
+													'pid' : inv[i].primary_id,
+													'point' : JSON.stringify(points)
+												};
+											var post_data = "ACT=" + encodeURIComponent('rst_btg')
+														  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
+											
+											$.ajax({
+												type: 'POST',
+												url: 'https://app.wkventertainment.com/',
+												data: post_data,
+												beforeSend: function(){
+													sys.loading(1);
+												},
+												success: function(str){
+													sys.loading(0);
+													if(str=='200 OK'){
+														inv[i].point = JSON.stringify(points);
+														$('body').data('inv', inv);
+														
+														var success_toast = apps.toast.create({
+																			   icon: '<i class="material-icons">cloud_done</i>',
+																			   text: 'Tag Details Successfully Saved.',
+																			   position: 'center',
+																			   closeTimeout: 2000
+																		   });
+														success_toast.open();
+													}else{
+														var failed_toast = apps.toast.create({
+																			   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
+																			   text: 'Oooppss, error',
+																			   position: 'center',
+																			   closeTimeout: 2000
+																		   });
+														failed_toast.open();
+													}
+												}
+											});
 										});
 									}else{
 										points[target] = {'p':'Basement', 'c':'2'};
-									}
-									
-									var DATA = {
-											'usr' : STORAGE.getItem('usr'),
-											'pid' : inv[i].primary_id,
-											'point' : JSON.stringify(points)
-										};
-									var post_data = "ACT=" + encodeURIComponent('rst_btg')
-												  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
-									
-									$.ajax({
-										type: 'POST',
-										url: 'https://app.wkventertainment.com/',
-										data: post_data,
-										beforeSend: function(){
-											sys.loading(1);
-										},
-										success: function(str){
-											sys.loading(0);
-											if(str=='200 OK'){
-												inv[i].point = JSON.stringify(points);
-												$('body').data('inv', inv);
-												
-												var success_toast = apps.toast.create({
-																	   icon: '<i class="material-icons">cloud_done</i>',
-																	   text: 'Tag Details Successfully Saved.',
-																	   position: 'center',
-																	   closeTimeout: 2000
-																   });
-												success_toast.open();
-											}else{
-												var failed_toast = apps.toast.create({
-																	   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
-																	   text: 'Oooppss, error',
-																	   position: 'center',
-																	   closeTimeout: 2000
-																   });
-												failed_toast.open();
+										
+										var DATA = {
+												'usr' : STORAGE.getItem('usr'),
+												'pid' : inv[i].primary_id,
+												'point' : JSON.stringify(points)
+											};
+										var post_data = "ACT=" + encodeURIComponent('rst_btg')
+													  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
+										
+										$.ajax({
+											type: 'POST',
+											url: 'https://app.wkventertainment.com/',
+											data: post_data,
+											beforeSend: function(){
+												sys.loading(1);
+											},
+											success: function(str){
+												sys.loading(0);
+												if(str=='200 OK'){
+													inv[i].point = JSON.stringify(points);
+													$('body').data('inv', inv);
+													
+													var success_toast = apps.toast.create({
+																		   icon: '<i class="material-icons">cloud_done</i>',
+																		   text: 'Tag Details Successfully Saved.',
+																		   position: 'center',
+																		   closeTimeout: 2000
+																	   });
+													success_toast.open();
+												}else{
+													var failed_toast = apps.toast.create({
+																		   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
+																		   text: 'Oooppss, error',
+																		   position: 'center',
+																		   closeTimeout: 2000
+																	   });
+													failed_toast.open();
+												}
 											}
-										}
-									});
+										});
+									}
 									found = true;
 									break;
 								}
