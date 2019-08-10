@@ -6,11 +6,11 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.161",
+			  version: "1.0.162",
 			  rtl: false,
 			  language: "en-US"
 		  });
-var geoToken = true, geoCount = 120, APP_VERSION = 10161;
+var geoToken = true, geoCount = 120, APP_VERSION = 10162;
 
 var app = {
     initialize: function() {
@@ -3955,12 +3955,12 @@ $(document).ready(function(){
 			
 			setTimeout(function(){
 				if(inf['level']>8 && inf['leave']){
-					if("Notification" in window){
+					if('Notification' in window){
 						Notification.requestPermission(function(permission){
 							if(permission === 'granted'){
-								var notification = new Notification("Pending leave request", {
+								var notification = new Notification('Pending leave request', {
 									tag: (((new Date()).getTime())/60000).toFixed(0),
-									icon: 'icon_bnw.png',
+									icon: 'https://app.wkventertainment.com/icon_bnw.png',
 									body: ('From ' + sys.unameToSname(inf['leave'].toString())) 
 								});
 							}
