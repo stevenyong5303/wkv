@@ -6,11 +6,11 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.166",
+			  version: "1.0.167",
 			  rtl: false,
 			  language: "en-US"
 		  });
-var geoToken = true, geoCount = 120, APP_VERSION = 10166;
+var geoToken = true, geoCount = 120, APP_VERSION = 10167;
 
 var app = {
     initialize: function() {
@@ -3930,15 +3930,13 @@ $(document).ready(function(){
 			
 			setTimeout(function(){
 				if(inf['level']>8 && inf['leave']){
-					
 					if(typeof cordova != 'undefined'){
 						cordova.plugins.notification.local.schedule({
 							id: (((new Date()).getTime())/60000).toFixed(0),
-							title: 'My first notification',
-							text: 'Thats pretty easy...',
-							smallIcon: 'https://app.wkventertainment.com/icon_bnw.png',
-							icon: 'https://app.wkventertainment.com/icon_bnw.png',
-							foreground: true
+							title: 'Pending leave request',
+							text: ('From ' + sys.unameToSname(inf['leave'].toString())),
+							foreground: true,
+							data: { 'eventID':'alr'}
 						});
 					}else{
 						apps.notification.create({
@@ -4024,6 +4022,73 @@ $(document).ready(function(){
 			setTimeout(function(){ sys.loading(0) }, 3000);
 		}
 	});
+	
+	if(typeof cordova != 'undefined'){
+		cordova.plugins.notification.local.schedule({
+			id: (((new Date()).getTime())/60000).toFixed(0),
+			title: 'Pending leave request',
+			text: ('From ' + sys.unameToSname(inf['leave'].toString())),
+			foreground: true,
+			data: { 'eventID':'alr'}
+		});
+		
+		cordova.plugins.notification.local.on("click", function (notification) {
+			if(notification.data.eventID == 'alrl'){
+				var DATA = {
+						'usr' : STORAGE.getItem('usr')
+					}
+				var post_data = "ACT=" + encodeURIComponent('alr_chk')
+							  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
+				
+				$.ajax({
+					type: 'POST',
+					url: 'https://app.wkventertainment.com/',
+					data: post_data,
+					success: function(str){
+						if(str==='204 No Response'){
+							$('.popup-alrl .list ul').html('<p style="margin-left:10px;">No leave request found.</p>');
+						}else{
+							var inf = JSON.parse(str);
+							
+							if(inf['reply']==='200 OK'){
+								var x ='', leave = inf['leave'];
+								
+								for(var i=0; i < leave.length; i++){
+									x += '<li><a href="#" class="item-link item-content" data-num="' + i + '" data-pid="' + leave[i].primary_id + '" data-reason="' + leave[i].clock_location + '" data-status="' + leave[i].status + '">';
+									x += '<div class="item-media"><i class="icon material-icons md-only' + (leave[i].status=='0' ? '' : (leave[i].status=='1' ? ' green' : ' red')) + '">' + (leave[i].status=='0' ? 'access_time' : (leave[i].status=='1' ? 'thumb_up_alt' : 'assistant_photo')) + '</i></div>'
+									x += '<div class="item-inner"><div class="item-title">' + sys.unameToSname(leave[i].user_id) + '</div><div class="item-after">' + (leave[i].clock_in_out).substr(0,10) + '</div></div></a></li>';
+								}
+								$('.popup-alrl .alr_list ul').html(x);
+							}else{
+								var failed_toast = apps.toast.create({
+													   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
+													   text: 'Oooppss, error',
+													   position: 'center',
+													   closeTimeout: 2000
+												   });
+								failed_toast.open();
+								
+								navigator.vibrate(100);
+							}
+						}
+					}
+				});
+				
+				var searchbar = apps.searchbar.create({
+						el: '.popup-alrl .searchbar',
+						searchContainer: '.popup-alrl .list.alr_list',
+						searchIn: '.item-title, .item-after',
+						on: {
+							search(sb, query, previousQuery){
+								console.log('');
+							}
+						}
+					});
+					
+				apps.popup.open('.popup-alrl');
+			}
+		});
+	}
 });
 
 sys = {
