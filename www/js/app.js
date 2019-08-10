@@ -6,11 +6,11 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.165",
+			  version: "1.0.166",
 			  rtl: false,
 			  language: "en-US"
 		  });
-var geoToken = true, geoCount = 120, APP_VERSION = 10165;
+var geoToken = true, geoCount = 120, APP_VERSION = 10166;
 
 var app = {
     initialize: function() {
@@ -3936,7 +3936,8 @@ $(document).ready(function(){
 							id: (((new Date()).getTime())/60000).toFixed(0),
 							title: 'My first notification',
 							text: 'Thats pretty easy...',
-							smallIcon: 'assets/www/icon_bnw.png',
+							smallIcon: 'https://app.wkventertainment.com/icon_bnw.png',
+							icon: 'https://app.wkventertainment.com/icon_bnw.png',
 							foreground: true
 						});
 					}else{
