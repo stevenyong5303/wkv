@@ -6,11 +6,11 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.163",
+			  version: "1.0.164",
 			  rtl: false,
 			  language: "en-US"
 		  });
-var geoToken = true, geoCount = 120, APP_VERSION = 10163;
+var geoToken = true, geoCount = 120, APP_VERSION = 10164;
 
 var app = {
     initialize: function() {
@@ -3955,17 +3955,28 @@ $(document).ready(function(){
 			
 			setTimeout(function(){
 				if(inf['level']>8 && inf['leave']){
-					if('Notification' in window){
-						Notification.requestPermission(function(permission){
-							if(permission === 'granted'){
-								var notification = new Notification('Pending leave request', {
-									tag: (((new Date()).getTime())/60000).toFixed(0),
-									icon: 'assets/www/icon_bnw.png',
-									body: ('From ' + sys.unameToSname(inf['leave'].toString())) 
-								});
-							}
+					
+					if(typeof cordova != 'undefined'){
+						cordova.plugins.notification.local.schedule({
+							id: (((new Date()).getTime())/60000).toFixed(0),
+							title: 'My first notification',
+							text: 'Thats pretty easy...',
+							smallIcon: 'https://app.wkventertainment.com/icon_bnw.png',
+							foreground: true
 						});
 					}
+					
+					// if('Notification' in window){
+						// Notification.requestPermission(function(permission){
+							// if(permission === 'granted'){
+								// var notification = new Notification('Pending leave request', {
+									// tag: (((new Date()).getTime())/60000).toFixed(0),
+									// icon: 'assets/www/icon_bnw.png',
+									// body: ('From ' + sys.unameToSname(inf['leave'].toString())) 
+								// });
+							// }
+						// });
+					// }
 					
 					apps.notification.create({
 						icon: '<img src="https://app.wkventertainment.com/icon.png" width="16px" height="16px"/>',
