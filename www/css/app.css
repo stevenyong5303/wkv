@@ -265,11 +265,11 @@ td.tb-pic.tb-not-paid, div.col-10.tb-not-paid{
 	display: inline-block;
 	width: 55px;
 }
-.details-popover .autocomplete-dropdown.autocomplete-dropdown-in ul{
+.details-popover .autocomplete-dropdown.autocomplete-dropdown-in ul, .tskld-popover .autocomplete-dropdown.autocomplete-dropdown-in ul{
 	padding-left: 0px !important;
 	font-size: 12px;
 }
-.details-popover .autocomplete-dropdown.autocomplete-dropdown-in ul li{
+.details-popover .autocomplete-dropdown.autocomplete-dropdown-in ul li, .tskld-popover .autocomplete-dropdown.autocomplete-dropdown-in ul li{
 	height: 32px;
 }
 .popup-audiop audio{

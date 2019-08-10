@@ -6,11 +6,11 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.167",
+			  version: "1.0.168",
 			  rtl: false,
 			  language: "en-US"
 		  });
-var geoToken = true, geoCount = 120, APP_VERSION = 10167;
+var geoToken = true, geoCount = 120, APP_VERSION = 10168;
 
 var app = {
     initialize: function() {
@@ -206,7 +206,7 @@ $(document).ready(function(){
 		}
 	});
 	
-	sys.dayClick = function(user, skip){
+	sys.dayClick = function(user){
 		if(sys.isEmpty(user)){
 			user = STORAGE.getItem('usr');
 		}
@@ -229,9 +229,7 @@ $(document).ready(function(){
 							sys.loading(1);
 						},
 						success: function(str){
-							if(!skip){
-								sys.loading(0);
-							}
+							sys.loading(0);
 							$('.popup-event .event_list').data('date', tmp.toDateString().substr(4));
 							var hidden = (((tmp.getTime() - (new Date()).getTime()) > 86400000 ) ? ((parseInt($('body').data('user_level'))<7) ? true : false) : false);
 							$('a.leave_app').removeClass('disabled');
@@ -541,7 +539,7 @@ $(document).ready(function(){
 			});
 		}
 	};
-	sys.dayClick(usr, true);
+	sys.dayClick(usr);
 	sys.eventCheck(usr, (new Date().getMonth()), new Date().getYear()+1900, true);
 	
 	$('.evts_next').on('click', function(){
@@ -1077,6 +1075,12 @@ $(document).ready(function(){
 		apps.panel.open('left', true);
 		
 		$('.panel-evt-rmk textarea').focus();
+	});
+	
+	$('#rmk_amd').on('click', function(){
+		window.resolveLocalFileSystemURL(cordova.file.dataDirectory, function (dirEntry){
+			app.dialog.alert('file system open: ' + dirEntry.name);
+		}, onErrorLoadFs);
 	});
 	
 	$('.panel-evt-rmk textarea').on('paste keyup', function(){
@@ -4024,15 +4028,7 @@ $(document).ready(function(){
 	});
 	
 	if(typeof cordova != 'undefined'){
-		cordova.plugins.notification.local.schedule({
-			id: (((new Date()).getTime())/60000).toFixed(0),
-			title: 'Pending leave request',
-			text: ('From ' + sys.unameToSname(inf['leave'].toString())),
-			foreground: true,
-			data: { 'eventID':'alr'}
-		});
-		
-		cordova.plugins.notification.local.on("click", function (notification) {
+		cordova.plugins.notification.local.on("click", function (notification){
 			if(notification.data.eventID == 'alrl'){
 				var DATA = {
 						'usr' : STORAGE.getItem('usr')
@@ -4087,7 +4083,7 @@ $(document).ready(function(){
 					
 				apps.popup.open('.popup-alrl');
 			}
-		});
+		}, this);
 	}
 });
 
