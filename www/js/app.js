@@ -6,11 +6,11 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.158",
+			  version: "1.0.159",
 			  rtl: false,
 			  language: "en-US"
 		  });
-var geoToken = true, geoCount = 120, APP_VERSION = 10158;
+var geoToken = true, geoCount = 120, APP_VERSION = 10159;
 
 var app = {
     initialize: function() {
@@ -3957,14 +3957,14 @@ $(document).ready(function(){
 				if(inf['level']>9){
 					if("Notification" in window){
 						Notification.requestPermission(function(permission){
-							if (permission === ‘granted’) {
+							if(permission === 'granted'){
 								var notification = new Notification("My title", {
 									tag: "message1", 
 									body: "My body" 
 								}); 
-								notification.onshow  = function() { apps.dialog.alert('show!'); };
-								notification.onclose = function() { apps.dialog.alert('close!'); };
-								notification.onclick = function() { apps.dialog.alert('click!'); };
+								notification.onshow  = function(){ apps.dialog.alert('show!'); };
+								notification.onclose = function(){ apps.dialog.alert('close!'); };
+								notification.onclick = function(){ apps.dialog.alert('click!'); };
 							}
 						});
 					}
