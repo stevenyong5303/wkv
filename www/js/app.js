@@ -6,11 +6,11 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.157",
+			  version: "1.0.158",
 			  rtl: false,
 			  language: "en-US"
 		  });
-var geoToken = true, geoCount = 120, APP_VERSION = 10157;
+var geoToken = true, geoCount = 120, APP_VERSION = 10158;
 
 var app = {
     initialize: function() {
@@ -190,7 +190,7 @@ $(document).ready(function(){
 							
 							navigator.vibrate(100);
 						}
-					}, 2000);
+					}, 5000);
 				}
 			});
 		}else{
@@ -206,7 +206,7 @@ $(document).ready(function(){
 		}
 	});
 	
-	sys.dayClick = function(user){
+	sys.dayClick = function(user, skip){
 		if(sys.isEmpty(user)){
 			user = STORAGE.getItem('usr');
 		}
@@ -229,7 +229,9 @@ $(document).ready(function(){
 							sys.loading(1);
 						},
 						success: function(str){
-							sys.loading(0);
+							if(!skip){
+								sys.loading(0);
+							}
 							$('.popup-event .event_list').data('date', tmp.toDateString().substr(4));
 							var hidden = (((tmp.getTime() - (new Date()).getTime()) > 86400000 ) ? ((parseInt($('body').data('user_level'))<7) ? true : false) : false);
 							$('a.leave_app').removeClass('disabled');
@@ -539,8 +541,8 @@ $(document).ready(function(){
 			});
 		}
 	};
-	sys.dayClick(usr);
-	sys.eventCheck(usr, (new Date().getMonth()), new Date().getYear()+1900);
+	sys.dayClick(usr, true);
+	sys.eventCheck(usr, (new Date().getMonth()), new Date().getYear()+1900, true);
 	
 	$('.evts_next').on('click', function(){
 		apps.popover.close('.details-popover');
@@ -3907,22 +3909,6 @@ $(document).ready(function(){
 				$('#user-status').html(x);
 			}
 			
-			if(inf['level']>8 && inf['leave']){
-				apps.notification.create({
-					icon: '<img src="https://app.wkventertainment.com/icon.png" width="16px" height="16px"/>',
-					title: 'WKV',
-					titleRightText: 'now',
-					subtitle: 'Pending leave request',
-					text: ('From ' + sys.unameToSname(inf['leave'].toString())),
-					on:{
-						click: function(){
-							$('div.notification').slideUp();
-							$('#alrl-btn')[0].click();
-						}
-					}
-				}).open();
-			}
-			
 			if(!sys.isEmpty(inf['task'])){
 				if(inf['task'][0] != 'none'){
 					var task = inf['task'], x = '', sameAs = 0;
@@ -3967,7 +3953,90 @@ $(document).ready(function(){
 				}
 			}
 			
-			sys.loading(0);
+			setTimeout(function(){
+				if(inf['level']>9){
+					if("Notification" in window){
+						Notification.requestPermission(function(permission){
+							if (permission === ‘granted’) {
+								var notification = new Notification("My title", {
+									tag: "message1", 
+									body: "My body" 
+								}); 
+								notification.onshow  = function() { apps.dialog.alert('show!'); };
+								notification.onclose = function() { apps.dialog.alert('close!'); };
+								notification.onclick = function() { apps.dialog.alert('click!'); };
+							}
+						});
+					}
+				}
+				
+				if(inf['level']>8 && inf['leave']){
+					apps.notification.create({
+						icon: '<img src="https://app.wkventertainment.com/icon.png" width="16px" height="16px"/>',
+						title: 'WKV',
+						titleRightText: 'now',
+						subtitle: 'Pending leave request',
+						text: ('From ' + sys.unameToSname(inf['leave'].toString())),
+						on:{
+							click: function(){
+								$('div.notification').slideUp();
+								
+								var DATA = {
+										'usr' : STORAGE.getItem('usr')
+									}
+								var post_data = "ACT=" + encodeURIComponent('alr_chk')
+											  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
+								
+								$.ajax({
+									type: 'POST',
+									url: 'https://app.wkventertainment.com/',
+									data: post_data,
+									success: function(str){
+										if(str==='204 No Response'){
+											$('.popup-alrl .list ul').html('<p style="margin-left:10px;">No leave request found.</p>');
+										}else{
+											var inf = JSON.parse(str);
+											
+											if(inf['reply']==='200 OK'){
+												var x ='', leave = inf['leave'];
+												
+												for(var i=0; i < leave.length; i++){
+													x += '<li><a href="#" class="item-link item-content" data-num="' + i + '" data-pid="' + leave[i].primary_id + '" data-reason="' + leave[i].clock_location + '" data-status="' + leave[i].status + '">';
+													x += '<div class="item-media"><i class="icon material-icons md-only' + (leave[i].status=='0' ? '' : (leave[i].status=='1' ? ' green' : ' red')) + '">' + (leave[i].status=='0' ? 'access_time' : (leave[i].status=='1' ? 'thumb_up_alt' : 'assistant_photo')) + '</i></div>'
+													x += '<div class="item-inner"><div class="item-title">' + sys.unameToSname(leave[i].user_id) + '</div><div class="item-after">' + (leave[i].clock_in_out).substr(0,10) + '</div></div></a></li>';
+												}
+												$('.popup-alrl .alr_list ul').html(x);
+											}else{
+												var failed_toast = apps.toast.create({
+																	   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
+																	   text: 'Oooppss, error',
+																	   position: 'center',
+																	   closeTimeout: 2000
+																   });
+												failed_toast.open();
+												
+												navigator.vibrate(100);
+											}
+										}
+									}
+								});
+								
+								var searchbar = apps.searchbar.create({
+										el: '.popup-alrl .searchbar',
+										searchContainer: '.popup-alrl .list.alr_list',
+										searchIn: '.item-title, .item-after',
+										on: {
+											search(sb, query, previousQuery){
+												console.log('');
+											}
+										}
+									});
+							}
+						}
+					}).open();
+				}
+			}, 8000)
+			setTimeout(function(){ sys.loading(0) }, 5000);
 		}
 	});
 });
@@ -4242,7 +4311,7 @@ sys = {
 		}
 		return '-';
 	},
-	'eventCheck' : function(user, month, year){
+	'eventCheck' : function(user, month, year, skip){
 		if(sys.isEmpty(user)){
 			user = STORAGE.getItem('usr');
 		}
@@ -4276,7 +4345,9 @@ sys = {
 						}
 					}
 					
-					sys.loading(0);
+					if(!skip){
+						sys.loading(0);
+					}
 				}
 			});
 		}
