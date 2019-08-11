@@ -6,11 +6,11 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.168",
+			  version: "1.0.169",
 			  rtl: false,
 			  language: "en-US"
 		  });
-var geoToken = true, geoCount = 120, APP_VERSION = 10168;
+var geoToken = true, geoCount = 120, APP_VERSION = 10169;
 
 var app = {
     initialize: function() {
@@ -1078,9 +1078,7 @@ $(document).ready(function(){
 	});
 	
 	$('#rmk_amd').on('click', function(){
-		window.resolveLocalFileSystemURL(cordova.file.dataDirectory, function (dirEntry){
-			app.dialog.alert('file system open: ' + dirEntry.name);
-		}, onErrorLoadFs);
+		$('#amd_fle').trigger('click');
 	});
 	
 	$('.panel-evt-rmk textarea').on('paste keyup', function(){
