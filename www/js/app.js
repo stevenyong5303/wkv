@@ -6,11 +6,11 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.169",
+			  version: "1.0.170",
 			  rtl: false,
 			  language: "en-US"
 		  });
-var geoToken = true, geoCount = 120, APP_VERSION = 10169;
+var geoToken = true, geoCount = 120, APP_VERSION = 10170;
 
 var app = {
     initialize: function() {
@@ -3927,6 +3927,14 @@ $(document).ready(function(){
 				}
 			}
 			
+			if(typeof window.plugins != 'undefined'){
+				window.plugins.OneSignal.sendTags({
+					'level': inf['level'],
+					'uid': usr
+				});
+				window.plugins.OneSignal.setExternalUserId(usr);
+			}
+			
 			for(var i=10; i>parseInt(inf['level']); i--){
 				if($('.level'+i).length > 0){
 					$('.level'+i).remove();
@@ -3947,7 +3955,7 @@ $(document).ready(function(){
 							title: 'Pending leave request',
 							text: ('From ' + sys.unameToSname(inf['leave'].toString())),
 							foreground: true,
-							data: { 'eventID':'alr'}
+							data: { 'eventID':'alr' }
 						});
 					}else{
 						apps.notification.create({
