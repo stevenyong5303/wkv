@@ -24,6 +24,15 @@ var app = {
     onDeviceReady: function(){
         app.receivedEvent('deviceready');
 		
+		var notificationOpenedCallback = function(jsonData) {
+			console.log('notificationOpenedCallback: ' + JSON.stringify(jsonData));
+		};
+
+		window.plugins.OneSignal
+		.startInit("1e0f19a6-8d77-404f-9006-c9d9f381fe59")
+		.handleNotificationOpened(notificationOpenedCallback)
+		.endInit();
+		
 		window.open = cordova.InAppBrowser.open;
 		document.addEventListener("backbutton", sys.onBackKeyDown, false);
     },
