@@ -6,11 +6,11 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.170",
+			  version: "1.0.171",
 			  rtl: false,
 			  language: "en-US"
 		  });
-var geoToken = true, geoCount = 120, APP_VERSION = 10170;
+var geoToken = true, geoCount = 120, APP_VERSION = 10171;
 
 var app = {
     initialize: function() {
@@ -32,6 +32,8 @@ var app = {
 		.startInit("1e0f19a6-8d77-404f-9006-c9d9f381fe59")
 		.handleNotificationOpened(notificationOpenedCallback)
 		.endInit();
+		
+		window.plugins.OneSignal.sendTag("uid", STORAGE.getItem('usr'));
 		
 		window.open = cordova.InAppBrowser.open;
 		document.addEventListener("backbutton", sys.onBackKeyDown, false);
@@ -3925,14 +3927,6 @@ $(document).ready(function(){
 					$('#task_tl').data('inf', task);
 					$('#task_tl').html(x);
 				}
-			}
-			
-			if(typeof window.plugins != 'undefined'){
-				window.plugins.OneSignal.sendTags({
-					'level': inf['level'],
-					'uid': usr
-				});
-				window.plugins.OneSignal.setExternalUserId(usr);
 			}
 			
 			for(var i=10; i>parseInt(inf['level']); i--){
