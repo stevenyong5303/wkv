@@ -4,7 +4,7 @@
 <widget xmlns     = "http://www.w3.org/ns/widgets"
         xmlns:gap = "http://phonegap.com/ns/1.0"
         id        = "com.wkv.manage"
-        version   = "1.0.171">
+        version   = "1.0.172">
 
     <name>WKV</name>
 
@@ -47,7 +47,6 @@
 
     <!-- Plugins -->
 	<plugin name="cordova-plugin-x-socialsharing" />
-	<plugin name="cordova-plugin-local-notification" />
 	<plugin name="phonegap-plugin-barcodescanner" />
 	<plugin name="onesignal-cordova-plugin" spec="2.4.1" source="npm" />
 	
@@ -109,7 +108,7 @@
     <!-- <gap:splash src="res/screen/windows-phone/screen-portrait.png"      gap:platform="winphone" /> -->
 
     <gap:config-file platform="ios" parent="CFBundleShortVersionString">
-    <string>171</string>
+    <string>172</string>
     </gap:config-file>
 
     <!--
