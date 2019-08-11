@@ -38,7 +38,7 @@ span.dialog-label{
 	display: inline-block;
 	width: 35px;
 }
-span.pic-call{
+span.pic-call, span.rmk-media{
 	font-weight: bold;
 }
 div.list a div.item-media i.red{

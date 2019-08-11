@@ -1043,7 +1043,10 @@
 						<a href="#" id="rmk_amd">
 							<i class="icon material-icons md-only">video_library</i>
 						</a>
-						<input id="amd_fle" type="file"/>
+						<form id="amd_frm" style="display:none;" enctype="multipart/form-data">
+							<input type="text" name="ACT" value="amd_evt_fle_upload"/>
+							<input id="amd_fle" type="file" name="file"/>
+						</form>
 					</div>
 					<div class="toolbar">
 						<div class="toolbar-inner">
@@ -3737,7 +3740,7 @@
 				<div class="block">
 					<div align="center">
 						 <img src="icon.png" alt="WKV Logo" height="128" width="128">
-						 <span style="color:#999;position:absolute;top:40px;font-size:12px;">&emsp;Version 1.0.172</span>
+						 <span style="color:#999;position:absolute;top:40px;font-size:12px;">&emsp;Version 1.0.173</span>
 					</div>
 					<p>WKV Application serves as a platform for of WKV’s member to obtain basic information and calculation method can easily obtain by accessing to the application.</p>
 					<p>For general usage, clock in and clock out is built in the application for employees of WKV to check in whenever they report to event venue.</p>

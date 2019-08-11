@@ -6,11 +6,11 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.172",
+			  version: "1.0.173",
 			  rtl: false,
 			  language: "en-US"
 		  });
-var geoToken = true, geoCount = 120, APP_VERSION = 10172;
+var geoToken = true, geoCount = 120, APP_VERSION = 10173;
 
 var app = {
     initialize: function() {
@@ -321,6 +321,7 @@ $(document).ready(function(){
 										var inf1 = JSON.parse(str);
 										
 										if(parseInt($('body').data('user_level'))>=9 && inf1.lock==0){
+											$('.details-popover').data('lock', 0);
 											x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Person In Charge</div><div class="item-input-wrap">' + ((inf.pic==null) ? '-' : inf.pic) + '</div></div></div></li>';
 											x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Luncheon/Dinner</div><div class="item-input-wrap"><input class="evtd_ld" type="text" autocomplete="off" value="' + ((inf.luncheon_dinner==null) ? '' : inf.luncheon_dinner) + '"></div></div></div></li>';
 											x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Standby Time</div><div class="item-input-wrap"><input class="evtd_sbtm" type="text" autocomplete="off" value="' + ((inf.time==null) ? '' : inf.time) + '"></div></div></div></li>';
@@ -336,6 +337,7 @@ $(document).ready(function(){
 											x += '<button class="evtd_dlt button col button-fill" data-eid="' + inf.primary_id + '">Delete</button>';
 											x += '</div></div></div></li>';
 										}else{
+											$('.details-popover').data('lock', 1);
 											x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Person In Charge</div><div class="item-input-wrap">' + ((inf.pic==null) ? '-' : inf.pic) + '</div></div></div></li>';
 											x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Luncheon/Dinner</div><div class="item-input-wrap">' + ((inf.luncheon_dinner==null) ? '-' : inf.luncheon_dinner) + '</div></div></div></li>';
 											x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Standby Time</div><div class="item-input-wrap">' + ((inf.time==null) ? '-' : inf.time) + '</div></div></div></li>';
@@ -761,6 +763,12 @@ $(document).ready(function(){
 		}
 	});
 	
+	$('#app').on('click', 'span.rmk-media', function(){
+		var source = $(this).data('src');
+		
+		window.open(('https://app.wkventertainment.com/files/upload/' + source), '_system');
+	});
+	
 	$('a#home-btn').on('mousedown touchstart', function(){
 		if($(this).hasClass('tab-link-active')){
 			DATA = {
@@ -1093,6 +1101,49 @@ $(document).ready(function(){
 	
 	$('#rmk_amd').on('click', function(){
 		$('#amd_fle').trigger('click');
+	});
+	
+	$('#amd_fle').on('change', function(){
+		$.ajax({
+			url: 'https://app.wkventertainment.com/',
+			type: 'POST',
+			data:  new FormData($('#amd_frm')[0]),
+			contentType: false,
+			cache: false,
+			processData:false,
+			beforeSend : function(){
+				sys.loading(1);
+			},
+			success: function(str){
+				var inf = JSON.parse(str);
+			
+				if(inf['reply']==='200 OK'){
+					var x = ($('.panel-evt-rmk textarea').val() + '\n*[' + inf['type'] + ']^' + inf['path'] + '*');
+					
+					$('.panel-evt-rmk textarea').val(x);
+					$('.details-popover input.evtd_rmk').val(sys.commasToNextLine(x, 'r'));
+					sys.loading(0);
+				}else if(inf['reply']==='400 Bad Request'){
+					sys.loading(0);
+					var failed_toast = apps.toast.create({
+										   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
+										   text: 'Invalid file.',
+										   position: 'center',
+										   closeTimeout: 2000
+									   });
+					failed_toast.open();
+				}else{
+					sys.loading(0);
+					var failed_toast = apps.toast.create({
+										   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
+										   text: 'Oooppss, error',
+										   position: 'center',
+										   closeTimeout: 2000
+									   });
+					failed_toast.open();
+				}
+			}       
+		});
 	});
 	
 	$('.panel-evt-rmk textarea').on('paste keyup', function(){
@@ -3396,7 +3447,7 @@ $(document).ready(function(){
 	$('.popover-backdrop').on('click', function(e){
 		if($('.details-popover').css('display')=='block'){
 			if(this === e.target){
-				if(parseInt($('body').data('user_level')) > 7){
+				if((parseInt($('body').data('user_level')) > 7) && ($('.details-popover').data('lock') == 0)){
 					var trName = $('.details-popover button.evtd_sve').data('trName'),
 						inf = $('div.details-popover').data('info'),
 						pid = $('.details-popover button.evtd_sve').data('eid'),
@@ -4199,7 +4250,19 @@ sys = {
 	'commasToNextLine' : function(str, mode){
 		if(str){
 			if(sys.isEmpty(mode)){
-				var x = str.replace(/,,/g, '<br/>'), pattern = new RegExp(/\`(.*?)\`/g);
+				var x = str.replace(/,,/g, '<br/>'), pattern = new RegExp(/\`(.*?)\`/g), media = new RegExp(/\*\[(.*?)\]\^(.*?)\*/g);
+				
+				if(media.test(x)){
+					var files = x.match(media);
+					
+					for(var i=0; i<files.length; i++){
+						var source = files[i].substr(9, (files[i].length - 10));
+						var type = files[i].substr(2, 5);
+						var link = '<span data-src="' + source + '" class="rmk-media">[ ' + type + ' ]</a>';
+						
+						x = x.replace(files[i], link);
+					}
+				}
 				
 				if(pattern.test(x)){
 					var pic = x.match(pattern), crews = $('body').data('crew');
