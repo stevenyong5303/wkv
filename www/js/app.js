@@ -986,7 +986,7 @@ $(document).ready(function(){
 									total += tprice;
 								}
 								
-								x += '<li class="item-content"><div class="item-inner"><div class="row small-font"><div class="tt col-10 ' + (inf['sales'][i].paid=='1' ? 'tb-paid' : 'tb-not-paid') + '" data-pid="' + inf['sales'][i].primary_id + '" data-rmk="' + inf['sales'][i].remarks + '">' + (j+1) + '</div><div class="col-20">' + (inf['sales'][i].date).substr(0,10) + '</div><div class="col-45">' + sys.pidToLoc(inf['sales'][i].venue).loc_name + '</div><div class="col-15">RM ' + tprice + '</div></div></div></li>';
+								x += '<li class="item-content"><div class="item-inner"><div class="row small-font"><div class="tt col-10' + ((inf['sales'][i].price != 0) ? (inf['sales'][i].paid=='1' ? ' tb-paid' : ' tb-not-paid') : '') + '" data-pid="' + inf['sales'][i].primary_id + '" data-rmk="' + inf['sales'][i].remarks + '">' + (j+1) + '</div><div class="col-20">' + (inf['sales'][i].date).substr(0,10) + '</div><div class="col-45">' + sys.pidToLoc(inf['sales'][i].venue).loc_name + '</div><div class="col-15">RM ' + tprice + '</div></div></div></li>';
 								j++;
 								match = true;
 							}
