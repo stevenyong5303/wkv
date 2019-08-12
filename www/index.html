@@ -109,9 +109,6 @@
 							<ul>
 								<li>
 									<a id="lgn_sgn" class="button button-fill button-raised">Login</a>
-									<div style="display:none;">
-										<audio src="https://app.wkventertainment.com/files/music/silent.m4a" controls="true" loop="true"></audio>
-									</div>
 								</li>
 							</ul>
 						</div>
@@ -261,6 +258,18 @@
 												<!-- </div> -->
 											<!-- </div> -->
 										<!-- </li> -->
+										<li>
+											<div class="item-content">
+												<div class="item-media">
+													<i class="icon material-icons md-only">add_alert</i>
+												</div>
+												<div class="item-inner">
+													<div class="item-title">
+														<a id="sntf-btn" class="link popup-open" href="#" data-popup=".popup-sntf">Send Notifications</a>
+													</div>
+												</div>
+											</div>
+										</li>
 										<li>
 											<div class="item-content">
 												<div class="item-media">
@@ -703,18 +712,6 @@
 								<li>
 									<div class="item-content">
 										<div class="item-media">
-											<i class="icon material-icons md-only">add_alert</i>
-										</div>
-										<div class="item-inner">
-											<div class="item-title">
-												<a id="sntf-btn" class="link" href="#">Send Notifications</a>
-											</div>
-										</div>
-									</div>
-								</li>
-								<li>
-									<div class="item-content">
-										<div class="item-media">
 											<i class="icon material-icons md-only">date_range</i>
 										</div>
 										<div class="item-inner">
@@ -1109,7 +1106,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="popup popup-crewl level8">
+			<div class="popup popup-crewl level9">
 				<div class="toolbar">
 					<div class="toolbar-inner">
 						<div class="left">Crew List</div>
@@ -1156,7 +1153,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="popup popup-locl level8">
+			<div class="popup popup-locl level9">
 				<div class="toolbar">
 					<div class="toolbar-inner">
 						<div class="left">Location List</div>
@@ -1264,7 +1261,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="popup popup-picl level8">
+			<div class="popup popup-picl level9">
 				<div class="toolbar">
 					<div class="toolbar-inner">
 						<div class="left">Person In Charge List</div>
@@ -1335,7 +1332,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="popup popup-rprt level8">
+			<div class="popup popup-rprt level9">
 				<div class="toolbar">
 					<div class="toolbar-inner">
 						<div class="left">Sales Reports</div>
@@ -1377,6 +1374,50 @@
 				</div>
 				<div class="rprt-result list noselect" style="z-index:0;">
 					<ul></ul>
+				</div>
+			</div>
+			<div class="popup popup-sntf level8">
+				<div class="toolbar">
+					<div class="toolbar-inner">
+						<div class="left">Send Notifications</div>
+						<div class="right"><a class="link popup-close" href="#">Close</a></div>
+					</div>
+				</div>
+				<div class="list">
+					<ul>
+						<li class="item-content">
+							<div class="item-inner">
+								<form class="searchbar">
+									<div class="searchbar-inner">
+										<div class="searchbar-input-wrap">
+											<input type="search" placeholder="Search">
+											<i class="searchbar-icon"></i>
+											<span class="input-clear-button"></span>
+										</div>
+										<span class="searchbar-disable-button if-not-aurora">Cancel</span>
+									</div>
+								</form>
+							</div>
+						</li>
+						<div class="block">
+							<div class="list sntf-crw">
+								<ul></ul>
+							</div>
+						</div>
+						<li class="item-content item-input">
+							<div class="item-inner">
+								<div class="item-title item-label">Message</div>
+								<div class="item-input-wrap">
+									<input id="sntf_msg" type="text" value="" autocomplete="off">
+								</div>
+							</div>
+						</li>
+					</ul>
+				</div>
+				<div class="block" style="z-index:0;">
+					<button class="button button-raised button-fill sntf_snd" style="margin: 10px auto -20px;width: calc(100% - 30px);">
+						<i class="icon material-icons md-only">send</i>
+					</button>
 				</div>
 			</div>
 			<div class="popup popup-tskl level8">
@@ -1464,7 +1505,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="popup popup-alrl level8">
+			<div class="popup popup-alrl level9">
 				<div class="toolbar">
 					<div class="toolbar-inner">
 						<div class="left">Leave Request List</div>
@@ -2054,6 +2095,7 @@
 										<div class="item-title item-label">
 											<i class="icon material-icons md-only">create</i> Fixture Legend
 										</div>
+										<div class="item-input-wrap">
 										<div class="item-input-wrap">
 											<select id="ltcl_nme">
 												<option value="PAR" selected>Par Can</option>
@@ -3740,7 +3782,7 @@
 				<div class="block">
 					<div align="center">
 						 <img src="icon.png" alt="WKV Logo" height="128" width="128">
-						 <span style="color:#999;position:absolute;top:40px;font-size:12px;">&emsp;Version 1.0.173</span>
+						 <span style="color:#999;position:absolute;top:40px;font-size:12px;">&emsp;Version 1.0.174</span>
 					</div>
 					<p>WKV Application serves as a platform for of WKV’s member to obtain basic information and calculation method can easily obtain by accessing to the application.</p>
 					<p>For general usage, clock in and clock out is built in the application for employees of WKV to check in whenever they report to event venue.</p>

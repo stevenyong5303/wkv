@@ -4,7 +4,7 @@
 <widget xmlns     = "http://www.w3.org/ns/widgets"
         xmlns:gap = "http://phonegap.com/ns/1.0"
         id        = "com.wkv.manage"
-        version   = "1.0.173">
+        version   = "1.0.174">
 
     <name>WKV</name>
 
@@ -108,7 +108,7 @@
     <!-- <gap:splash src="res/screen/windows-phone/screen-portrait.png"      gap:platform="winphone" /> -->
 
     <gap:config-file platform="ios" parent="CFBundleShortVersionString">
-    <string>173</string>
+    <string>174</string>
     </gap:config-file>
 
     <!--

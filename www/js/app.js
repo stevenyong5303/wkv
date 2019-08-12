@@ -6,11 +6,11 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.173",
+			  version: "1.0.174",
 			  rtl: false,
 			  language: "en-US"
 		  });
-var geoToken = true, geoCount = 120, APP_VERSION = 10173;
+var geoToken = true, geoCount = 120, APP_VERSION = 10174;
 
 var app = {
     initialize: function() {
@@ -1052,7 +1052,90 @@ $(document).ready(function(){
 				}
 			}
 		});
-	})
+	});
+	
+	$('#sntf-btn').on('click', function(){
+		var crews = $('body').data('crew'),
+			x = '';
+		
+		for(var i = 0; i < crews.length; i++){
+			if(!sys.isEmpty(crews[i]['player_id'])){
+				
+				x += '<li><label class="item-checkbox item-content"><input type="checkbox" name="sncw-checkbox" value="' + crews[i]['player_id'] + '"/>';
+				x += '<i class="icon icon-checkbox"></i><div class="item-inner"><div class="item-title">' + crews[i]['short_name'] + '</div></div></label></li>';
+			}
+		}
+		
+		$('div.sntf-crw ul').html(x);
+		
+		var searchbar = apps.searchbar.create({
+				el: '.popup-sntf .searchbar',
+				searchContainer: '.popup-sntf .list.sntf-crw',
+				searchIn: '.item-title',
+				on: {
+					search(sb, query, previousQuery){
+						console.log('');
+					}
+				}
+			});
+	});
+	
+	$('button.sntf_snd').on('click', function(){
+		var receivers = [],
+			message = $('#sntf_msg').val(),
+			sender = $('#edpf_name').val();
+		
+		for(var i=0; i<$('input[name="sncw-checkbox"]:checked').length; i++){
+			receivers.push($('input[name="sncw-checkbox"]:checked:eq('+i+')').val());
+		}
+		
+		if(sys.isEmpty(sender)){
+			sender = 'The Management';
+		}
+		if(!sys.isEmpty(receivers) && !sys.isEmpty(message)){
+			var DATA = {
+				'app_id' : '1e0f19a6-8d77-404f-9006-c9d9f381fe59',
+				'include_player_ids' : receivers,
+				'template_id': '7052a1cb-7d5a-46cd-bacd-76498a49254f',
+				'headings' : { 'en': ('Notification from ' + sender)},
+				'contents' : { 'en': message},
+				'data' : { 'sender': usr }
+			};
+					  
+			$.ajax({
+				type: 'POST',
+				url: 'https://onesignal.com/api/v1/notifications',
+				data: JSON.stringify(DATA),
+				contentType: "application/json; charset=utf-8",
+				dataType: "json",
+				beforeSend: function(){
+					sys.loading(1);
+				},
+				success: function(inf){
+					if(!sys.isEmpty(inf['id'])){
+						$('#sntf_msg').val('');
+						sys.loading(0);
+						var success_toast = apps.toast.create({
+												icon: '<i class="material-icons">send</i>',
+												text: 'Notification sent',
+												position: 'center',
+												closeTimeout: 6000
+											});
+							success_toast.open();
+					}else{
+						sys.loading(0);
+						var failed_toast = apps.toast.create({
+											   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
+											   text: 'Oooppss, error',
+											   position: 'center',
+											   closeTimeout: 2000
+										   });
+						failed_toast.open();
+					}
+				}
+			});
+		}
+	});
 	
 	$('.details-popover').on('click', 'input.evtd_rmk', function(){
 		var x = '';
