@@ -6,11 +6,11 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.174",
+			  version: "1.0.175",
 			  rtl: false,
 			  language: "en-US"
 		  });
-var geoToken = true, geoCount = 120, APP_VERSION = 10174;
+var geoToken = true, geoCount = 120, APP_VERSION = 10175;
 
 var app = {
     initialize: function() {
@@ -1083,7 +1083,8 @@ $(document).ready(function(){
 	$('button.sntf_snd').on('click', function(){
 		var receivers = [],
 			message = $('#sntf_msg').val(),
-			sender = $('#edpf_name').val();
+			sender = $('#edpf_name').val(),
+			title = $('#sntf_ttl').val();
 		
 		for(var i=0; i<$('input[name="sncw-checkbox"]:checked').length; i++){
 			receivers.push($('input[name="sncw-checkbox"]:checked:eq('+i+')').val());
@@ -1097,7 +1098,7 @@ $(document).ready(function(){
 				'app_id' : '1e0f19a6-8d77-404f-9006-c9d9f381fe59',
 				'include_player_ids' : receivers,
 				'template_id': '7052a1cb-7d5a-46cd-bacd-76498a49254f',
-				'headings' : { 'en': ('Notification from ' + sender)},
+				'headings' : { 'en': (sys.isEmpty(title) ? ('Notification from ' + sender) : title)},
 				'contents' : { 'en': message},
 				'data' : { 'sender': usr }
 			};
@@ -1113,13 +1114,14 @@ $(document).ready(function(){
 				},
 				success: function(inf){
 					if(!sys.isEmpty(inf['id'])){
+						$('#sntf_ttl').val('');
 						$('#sntf_msg').val('');
 						sys.loading(0);
 						var success_toast = apps.toast.create({
 												icon: '<i class="material-icons">send</i>',
 												text: 'Notification sent',
 												position: 'center',
-												closeTimeout: 6000
+												closeTimeout: 2000
 											});
 							success_toast.open();
 					}else{
@@ -1503,7 +1505,7 @@ $(document).ready(function(){
 								var failed_toast = apps.toast.create({
 												   text: 'No item found',
 												   position: 'center',
-												   closeTimeout: 1000
+												   closeTimeout: 2000
 											   });
 								failed_toast.open();
 							}
@@ -2700,7 +2702,7 @@ $(document).ready(function(){
 						var x ='', leave = inf['leave'];
 						
 						for(var i=0; i < leave.length; i++){
-							x += '<li><a href="#" class="item-link item-content" data-num="' + i + '" data-pid="' + leave[i].primary_id + '" data-reason="' + leave[i].clock_location + '" data-status="' + leave[i].status + '">';
+							x += '<li><a href="#" class="item-link item-content" data-num="' + i + '" data-pid="' + leave[i].primary_id + '" data-reason="' + leave[i].clock_location + '" data-status="' + leave[i].status + '" data-uid="' + leave[i].user_id + '">';
 							x += '<div class="item-media"><i class="icon material-icons md-only' + (leave[i].status=='0' ? '' : (leave[i].status=='1' ? ' green' : ' red')) + '">' + (leave[i].status=='0' ? 'access_time' : (leave[i].status=='1' ? 'thumb_up_alt' : 'assistant_photo')) + '</i></div>'
 							x += '<div class="item-inner"><div class="item-title">' + sys.unameToSname(leave[i].user_id) + '</div><div class="item-after">' + (leave[i].clock_in_out).substr(0,10) + '</div></div></a></li>';
 						}
@@ -2737,6 +2739,7 @@ $(document).ready(function(){
 		$('#alrd_date').val($(this).find('.item-after').text());
 		$('#alrd_date').data('pid', $(this).data('pid'));
 		$('#alrd_date').data('num', $(this).data('num'));
+		$('#alrd_date').data('uid', $(this).data('uid'));
 		$('#alrd_user').val($(this).find('.item-title').text());
 		$('#alrd_reason').val($(this).data('reason'));
 		var status = (($(this).data('status') == '1') ? 'OK' : (($(this).data('status') == '0') ? '' : $(this).data('status')));
@@ -2766,20 +2769,72 @@ $(document).ready(function(){
 				sys.loading(0);
 				
 				if(str==='200 OK'){
-					var x = '<a href="#" class="item-link item-content" data-num="' + $('#alrd_date').data('num') + '" data-pid="' + $('#alrd_date').data('pid') + '" data-reason="' + $('#alrd_reason').val() + '" data-status="' + status + '">';
-						x += '<div class="item-media"><i class="icon material-icons md-only' + (status=='0' ? '' : (status=='1' ? ' green' : ' red')) + '">' + (status=='0' ? 'access_time' : (status=='1' ? 'thumb_up_alt' : 'assistant_photo')) + '</i></div>'
-						x += '<div class="item-inner"><div class="item-title">' + $('#alrd_user').val() + '</div><div class="item-after">' + $('#alrd_date').val() + '</div></div></a>';
-						
-					$('.alr_list ul li:eq(' + $('#alrd_date').data('num') + ')').html(x);
-					apps.popover.close('.alrld-popover');
+					if(status != 0){
+						var plyid = sys.uidToPyid($('#alrd_date').data('uid'));
 					
-					var success_toast = apps.toast.create({
-										   icon: '<i class="material-icons">cloud_done</i>',
-										   text: 'Details Successfully Saved',
-										   position: 'center',
-										   closeTimeout: 2000
-									   });
-					success_toast.open();
+						var DATA = {
+							'app_id' : '1e0f19a6-8d77-404f-9006-c9d9f381fe59',
+							'include_player_ids' : [plyid],
+							'template_id': '7052a1cb-7d5a-46cd-bacd-76498a49254f',
+							'headings' : { 'en' : ((status==1) ? 'Leave Request Approved' : 'Leave Request Rejected')},
+							'contents' : { 'en' : ('For date : ' + $('#alrd_date').val())},
+							'data' : { 'sender' : usr, 'system' : 'lrq_udt' }
+						};
+								  
+						$.ajax({
+							type: 'POST',
+							url: 'https://onesignal.com/api/v1/notifications',
+							data: JSON.stringify(DATA),
+							contentType: "application/json; charset=utf-8",
+							dataType: "json",
+							beforeSend: function(){
+								sys.loading(1);
+							},
+							success: function(inf){
+								if(!sys.isEmpty(inf['id'])){
+									var x = '<a href="#" class="item-link item-content" data-num="' + $('#alrd_date').data('num') + '" data-pid="' + $('#alrd_date').data('pid') + '" data-reason="' + $('#alrd_reason').val() + '" data-status="' + status + '">';
+										x += '<div class="item-media"><i class="icon material-icons md-only' + (status=='0' ? '' : (status=='1' ? ' green' : ' red')) + '">' + (status=='0' ? 'access_time' : (status=='1' ? 'thumb_up_alt' : 'assistant_photo')) + '</i></div>'
+										x += '<div class="item-inner"><div class="item-title">' + $('#alrd_user').val() + '</div><div class="item-after">' + $('#alrd_date').val() + '</div></div></a>';
+										
+									$('.alr_list ul li:eq(' + $('#alrd_date').data('num') + ')').html(x);
+									apps.popover.close('.alrld-popover');
+									
+									sys.loading(0);
+									var success_toast = apps.toast.create({
+														   icon: '<i class="material-icons">cloud_done</i>',
+														   text: 'Details Successfully Saved',
+														   position: 'center',
+														   closeTimeout: 2000
+													   });
+									success_toast.open();
+								}else{
+									sys.loading(0);
+									var failed_toast = apps.toast.create({
+														   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
+														   text: 'Oooppss, error',
+														   position: 'center',
+														   closeTimeout: 2000
+													   });
+									failed_toast.open();
+								}
+							}
+						});
+					}else{
+						var x = '<a href="#" class="item-link item-content" data-num="' + $('#alrd_date').data('num') + '" data-pid="' + $('#alrd_date').data('pid') + '" data-reason="' + $('#alrd_reason').val() + '" data-status="' + status + '">';
+							x += '<div class="item-media"><i class="icon material-icons md-only' + (status=='0' ? '' : (status=='1' ? ' green' : ' red')) + '">' + (status=='0' ? 'access_time' : (status=='1' ? 'thumb_up_alt' : 'assistant_photo')) + '</i></div>'
+							x += '<div class="item-inner"><div class="item-title">' + $('#alrd_user').val() + '</div><div class="item-after">' + $('#alrd_date').val() + '</div></div></a>';
+							
+						$('.alr_list ul li:eq(' + $('#alrd_date').data('num') + ')').html(x);
+						apps.popover.close('.alrld-popover');
+						
+						var success_toast = apps.toast.create({
+											   icon: '<i class="material-icons">cloud_done</i>',
+											   text: 'Details Successfully Saved',
+											   position: 'center',
+											   closeTimeout: 2000
+										   });
+						success_toast.open();
+					}
 				}else{
 					var failed_toast = apps.toast.create({
 										   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
@@ -3162,17 +3217,47 @@ $(document).ready(function(){
 						sys.loading(1);
 					},
 					success: function(str){
-						sys.loading(0);
-						
 						if(str==='200 OK'){
-							var success_toast = apps.toast.create({
-												   icon: '<i class="material-icons">hearing</i>',
-												   text: 'Leave request pending for approval.',
-												   position: 'center',
-												   closeTimeout: 2000
-											   });
-							success_toast.open();
+							var superUser = sys.pyid('super');
+							var DATA = {
+								'app_id' : '1e0f19a6-8d77-404f-9006-c9d9f381fe59',
+								'include_player_ids': superUser,
+								'template_id': '7052a1cb-7d5a-46cd-bacd-76498a49254f',
+								'headings' : { 'en' : ('Leave Request on ' + date)},
+								'contents' : { 'en' : ('From : ' + $('#edpf_name').val())},
+								'data' : { 'sender' : usr, 'system' : 'lrq_add' }
+							};
+									  
+							$.ajax({
+								type: 'POST',
+								url: 'https://onesignal.com/api/v1/notifications',
+								data: JSON.stringify(DATA),
+								contentType: "application/json; charset=utf-8",
+								dataType: "json",
+								success: function(inf){
+									if(!sys.isEmpty(inf['id'])){
+										sys.loading(0);
+										var success_toast = apps.toast.create({
+																icon: '<i class="material-icons">hearing</i>',
+																text: 'Leave request pending for approval.',
+																position: 'center',
+																closeTimeout: 2000
+															});
+											success_toast.open();
+									}else{
+										sys.loading(0);
+										var failed_toast = apps.toast.create({
+															   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
+															   text: 'Oooppss, error',
+															   position: 'center',
+															   closeTimeout: 2000
+														   });
+										failed_toast.open();
+									}
+								}
+							});
 						}else{
+							sys.loading(0);
 							var failed_toast = apps.toast.create({
 												   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
 												   text: 'Oooppss, error',
@@ -4080,75 +4165,6 @@ $(document).ready(function(){
 				}
 			}
 			
-			setTimeout(function(){
-				if(inf['level']>8 && inf['leave']){
-					apps.notification.create({
-						icon: '<img src="https://app.wkventertainment.com/icon.png" width="16px" height="16px"/>',
-						title: 'WKV',
-						titleRightText: 'now',
-						subtitle: 'Pending leave request',
-						text: ('From ' + sys.unameToSname(inf['leave'].toString())),
-						on:{
-							click: function(){
-								$('div.notification').slideUp();
-								
-								var DATA = {
-										'usr' : STORAGE.getItem('usr')
-									}
-								var post_data = "ACT=" + encodeURIComponent('alr_chk')
-											  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
-								
-								$.ajax({
-									type: 'POST',
-									url: 'https://app.wkventertainment.com/',
-									data: post_data,
-									success: function(str){
-										if(str==='204 No Response'){
-											$('.popup-alrl .list ul').html('<p style="margin-left:10px;">No leave request found.</p>');
-										}else{
-											var inf = JSON.parse(str);
-											
-											if(inf['reply']==='200 OK'){
-												var x ='', leave = inf['leave'];
-												
-												for(var i=0; i < leave.length; i++){
-													x += '<li><a href="#" class="item-link item-content" data-num="' + i + '" data-pid="' + leave[i].primary_id + '" data-reason="' + leave[i].clock_location + '" data-status="' + leave[i].status + '">';
-													x += '<div class="item-media"><i class="icon material-icons md-only' + (leave[i].status=='0' ? '' : (leave[i].status=='1' ? ' green' : ' red')) + '">' + (leave[i].status=='0' ? 'access_time' : (leave[i].status=='1' ? 'thumb_up_alt' : 'assistant_photo')) + '</i></div>'
-													x += '<div class="item-inner"><div class="item-title">' + sys.unameToSname(leave[i].user_id) + '</div><div class="item-after">' + (leave[i].clock_in_out).substr(0,10) + '</div></div></a></li>';
-												}
-												$('.popup-alrl .alr_list ul').html(x);
-											}else{
-												var failed_toast = apps.toast.create({
-																	   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
-																	   text: 'Oooppss, error',
-																	   position: 'center',
-																	   closeTimeout: 2000
-																   });
-												failed_toast.open();
-												
-												navigator.vibrate(100);
-											}
-										}
-									}
-								});
-								
-								var searchbar = apps.searchbar.create({
-										el: '.popup-alrl .searchbar',
-										searchContainer: '.popup-alrl .list.alr_list',
-										searchIn: '.item-title, .item-after',
-										on: {
-											search(sb, query, previousQuery){
-												console.log('');
-											}
-										}
-									});
-									
-								apps.popup.open('.popup-alrl');
-							}
-						}
-					}).open();
-				}
-			}, 5000)
 			setTimeout(function(){ sys.loading(0) }, 3000);
 		}
 	});
@@ -4405,6 +4421,49 @@ sys = {
 			}
 		}
 		return null;
+	},
+	'uidToPyid' : function(str){
+		if(str){
+			var crews = $('body').data('crew');
+			
+			for(var i=0; i<crews.length; i++){
+				if(str == crews[i].user_id){
+					return crews[i].player_id;
+				}
+			}
+		}
+		return null;
+	},
+	'pyid' : function(str){
+		var level = 99, plyid = [], crews = $('body').data('crew');
+		
+		switch(str){
+			case 'super':
+				level = 9;
+				break;
+			case 'management':
+				level = 8;
+				break;
+			case 'fulltime':
+				level = 3;
+				break;
+			case 'crew':
+				level = 2;
+				break;
+			case 'all':
+				level = 1;
+				break;
+		}
+		
+		for(var i=0; i<crews.length; i++){
+			if(!sys.isEmpty(crews[i].player_id)){
+				if(parseInt(crews[i].user_level) >= level){
+					plyid.push(crews[i].player_id);
+				}
+			}
+		}
+		
+		return plyid;
 	},
 	'carToTcar' : function(str, mode){
 		var Tcar = '';
