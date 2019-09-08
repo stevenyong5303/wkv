@@ -6,11 +6,11 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.176",
+			  version: "1.0.177",
 			  rtl: false,
 			  language: "en-US"
 		  });
-var geoToken = true, geoCount = 120, APP_VERSION = 10176;
+var geoToken = true, geoCount = 120, APP_VERSION = 10177, tmpCalendar = '';
 
 var app = {
     initialize: function() {
@@ -57,36 +57,36 @@ $(document).ready(function(){
 	var calendarInline = apps.calendar.create({
 			containerEl: '#wkv-calendar',
 			value:  [new Date()],
-					weekHeader: true,
-					renderToolbar: function () {
-						return  '<div class="toolbar calendar-custom-toolbar no-shadow">' +
-								'<div class="toolbar-inner">' +
-								'<div class="left">' +
-								'<a href="#" class="link icon-only"><i class="icon icon-back ' + (apps.theme === 'md' ? 'color-black' : '') + '"></i></a>' +
-								'</div>' +
-								'<div class="center"></div>' +
-								'<div class="right">' +
-								'<a href="#" class="link icon-only"><i class="icon icon-forward ' + (apps.theme === 'md' ? 'color-black' : '') + '"></i></a>' +
-								'</div>' +
-								'</div>' +
-								'</div>';
-					},
-					on: {
-						init: function (c) {
-							$$('.calendar-custom-toolbar .center').text(monthNames[c.currentMonth] +', ' + c.currentYear);
-							$$('.calendar-custom-toolbar .left .link').on('click', function () {
-								calendarInline.prevMonth();
-							});
-							$$('.calendar-custom-toolbar .right .link').on('click', function () {
-								calendarInline.nextMonth();
-							});
-						},
-						monthYearChangeStart: function (c) {
-							$$('.calendar-custom-toolbar .center').text(monthNames[c.currentMonth] +', ' + c.currentYear);
-							sys.dayClick(usr);
-							sys.eventCheck(usr, c.currentMonth, c.currentYear);
-						}
-					}
+			weekHeader: true,
+			renderToolbar: function () {
+				return  '<div class="toolbar calendar-custom-toolbar no-shadow">' +
+						'<div class="toolbar-inner">' +
+						'<div class="left">' +
+						'<a href="#" class="link icon-only"><i class="icon icon-back ' + (apps.theme === 'md' ? 'color-black' : '') + '"></i></a>' +
+						'</div>' +
+						'<div class="center"></div>' +
+						'<div class="right">' +
+						'<a href="#" class="link icon-only"><i class="icon icon-forward ' + (apps.theme === 'md' ? 'color-black' : '') + '"></i></a>' +
+						'</div>' +
+						'</div>' +
+						'</div>';
+			},
+			on: {
+				init: function (c) {
+					$$('.calendar-custom-toolbar .center').text(monthNames[c.currentMonth] +', ' + c.currentYear);
+					$$('.calendar-custom-toolbar .left .link').on('click', function () {
+						calendarInline.prevMonth();
+					});
+					$$('.calendar-custom-toolbar .right .link').on('click', function () {
+						calendarInline.nextMonth();
+					});
+				},
+				monthYearChangeStart: function (c) {
+					$$('.calendar-custom-toolbar .center').text(monthNames[c.currentMonth] +', ' + c.currentYear);
+					sys.dayClick(usr);
+					sys.eventCheck(usr, c.currentMonth, c.currentYear);
+				}
+			}
 		});
 	
 	$('#lgn #lgn_sgn').on('click', function(){
@@ -905,10 +905,15 @@ $(document).ready(function(){
 	});
 	
 	$('#rprt-btn').on('click', function(){
-		var today = ((((new Date).getYear()+1900)) + '-' + (sys.pad((new Date).getMonth()+1)) + '-' + (sys.pad((new Date).getDate()))), pic = [];
+		var pic = [];
+		$('#rprt_cal').html('');
 		
-		$('#rprt_from').val(today);
-		$('#rprt_to').val(today);
+		tmpCalendar = apps.calendar.create({
+			containerEl: '#rprt_cal',
+			value: [new Date()],
+			weekHeader: true,
+			rangePicker: true
+		});
 		
 		var crews = $('body').data('crew');
 		
@@ -942,8 +947,8 @@ $(document).ready(function(){
 	});
 	
 	$('.rprt_gen').on('click', function(){
-		var from = $('#rprt_from').val(),
-			to = $('#rprt_to').val();
+		var from = sys.dateToString(tmpCalendar.getValue()[0], 'yyyy-mm-dd'),
+			to = sys.dateToString(((tmpCalendar.getValue().length < 2) ? (tmpCalendar.getValue()[0]) : (tmpCalendar.getValue()[1])), 'yyyy-mm-dd');
 		
 		var DATA = {
 				'usr' : STORAGE.getItem('usr'),
@@ -1052,6 +1057,154 @@ $(document).ready(function(){
 				}
 			}
 		});
+	});
+	
+	$('#rwht-btn').on('click', function(){
+		var work = [], work_id = [],
+			crews = $('body').data('crew');
+		$('#rwht_cal').html('');
+		
+		tmpCalendar = apps.calendar.create({
+			containerEl: '#rwht_cal',
+			value: [new Date()],
+			weekHeader: true,
+			rangePicker: true
+		});
+		
+		for(var i = 0, j = 0; i < crews.length; i++){
+			if(crews[i]['user_level'] > 0){
+				work[j] = crews[i]['short_name'];
+				j++;
+			}
+		}
+		
+		var autoSearch = apps.autocomplete.create({
+			openIn: 'dropdown',
+			inputEl: '#rwht_crw',
+			limit: 5,
+			source: function(query, render){
+				var results = [];
+				
+				if(query.length === 0){
+					render(results);
+					return;
+				}
+				
+				for(var i = 0; i < work.length; i++){
+					if (work[i].toLowerCase().indexOf(query.toLowerCase()) >= 0) results.push(work[i]);
+				}
+				
+				render(results);
+			},
+			off: { blur }
+		});
+	});
+	
+	$('.rwht_gen').on('click', function(){
+		var from = sys.dateToString(tmpCalendar.getValue()[0], 'yyyy-mm-dd'),
+			to = sys.dateToString(((tmpCalendar.getValue().length < 2) ? (tmpCalendar.getValue()[0]) : (tmpCalendar.getValue()[1])), 'yyyy-mm-dd'),
+			wcrew = sys.snameToUname($('#rwht_crw').val());
+		
+		if(!sys.isEmpty(wcrew)){
+			var DATA = {
+					'usr' : STORAGE.getItem('usr'),
+					'from' : from,
+					'to' : to
+				};
+			var post_data = "ACT=" + encodeURIComponent('rwh_chk')
+						  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
+						  
+			$.ajax({
+				type: 'POST',
+				url: 'https://app.wkventertainment.com/',
+				data: post_data,
+				beforeSend: function(){
+					sys.loading(1);
+				},
+				success: function(str){
+					var inf = JSON.parse(str);
+				
+					if(inf['reply']==='200 OK'){
+						var match = false, x = '', total = 0, cday = '', num = 0;
+						
+						for(var i = 0; i < inf['work'].length; i++){
+							if(!sys.isEmpty(inf['work'][i].crew)){
+								if(inf['work'][i].crew.indexOf(',') != -1){
+									var many = inf['work'][i].crew.split(',');
+									
+									for(var j = 0; j < many.length; j++){
+										if(many[j] == wcrew){
+											x += '<li class="item-content"><div class="item-inner"><div class="row small-font"><div class="tt col-10" data-pid="' + inf['work'][i].primary_id + '">' + (num+1) + '</div><div class="col-20">' + (inf['work'][i].date).substr(0,10) + '</div><div class="col-45">' + sys.pidToLoc(inf['work'][i].venue).loc_name + '</div><div class="col-15 tt" data-rmk="' + inf['work'][i].remarks + '">Details</div></div></div></li>';
+											if(cday != ((inf['work'][i].date).substr(0,10))){
+												total++;
+											}
+											num++;
+											match = true;
+											cday = (inf['work'][i].date).substr(0,10);
+											break;
+										}
+									}
+								}else{
+									if(inf['work'][i].crew == wcrew){
+										x += '<li class="item-content"><div class="item-inner"><div class="row small-font"><div class="tt col-10" data-pid="' + inf['work'][i].primary_id + '">' + (num+1) + '</div><div class="col-20">' + (inf['work'][i].date).substr(0,10) + '</div><div class="col-45">' + sys.pidToLoc(inf['work'][i].venue).loc_name + '</div><div class="col-15 tt" data-rmk="' + inf['work'][i].remarks + '">Details</div></div></div></li>';
+										if(cday != ((inf['work'][i].date).substr(0,10))){
+											total++;
+										}
+										num++;
+										match = true;
+										cday = (inf['work'][i].date).substr(0,10);
+									}
+								}
+							}
+						}
+						
+						if(match){
+							x += '<li class="item-content"><div class="item-inner">Total working days: ' + total + '</div></li>';
+							$('.rwht-result ul').html(x);
+							
+							$('.rwht-result ul .tt').each(function(){
+								apps.tooltip.create({
+									targetEl: $(this),
+									text: sys.commasToNextLine($(this).data('rmk'), 'h')
+								});
+							});
+						}else{
+							$('.rwht-result ul').html('<li class="item-content"><div class="item-inner">No history found.</div></li>');
+							var failed_toast = apps.toast.create({
+												   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
+												   text: 'No report found.',
+												   position: 'center',
+												   closeTimeout: 2000
+											   });
+							failed_toast.open();
+						}
+						
+						sys.loading(0);
+					}else if(inf['reply']==='204 No Response'){
+						$('.rwht-result ul').html('<li class="item-content"><div class="item-inner">No history found.</div></li>');
+						var failed_toast = apps.toast.create({
+											   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
+											   text: 'No report found.',
+											   position: 'center',
+											   closeTimeout: 2000
+										   });
+						failed_toast.open();
+						sys.loading(0);
+					}else{
+						sys.loading(0);
+						var failed_toast = apps.toast.create({
+											   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
+											   text: 'Oooppss, error',
+											   position: 'center',
+											   closeTimeout: 2000
+										   });
+						failed_toast.open();
+					}
+				}
+			});
+		}else{
+			navigator.vibrate(100);
+		}
 	});
 	
 	$('#sntf-btn').on('click', function(){
@@ -2258,6 +2411,20 @@ $(document).ready(function(){
 				navigator.vibrate(100);
 			}
 		}
+	});
+	
+	$('button.apkl_add').on('click', function(){
+		apps.popup.close('.popup-apkl', true);
+		apps.popup.open('.popup-apklp', true);
+		$('.popup-backdrop').addClass('backdrop-in');
+		
+		$('.popup-apklp .stepper').each(function(i){
+			var id = $(this).data('id');
+			apps.stepper.create({
+				el: '.popup-apklp .stp-' + id + '.stepper'
+			});
+		});
+		
 	});
 	
 	$('#picl-btn').on('click', function(){
@@ -4397,6 +4564,27 @@ sys = {
 		}
 		return '';
 	},
+	'dateToString' : function(date, str){
+		var x = '', d = new Date(date);
+		
+		switch(str){
+			case 'dd':
+				sys.pad((d.getDate()));
+				break;
+			case 'mm':
+				sys.pad((d.getMonth()+1));
+				break;
+			case 'yyyy':
+				x += d.getFullYear();
+				break;
+			case 'yyyy-mm-dd':
+				x += d.getFullYear();
+				x += '-' + sys.pad((d.getMonth()+1));
+				x += '-' + sys.pad((d.getDate()));
+				break;
+		}
+		return x;
+	},
 	'unameToSname' : function(str){
 		if(str){
 			var aCrew = str.split(','), sCrew = [], all = $('body').data('crew');
@@ -4417,6 +4605,18 @@ sys = {
 					if(str == all[j].user_id){
 						return all[j].short_name;
 					}
+				}
+			}
+		}
+		return null;
+	},
+	'snameToUname' : function(str){
+		var all = $('body').data('crew');
+		
+		if(str){
+			for(var j=0; j<all.length; j++){
+				if(str == all[j].short_name){
+					return all[j].user_id;
 				}
 			}
 		}

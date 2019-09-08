@@ -261,6 +261,18 @@
 										<li>
 											<div class="item-content">
 												<div class="item-media">
+													<i class="icon material-icons md-only">format_list_numbered</i>
+												</div>
+												<div class="item-inner">
+													<div class="item-title">
+														<a id="apkl-btn" class="link popup-open" href="#" data-popup=".popup-apkl">Packing List</a>
+													</div>
+												</div>
+											</div>
+										</li>
+										<li>
+											<div class="item-content">
+												<div class="item-media">
 													<i class="icon material-icons md-only">face</i>
 												</div>
 												<div class="item-inner">
@@ -1261,6 +1273,466 @@
 					</div>
 				</div>
 			</div>
+			<div class="popup popup-apkl level8">
+				<div class="toolbar">
+					<div class="toolbar-inner">
+						<div class="left">Packing List</div>
+						<div class="right"><a class="link popup-close" href="#">Close</a></div>
+					</div>
+				</div>
+				<div class="block">
+					<form class="searchbar">
+						<div class="searchbar-inner">
+							<div class="searchbar-input-wrap">
+								<input type="search" placeholder="Search">
+								<i class="searchbar-icon"></i>
+								<span class="input-clear-button"></span>
+							</div>
+							<span class="searchbar-disable-button if-not-aurora">Cancel</span>
+						</div>
+					</form>
+				</div>
+				<div class="searchbar-backdrop"></div>
+				<div class="block searchbar-hide-on-search">
+					<button class="button button-raised button-fill apkl_add" style="margin: 10px auto -20px;width: calc(100% - 30px);">
+						<i class="icon material-icons md-only">add</i>
+					</button>
+				</div>
+				<div class="searchbar-found list apk_list">
+					<ul></ul>
+				</div>
+			</div>
+			<div class="popup popup-apklp level8">
+				<div class="toolbar">
+					<div class="toolbar-inner">
+						<div class="left">Packing List</div>
+						<div class="right"><a class="link popup-close" href="#">Close</a></div>
+					</div>
+				</div>
+				<div class="block">
+					<div class="list">
+						<ul>
+							<li class="item-content item-input">
+								<div class="item-inner">
+									<div class="item-title item-label">Packing List Title</div>
+									<div class="item-input-wrap">
+										<input id="apkl_title" type="text" value="" autocomplete="off" required>
+									</div>
+								</div>
+							</li>
+							<li class="item-content item-input">
+								<div class="item-inner">
+									<div class="item-title item-label">Date</div>
+									<div class="item-input-wrap">
+										<input id="apkl_date" type="date" value="" autocomplete="off" required>
+										<span class="input-clear-button"></span>
+									</div>
+								</div>
+							</li>
+							<li class="item-content item-input">
+								<div class="item-inner">
+									<div class="item-title item-label">Item List</div>
+									<div class="item-input-wrap">
+										<div class="list accordion-list">
+											<ul>
+												<li class="accordion-item">
+													<a href="" class="item-link item-content">
+														<div class="item-inner">
+															<div class="item-title">Sound</div>
+														</div>
+													</a>
+													<div class="accordion-item-content list">
+														<ul>
+															<li>
+																<div class="item-content">
+																	<div class="item-media">
+																		<div class="stepper stepper-raised stepper-small stepper-fill stp-speaker" data-id="speaker">
+																			<div class="stepper-button-minus"></div>
+																			<div class="stepper-value"></div>
+																			<div class="stepper-button-plus"></div>
+																		</div>
+																	</div>
+																	<div class="item-inner">
+																		<div class="item-title">Speaker</div>
+																	</div>
+																</div>
+															</li>
+															<li>
+																<div class="item-content">
+																	<div class="item-media">
+																		<div class="stepper stepper-raised stepper-small stepper-fill stp-speakerStand" data-id="speakerStand">
+																			<div class="stepper-button-minus"></div>
+																			<div class="stepper-value"></div>
+																			<div class="stepper-button-plus"></div>
+																		</div>
+																	</div>
+																	<div class="item-inner">
+																		<div class="item-title">Speaker Stand</div>
+																	</div>
+																</div>
+															</li>
+															<li>
+																<div class="item-content">
+																	<div class="item-media">
+																		<div class="stepper stepper-raised stepper-small stepper-fill stp-bookStand" data-id="bookStand">
+																			<div class="stepper-button-minus"></div>
+																			<div class="stepper-value"></div>
+																			<div class="stepper-button-plus"></div>
+																		</div>
+																	</div>
+																	<div class="item-inner">
+																		<div class="item-title">Book Stand</div>
+																	</div>
+																</div>
+															</li>
+															<li>
+																<div class="item-content">
+																	<div class="item-media">
+																		<div class="stepper stepper-raised stepper-small stepper-fill stp-micStand" data-id="micStand">
+																			<div class="stepper-button-minus"></div>
+																			<div class="stepper-value"></div>
+																			<div class="stepper-button-plus"></div>
+																		</div>
+																	</div>
+																	<div class="item-inner">
+																		<div class="item-title">Microphone Stand</div>
+																	</div>
+																</div>
+															</li>
+															<li>
+																<div class="item-content">
+																	<div class="item-media">
+																		<div class="stepper stepper-raised stepper-small stepper-fill stp-mixer" data-id="mixer">
+																			<div class="stepper-button-minus"></div>
+																			<div class="stepper-value"></div>
+																			<div class="stepper-button-plus"></div>
+																		</div>
+																	</div>
+																	<div class="item-inner">
+																		<div class="item-title">Mixer</div>
+																	</div>
+																</div>
+															</li>
+															<li>
+																<div class="item-content">
+																	<div class="item-media">
+																		<div class="stepper stepper-raised stepper-small stepper-fill stp-wlMic" data-id="wlMic">
+																			<div class="stepper-button-minus"></div>
+																			<div class="stepper-value"></div>
+																			<div class="stepper-button-plus"></div>
+																		</div>
+																	</div>
+																	<div class="item-inner">
+																		<div class="item-title">Wireless Microphone</div>
+																	</div>
+																</div>
+															</li>
+															<li>
+																<div class="item-content">
+																	<div class="item-media">
+																		<div class="stepper stepper-raised stepper-small stepper-fill stp-laptop" data-id="laptop">
+																			<div class="stepper-button-minus"></div>
+																			<div class="stepper-value"></div>
+																			<div class="stepper-button-plus"></div>
+																		</div>
+																	</div>
+																	<div class="item-inner">
+																		<div class="item-title">Laptop / MP3 Device</div>
+																	</div>
+																</div>
+															</li>
+															<li>
+																<div class="item-content">
+																	<div class="item-media">
+																		<div class="stepper stepper-raised stepper-small stepper-fill stp-trolley" data-id="trolley">
+																			<div class="stepper-button-minus"></div>
+																			<div class="stepper-value"></div>
+																			<div class="stepper-button-plus"></div>
+																		</div>
+																	</div>
+																	<div class="item-inner">
+																		<div class="item-title">Trolley</div>
+																	</div>
+																</div>
+															</li>
+															<li>
+																<div class="item-content">
+																	<div class="item-media">
+																		<div class="stepper stepper-raised stepper-small stepper-fill stp-mSetS" data-id="mSetS">
+																			<div class="stepper-button-minus"></div>
+																			<div class="stepper-value"></div>
+																			<div class="stepper-button-plus"></div>
+																		</div>
+																	</div>
+																	<div class="item-inner">
+																		<div class="item-title">Mset Cable Box</div>
+																	</div>
+																</div>
+															</li>
+															<li>
+																<div class="item-content">
+																	<div class="item-media">
+																		<div class="stepper stepper-raised stepper-small stepper-fill stp-bSetS" data-id="bSetS">
+																			<div class="stepper-button-minus"></div>
+																			<div class="stepper-value"></div>
+																			<div class="stepper-button-plus"></div>
+																		</div>
+																	</div>
+																	<div class="item-inner">
+																		<div class="item-title">Bset Cable Box</div>
+																	</div>
+																</div>
+															</li>
+															<li>
+																<div class="item-content">
+																	<div class="item-media">
+																		<div class="stepper stepper-raised stepper-small stepper-fill stp-xlrS" data-id="xlrS">
+																			<div class="stepper-button-minus"></div>
+																			<div class="stepper-value"></div>
+																			<div class="stepper-button-plus"></div>
+																		</div>
+																	</div>
+																	<div class="item-inner">
+																		<div class="item-title">XLR Cable</div>
+																	</div>
+																</div>
+															</li>
+															<li>
+																<div class="item-content">
+																	<div class="item-media">
+																		<div class="stepper stepper-raised stepper-small stepper-fill stp-xlrsS" data-id="xlrsS">
+																			<div class="stepper-button-minus"></div>
+																			<div class="stepper-value"></div>
+																			<div class="stepper-button-plus"></div>
+																		</div>
+																	</div>
+																	<div class="item-inner">
+																		<div class="item-title">XLR Cable (Short)</div>
+																	</div>
+																</div>
+															</li>
+															<li>
+																<div class="item-content">
+																	<div class="item-media">
+																		<div class="stepper stepper-raised stepper-small stepper-fill stp-monS" data-id="monS">
+																			<div class="stepper-button-minus"></div>
+																			<div class="stepper-value"></div>
+																			<div class="stepper-button-plus"></div>
+																		</div>
+																	</div>
+																	<div class="item-inner">
+																		<div class="item-title">Monitor Cable</div>
+																	</div>
+																</div>
+															</li>
+															<li>
+																<div class="item-content">
+																	<div class="item-media">
+																		<div class="stepper stepper-raised stepper-small stepper-fill stp-wMicS" data-id="wMicS">
+																			<div class="stepper-button-minus"></div>
+																			<div class="stepper-value"></div>
+																			<div class="stepper-button-plus"></div>
+																		</div>
+																	</div>
+																	<div class="item-inner">
+																		<div class="item-title">Wired Microphone</div>
+																	</div>
+																</div>
+															</li>
+															<li>
+																<div class="item-content">
+																	<div class="item-media">
+																		<div class="stepper stepper-raised stepper-small stepper-fill stp-tapeS" data-id="tapeS">
+																			<div class="stepper-button-minus"></div>
+																			<div class="stepper-value"></div>
+																			<div class="stepper-button-plus"></div>
+																		</div>
+																	</div>
+																	<div class="item-inner">
+																		<div class="item-title">Duct Tape</div>
+																	</div>
+																</div>
+															</li>
+															<li>
+																<div class="item-content">
+																	<div class="item-media">
+																		<div class="stepper stepper-raised stepper-small stepper-fill stp-clothS" data-id="clothS">
+																			<div class="stepper-button-minus"></div>
+																			<div class="stepper-value"></div>
+																			<div class="stepper-button-plus"></div>
+																		</div>
+																	</div>
+																	<div class="item-inner">
+																		<div class="item-title">Speaker Cloth</div>
+																	</div>
+																</div>
+															</li>
+															<li>
+																<div class="item-content">
+																	<div class="item-media">
+																		<div class="stepper stepper-raised stepper-small stepper-fill stp-2chdiS" data-id="2chdiS">
+																			<div class="stepper-button-minus"></div>
+																			<div class="stepper-value"></div>
+																			<div class="stepper-button-plus"></div>
+																		</div>
+																	</div>
+																	<div class="item-inner">
+																		<div class="item-title">2 CH DI Box</div>
+																	</div>
+																</div>
+															</li>
+															<li>
+																<div class="item-content">
+																	<div class="item-media">
+																		<div class="stepper stepper-raised stepper-small stepper-fill stp-adjkS" data-id="adjkS">
+																			<div class="stepper-button-minus"></div>
+																			<div class="stepper-value"></div>
+																			<div class="stepper-button-plus"></div>
+																		</div>
+																	</div>
+																	<div class="item-inner">
+																		<div class="item-title">Audio Jack</div>
+																	</div>
+																</div>
+															</li>
+															<li>
+																<div class="item-content">
+																	<div class="item-media">
+																		<div class="stepper stepper-raised stepper-small stepper-fill stp-gtrjkS" data-id="gtrjkS">
+																			<div class="stepper-button-minus"></div>
+																			<div class="stepper-value"></div>
+																			<div class="stepper-button-plus"></div>
+																		</div>
+																	</div>
+																	<div class="item-inner">
+																		<div class="item-title">Guitar Jack</div>
+																	</div>
+																</div>
+															</li>
+															<li>
+																<div class="item-content">
+																	<div class="item-media">
+																		<div class="stepper stepper-raised stepper-small stepper-fill stp-gryExS" data-id="gryExS">
+																			<div class="stepper-button-minus"></div>
+																			<div class="stepper-value"></div>
+																			<div class="stepper-button-plus"></div>
+																		</div>
+																	</div>
+																	<div class="item-inner">
+																		<div class="item-title">Grey Extension</div>
+																	</div>
+																</div>
+															</li>
+															<li>
+																<div class="item-content">
+																	<div class="item-media">
+																		<div class="stepper stepper-raised stepper-small stepper-fill stp-rndExS" data-id="rndExS">
+																			<div class="stepper-button-minus"></div>
+																			<div class="stepper-value"></div>
+																			<div class="stepper-button-plus"></div>
+																		</div>
+																	</div>
+																	<div class="item-inner">
+																		<div class="item-title">Round Extension</div>
+																	</div>
+																</div>
+															</li>
+															<li>
+																<div class="item-content">
+																	<div class="item-media">
+																		<div class="stepper stepper-raised stepper-small stepper-fill stp-1to5ExS" data-id="1to5ExS">
+																			<div class="stepper-button-minus"></div>
+																			<div class="stepper-value"></div>
+																			<div class="stepper-button-plus"></div>
+																		</div>
+																	</div>
+																	<div class="item-inner">
+																		<div class="item-title">1 to 5 Extension</div>
+																	</div>
+																</div>
+															</li>
+															<li>
+																<div class="item-content">
+																	<div class="item-media">
+																		<div class="stepper stepper-raised stepper-small stepper-fill stp-pwrCrdS" data-id="pwrCrdS">
+																			<div class="stepper-button-minus"></div>
+																			<div class="stepper-value"></div>
+																			<div class="stepper-button-plus"></div>
+																		</div>
+																	</div>
+																	<div class="item-inner">
+																		<div class="item-title">Power Cord</div>
+																	</div>
+																</div>
+															</li>
+														</ul>
+													</div>
+												</li>
+												<li class="accordion-item">
+													<a href="" class="item-link item-content">
+														<div class="item-inner">
+															<div class="item-title">Lighting</div>
+														</div>
+													</a>
+													<div class="accordion-item-content">Item 2 content ...</div>
+												</li>
+												<li class="accordion-item">
+													<a href="" class="item-link item-content">
+														<div class="item-inner">
+															<div class="item-title">Karaoke</div>
+														</div>
+													</a>
+													<div class="accordion-item-content">Item 2 content ...</div>
+												</li>
+												<li class="accordion-item">
+													<a href="" class="item-link item-content">
+														<div class="item-inner">
+															<div class="item-title">LED Screen</div>
+														</div>
+													</a>
+													<div class="accordion-item-content">Item 2 content ...</div>
+												</li>
+												<li class="accordion-item">
+													<a href="" class="item-link item-content">
+														<div class="item-inner">
+															<div class="item-title">Stage</div>
+														</div>
+													</a>
+													<div class="accordion-item-content">Item 2 content ...</div>
+												</li>
+												<li class="accordion-item">
+													<a href="" class="item-link item-content">
+														<div class="item-inner">
+															<div class="item-title">Truss</div>
+														</div>
+													</a>
+													<div class="accordion-item-content">Item 2 content ...</div>
+												</li>
+												<li class="accordion-item">
+													<a href="" class="item-link item-content">
+														<div class="item-inner">
+															<div class="item-title">Live Feed</div>
+														</div>
+													</a>
+													<div class="accordion-item-content">Item 2 content ...</div>
+												</li>
+											</ul>
+										</div>
+									</div>
+								</div>
+							</li>
+							<li class="item-content item-input">
+								<div class="item-inner">
+									<div class="row">
+										<button class="col button button-fill apkl_ok">OK</button>
+										<button class="col button button-fill popover-close">Cancel</button>
+									</div>
+								</div>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
 			<div class="popup popup-picl level8">
 				<div class="toolbar">
 					<div class="toolbar-inner">
@@ -1343,18 +1815,7 @@
 					<ul>
 						<li class="item-content item-input">
 							<div class="item-inner">
-								<div class="item-title item-label">From</div>
-								<div class="item-input-wrap">
-									<input id="rprt_from" type="date" value="" autocomplete="off" required validate>
-								</div>
-							</div>
-						</li>
-						<li class="item-content item-input">
-							<div class="item-inner">
-								<div class="item-title item-label">To</div>
-								<div class="item-input-wrap">
-									<input id="rprt_to" type="date" value="" autocomplete="off" required validate>
-								</div>
+								<div id="rprt_cal"></div>
 							</div>
 						</li>
 						<li class="item-content item-input">
@@ -1373,6 +1834,39 @@
 					</button>
 				</div>
 				<div class="rprt-result list noselect" style="z-index:0;">
+					<ul></ul>
+				</div>
+			</div>
+			<div class="popup popup-rwht level9">
+				<div class="toolbar">
+					<div class="toolbar-inner">
+						<div class="left">Work History</div>
+						<div class="right"><a class="link popup-close" href="#">Close</a></div>
+					</div>
+				</div>
+				<div class="list">
+					<ul>
+						<li class="item-content item-input">
+							<div class="item-inner">
+								<div id="rwht_cal"></div>
+							</div>
+						</li>
+						<li class="item-content item-input">
+							<div class="item-inner">
+								<div class="item-title item-label">Crew</div>
+								<div class="item-input-wrap">
+									<input id="rwht_crw" type="text" value="" autocomplete="off">
+								</div>
+							</div>
+						</li>
+					</ul>
+				</div>
+				<div class="block" style="z-index:0;">
+					<button class="button button-raised button-fill rwht_gen" style="margin: 10px auto -20px;width: calc(100% - 30px);">
+						<i class="icon material-icons md-only rotate-270">developer_board</i>
+					</button>
+				</div>
+				<div class="rwht-result list noselect" style="z-index:0;">
 					<ul></ul>
 				</div>
 			</div>
@@ -3801,7 +4295,7 @@
 				<div class="block">
 					<div align="center">
 						 <img src="icon.png" alt="WKV Logo" height="128" width="128">
-						 <span style="color:#999;position:absolute;top:40px;font-size:12px;">&emsp;Version 1.0.176</span>
+						 <span style="color:#999;position:absolute;top:40px;font-size:12px;">&emsp;Version 1.0.177</span>
 					</div>
 					<p>WKV Application serves as a platform for of WKV’s member to obtain basic information and calculation method can easily obtain by accessing to the application.</p>
 					<p>For general usage, clock in and clock out is built in the application for employees of WKV to check in whenever they report to event venue.</p>

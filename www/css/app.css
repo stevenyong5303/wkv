@@ -5,6 +5,9 @@
     font-weight: normal;
     font-style: normal;
 }
+.popup-apklp .accordion-item-content.list  li .item-title{
+	margin-top: 7px;
+}
 .noselect {
 	-webkit-touch-callout: none;
 	-webkit-user-select: none;
@@ -18,7 +21,7 @@ img.itml, div.row{
 }
 div.dialog.itm-dialog{
 	width: calc(100% - 70px);
-	top: calc(10% + 70px);
+	top: calc(15% + 70px);
 	left: 175px;
 	max-height: 84%;
 	overflow: auto;
@@ -194,12 +197,26 @@ td.tb-pic.tb-paid, div.col-10.tb-paid{
 td.tb-pic.tb-not-paid, div.col-10.tb-not-paid{
 	border-right: 5px solid red;
 }
+.rotate-90 {
+	-webkit-transform: rotate(90deg);
+	-moz-transform: rotate(90deg);
+	-ms-transform: rotate(90deg);
+	-o-transform: rotate(90deg);
+	transform: rotate(90deg);
+}
 .rotate-180 {
 	-webkit-transform: rotate(180deg);
 	-moz-transform: rotate(180deg);
 	-ms-transform: rotate(180deg);
 	-o-transform: rotate(180deg);
 	transform: rotate(180deg);
+}
+.rotate-270 {
+	-webkit-transform: rotate(270deg);
+	-moz-transform: rotate(270deg);
+	-ms-transform: rotate(270deg);
+	-o-transform: rotate(270deg);
+	transform: rotate(270deg);
 }
 #wkv-calendar .calendar-month-current .calendar-day.hl1 span {
 	background-color: #ffcccc;
