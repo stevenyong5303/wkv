@@ -4,7 +4,7 @@
 <widget xmlns     = "http://www.w3.org/ns/widgets"
         xmlns:gap = "http://phonegap.com/ns/1.0"
         id        = "com.wkv.manage"
-        version   = "1.0.177">
+        version   = "1.0.178">
 
     <name>WKV</name>
 
@@ -22,7 +22,7 @@
         If you do not want any permissions to be added to your app, add the
         following tag to your config.xml; you will still have the INTERNET
         permission on your app, which PhoneGap requires.
-    
+	 
     <preference name="permissions"                value="none"/>
 	-->
 
@@ -108,7 +108,7 @@
     <!-- <gap:splash src="res/screen/windows-phone/screen-portrait.png"      gap:platform="winphone" /> -->
 
     <gap:config-file platform="ios" parent="CFBundleShortVersionString">
-    <string>177</string>
+    <string>178</string>
     </gap:config-file>
 
     <!--
