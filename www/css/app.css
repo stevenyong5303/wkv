@@ -16,6 +16,9 @@
 	-ms-user-select: none;
 	user-select: none;
 }
+.colorRed {
+	color: #ff3333;
+}
 img.itml, div.row{
 	width:100%;
 }

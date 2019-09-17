@@ -6,11 +6,11 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.178",
+			  version: "1.0.179",
 			  rtl: false,
 			  language: "en-US"
 		  });
-var geoToken = true, geoCount = 120, APP_VERSION = 10178, tmpCalendar = '';
+var geoToken = true, geoCount = 120, APP_VERSION = 10179, tmpCalendar = '';
 
 var app = {
     initialize: function() {
@@ -243,7 +243,6 @@ $(document).ready(function(){
 							sys.loading(1);
 						},
 						success: function(str){
-							sys.loading(0);
 							$('.popup-event .event_list').data('date', tmp.toDateString().substr(4));
 							var hidden = (((tmp.getTime() - (new Date()).getTime()) > 86400000 ) ? ((parseInt($('body').data('user_level'))<7) ? true : false) : false);
 							$('a.leave_app').removeClass('disabled');
@@ -293,7 +292,34 @@ $(document).ready(function(){
 							}
 							$('.popup-event .event_date').text(tmp.toDateString().substr(4));
 							
-							apps.popup.open('.popup-event');
+							if(parseInt($('body').data('user_level'))>=9){
+								DATA = {
+									'usr' : user,
+									'date' : tmp.toDateString().substr(4)
+								};
+								post_data = "ACT=" + encodeURIComponent('evt_lvc')
+										  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
+										  
+								$.ajax({
+									type: 'POST',
+									url: 'https://app.wkventertainment.com/',
+									data: post_data,
+									success: function(str){
+										sys.loading(0);
+										
+										if(str==='204 No Response'){
+											$('.details-popover').data('leave', '');
+										}else{
+											$('.details-popover').data('leave', str);
+										}
+										apps.popup.open('.popup-event');
+									}
+								});
+							}else{
+								sys.loading(0);
+								apps.popup.open('.popup-event');
+							}
+							
 							
 							$('.event_list span.button').on('click', function(){
 								var x = '';
@@ -1063,7 +1089,7 @@ $(document).ready(function(){
 									
 									for(var j = 0; j < many.length; j++){
 										if(many[j] == wcrew){
-											x += '<li class="item-content"><div class="item-inner"><div class="row small-font"><div class="tt col-10" data-pid="' + inf['work'][i].primary_id + '">' + (num+1) + '</div><div class="col-20">' + (inf['work'][i].date).substr(0,10) + '</div><div class="col-45">' + sys.pidToLoc(inf['work'][i].venue).loc_name + '</div><div class="col-15 tt" data-rmk="' + (sys.isEmpty(inf['work'][i].remarks) ? inf['work'][i].description : inf['work'][i].remarks) + '">Details</div></div></div></li>';
+											x += '<li class="item-content"><div class="item-inner"><div class="row small-font"><div class="tt col-10" data-pid="' + inf['work'][i].primary_id + '">' + (num+1) + '</div><div class="col-20">' + (inf['work'][i].date).substr(0,10) + '</div><div class="col-45">' + sys.pidToLoc(inf['work'][i].venue).loc_name + '</div><div class="col-15 tt noselect" data-rmk="' + (sys.isEmpty(inf['work'][i].remarks) ? inf['work'][i].description : inf['work'][i].remarks) + '">Details</div></div></div></li>';
 											if(cday != ((inf['work'][i].date).substr(0,10))){
 												total++;
 											}
@@ -1075,7 +1101,7 @@ $(document).ready(function(){
 									}
 								}else{
 									if(inf['work'][i].crew == wcrew){
-										x += '<li class="item-content"><div class="item-inner"><div class="row small-font"><div class="tt col-10" data-pid="' + inf['work'][i].primary_id + '">' + (num+1) + '</div><div class="col-20">' + (inf['work'][i].date).substr(0,10) + '</div><div class="col-45">' + sys.pidToLoc(inf['work'][i].venue).loc_name + '</div><div class="col-15 tt" data-rmk="' + (sys.isEmpty(inf['work'][i].remarks) ? inf['work'][i].description : inf['work'][i].remarks) + '">Details</div></div></div></li>';
+										x += '<li class="item-content"><div class="item-inner"><div class="row small-font"><div class="tt col-10" data-pid="' + inf['work'][i].primary_id + '">' + (num+1) + '</div><div class="col-20">' + (inf['work'][i].date).substr(0,10) + '</div><div class="col-45">' + sys.pidToLoc(inf['work'][i].venue).loc_name + '</div><div class="col-15 tt noselect" data-rmk="' + (sys.isEmpty(inf['work'][i].remarks) ? inf['work'][i].description : inf['work'][i].remarks) + '">Details</div></div></div></li>';
 										if(cday != ((inf['work'][i].date).substr(0,10))){
 											total++;
 										}
@@ -1319,6 +1345,7 @@ $(document).ready(function(){
 		
 		var crews = $('body').data('crew'),
 			work = (sys.isEmpty($('input.evtd_crew').data('uname')) ? [] : ($('input.evtd_crew').data('uname').indexOf(',') != -1 ? $('input.evtd_crew').data('uname').split(',') : [$('input.evtd_crew').data('uname')])),
+			leave = (sys.isEmpty($('.details-popover').data('leave')) ? [] : ($('.details-popover').data('leave').indexOf(',') != -1 ? $('.details-popover').data('leave').split(',') : [$('.details-popover').data('leave')])),
 			x = '';
 		
 		for(var i = 0; i < crews.length; i++){
@@ -1330,8 +1357,15 @@ $(document).ready(function(){
 						break;
 					}
 				}
+				var leaveApproved = false;
+				for(var k = 0; k < leave.length; k++){
+					if(crews[i]['user_id'] == leave[k]){
+						leaveApproved = true;
+						break;
+					}
+				}
 				x += '<li><label class="item-checkbox item-content"><input type="checkbox" ' + (select ? 'checked="checked"' : '') + ' name="evcw-checkbox" value="' + crews[i]['user_id'] + '" data-sn="' + crews[i]['short_name'] + '" />';
-				x += '<i class="icon icon-checkbox"></i><div class="item-inner"><div class="item-title">' + crews[i]['short_name'] + '</div></div></label></li>';
+				x += '<i class="icon icon-checkbox"></i><div class="item-inner"><div class="item-title' + (leaveApproved ? ' colorRed' : '') + '">' + crews[i]['short_name'] + '</div></div></label></li>';
 			}
 		}
 		$('.evt-crew ul').html(x);
@@ -4056,7 +4090,7 @@ $(document).ready(function(){
 								
 								for(var j = 0; j < many.length; j++){
 									if(many[j] == wcrew){
-										x += '<li class="item-content"><div class="item-inner"><div class="row small-font"><div class="tt col-10" data-pid="' + inf['work'][i].primary_id + '">' + (num+1) + '</div><div class="col-20">' + (inf['work'][i].date).substr(0,10) + '</div><div class="col-45">' + sys.pidToLoc(inf['work'][i].venue).loc_name + '</div><div class="col-15 tt" data-rmk="' + (sys.isEmpty(inf['work'][i].remarks) ? inf['work'][i].description : inf['work'][i].remarks) + '">Details</div></div></div></li>';
+										x += '<li class="item-content"><div class="item-inner"><div class="row small-font"><div class="tt col-10" data-pid="' + inf['work'][i].primary_id + '">' + (num+1) + '</div><div class="col-20">' + (inf['work'][i].date).substr(0,10) + '</div><div class="col-45">' + sys.pidToLoc(inf['work'][i].venue).loc_name + '</div><div class="col-15 tt noselect" data-rmk="' + (sys.isEmpty(inf['work'][i].remarks) ? inf['work'][i].description : inf['work'][i].remarks) + '">Details</div></div></div></li>';
 										if(cday != ((inf['work'][i].date).substr(0,10))){
 											total++;
 										}
@@ -4068,7 +4102,7 @@ $(document).ready(function(){
 								}
 							}else{
 								if(inf['work'][i].crew == wcrew){
-									x += '<li class="item-content"><div class="item-inner"><div class="row small-font"><div class="tt col-10" data-pid="' + inf['work'][i].primary_id + '">' + (num+1) + '</div><div class="col-20">' + (inf['work'][i].date).substr(0,10) + '</div><div class="col-45">' + sys.pidToLoc(inf['work'][i].venue).loc_name + '</div><div class="col-15 tt" data-rmk="' + (sys.isEmpty(inf['work'][i].remarks) ? inf['work'][i].description : inf['work'][i].remarks) + '">Details</div></div></div></li>';
+									x += '<li class="item-content"><div class="item-inner"><div class="row small-font"><div class="tt col-10" data-pid="' + inf['work'][i].primary_id + '">' + (num+1) + '</div><div class="col-20">' + (inf['work'][i].date).substr(0,10) + '</div><div class="col-45">' + sys.pidToLoc(inf['work'][i].venue).loc_name + '</div><div class="col-15 tt noselect" data-rmk="' + (sys.isEmpty(inf['work'][i].remarks) ? inf['work'][i].description : inf['work'][i].remarks) + '">Details</div></div></div></li>';
 									if(cday != ((inf['work'][i].date).substr(0,10))){
 										total++;
 									}
