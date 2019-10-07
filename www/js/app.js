@@ -6,11 +6,11 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.179",
+			  version: "1.0.180",
 			  rtl: false,
 			  language: "en-US"
 		  });
-var geoToken = true, geoCount = 120, APP_VERSION = 10179, tmpCalendar = '';
+var geoToken = true, geoCount = 120, APP_VERSION = 10180, tmpCalendar = '';
 
 var app = {
     initialize: function() {
@@ -186,9 +186,15 @@ $(document).ready(function(){
 								$('#task_tl').html(x);
 							}
 							
-							for(var i=9; i>parseInt(inf['level']); i--){
+							for(var i=10; i>parseInt(inf['level']); i--){
 								if($('.level'+i).length > 0){
 									$('.level'+i).remove();
+								}
+							}
+							
+							for(var i=0; i<parseInt(inf['level']); i++){
+								if($('.ltlevel'+i).length > 0){
+									$('.ltlevel'+i).remove();
 								}
 							}
 							
@@ -650,7 +656,7 @@ $(document).ready(function(){
 	});
 	
 	$('.details-popover').on('keyup', 'input.evtd_ld', function(){
-		if(($(this).val()).toLowerCase()=='setup'){
+		if(($(this).val()).toLowerCase()=='setup' || ($(this).val()).toLowerCase()=='rehearsal' || ($(this).val()).toLowerCase()=='dismantle'){
 			$('.evtd_price').val(0);
 		}
 	});
@@ -1089,7 +1095,7 @@ $(document).ready(function(){
 									
 									for(var j = 0; j < many.length; j++){
 										if(many[j] == wcrew){
-											x += '<li class="item-content"><div class="item-inner"><div class="row small-font"><div class="tt col-10" data-pid="' + inf['work'][i].primary_id + '">' + (num+1) + '</div><div class="col-20">' + (inf['work'][i].date).substr(0,10) + '</div><div class="col-45">' + sys.pidToLoc(inf['work'][i].venue).loc_name + '</div><div class="col-15 tt noselect" data-rmk="' + (sys.isEmpty(inf['work'][i].remarks) ? inf['work'][i].description : inf['work'][i].remarks) + '">Details</div></div></div></li>';
+											x += '<li class="item-content"><div class="item-inner"><div class="row small-font"><div class="tt col-10" data-pid="' + inf['work'][i].primary_id + '">' + (num+1) + '</div><div class="col-20">' + (inf['work'][i].date).substr(0,10) + '</div><div class="col-45">' + (sys.isEmpty(sys.pidToLoc(inf['work'][i].venue).loc_name) ? inf['work'][i].venue : (sys.pidToLoc(inf['work'][i].venue).loc_name)) + '</div><div class="col-15 tt noselect" data-rmk="' + (sys.isEmpty(inf['work'][i].remarks) ? inf['work'][i].description : inf['work'][i].remarks) + '"><i class="material-icons">info</i></div></div></div></li>';
 											if(cday != ((inf['work'][i].date).substr(0,10))){
 												total++;
 											}
@@ -1101,7 +1107,7 @@ $(document).ready(function(){
 									}
 								}else{
 									if(inf['work'][i].crew == wcrew){
-										x += '<li class="item-content"><div class="item-inner"><div class="row small-font"><div class="tt col-10" data-pid="' + inf['work'][i].primary_id + '">' + (num+1) + '</div><div class="col-20">' + (inf['work'][i].date).substr(0,10) + '</div><div class="col-45">' + sys.pidToLoc(inf['work'][i].venue).loc_name + '</div><div class="col-15 tt noselect" data-rmk="' + (sys.isEmpty(inf['work'][i].remarks) ? inf['work'][i].description : inf['work'][i].remarks) + '">Details</div></div></div></li>';
+										x += '<li class="item-content"><div class="item-inner"><div class="row small-font"><div class="tt col-10" data-pid="' + inf['work'][i].primary_id + '">' + (num+1) + '</div><div class="col-20">' + (inf['work'][i].date).substr(0,10) + '</div><div class="col-45">' + (sys.isEmpty(sys.pidToLoc(inf['work'][i].venue).loc_name) ? inf['work'][i].venue : (sys.pidToLoc(inf['work'][i].venue).loc_name)) + '</div><div class="col-15 tt noselect" data-rmk="' + (sys.isEmpty(inf['work'][i].remarks) ? inf['work'][i].description : inf['work'][i].remarks) + '"><i class="material-icons">info</i></div></div></div></li>';
 										if(cday != ((inf['work'][i].date).substr(0,10))){
 											total++;
 										}
@@ -1740,7 +1746,14 @@ $(document).ready(function(){
 			share += ($('input[name="cnv-checkbox"]:checked:eq('+i+')').data('ic'));
 		}
 		
-		window.plugins.socialsharing.share(share);
+		if(typeof window.plugins != 'undefined'){
+			window.plugins.socialsharing.share(share);
+		}else{
+			$('body').append('<textarea id="tempCopy"/></textarea>');
+			$('body textarea#tempCopy').val(share).select();
+			document.execCommand("copy");
+			$('body textarea#tempCopy').remove();
+		}
 	});
 	
 	$('#abctg-btn').on('click', function(){
@@ -3481,7 +3494,14 @@ $(document).ready(function(){
 			}
 		}
 
-		window.plugins.socialsharing.share(share);
+		if(typeof window.plugins != 'undefined'){
+			window.plugins.socialsharing.share(share);
+		}else{
+			$('body').append('<textarea id="tempCopy"/></textarea>');
+			$('body textarea#tempCopy').val(share).select();
+			document.execCommand("copy");
+			$('body textarea#tempCopy').remove();
+		}
 	});
 	
 	$('button.evts_ok').on('click', function(){
@@ -3509,7 +3529,6 @@ $(document).ready(function(){
 					sys.loading(1);
 				},
 				success: function(str){
-					sys.loading(0);
 					var inf = JSON.parse(str);
 			
 					if(inf['reply']==='200 OK'){
@@ -3569,7 +3588,7 @@ $(document).ready(function(){
 							var inf = $('tr[name="' + $(this).attr('name') + '"]').data('info');
 							var trName = $(this).attr('name');
 							
-							if(parseInt($('body').data('user_level'))>=9 && inf1.lock==0){
+							if(parseInt($('body').data('user_level'))>=9){
 								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Person In Charge</div><div class="item-input-wrap">' + ((inf.pic==null) ? '-' : inf.pic) + '</div></div></div></li>';
 								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Luncheon/Dinner</div><div class="item-input-wrap"><input class="evtd_ld" type="text" autocomplete="off" value="' + ((inf.luncheon_dinner==null) ? '' : inf.luncheon_dinner) + '"></div></div></div></li>';
 								x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Standby Time</div><div class="item-input-wrap"><input class="evtd_sbtm" type="text" autocomplete="off" value="' + ((inf.time==null) ? '' : inf.time) + '"></div></div></div></li>';
@@ -3660,15 +3679,45 @@ $(document).ready(function(){
 							apps.popover.open('.details-popover');
 						});
 						
-						var success_toast = apps.toast.create({
-											   icon: '<i class="material-icons">cloud_done</i>',
-											   text: 'Details Successfully Added',
-											   position: 'center',
-											   closeTimeout: 2000
-										   });
-						success_toast.open();
-						
-						navigator.vibrate(100);
+						var DATA = {
+							'app_id' : '1e0f19a6-8d77-404f-9006-c9d9f381fe59',
+							'include_player_ids': ['d01c1bb0-5de1-4a4a-819f-66e3bacdd8ff'],
+							'template_id': '7052a1cb-7d5a-46cd-bacd-76498a49254f',
+							'headings' : { 'en' : 'Whatsapp Message Server check required.'},
+							'contents' : { 'en' : ('New event added by : ' + usr)},
+							'data' : { 'sender' : usr, 'system' : 'evd_add' }
+						};
+								  
+						$.ajax({
+							type: 'POST',
+							url: 'https://onesignal.com/api/v1/notifications',
+							data: JSON.stringify(DATA),
+							contentType: "application/json; charset=utf-8",
+							dataType: "json",
+							success: function(inf){
+								if(!sys.isEmpty(inf['id'])){
+									sys.loading(0);
+									var success_toast = apps.toast.create({
+														   icon: '<i class="material-icons">cloud_done</i>',
+														   text: 'Details Successfully Added',
+														   position: 'center',
+														   closeTimeout: 2000
+													   });
+									success_toast.open();
+									
+									navigator.vibrate(100);
+								}else{
+									sys.loading(0);
+									var failed_toast = apps.toast.create({
+														   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
+														   text: 'Oooppss, error',
+														   position: 'center',
+														   closeTimeout: 2000
+													   });
+									failed_toast.open();
+								}
+							}
+						});
 						
 						$('.evts_input button.fab-close')[0].click();
 						$('#evts_ipic').val(''),
@@ -3702,7 +3751,15 @@ $(document).ready(function(){
 				  + 'Sound Check : 5pm\n\n'
 				  + (sys.isEmpty(inf.car_in) ? '' : ('Use : ' + inf.car_in + '\n'))
 				  + (sys.isEmpty(inf.remarks) ? '' : ('Remarks : ' + sys.commasToNextLine(inf.remarks, 'n') + '\n'));
-		window.plugins.socialsharing.share(share);
+				  
+		if(typeof window.plugins != 'undefined'){
+			window.plugins.socialsharing.share(share);
+		}else{
+			$('body').append('<textarea id="tempCopy"/></textarea>');
+			$('body textarea#tempCopy').val(share).select();
+			document.execCommand("copy");
+			$('body textarea#tempCopy').remove();
+		}
 	});
 	
 	$('.popover-backdrop').on('click', function(e){
@@ -4090,7 +4147,7 @@ $(document).ready(function(){
 								
 								for(var j = 0; j < many.length; j++){
 									if(many[j] == wcrew){
-										x += '<li class="item-content"><div class="item-inner"><div class="row small-font"><div class="tt col-10" data-pid="' + inf['work'][i].primary_id + '">' + (num+1) + '</div><div class="col-20">' + (inf['work'][i].date).substr(0,10) + '</div><div class="col-45">' + sys.pidToLoc(inf['work'][i].venue).loc_name + '</div><div class="col-15 tt noselect" data-rmk="' + (sys.isEmpty(inf['work'][i].remarks) ? inf['work'][i].description : inf['work'][i].remarks) + '">Details</div></div></div></li>';
+										x += '<li class="item-content"><div class="item-inner"><div class="row small-font"><div class="tt col-10" data-pid="' + inf['work'][i].primary_id + '">' + (num+1) + '</div><div class="col-20">' + (inf['work'][i].date).substr(0,10) + '</div><div class="col-45">' + (sys.isEmpty(sys.pidToLoc(inf['work'][i].venue).loc_name) ? inf['work'][i].venue : (sys.pidToLoc(inf['work'][i].venue).loc_name)) + '</div><div class="col-15 tt noselect" data-rmk="' + (sys.isEmpty(inf['work'][i].remarks) ? inf['work'][i].description : inf['work'][i].remarks) + '"><i class="material-icons">info</i></div></div></div></li>';
 										if(cday != ((inf['work'][i].date).substr(0,10))){
 											total++;
 										}
@@ -4102,7 +4159,7 @@ $(document).ready(function(){
 								}
 							}else{
 								if(inf['work'][i].crew == wcrew){
-									x += '<li class="item-content"><div class="item-inner"><div class="row small-font"><div class="tt col-10" data-pid="' + inf['work'][i].primary_id + '">' + (num+1) + '</div><div class="col-20">' + (inf['work'][i].date).substr(0,10) + '</div><div class="col-45">' + sys.pidToLoc(inf['work'][i].venue).loc_name + '</div><div class="col-15 tt noselect" data-rmk="' + (sys.isEmpty(inf['work'][i].remarks) ? inf['work'][i].description : inf['work'][i].remarks) + '">Details</div></div></div></li>';
+									x += '<li class="item-content"><div class="item-inner"><div class="row small-font"><div class="tt col-10" data-pid="' + inf['work'][i].primary_id + '">' + (num+1) + '</div><div class="col-20">' + (inf['work'][i].date).substr(0,10) + '</div><div class="col-45">' + (sys.isEmpty(sys.pidToLoc(inf['work'][i].venue).loc_name) ? inf['work'][i].venue : (sys.pidToLoc(inf['work'][i].venue).loc_name)) + '</div><div class="col-15 tt noselect" data-rmk="' + (sys.isEmpty(inf['work'][i].remarks) ? inf['work'][i].description : inf['work'][i].remarks) + '"><i class="material-icons">info</i></div></div></div></li>';
 									if(cday != ((inf['work'][i].date).substr(0,10))){
 										total++;
 									}
@@ -4359,10 +4416,16 @@ $(document).ready(function(){
 				}
 			}
 			
-			for(var i=1; i<=parseInt(inf['level']); i++){
+			for(var i=0; i<parseInt(inf['level']); i++){
 				if($('.ltlevel'+i).length > 0){
 					$('.ltlevel'+i).remove();
 				}
+			}
+			
+			if(inf['level']<1){
+				apps.tab.show('#pg-DLhome', false);
+			}else{
+				apps.tab.show('#pg-home', false);
 			}
 			
 			setTimeout(function(){ sys.loading(0) }, 3000);
@@ -4772,6 +4835,10 @@ sys = {
 				return 'D';
 			}else if(str.toLowerCase() == 'setup'){
 				return 'ST';
+			}else if(str.toLowerCase() == 'rehearsal'){
+				return 'RH';
+			}else if(str.toLowerCase() == 'dismantle'){
+				return 'XX';
 			}else if(str.toLowerCase().indexOf('board') != -1){
 				if(str.toLowerCase().indexOf('lunch') != -1){
 					return 'L:OB';
