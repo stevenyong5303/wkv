@@ -6,11 +6,11 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.190",
+			  version: "1.0.191",
 			  rtl: false,
 			  language: "en-US"
 		  });
-var geoToken = true, geoCount = 120, APP_VERSION = 10190, tmpCalendar = '';
+var geoToken = true, geoCount = 120, APP_VERSION = 10191, tmpCalendar = '';
 
 var app = {
     initialize: function() {
@@ -33,15 +33,34 @@ var app = {
 					switch(act){
 						case 'tsk':
 						case 'evd':
-							$('.tsk'+aid)[0].click();
+							setTimeout(function reaction() {
+								if($('#loading-overlay').css('opacity')=='0'){
+									$('.tsk'+aid)[0].click();
+								}else{
+									setTimeout(reaction, 1500);
+								}
+							}, 1500);
 							break;
 							
 						case 'lrq':
-							$('#alrl-btn')[0].click();
+							setTimeout(function reaction() {
+								if($('#loading-overlay').css('opacity')=='0'){
+									$('#alrl-btn')[0].click();
+								}else{
+									setTimeout(reaction, 1500);
+								}
+							}, 1500);
+							setTimeout(function(){  }, 5000);
 							break;
 							
 						case 'lrs':
-							$('#lvapv-btn')[0].click();
+							setTimeout(function reaction() {
+								if($('#loading-overlay').css('opacity')=='0'){
+									$('#lvapv-btn')[0].click();
+								}else{
+									setTimeout(reaction, 1500);
+								}
+							}, 1500);
 							break;
 					}
 				});
