@@ -6,11 +6,11 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.188",
+			  version: "1.0.189",
 			  rtl: false,
 			  language: "en-US"
 		  });
-var geoToken = true, geoCount = 120, APP_VERSION = 10188, tmpCalendar = '';
+var geoToken = true, geoCount = 120, APP_VERSION = 10189, tmpCalendar = '';
 
 var app = {
     initialize: function() {
@@ -25,8 +25,27 @@ var app = {
         app.receivedEvent('deviceready');
 		
 		var notificationOpenedCallback = function(jsonData) {
-			console.log('notificationOpenedCallback: ' + JSON.stringify(jsonData));
-			apps.dialog.alert(JSON.stringify(jsonData['notification']['payload']['additionalData']));
+			if(!sys.isEmpty(jsonData['notification']['payload']['additionalData']['feedback'])){
+				var act = jsonData['notification']['payload']['additionalData']['feedback'].substr(0,3),
+					aid = jsonData['notification']['payload']['additionalData']['feedback'].substr(4);
+					
+				$(document).ready(function(){
+					switch(act){
+						case 'tsk':
+						case 'evd':
+							setTimeout(function(){ $('.tsk'+aid)[0].click(); }, 5000);
+							break;
+							
+						case 'lrq':
+							setTimeout(function(){ $('#alrl-btn')[0].click(); }, 5000);
+							break;
+							
+						case 'lrs':
+							setTimeout(function(){ $('#lvapv-btn')[0].click(); }, 5000);
+							break;
+					}
+				});
+			}
 		};
 
 		window.plugins.OneSignal
@@ -169,7 +188,7 @@ $(document).ready(function(){
 										x += '<div class="timeline-item-content">';
 									}
 									
-									x += '<div class="timeline-item-inner" data-locpid="' + (sys.isEmpty(task[i]['venue']) ? 0 : (task[i]['venue'].indexOf('#PID#') != -1 ? task[i]['venue'] : 0)) + '" data-rmk="' + task[i]['remarks'] + '">';
+									x += '<div class="timeline-item-inner tsk' + task[i]['primary_id'] + '" data-locpid="' + (sys.isEmpty(task[i]['venue']) ? 0 : (task[i]['venue'].indexOf('#PID#') != -1 ? task[i]['venue'] : 0)) + '" data-rmk="' + task[i]['remarks'] + '">';
 									
 									if(task[i]['time']){
 										x += '<div class="timeline-item-time">' + task[i]['time'] + '</div>';
@@ -797,7 +816,7 @@ $(document).ready(function(){
 									x += '<div class="timeline-item-content">';
 								}
 								
-								x += '<div class="timeline-item-inner" data-locpid="' + (sys.isEmpty(task[i]['venue']) ? 0 : (task[i]['venue'].indexOf('#PID#') != -1 ? task[i]['venue'] : 0)) + '" data-rmk="' + task[i]['remarks'] + '">';
+								x += '<div class="timeline-item-inner tsk' + task[i]['primary_id'] + '" data-locpid="' + (sys.isEmpty(task[i]['venue']) ? 0 : (task[i]['venue'].indexOf('#PID#') != -1 ? task[i]['venue'] : 0)) + '" data-rmk="' + task[i]['remarks'] + '">';
 								
 								if(task[i]['time']){
 									x += '<div class="timeline-item-time">' + task[i]['time'] + '</div>';
@@ -2707,7 +2726,7 @@ $(document).ready(function(){
 										'template_id': '7052a1cb-7d5a-46cd-bacd-76498a49254f',
 										'headings' : { 'en': ('Task added for ' + (tlds + ' on ' + (tldt.substr(8, 2) + '/' + tldt.substr(5, 2))))},
 										'contents' : { 'en': 'Kindly double check your latest schedule. :)'},
-										'data' : { 'sender': usr, 'system' : 'udt_ntf'}
+										'data' : { 'sender': usr, 'system' : 'tsk_add', 'feedback' : ('tsk_' + inf['pid'])}
 									};
 											  
 								$.ajax({
@@ -2823,7 +2842,7 @@ $(document).ready(function(){
 											'template_id': '7052a1cb-7d5a-46cd-bacd-76498a49254f',
 											'headings' : { 'en': ('Task details updated for ' + (tlds + ' on ' + (tldt.substr(8, 2) + '/' + tldt.substr(5, 2))))},
 											'contents' : { 'en': 'Kindly double check your latest schedule. :)'},
-											'data' : { 'sender': usr, 'system' : 'udt_ntf'}
+											'data' : { 'sender': usr, 'system' : 'tsk_udt', 'feedback' : ('tsk_' + tpid)}
 										};
 												  
 									$.ajax({
@@ -2990,7 +3009,7 @@ $(document).ready(function(){
 							'template_id': '7052a1cb-7d5a-46cd-bacd-76498a49254f',
 							'headings' : { 'en' : ((status==1) ? 'Leave Request Approved' : 'Leave Request Rejected')},
 							'contents' : { 'en' : ('For date : ' + $('#alrd_date').val())},
-							'data' : { 'sender' : usr, 'system' : 'lrq_udt' }
+							'data' : { 'sender' : usr, 'system' : 'lrq_udt', 'feedback' : ('lrs_' + $('#alrd_date').data('pid')) }
 						};
 								  
 						$.ajax({
@@ -3432,7 +3451,7 @@ $(document).ready(function(){
 								'template_id': '7052a1cb-7d5a-46cd-bacd-76498a49254f',
 								'headings' : { 'en' : ('Leave Request on ' + date)},
 								'contents' : { 'en' : ('From : ' + $('#edpf_name').val())},
-								'data' : { 'sender' : usr, 'system' : 'lrq_add' }
+								'data' : { 'sender' : usr, 'system' : 'lrq_add', 'feedback' : ('lrq_') }
 							};
 									  
 							$.ajax({
@@ -3861,7 +3880,7 @@ $(document).ready(function(){
 												'template_id': '7052a1cb-7d5a-46cd-bacd-76498a49254f',
 												'headings' : { 'en': ('Event details updated for ' + $('.details-popover').data('title'))},
 												'contents' : { 'en': 'Kindly double check your latest schedule. :)'},
-												'data' : { 'sender': usr, 'system' : 'udt_ntf'}
+												'data' : { 'sender': usr, 'system' : 'evd_udt', 'feedback' : ('evd_' + pid)}
 											};
 													  
 										$.ajax({
@@ -4391,7 +4410,7 @@ $(document).ready(function(){
 							x += '<div class="timeline-item-content">';
 						}
 						
-						x += '<div class="timeline-item-inner" data-locpid="' + (sys.isEmpty(task[i]['venue']) ? 0 : (task[i]['venue'].indexOf('#PID#') != -1 ? task[i]['venue'] : 0)) + '" data-rmk="' + task[i]['remarks'] + '">';
+						x += '<div class="timeline-item-inner tsk' + task[i]['primary_id'] + '" data-locpid="' + (sys.isEmpty(task[i]['venue']) ? 0 : (task[i]['venue'].indexOf('#PID#') != -1 ? task[i]['venue'] : 0)) + '" data-rmk="' + task[i]['remarks'] + '">';
 						
 						if(task[i]['time']){
 							x += '<div class="timeline-item-time">' + task[i]['time'] + '</div>';
