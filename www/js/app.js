@@ -6,11 +6,11 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.189",
+			  version: "1.0.190",
 			  rtl: false,
 			  language: "en-US"
 		  });
-var geoToken = true, geoCount = 120, APP_VERSION = 10189, tmpCalendar = '';
+var geoToken = true, geoCount = 120, APP_VERSION = 10190, tmpCalendar = '';
 
 var app = {
     initialize: function() {
@@ -33,15 +33,15 @@ var app = {
 					switch(act){
 						case 'tsk':
 						case 'evd':
-							setTimeout(function(){ $('.tsk'+aid)[0].click(); }, 5000);
+							$('.tsk'+aid)[0].click();
 							break;
 							
 						case 'lrq':
-							setTimeout(function(){ $('#alrl-btn')[0].click(); }, 5000);
+							$('#alrl-btn')[0].click();
 							break;
 							
 						case 'lrs':
-							setTimeout(function(){ $('#lvapv-btn')[0].click(); }, 5000);
+							$('#lvapv-btn')[0].click();
 							break;
 					}
 				});
