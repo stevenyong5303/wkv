@@ -6,11 +6,11 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.184",
+			  version: "1.0.185",
 			  rtl: false,
 			  language: "en-US"
 		  });
-var geoToken = true, geoCount = 120, APP_VERSION = 10184, tmpCalendar = '';
+var geoToken = true, geoCount = 120, APP_VERSION = 10185, tmpCalendar = '';
 
 var app = {
     initialize: function() {
@@ -26,7 +26,7 @@ var app = {
 		
 		var notificationOpenedCallback = function(jsonData) {
 			console.log('notificationOpenedCallback: ' + JSON.stringify(jsonData));
-			apps.dialog.alert(JSON.stringify(jsonData));
+			apps.dialog.alert(JSON.stringify(jsonData['notification']['additionalData']));
 		};
 
 		window.plugins.OneSignal
