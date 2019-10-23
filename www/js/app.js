@@ -6,11 +6,11 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.193",
+			  version: "1.0.194",
 			  rtl: false,
 			  language: "en-US"
 		  });
-var geoToken = true, geoCount = 120, APP_VERSION = 10193, tmpCalendar = '';
+var geoToken = true, geoCount = 120, APP_VERSION = 10194, tmpCalendar = '';
 
 var app = {
     initialize: function() {
@@ -1411,7 +1411,29 @@ $(document).ready(function(){
 			creator: 'WKV Entertainment'
 		});
 		
-		window.plugins.socialsharing.share(doc.output());
+		window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fs){
+			fs.root.getFile("wkv.pdf", { create: true, exclusive: false }, function(fileEntry){
+				writeFile(fileEntry, null);
+			}, onErrorCreateFile);
+		}, onErrorLoadFs);
+		
+		function writeFile(fileEntry, dataObj) {
+			fileEntry.createWriter(function (fileWriter) {
+				fileWriter.onwriteend = function() {
+					readFile(fileEntry);
+				};
+				fileWriter.onerror = function (e) {
+					console.log("Failed file write: " + e.toString());
+				};
+				
+				if (!dataObj) {
+					dataObj = new Blob(['some file data'], { type: 'text/plain' });
+				}
+				fileWriter.write(dataObj);
+			});
+		}
+		
+		writeFile('wkv.pdf', doc.output());
 	});
 	
 	$('.details-popover').on('click', 'input.evtd_rmk', function(){
