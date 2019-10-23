@@ -6,11 +6,11 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.198",
+			  version: "1.0.199",
 			  rtl: false,
 			  language: "en-US"
 		  });
-var geoToken = true, geoCount = 120, APP_VERSION = 10198, tmpCalendar = '', fileObject;
+var geoToken = true, geoCount = 120, APP_VERSION = 10199, tmpCalendar = '', fileObject;
 
 var app = {
     initialize: function() {
@@ -1294,7 +1294,7 @@ $(document).ready(function(){
 					 + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
 		var url = 'https://app.wkventertainment.com/?' + (get_data);
 		
-		window.open(url, "_blank");
+		window.open(url, "_system");
 	});
 	
 	$('.details-popover').on('click', 'input.evtd_rmk', function(){
