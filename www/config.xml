@@ -4,7 +4,7 @@
 <widget xmlns     = "http://www.w3.org/ns/widgets"
         xmlns:gap = "http://phonegap.com/ns/1.0"
         id        = "com.wkv.manage"
-        version   = "1.0.195">
+        version   = "1.0.196">
 
     <name>WKV</name>
 
@@ -49,6 +49,7 @@
 	<plugin name="cordova-plugin-x-socialsharing" />
 	<plugin name="phonegap-plugin-barcodescanner" />
 	<plugin name="onesignal-cordova-plugin" spec="2.4.1" source="npm" />
+	<plugin name="cordova-plugin-pdf-viewer" />
 	
 	<plugin name="cordova-plugin-battery-status" />
     <plugin name="cordova-plugin-camera" />

@@ -6,11 +6,11 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.195",
+			  version: "1.0.196",
 			  rtl: false,
 			  language: "en-US"
 		  });
-var geoToken = true, geoCount = 120, APP_VERSION = 10195, tmpCalendar = '';
+var geoToken = true, geoCount = 120, APP_VERSION = 10196, tmpCalendar = '';
 
 var app = {
     initialize: function() {
@@ -1411,26 +1411,7 @@ $(document).ready(function(){
 			creator: 'WKV Entertainment'
 		});
 		
-
-		function writeToFile(fileName, data){
-			window.resolveLocalFileSystemURL( cordova.file.dataDirectory, function(directoryEntry){
-				directoryEntry.getFile( fileName, { create: true }, function(fileEntry){
-					fileEntry.createWriter( function(fileWriter){
-						fileWriter.onwriteend = function(e){
-							console.log('Write of file "' + fileName + '"" completed.')
-						}
-
-						fileWriter.onerror = function(e) {
-							console.log('Write failed: ' + e.toString())
-						}
-
-						var blob = new Blob([data], { type: 'application/pdf' })
-						fileWriter.write(blob)
-					}, errorHandler.bind(null, fileName))
-				}, errorHandler.bind(null, fileName))}, errorHandler.bind(null, fileName))
-		}
-		
-		writeToFile('wkv.pdf', doc.output());
+		PDFViewer.openPDF(doc.output());
 	});
 	
 	$('.details-popover').on('click', 'input.evtd_rmk', function(){
