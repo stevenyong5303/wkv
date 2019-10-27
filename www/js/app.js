@@ -6,11 +6,11 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.199",
+			  version: "1.0.200",
 			  rtl: false,
 			  language: "en-US"
 		  });
-var geoToken = true, geoCount = 120, APP_VERSION = 10199, tmpCalendar = '', fileObject;
+var geoToken = true, geoCount = 120, APP_VERSION = 10200, tmpCalendar = '', fileObject;
 
 var app = {
     initialize: function() {
@@ -177,6 +177,9 @@ $(document).ready(function(){
 							$('span.ncf-email').text(inf['email'].toLowerCase());
 							$('#edpf_eml').val(inf['email']);
 							
+							$('span.ncf-name').data('value', inf['name']);
+							$('span.ncf-tel').data('value', inf['contact']);
+							$('span.ncf-email').data('value', (inf['email'].toLowerCase()));
 							$('div.views').css('opacity', '1');
 							
 							$('#lgn input[name="lgn_usr"]').val('');
@@ -808,6 +811,10 @@ $(document).ready(function(){
 						$('span.ncf-email').text(inf['email'].toLowerCase());
 						$('#edpf_eml').val(inf['email']);
 						
+						$('span.ncf-name').data('value', inf['name']);
+						$('span.ncf-tel').data('value', inf['contact']);
+						$('span.ncf-email').data('value', (inf['email'].toLowerCase()));
+						
 						$('div.views').css('opacity', '1');
 					}
 					
@@ -1288,13 +1295,47 @@ $(document).ready(function(){
 	
 	$('#fgnr-btn').on('click', function(){
 		var DATA = {
-				'usr' : STORAGE.getItem('usr')
+				'usr' : STORAGE.getItem('usr'),
+				'sales' : $('span.ncf-name').data('value'),
+				'tel' : $('span.ncf-tel').data('value'),
+				'email' : $('span.ncf-email').data('value')
 			};
 		var get_data = "ACT=" + encodeURIComponent('pdf_gen')
+					 + "&TYPE=" + encodeURIComponent('Q')
 					 + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
-		var url = 'https://app.wkventertainment.com/?' + (get_data);
+		var url = 'https://app.wkventertainment.com/?' + (get_data + ("&MD5=" + encodeURIComponent(md5(sys.serialize(DATA))) + "&CS=" + encodeURIComponent(sys.checksum(md5(sys.serialize(DATA))))));
 		
 		window.open(url, "_system");
+		
+		var pic = [], crews = $('body').data('crew');
+		
+		for(var i = 0, j=0; i < crews.length; i++){
+			if(crews[i]['user_level'] == 0){
+				pic[j] = crews[i]['nc_name'];
+				j++;
+			}
+		}
+		
+		var autoSearch = apps.autocomplete.create({
+			openIn: 'dropdown',
+			inputEl: '#fgnr_q_pic',
+			limit: 5,
+			source: function(query, render){
+				var results = [];
+				
+				if(query.length === 0){
+					render(results);
+					return;
+				}
+				
+				for(var i = 0; i < pic.length; i++){
+					if (pic[i].toLowerCase().indexOf(query.toLowerCase()) >= 0) results.push(pic[i]);
+				}
+				
+				render(results);
+			},
+			off: { blur }
+		});
 	});
 	
 	$('.details-popover').on('click', 'input.evtd_rmk', function(){
@@ -4101,6 +4142,10 @@ $(document).ready(function(){
 						$('span.ncf-name').html($('span.ncf-name').text().replace(/ /g, '&nbsp;&nbsp;&nbsp;'));
 						$('span.ncf-tel').text(tel.toLowerCase());
 						$('span.ncf-email').text(email.toLowerCase());
+						
+						$('span.ncf-name').data('value', name);
+						$('span.ncf-tel').data('value', tel);
+						$('span.ncf-email').data('value', (email.toLowerCase()));
 					}else{
 						var failed_toast = apps.toast.create({
 											   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
@@ -4356,6 +4401,16 @@ $(document).ready(function(){
 		window.open("market://details?id=com.wkv.manage", "_system");
 	});
 	
+	$('body').on('touchend', function(e){
+		if(e.touches.length==3){
+			apps.dialog.alert('3 fingers', '');
+			cordova.plugins.clipboard.copy(window.getSelection().toString());
+		}else if(e.touches.length==4){
+			apps.dialog.alert('4 fingers', '');
+			cordova.plugins.clipboard.paste();
+		}
+	});
+	
 	DATA = {
 		'usr' : usr,
 		'pwd' : pwd,
@@ -4412,6 +4467,10 @@ $(document).ready(function(){
 				$('#edpf_tel').val(inf['contact']);
 				$('span.ncf-email').text(inf['email'].toLowerCase());
 				$('#edpf_eml').val(inf['email']);
+				
+				$('span.ncf-name').data('value', inf['name']);
+				$('span.ncf-tel').data('value', inf['contact']);
+				$('span.ncf-email').data('value', (inf['email'].toLowerCase()));
 				
 				$('div.views').css('opacity', '1');
 			}
@@ -5171,5 +5230,14 @@ sys = {
 				return 'Sun';
 		}
 		return false;
+	},
+	'checksum' : function(md5str){
+		function rdC(){
+			var characters = 'abcdefghijklmnopqrstuvwxyz0123456789';
+			
+			return characters.charAt(Math.floor(Math.random() * 36));
+		}
+		
+		return (rdC() + md5str.charAt(8) + md5str.charAt(17) + rdC() + md5str.charAt(1) + md5str.charAt(10) + rdC() + md5str.charAt(31) + md5str.charAt(24) + rdC() + md5str.charAt(2) + md5str.charAt(19) + rdC() + md5str.charAt(11) + rdC() + md5str.charAt(27));
 	}
 }

@@ -221,6 +221,11 @@ td.tb-pic.tb-not-paid, div.col-10.tb-not-paid{
 	-o-transform: rotate(270deg);
 	transform: rotate(270deg);
 }
+.item-title.fgnr_dtls {
+	color: rgba(0,0,0,.65);
+	font-size: 12px;
+	margin: auto;
+}
 #wkv-calendar .calendar-month-current .calendar-day.hl1 span {
 	background-color: #ffcccc;
 }
