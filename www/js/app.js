@@ -6,11 +6,11 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.203",
+			  version: "1.0.204",
 			  rtl: false,
 			  language: "en-US"
 		  });
-var geoToken = true, geoCount = 120, APP_VERSION = 10203, tmpCalendar = '', fileObject, tapHold = 0;
+var geoToken = true, geoCount = 120, APP_VERSION = 10204, tmpCalendar = '', fileObject, tapHold = 0;
 
 var app = {
     initialize: function() {
@@ -5244,8 +5244,11 @@ sys = {
 		if(sys.isEmpty(window.getSelection().toString())){
 			if($('*:focus').length){
 				cordova.plugins.clipboard.paste(function(text){
-					var tmp = $('*:focus').val();
-					$('*:focus').val((tmp + text));
+					var pos = $('*:focus')[0].selectionStart;
+					var tmpStart = ($('*:focus').val()).substring(0, pos),
+						tmpEnd = ($('*:focus').val()).substring(pos, ($('*:focus').val().length));
+					
+					$('*:focus').val((tmpStart + text + tmpEnd));
 				});
 				apps.toast.create({
 					icon: '<i class="material-icons">flip_to_front</i>',
