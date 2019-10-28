@@ -6,11 +6,11 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.200",
+			  version: "1.0.201",
 			  rtl: false,
 			  language: "en-US"
 		  });
-var geoToken = true, geoCount = 120, APP_VERSION = 10200, tmpCalendar = '', fileObject;
+var geoToken = true, geoCount = 120, APP_VERSION = 10201, tmpCalendar = '', fileObject, tapHold = 0;
 
 var app = {
     initialize: function() {
@@ -4401,13 +4401,13 @@ $(document).ready(function(){
 		window.open("market://details?id=com.wkv.manage", "_system");
 	});
 	
+	$('body').on('touchstart', function(e){
+		tapHold = setTimeout(sys.longTap, 2000); 
+	});
+	
 	$('body').on('touchend', function(e){
-		if(e.touches.length==3){
-			apps.dialog.alert('3 fingers', '');
-			cordova.plugins.clipboard.copy(window.getSelection().toString());
-		}else if(e.touches.length==4){
-			apps.dialog.alert('4 fingers', '');
-			cordova.plugins.clipboard.paste();
+		if(tapHold){
+			clearTimeout(tapHold);
 		}
 	});
 	
@@ -5239,5 +5239,24 @@ sys = {
 		}
 		
 		return (rdC() + md5str.charAt(8) + md5str.charAt(17) + rdC() + md5str.charAt(1) + md5str.charAt(10) + rdC() + md5str.charAt(31) + md5str.charAt(24) + rdC() + md5str.charAt(2) + md5str.charAt(19) + rdC() + md5str.charAt(11) + rdC() + md5str.charAt(27));
+	},
+	'longTap' : function(){
+		if(sys.isEmpty(window.getSelection().toString())){
+			cordova.plugins.clipboard.paste();
+			apps.toast.create({
+				icon: '<i class="material-icons">flip_to_front</i>',
+				text: 'Text pasted.',
+				position: 'center',
+				closeTimeout: 1000
+			}).open();
+		}else{
+			cordova.plugins.clipboard.copy(window.getSelection().toString());
+			apps.toast.create({
+				icon: '<i class="material-icons">flip_to_back</i>',
+				text: 'Text copied.',
+				position: 'center',
+				closeTimeout: 1000
+			}).open();
+		}
 	}
 }
