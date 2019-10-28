@@ -6,11 +6,11 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.202",
+			  version: "1.0.203",
 			  rtl: false,
 			  language: "en-US"
 		  });
-var geoToken = true, geoCount = 120, APP_VERSION = 10202, tmpCalendar = '', fileObject, tapHold = 0;
+var geoToken = true, geoCount = 120, APP_VERSION = 10203, tmpCalendar = '', fileObject, tapHold = 0;
 
 var app = {
     initialize: function() {
@@ -314,7 +314,7 @@ $(document).ready(function(){
 								
 								for(var i=0; i<inf.length; i++){
 									x += '<tr name="el'+(i+1)+'"><td class="label-cell"><span class="button button-fill" name="el'+(i+1)+'">'+(i+1)+'</span></td>';
-									x += '<td class="tb-pic label-cell '+(((parseInt($('body').data('user_level'))>=8) && (sys.ldToShort(inf[i].luncheon_dinner)!='ST')) ? (inf[i].paid=='1' ? 'tb-paid' : 'tb-not-paid') : '' )+'">'+inf[i].pic+'</td>';
+									x += '<td class="tb-pic label-cell '+(((parseInt($('body').data('user_level'))>=8) && ((sys.ldToShort(inf[i].luncheon_dinner)!='ST') && (sys.ldToShort(inf[i].luncheon_dinner)!='RH') && (sys.ldToShort(inf[i].luncheon_dinner)!='XX'))) ? (inf[i].paid=='1' ? 'tb-paid' : 'tb-not-paid') : '' )+'">'+inf[i].pic+'</td>';
 									x += '<td class="tb-ld label-cell">'+(sys.ldToShort(inf[i].luncheon_dinner))+'</td>';
 									x += '<td class="tb-venue label-cell" data-pid="' + inf[i].venue + '">'+((inf[i].venue==null) ? '-' : (inf[i].venue.indexOf('#PID#') != -1 ? sys.pidToLoc(inf[i].venue).loc_name : inf[i].venue))+'</td>';
 									x += '<td class="tb-desc label-cell">'+((inf[i].description==null) ? '-' : inf[i].description)+'</td>';
@@ -3915,7 +3915,7 @@ $(document).ready(function(){
 								$('tr[name="' + trName + '"]').data('info', inf);
 								$('div.details-popover').data('info', inf);
 								
-								if(parseInt($('body').data('user_level'))>=8 && (sys.ldToShort(ld) != 'ST')){
+								if(parseInt($('body').data('user_level'))>=8 && ((sys.ldToShort(ld) != 'ST') && sys.ldToShort(ld) != 'RH' && sys.ldToShort(ld) != 'XX')){
 									if(paid){
 										$('tr[name="' + trName + '"] td.tb-pic').removeClass('tb-not-paid');
 										$('tr[name="' + trName + '"] td.tb-pic').addClass('tb-paid');
@@ -4402,7 +4402,7 @@ $(document).ready(function(){
 	});
 	
 	$('body').on('touchstart', function(e){
-		tapHold = setTimeout(sys.longTap, 3000); 
+		tapHold = setTimeout(sys.longTap, 2000); 
 	});
 	
 	$('body').on('touchmove touchend', function(e){
@@ -5241,8 +5241,8 @@ sys = {
 		return (rdC() + md5str.charAt(8) + md5str.charAt(17) + rdC() + md5str.charAt(1) + md5str.charAt(10) + rdC() + md5str.charAt(31) + md5str.charAt(24) + rdC() + md5str.charAt(2) + md5str.charAt(19) + rdC() + md5str.charAt(11) + rdC() + md5str.charAt(27));
 	},
 	'longTap' : function(){
-		if($('*:focus').length){
-			if(sys.isEmpty(window.getSelection().toString())){
+		if(sys.isEmpty(window.getSelection().toString())){
+			if($('*:focus').length){
 				cordova.plugins.clipboard.paste(function(text){
 					var tmp = $('*:focus').val();
 					$('*:focus').val((tmp + text));
@@ -5253,15 +5253,15 @@ sys = {
 					position: 'center',
 					closeTimeout: 1000
 				}).open();
-			}else{
-				cordova.plugins.clipboard.copy(window.getSelection().toString());
-				apps.toast.create({
-					icon: '<i class="material-icons">flip_to_back</i>',
-					text: 'Text copied.',
-					position: 'center',
-					closeTimeout: 1000
-				}).open();
 			}
+		}else{
+			cordova.plugins.clipboard.copy(window.getSelection().toString());
+			apps.toast.create({
+				icon: '<i class="material-icons">flip_to_back</i>',
+				text: 'Text copied.',
+				position: 'center',
+				closeTimeout: 1000
+			}).open();
 		}
 	}
 }
