@@ -6,11 +6,11 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.201",
+			  version: "1.0.202",
 			  rtl: false,
 			  language: "en-US"
 		  });
-var geoToken = true, geoCount = 120, APP_VERSION = 10201, tmpCalendar = '', fileObject, tapHold = 0;
+var geoToken = true, geoCount = 120, APP_VERSION = 10202, tmpCalendar = '', fileObject, tapHold = 0;
 
 var app = {
     initialize: function() {
@@ -4402,10 +4402,10 @@ $(document).ready(function(){
 	});
 	
 	$('body').on('touchstart', function(e){
-		tapHold = setTimeout(sys.longTap, 2000); 
+		tapHold = setTimeout(sys.longTap, 3000); 
 	});
 	
-	$('body').on('touchend', function(e){
+	$('body').on('touchmove touchend', function(e){
 		if(tapHold){
 			clearTimeout(tapHold);
 		}
@@ -5241,22 +5241,27 @@ sys = {
 		return (rdC() + md5str.charAt(8) + md5str.charAt(17) + rdC() + md5str.charAt(1) + md5str.charAt(10) + rdC() + md5str.charAt(31) + md5str.charAt(24) + rdC() + md5str.charAt(2) + md5str.charAt(19) + rdC() + md5str.charAt(11) + rdC() + md5str.charAt(27));
 	},
 	'longTap' : function(){
-		if(sys.isEmpty(window.getSelection().toString())){
-			cordova.plugins.clipboard.paste();
-			apps.toast.create({
-				icon: '<i class="material-icons">flip_to_front</i>',
-				text: 'Text pasted.',
-				position: 'center',
-				closeTimeout: 1000
-			}).open();
-		}else{
-			cordova.plugins.clipboard.copy(window.getSelection().toString());
-			apps.toast.create({
-				icon: '<i class="material-icons">flip_to_back</i>',
-				text: 'Text copied.',
-				position: 'center',
-				closeTimeout: 1000
-			}).open();
+		if($('*:focus').length){
+			if(sys.isEmpty(window.getSelection().toString())){
+				cordova.plugins.clipboard.paste(function(text){
+					var tmp = $('*:focus').val();
+					$('*:focus').val((tmp + text));
+				});
+				apps.toast.create({
+					icon: '<i class="material-icons">flip_to_front</i>',
+					text: 'Text pasted.',
+					position: 'center',
+					closeTimeout: 1000
+				}).open();
+			}else{
+				cordova.plugins.clipboard.copy(window.getSelection().toString());
+				apps.toast.create({
+					icon: '<i class="material-icons">flip_to_back</i>',
+					text: 'Text copied.',
+					position: 'center',
+					closeTimeout: 1000
+				}).open();
+			}
 		}
 	}
 }
