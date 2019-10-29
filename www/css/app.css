@@ -226,6 +226,10 @@ td.tb-pic.tb-not-paid, div.col-10.tb-not-paid{
 	font-size: 12px;
 	margin: auto;
 }
+.list.accordion-list.fgnr_tplt .item-title {
+	color: rgba(0,0,0,.65);
+	font-size: 12px;
+}
 #wkv-calendar .calendar-month-current .calendar-day.hl1 span {
 	background-color: #ffcccc;
 }

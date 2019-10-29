@@ -6,11 +6,11 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.204",
+			  version: "1.0.205",
 			  rtl: false,
 			  language: "en-US"
 		  });
-var geoToken = true, geoCount = 120, APP_VERSION = 10204, tmpCalendar = '', fileObject, tapHold = 0;
+var geoToken = true, geoCount = 120, APP_VERSION = 10205, tmpCalendar = '', fileObject, tapHold = 0;
 
 var app = {
     initialize: function() {
@@ -1294,19 +1294,6 @@ $(document).ready(function(){
 	});
 	
 	$('#fgnr-btn').on('click', function(){
-		var DATA = {
-				'usr' : STORAGE.getItem('usr'),
-				'sales' : $('span.ncf-name').data('value'),
-				'tel' : $('span.ncf-tel').data('value'),
-				'email' : $('span.ncf-email').data('value')
-			};
-		var get_data = "ACT=" + encodeURIComponent('pdf_gen')
-					 + "&TYPE=" + encodeURIComponent('Q')
-					 + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
-		var url = 'https://app.wkventertainment.com/?' + (get_data + ("&MD5=" + encodeURIComponent(md5(sys.serialize(DATA))) + "&CS=" + encodeURIComponent(sys.checksum(md5(sys.serialize(DATA))))));
-		
-		window.open(url, "_system");
-		
 		var pic = [], crews = $('body').data('crew');
 		
 		for(var i = 0, j=0; i < crews.length; i++){
@@ -1316,7 +1303,7 @@ $(document).ready(function(){
 			}
 		}
 		
-		var autoSearch = apps.autocomplete.create({
+		var autoSearchPIC = apps.autocomplete.create({
 			openIn: 'dropdown',
 			inputEl: '#fgnr_q_pic',
 			limit: 5,
@@ -1331,11 +1318,90 @@ $(document).ready(function(){
 				for(var i = 0; i < pic.length; i++){
 					if (pic[i].toLowerCase().indexOf(query.toLowerCase()) >= 0) results.push(pic[i]);
 				}
+				$('#fgnr_q_pic').data('qResult', results);
+				render(results);
+			},
+			off: { blur }
+		});
+		
+		var autoSearchVenue = apps.autocomplete.create({
+			openIn: 'dropdown',
+			inputEl: '#fgnr_q_vne',
+			limit: 5,
+			source: function(query, render){
+				var results = [], locs = $('body').data('loc');
+				if(query.length === 0){
+					render(results);
+					return;
+				}
+				
+				for(var i = 0; i < locs.length; i++){
+					if (locs[i].loc_name.toLowerCase().indexOf(query.toLowerCase()) >= 0) results.push(locs[i].loc_name);
+				}
 				
 				render(results);
 			},
 			off: { blur }
 		});
+	});
+	
+	$('#fgnr_q_pic').on('change', function(){
+		var qResult = $('#fgnr_q_pic').data('qResult');
+		
+		if(qResult.length > 0){
+			for(var i = 0; i < qResult.length; i++){
+				if($('#fgnr_q_pic').val() == qResult[i]){
+					var crews = $('body').data('crew'), pic = '';
+					
+					for(var j = 0; j < crews.length; j++){
+						if((crews[j]['nc_name'] == $('#fgnr_q_pic').val()) && (crews[j]['user_level'] == 0)){
+							pic = crews[j];
+						}
+					}
+					
+					$('#fgnr_q_attn').val(pic['nc_name']);
+					$('#fgnr_q_comp').val(pic['nc_pos1']);
+					$('#fgnr_q_addr').val(pic['nc_pos2']);
+					$('#fgnr_q_tel').val(pic['nc_contact']);
+					$('#fgnr_q_eml').val(pic['nc_email']);
+					$('#fgnr_q_ognz').val(pic['nc_name'] + (sys.isEmpty(pic['nc_pos1']) ? '' : (' (' + pic['nc_pos1'] + ')')));
+				}
+			}
+		}
+	});
+	
+	$('.popup-fgnr .fgnr_tplt.fgnr_q a').on('click', function(){
+		if(!sys.isEmpty($(this).data('value'))){
+			var tmp = $('#fgnr_q_eql').val(), val = $(this).data('value');
+			$('#fgnr_q_eql').val((sys.isEmpty(tmp) ? '' : (tmp + '\n\n')) + val);
+		}
+	});
+	
+	$('#fgnr_q_gnr').on('click', function(){
+		var DATA = {
+				'usr' : STORAGE.getItem('usr'),
+				'sales' : $('span.ncf-name').data('value'),
+				'tel' : $('span.ncf-tel').data('value'),
+				'email' : $('span.ncf-email').data('value'),
+				'cattn' : $('#fgnr_q_attn').val(),
+				'ccomp' : $('#fgnr_q_comp').val(),
+				'caddr' : $('#fgnr_q_addr').val(),
+				'ceml' : $('#fgnr_q_eml').val(),
+				'ctel' : $('#fgnr_q_tel').val(),
+				'cfax' : $('#fgnr_q_fax').val(),
+				'cmbl' : $('#fgnr_q_mbl').val(),
+				'ognz' : $('#fgnr_q_ognz').val(),
+				'vne' : $('#fgnr_q_vne').val(),
+				'dte' : $('#fgnr_q_dte').val(),
+				'tme' : $('#fgnr_q_tme').val(),
+				'eql' : $('#fgnr_q_eql').val()
+			};
+		var get_data = "ACT=" + encodeURIComponent('pdf_gen')
+					 + "&TYPE=" + encodeURIComponent('Q')
+					 + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
+		var url = 'https://app.wkventertainment.com/?' + (get_data + ("&MD5=" + encodeURIComponent(md5(sys.serialize(DATA))) + "&CS=" + encodeURIComponent(sys.checksum(md5(sys.serialize(DATA))))));
+		
+		window.open(url, "_system");
 	});
 	
 	$('.details-popover').on('click', 'input.evtd_rmk', function(){
@@ -2464,7 +2530,7 @@ $(document).ready(function(){
 		for(var i = 0, j=0; i < crews.length; i++){
 			if(crews[i]['user_level'] == 0){
 				x += '<li>';
-				x += '<a href="#" class="item-link item-content" data-num="' + i + '" data-jnum="' + j + '" data-uid="' + crews[i]['user_id'] + '" data-dname="' + crews[i]['nc_name'] + '" data-comp="' + crews[i]['nc_pos1'] + '" data-con="' + crews[i]['nc_contact'] + '">';
+				x += '<a href="#" class="item-link item-content" data-num="' + i + '" data-jnum="' + j + '" data-uid="' + crews[i]['user_id'] + '" data-dname="' + crews[i]['nc_name'] + '" data-comp="' + crews[i]['nc_pos1'] + '" data-adr="' + crews[i]['nc_pos2'] + '" data-con="' + crews[i]['nc_contact'] + '" data-eml="' + crews[i]['nc_email'] + '">';
 				x += '<div class="item-inner"><div class="item-title">';
 				x += crews[i]['nc_name'];
 				x += '<div class="item-footer">' + crews[i]['nc_contact'] + (sys.isEmpty(crews[i]['nc_pos1']) ? '' : (' (' + crews[i]['nc_pos1'] + ')')) + '</div>';
@@ -2489,7 +2555,9 @@ $(document).ready(function(){
 		}
 		$('#picl_dname').val('');
 		$('#picl_comp').val('');
+		$('#picl_adr').val('');
 		$('#picl_con').val('');
+		$('#picl_eml').val('');
 		apps.popover.open('.picl-popover');
 	});
 	
@@ -2501,12 +2569,14 @@ $(document).ready(function(){
 		$('#picl_dname').data('jnum', $(this).data('jnum'));
 		$('#picl_dname').val($(this).data('dname'));
 		$('#picl_comp').val($(this).data('comp'));
+		$('#picl_adr').val($(this).data('adr'));
 		$('#picl_con').val($(this).data('con'));
+		$('#picl_eml').val($(this).data('eml'));
 		apps.popover.open('.picl-popover');
 	});
 	
 	$('.picl_ok').on('click', function(){
-		var dnm = $('#picl_dname').val(), comp = $('#picl_comp').val(), con = $('#picl_con').val();
+		var dnm = $('#picl_dname').val(), comp = $('#picl_comp').val(), adr = $('#picl_adr').val(), con = $('#picl_con').val(), eml = $('#picl_eml').val();
 		
 		if(sys.isEmpty(dnm) || sys.isEmpty(con)){
 			navigator.vibrate(100);
@@ -2520,7 +2590,9 @@ $(document).ready(function(){
 					'usr' : STORAGE.getItem('usr'),
 					'dnm' : dnm,
 					'comp' : comp,
+					'adr' : adr,
 					'con' : con,
+					'eml' : eml,
 					'uid' : uid
 				};
 				var post_data = "ACT=" + encodeURIComponent('pic_add')
@@ -2538,7 +2610,7 @@ $(document).ready(function(){
 
 						if(str == '200 OK'){
 							var x = '<li>';
-								x += '<a href="#" class="item-link item-content" data-num="' + crew.length + '" data-jnum="' + $('.pic_list ul li').length + '" data-uid="' + uid + '" data-dname="' + dnm + '" data-comp="' + comp + '" data-con="' + con + '">';
+								x += '<a href="#" class="item-link item-content" data-num="' + crew.length + '" data-jnum="' + $('.pic_list ul li').length + '" data-uid="' + uid + '" data-dname="' + dnm + '" data-comp="' + comp + '" data-adr="' + adr + '" data-con="' + con + '" data-eml="' + eml + '">';
 								x += '<div class="item-inner"><div class="item-title">' + dnm + '<div class="item-footer">' + con + (sys.isEmpty(comp) ? '' : (' (' + comp + ')')) + '</div></div></div></a></li>';
 								
 							var ncrew = {
@@ -2548,6 +2620,8 @@ $(document).ready(function(){
 								'user_id' : uid,
 								'nc_contact' : con,
 								'nc_pos1' : comp,
+								'nc_pos2' : adr,
+								'nc_email' : eml,
 								'user_level' : '0'
 							};
 							crew.push(ncrew);
@@ -2578,7 +2652,9 @@ $(document).ready(function(){
 				var DATA = {
 					'usr' : STORAGE.getItem('usr'),
 					'comp' : comp,
+					'adr' : adr,
 					'con' : con,
+					'eml' : eml,
 					'uid' : $('#picl_dname').data('uid')
 				};
 				var post_data = "ACT=" + encodeURIComponent('pic_udt')
@@ -2596,11 +2672,13 @@ $(document).ready(function(){
 						
 						if(str == '200 OK'){
 							var pnum = $('#picl_dname').data('num'), jnum = $('#picl_dname').data('jnum');
-							var x = '<a href="#" class="item-link item-content" data-num="' + pnum + '" data-jnum="' + jnum + '" data-uid="' + $('#picl_dname').data('uid') + '" data-dname="' + dnm + '" data-comp="' + comp + '" data-con="' + con + '">';
+							var x = '<a href="#" class="item-link item-content" data-num="' + pnum + '" data-jnum="' + jnum + '" data-uid="' + $('#picl_dname').data('uid') + '" data-dname="' + dnm + '" data-comp="' + comp + '" data-adr="' + adr + '" data-con="' + con + '" data-eml="' + eml + '">';
 								x += '<div class="item-inner"><div class="item-title">' + dnm + '<div class="item-footer">' + con + (sys.isEmpty(comp) ? '' : (' (' + comp + ')')) + '</div></div></div></a>';
 							
 							crew[pnum]['nc_contact'] = con;
+							crew[pnum]['nc_email'] = eml;
 							crew[pnum]['nc_pos1'] = comp;
+							crew[pnum]['nc_pos2'] = adr;
 							
 							$('body').data('crew', crew);
 							$('.pic_list ul li:eq(' + jnum + ')').html(x);
