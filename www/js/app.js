@@ -6,11 +6,11 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.205",
+			  version: "1.0.206",
 			  rtl: false,
 			  language: "en-US"
 		  });
-var geoToken = true, geoCount = 120, APP_VERSION = 10205, tmpCalendar = '', fileObject, tapHold = 0;
+var geoToken = true, geoCount = 120, APP_VERSION = 10206, tmpCalendar = '', fileObject, tapHold = 0;
 
 var app = {
     initialize: function() {
@@ -209,7 +209,7 @@ $(document).ready(function(){
 										x += '<div class="timeline-item-content">';
 									}
 									
-									x += '<div class="timeline-item-inner tsk' + task[i]['primary_id'] + '" data-locpid="' + (sys.isEmpty(task[i]['venue']) ? 0 : (task[i]['venue'].indexOf('#PID#') != -1 ? task[i]['venue'] : 0)) + '" data-rmk="' + task[i]['remarks'] + '">';
+									x += '<div class="timeline-item-inner tsk' + task[i]['primary_id'] + '" data-locpid="' + (sys.isEmpty(task[i]['venue']) ? 0 : (task[i]['venue'].indexOf('#PID#') != -1 ? task[i]['venue'] : 0)) + '" data-rmk="' + task[i]['remarks'] + '" data-crew="' + task[i]['crew'] + '">';
 									
 									if(task[i]['time']){
 										x += '<div class="timeline-item-time">' + task[i]['time'] + '</div>';
@@ -841,7 +841,7 @@ $(document).ready(function(){
 									x += '<div class="timeline-item-content">';
 								}
 								
-								x += '<div class="timeline-item-inner tsk' + task[i]['primary_id'] + '" data-locpid="' + (sys.isEmpty(task[i]['venue']) ? 0 : (task[i]['venue'].indexOf('#PID#') != -1 ? task[i]['venue'] : 0)) + '" data-rmk="' + task[i]['remarks'] + '">';
+								x += '<div class="timeline-item-inner tsk' + task[i]['primary_id'] + '" data-locpid="' + (sys.isEmpty(task[i]['venue']) ? 0 : (task[i]['venue'].indexOf('#PID#') != -1 ? task[i]['venue'] : 0)) + '" data-rmk="' + task[i]['remarks'] + '" data-crew="' + task[i]['crew'] + '">';
 								
 								if(task[i]['time']){
 									x += '<div class="timeline-item-time">' + task[i]['time'] + '</div>';
@@ -880,7 +880,7 @@ $(document).ready(function(){
 			var loc = sys.pidToLoc(pid);
 			
 			apps.dialog.create({
-				text: (sys.isEmpty(rmk) ? (sys.isEmpty($(this).find('span').text()) ? 'No details found.' : $(this).find('span').text()) : rmk),
+				text: (sys.isEmpty(rmk) ? (sys.isEmpty($(this).find('span').text()) ? 'No details found.' : ($(this).find('span').text() + (sys.isEmpty($(this).data('crew')) ? '' : ('<br/>' + sys.unameToSname($(this).data('crew'), '@'))))) : rmk),
 				buttons: [{
 						text: 'Main Lobby',
 						cssClass: 'wazeBtn',
@@ -4579,7 +4579,7 @@ $(document).ready(function(){
 							x += '<div class="timeline-item-content">';
 						}
 						
-						x += '<div class="timeline-item-inner tsk' + task[i]['primary_id'] + '" data-locpid="' + (sys.isEmpty(task[i]['venue']) ? 0 : (task[i]['venue'].indexOf('#PID#') != -1 ? task[i]['venue'] : 0)) + '" data-rmk="' + task[i]['remarks'] + '">';
+						x += '<div class="timeline-item-inner tsk' + task[i]['primary_id'] + '" data-locpid="' + (sys.isEmpty(task[i]['venue']) ? 0 : (task[i]['venue'].indexOf('#PID#') != -1 ? task[i]['venue'] : 0)) + '" data-rmk="' + task[i]['remarks'] + '" data-crew="' + task[i]['crew'] + '">';
 						
 						if(task[i]['time']){
 							x += '<div class="timeline-item-time">' + task[i]['time'] + '</div>';
@@ -4865,25 +4865,52 @@ sys = {
 		}
 		return x;
 	},
-	'unameToSname' : function(str){
-		if(str){
-			var aCrew = str.split(','), sCrew = [], all = $('body').data('crew');
-			
-			if(str.indexOf(',') != -1){
-				for(var i=0; i<aCrew.length; i++){
+	'unameToSname' : function(str, mode){
+		if(sys.isEmpty(mode)){
+			if(str){
+				var aCrew = str.split(','), sCrew = [], all = $('body').data('crew');
+				
+				if(str.indexOf(',') != -1){
+					for(var i=0; i<aCrew.length; i++){
+						for(var j=0; j<all.length; j++){
+							if(aCrew[i] == all[j].user_id){
+								sCrew[i] = all[j].short_name;
+								break;
+							}
+						}
+					}
+					
+					return sCrew.join(', ');
+				}else{
 					for(var j=0; j<all.length; j++){
-						if(aCrew[i] == all[j].user_id){
-							sCrew[i] = all[j].short_name;
-							break;
+						if(str == all[j].user_id){
+							return all[j].short_name;
 						}
 					}
 				}
-				
-				return sCrew.join(', ');
-			}else{
-				for(var j=0; j<all.length; j++){
-					if(str == all[j].user_id){
-						return all[j].short_name;
+			}
+		}else{
+			if(mode == '@'){
+				if(str){
+					var aCrew = str.split(','), sCrew = [], all = $('body').data('crew');
+					
+					if(str.indexOf(',') != -1){
+						for(var i=0; i<aCrew.length; i++){
+							for(var j=0; j<all.length; j++){
+								if(aCrew[i] == all[j].user_id){
+									sCrew[i] = ('@' + all[j].short_name);
+									break;
+								}
+							}
+						}
+						
+						return sCrew.join(' ');
+					}else{
+						for(var j=0; j<all.length; j++){
+							if(str == all[j].user_id){
+								return ('@' + all[j].short_name);
+							}
+						}
 					}
 				}
 			}
