@@ -6,11 +6,11 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.208",
+			  version: "1.0.209",
 			  rtl: false,
 			  language: "en-US"
 		  });
-var geoToken = true, geoCount = 120, APP_VERSION = 10208, tmpCalendar = '', fileObject, tapHold = 0;
+var geoToken = true, geoCount = 120, APP_VERSION = 10209, tmpCalendar = '', fileObject, tapHold = 0, tapHoldStr = '';
 
 var app = {
     initialize: function() {
@@ -4626,12 +4626,21 @@ $(document).ready(function(){
 	});
 	
 	$('body').on('touchstart', function(e){
-		tapHold = setTimeout(sys.longTap, 2000); 
+		tapHold = setTimeout(sys.longTap, 2000);
+		tapHoldStr = window.getSelection().toString();
 	});
 	
-	$('body').on('touchcancel touchmove touchend', function(e){
+	$('body').on('touchmove touchend', function(e){
 		if(tapHold){
 			clearTimeout(tapHold);
+		}
+	});
+	
+	$('body').on('touchcancel', function(e){
+		if(tapHoldStr != window.getSelection().toString()){
+			if(tapHold){
+				clearTimeout(tapHold);
+			}
 		}
 	});
 	
