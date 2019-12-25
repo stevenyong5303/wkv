@@ -50,7 +50,7 @@
 	<plugin name="phonegap-plugin-barcodescanner" />
 	<plugin name="onesignal-cordova-plugin" spec="2.4.1" source="npm" />
 	<plugin name="cordova-clipboard" />
-	<plugin name="@mauron85/cordova-plugin-background-geolocation"/>
+	<plugin name="cordova-plugin-background-geolocation" />
 	
 	<plugin name="cordova-plugin-battery-status" />
     <plugin name="cordova-plugin-camera" />
