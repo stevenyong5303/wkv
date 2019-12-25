@@ -4,7 +4,7 @@
 <widget xmlns     = "http://www.w3.org/ns/widgets"
         xmlns:gap = "http://phonegap.com/ns/1.0"
         id        = "com.wkv.manage"
-        version   = "1.0.215">
+        version   = "1.0.216">
 
     <name>WKV</name>
 
@@ -50,7 +50,7 @@
 	<plugin name="phonegap-plugin-barcodescanner" />
 	<plugin name="onesignal-cordova-plugin" spec="2.4.1" source="npm" />
 	<plugin name="cordova-clipboard" />
-	<plugin name="@mauron85/cordova-plugin-background-geolocation" />
+	<plugin name="cordova-plugin-background-fetch" source="npm" />
 	
 	<plugin name="cordova-plugin-battery-status" />
     <plugin name="cordova-plugin-camera" />
@@ -110,7 +110,7 @@
     <!-- <gap:splash src="res/screen/windows-phone/screen-portrait.png"      gap:platform="winphone" /> -->
 
     <gap:config-file platform="ios" parent="CFBundleShortVersionString">
-    <string>215</string>
+    <string>216</string>
     </gap:config-file>
 
     <!--
@@ -143,7 +143,6 @@
 		<resource-file src="locales/android/drawable-xhdpi/ic_stat_onesignal_default.png" target="app/src/main/res/drawable-xhdpi/ic_stat_onesignal_default.png" />
 		<resource-file src="locales/android/drawable-xxhdpi/ic_stat_onesignal_default.png" target="app/src/main/res/drawable-xxhdpi/ic_stat_onesignal_default.png" />
 		<resource-file src="locales/android/drawable-xxxhdpi/ic_stat_onesignal_default.png" target="app/src/main/res/drawable-xxxhdpi/ic_stat_onesignal_default.png" />
-		<resource-file src="locales/android/mipmap/icon.png" target="app/src/main/res/mipmap/icon.png" />
     </platform>
     <platform name="ios">
         <allow-intent href="itms:*" />
