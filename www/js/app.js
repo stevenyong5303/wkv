@@ -90,6 +90,7 @@ var app = {
 			interval: 10000,
 			fastestInterval: 5000,
 			activitiesInterval: 10000,
+			notificationIconSmall: 'icon.png',
 			url: 'https://app.wkventertainment.com/',
 			postTemplate: {
 				lat : '@latitude',
