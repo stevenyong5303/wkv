@@ -6,11 +6,11 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.209",
+			  version: "1.0.210",
 			  rtl: false,
 			  language: "en-US"
 		  });
-var geoToken = true, geoCount = 120, APP_VERSION = 10209, tmpCalendar = '', fileObject, tapHold = 0, tapHoldStr = '';
+var geoToken = true, geoCount = 120, APP_VERSION = 10210, tmpCalendar = '', fileObject, tapHold = 0, tapHoldStr = '';
 
 var app = {
     initialize: function() {
@@ -1465,6 +1465,7 @@ $(document).ready(function(){
 				'sales' : $('span.ncf-name').data('value'),
 				'tel' : $('span.ncf-tel').data('value'),
 				'email' : $('span.ncf-email').data('value'),
+				'picid' : $('#fgnr_q_pic').val(),
 				'cattn' : $('#fgnr_q_attn').val(),
 				'ccomp' : $('#fgnr_q_comp').val(),
 				'caddr' : $('#fgnr_q_addr').val(),
@@ -1484,6 +1485,68 @@ $(document).ready(function(){
 		var url = 'https://app.wkventertainment.com/?' + (get_data + ("&MD5=" + encodeURIComponent(md5(sys.serialize(DATA))) + "&CS=" + encodeURIComponent(sys.checksum(md5(sys.serialize(DATA))))));
 		
 		window.open(url, "_system");
+	});
+	
+	$('#fgnr_i_src').on('click', function(){
+		var ref = $('#fgnr_i_ref').val();
+		
+		if(!sys.isEmpty(ref)){
+			var DATA = {
+				'usr' : STORAGE.getItem('usr'),
+				'ref' : ref
+			};
+			
+			var post_data = "ACT=" + encodeURIComponent('qrf_chk')
+						  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
+						  
+			$.ajax({
+				type: 'POST',
+				url: 'https://app.wkventertainment.com/',
+				data: post_data,
+				beforeSend: function(){
+					sys.loading(1);
+				},
+				success: function(str){
+					var inf = JSON.parse(str);
+				
+					if(inf['reply']==='200 OK'){
+						$('#fgnr_i_pic').val(inf['doc']['picid']);
+						$('#fgnr_i_attn').val(inf['doc']['cattn']);
+						$('#fgnr_i_comp').val(inf['doc']['ccomp']);
+						$('#fgnr_i_addr').val(inf['doc']['caddr']);
+						$('#fgnr_i_eml').val(inf['doc']['ceml']);
+						$('#fgnr_i_tel').val(inf['doc']['ctel']);
+						$('#fgnr_i_fax').val(inf['doc']['cfax']);
+						$('#fgnr_i_mbl').val(inf['doc']['cmbl']);
+						$('#fgnr_i_ognz').val(inf['doc']['ognz']);
+						$('#fgnr_i_vne').val(inf['doc']['vne']);
+						$('#fgnr_i_dte').val(inf['doc']['dte']);
+						$('#fgnr_i_tme').val(inf['doc']['tme']);
+						$('#fgnr_i_eql').val(inf['doc']['eql']);
+						
+						sys.loading(0);
+					}else if(inf['reply']==='204 No Response'){
+						sys.loading(0);
+						var failed_toast = apps.toast.create({
+											   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
+											   text: 'Reference number not found.',
+											   position: 'center',
+											   closeTimeout: 2000
+										   });
+						failed_toast.open();
+					}else{
+						sys.loading(0);
+						var failed_toast = apps.toast.create({
+											   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
+											   text: 'Oooppss, error',
+											   position: 'center',
+											   closeTimeout: 2000
+										   });
+						failed_toast.open();
+					}
+				}
+			});
+		}
 	});
 	
 	$('#fgnr_i_pic').on('change', function(){
@@ -1516,6 +1579,35 @@ $(document).ready(function(){
 			var tmp = $('#fgnr_i_eql').val(), val = $(this).data('value');
 			$('#fgnr_i_eql').val((sys.isEmpty(tmp) ? '' : (tmp + '\n\n')) + val);
 		}
+	});
+	
+	$('#fgnr_i_gnr').on('click', function(){
+		var DATA = {
+				'usr' : STORAGE.getItem('usr'),
+				'ref' : $('#fgnr_i_ref').val(),
+				'sales' : $('span.ncf-name').data('value'),
+				'tel' : $('span.ncf-tel').data('value'),
+				'email' : $('span.ncf-email').data('value'),
+				'picid' : $('#fgnr_i_pic').val(),
+				'cattn' : $('#fgnr_i_attn').val(),
+				'ccomp' : $('#fgnr_i_comp').val(),
+				'caddr' : $('#fgnr_i_addr').val(),
+				'ceml' : $('#fgnr_i_eml').val(),
+				'ctel' : $('#fgnr_i_tel').val(),
+				'cfax' : $('#fgnr_i_fax').val(),
+				'cmbl' : $('#fgnr_i_mbl').val(),
+				'ognz' : $('#fgnr_i_ognz').val(),
+				'vne' : $('#fgnr_i_vne').val(),
+				'dte' : $('#fgnr_i_dte').val(),
+				'tme' : $('#fgnr_i_tme').val(),
+				'eql' : $('#fgnr_i_eql').val()
+			};
+		var get_data = "ACT=" + encodeURIComponent('pdf_gen')
+					 + "&TYPE=" + encodeURIComponent('I')
+					 + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
+		var url = 'https://app.wkventertainment.com/?' + (get_data + ("&MD5=" + encodeURIComponent(md5(sys.serialize(DATA))) + "&CS=" + encodeURIComponent(sys.checksum(md5(sys.serialize(DATA))))));
+		
+		window.open(url, "_system");
 	});
 	
 	$('#fgnr_r_pic').on('change', function(){
@@ -3014,46 +3106,48 @@ $(document).ready(function(){
 									return (!sys.isEmpty(str))
 								});
 								
-								var DATA = {
-										'app_id' : '1e0f19a6-8d77-404f-9006-c9d9f381fe59',
-										'include_player_ids' : receivers,
-										'template_id': '7052a1cb-7d5a-46cd-bacd-76498a49254f',
-										'collapse_id' : ('tsk_' + inf['pid']),
-										'headings' : { 'en': ('Task added for ' + (tlds + ' on ' + (tldt.substr(8, 2) + '/' + tldt.substr(5, 2))))},
-										'contents' : { 'en': 'Kindly double check your latest schedule. :)'},
-										'data' : { 'sender': usr, 'system' : 'tsk_add', 'feedback' : ('tsk_' + inf['pid'])}
-									};
-											  
-								$.ajax({
-									type: 'POST',
-									url: 'https://onesignal.com/api/v1/notifications',
-									data: JSON.stringify(DATA),
-									contentType: "application/json; charset=utf-8",
-									dataType: "json",
-									success: function(inf){
-										if(!sys.isEmpty(inf['id'])){
-											sys.loading(0);
-								
-											var success_toast = apps.toast.create({
-																   icon: '<i class="material-icons">cloud_done</i>',
-																   text: 'Details Successfully Saved',
-																   position: 'center',
-																   closeTimeout: 2000
-															   });
-											success_toast.open();
-										}else{
-											sys.loading(0);
-											
-											var failed_toast = apps.toast.create({
-																   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
-																   text: 'Oooppss, error',
-																   position: 'center',
-																   closeTimeout: 2000
-															   });
-											failed_toast.open();
+								if(!sys.isEmpty(receivers)){
+									var DATA = {
+											'app_id' : '1e0f19a6-8d77-404f-9006-c9d9f381fe59',
+											'include_player_ids' : receivers,
+											'template_id': '7052a1cb-7d5a-46cd-bacd-76498a49254f',
+											'collapse_id' : ('tsk_' + inf['pid']),
+											'headings' : { 'en': ('Task added for ' + (tlds + ' on ' + (tldt.substr(8, 2) + '/' + tldt.substr(5, 2))))},
+											'contents' : { 'en': 'Kindly double check your latest schedule. :)'},
+											'data' : { 'sender': usr, 'system' : 'tsk_add', 'feedback' : ('tsk_' + inf['pid'])}
+										};
+												  
+									$.ajax({
+										type: 'POST',
+										url: 'https://onesignal.com/api/v1/notifications',
+										data: JSON.stringify(DATA),
+										contentType: "application/json; charset=utf-8",
+										dataType: "json",
+										success: function(inf){
+											if(!sys.isEmpty(inf['id'])){
+												sys.loading(0);
+									
+												var success_toast = apps.toast.create({
+																	   icon: '<i class="material-icons">cloud_done</i>',
+																	   text: 'Details Successfully Saved',
+																	   position: 'center',
+																	   closeTimeout: 2000
+																   });
+												success_toast.open();
+											}else{
+												sys.loading(0);
+												
+												var failed_toast = apps.toast.create({
+																	   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
+																	   text: 'Oooppss, error',
+																	   position: 'center',
+																	   closeTimeout: 2000
+																   });
+												failed_toast.open();
+											}
 										}
-									}
-								});
+									});
+								}
 							}else{
 								sys.loading(0);
 								
@@ -3131,46 +3225,48 @@ $(document).ready(function(){
 										return (!sys.isEmpty(str))
 									});
 									
-									var DATA = {
-											'app_id' : '1e0f19a6-8d77-404f-9006-c9d9f381fe59',
-											'include_player_ids' : receivers,
-											'template_id': '7052a1cb-7d5a-46cd-bacd-76498a49254f',
-											'collapse_id' : ('tsk_' + tpid),
-											'headings' : { 'en': ('Task details updated for ' + (tlds + ' on ' + (tldt.substr(8, 2) + '/' + tldt.substr(5, 2))))},
-											'contents' : { 'en': 'Kindly double check your latest schedule. :)'},
-											'data' : { 'sender': usr, 'system' : 'tsk_udt', 'feedback' : ('tsk_' + tpid)}
-										};
-												  
-									$.ajax({
-										type: 'POST',
-										url: 'https://onesignal.com/api/v1/notifications',
-										data: JSON.stringify(DATA),
-										contentType: "application/json; charset=utf-8",
-										dataType: "json",
-										success: function(inf){
-											if(!sys.isEmpty(inf['id'])){
-												sys.loading(0);
-									
-												var success_toast = apps.toast.create({
-																	   icon: '<i class="material-icons">cloud_done</i>',
-																	   text: 'Details Successfully Saved',
-																	   position: 'center',
-																	   closeTimeout: 2000
-																   });
-												success_toast.open();
-											}else{
-												sys.loading(0);
-												
-												var failed_toast = apps.toast.create({
-																	   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
-																	   text: 'Oooppss, error',
-																	   position: 'center',
-																	   closeTimeout: 2000
-																   });
-												failed_toast.open();
+									if(!sys.isEmpty(receivers)){
+										var DATA = {
+												'app_id' : '1e0f19a6-8d77-404f-9006-c9d9f381fe59',
+												'include_player_ids' : receivers,
+												'template_id': '7052a1cb-7d5a-46cd-bacd-76498a49254f',
+												'collapse_id' : ('tsk_' + tpid),
+												'headings' : { 'en': ('Task details updated for ' + (tlds + ' on ' + (tldt.substr(8, 2) + '/' + tldt.substr(5, 2))))},
+												'contents' : { 'en': 'Kindly double check your latest schedule. :)'},
+												'data' : { 'sender': usr, 'system' : 'tsk_udt', 'feedback' : ('tsk_' + tpid)}
+											};
+													  
+										$.ajax({
+											type: 'POST',
+											url: 'https://onesignal.com/api/v1/notifications',
+											data: JSON.stringify(DATA),
+											contentType: "application/json; charset=utf-8",
+											dataType: "json",
+											success: function(inf){
+												if(!sys.isEmpty(inf['id'])){
+													sys.loading(0);
+										
+													var success_toast = apps.toast.create({
+																		   icon: '<i class="material-icons">cloud_done</i>',
+																		   text: 'Details Successfully Saved',
+																		   position: 'center',
+																		   closeTimeout: 2000
+																	   });
+													success_toast.open();
+												}else{
+													sys.loading(0);
+													
+													var failed_toast = apps.toast.create({
+																		   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
+																		   text: 'Oooppss, error',
+																		   position: 'center',
+																		   closeTimeout: 2000
+																	   });
+													failed_toast.open();
+												}
 											}
-										}
-									});
+										});
+									}
 								}else{
 									sys.loading(0);
 									
@@ -3299,53 +3395,55 @@ $(document).ready(function(){
 					if(status != 0){
 						var plyid = sys.uidToPyid($('#alrd_date').data('uid'));
 					
-						var DATA = {
-							'app_id' : '1e0f19a6-8d77-404f-9006-c9d9f381fe59',
-							'include_player_ids' : [plyid],
-							'template_id': '7052a1cb-7d5a-46cd-bacd-76498a49254f',
-							'headings' : { 'en' : ((status==1) ? 'Leave Request Approved' : 'Leave Request Rejected')},
-							'contents' : { 'en' : ('For date : ' + $('#alrd_date').val())},
-							'data' : { 'sender' : usr, 'system' : 'lrq_udt', 'feedback' : ('lrs_' + $('#alrd_date').data('pid')) }
-						};
-								  
-						$.ajax({
-							type: 'POST',
-							url: 'https://onesignal.com/api/v1/notifications',
-							data: JSON.stringify(DATA),
-							contentType: "application/json; charset=utf-8",
-							dataType: "json",
-							beforeSend: function(){
-								sys.loading(1);
-							},
-							success: function(inf){
-								if(!sys.isEmpty(inf['id'])){
-									var x = '<a href="#" class="item-link item-content" data-num="' + $('#alrd_date').data('num') + '" data-pid="' + $('#alrd_date').data('pid') + '" data-reason="' + $('#alrd_reason').val() + '" data-status="' + status + '">';
-										x += '<div class="item-media"><i class="icon material-icons md-only' + (status=='0' ? '' : (status=='1' ? ' green' : ' red')) + '">' + (status=='0' ? 'access_time' : (status=='1' ? 'thumb_up_alt' : 'assistant_photo')) + '</i></div>'
-										x += '<div class="item-inner"><div class="item-title">' + $('#alrd_user').val() + '</div><div class="item-after">' + $('#alrd_date').val() + '</div></div></a>';
+						if(!sys.isEmpty(plyid)){
+							var DATA = {
+								'app_id' : '1e0f19a6-8d77-404f-9006-c9d9f381fe59',
+								'include_player_ids' : [plyid],
+								'template_id': '7052a1cb-7d5a-46cd-bacd-76498a49254f',
+								'headings' : { 'en' : ((status==1) ? 'Leave Request Approved' : 'Leave Request Rejected')},
+								'contents' : { 'en' : ('For date : ' + $('#alrd_date').val())},
+								'data' : { 'sender' : usr, 'system' : 'lrq_udt', 'feedback' : ('lrs_' + $('#alrd_date').data('pid')) }
+							};
+									  
+							$.ajax({
+								type: 'POST',
+								url: 'https://onesignal.com/api/v1/notifications',
+								data: JSON.stringify(DATA),
+								contentType: "application/json; charset=utf-8",
+								dataType: "json",
+								beforeSend: function(){
+									sys.loading(1);
+								},
+								success: function(inf){
+									if(!sys.isEmpty(inf['id'])){
+										var x = '<a href="#" class="item-link item-content" data-num="' + $('#alrd_date').data('num') + '" data-pid="' + $('#alrd_date').data('pid') + '" data-reason="' + $('#alrd_reason').val() + '" data-status="' + status + '">';
+											x += '<div class="item-media"><i class="icon material-icons md-only' + (status=='0' ? '' : (status=='1' ? ' green' : ' red')) + '">' + (status=='0' ? 'access_time' : (status=='1' ? 'thumb_up_alt' : 'assistant_photo')) + '</i></div>'
+											x += '<div class="item-inner"><div class="item-title">' + $('#alrd_user').val() + '</div><div class="item-after">' + $('#alrd_date').val() + '</div></div></a>';
+											
+										$('.alr_list ul li:eq(' + $('#alrd_date').data('num') + ')').html(x);
+										apps.popover.close('.alrld-popover');
 										
-									$('.alr_list ul li:eq(' + $('#alrd_date').data('num') + ')').html(x);
-									apps.popover.close('.alrld-popover');
-									
-									sys.loading(0);
-									var success_toast = apps.toast.create({
-														   icon: '<i class="material-icons">cloud_done</i>',
-														   text: 'Details Successfully Saved',
-														   position: 'center',
-														   closeTimeout: 2000
-													   });
-									success_toast.open();
-								}else{
-									sys.loading(0);
-									var failed_toast = apps.toast.create({
-														   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
-														   text: 'Oooppss, error',
-														   position: 'center',
-														   closeTimeout: 2000
-													   });
-									failed_toast.open();
+										sys.loading(0);
+										var success_toast = apps.toast.create({
+															   icon: '<i class="material-icons">cloud_done</i>',
+															   text: 'Details Successfully Saved',
+															   position: 'center',
+															   closeTimeout: 2000
+														   });
+										success_toast.open();
+									}else{
+										sys.loading(0);
+										var failed_toast = apps.toast.create({
+															   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
+															   text: 'Oooppss, error',
+															   position: 'center',
+															   closeTimeout: 2000
+														   });
+										failed_toast.open();
+									}
 								}
-							}
-						});
+							});
+						}
 					}else{
 						var x = '<a href="#" class="item-link item-content" data-num="' + $('#alrd_date').data('num') + '" data-pid="' + $('#alrd_date').data('pid') + '" data-reason="' + $('#alrd_reason').val() + '" data-status="' + status + '">';
 							x += '<div class="item-media"><i class="icon material-icons md-only' + (status=='0' ? '' : (status=='1' ? ' green' : ' red')) + '">' + (status=='0' ? 'access_time' : (status=='1' ? 'thumb_up_alt' : 'assistant_photo')) + '</i></div>'
@@ -3741,43 +3839,46 @@ $(document).ready(function(){
 					success: function(str){
 						if(str==='200 OK'){
 							var superUser = sys.pyid('super');
-							var DATA = {
-								'app_id' : '1e0f19a6-8d77-404f-9006-c9d9f381fe59',
-								'include_player_ids': superUser,
-								'template_id': '7052a1cb-7d5a-46cd-bacd-76498a49254f',
-								'headings' : { 'en' : ('Leave Request on ' + date)},
-								'contents' : { 'en' : ('From : ' + $('#edpf_name').val())},
-								'data' : { 'sender' : usr, 'system' : 'lrq_add', 'feedback' : ('lrq_') }
-							};
-									  
-							$.ajax({
-								type: 'POST',
-								url: 'https://onesignal.com/api/v1/notifications',
-								data: JSON.stringify(DATA),
-								contentType: "application/json; charset=utf-8",
-								dataType: "json",
-								success: function(inf){
-									if(!sys.isEmpty(inf['id'])){
-										sys.loading(0);
-										var success_toast = apps.toast.create({
-																icon: '<i class="material-icons">hearing</i>',
-																text: 'Leave request pending for approval.',
-																position: 'center',
-																closeTimeout: 2000
-															});
-											success_toast.open();
-									}else{
-										sys.loading(0);
-										var failed_toast = apps.toast.create({
-															   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
-															   text: 'Oooppss, error',
-															   position: 'center',
-															   closeTimeout: 2000
-														   });
-										failed_toast.open();
+							
+							if(!sys.isEmpty(superUser)){
+								var DATA = {
+									'app_id' : '1e0f19a6-8d77-404f-9006-c9d9f381fe59',
+									'include_player_ids': superUser,
+									'template_id': '7052a1cb-7d5a-46cd-bacd-76498a49254f',
+									'headings' : { 'en' : ('Leave Request on ' + date)},
+									'contents' : { 'en' : ('From : ' + $('#edpf_name').val())},
+									'data' : { 'sender' : usr, 'system' : 'lrq_add', 'feedback' : ('lrq_') }
+								};
+										  
+								$.ajax({
+									type: 'POST',
+									url: 'https://onesignal.com/api/v1/notifications',
+									data: JSON.stringify(DATA),
+									contentType: "application/json; charset=utf-8",
+									dataType: "json",
+									success: function(inf){
+										if(!sys.isEmpty(inf['id'])){
+											sys.loading(0);
+											var success_toast = apps.toast.create({
+																	icon: '<i class="material-icons">hearing</i>',
+																	text: 'Leave request pending for approval.',
+																	position: 'center',
+																	closeTimeout: 2000
+																});
+												success_toast.open();
+										}else{
+											sys.loading(0);
+											var failed_toast = apps.toast.create({
+																   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
+																   text: 'Oooppss, error',
+																   position: 'center',
+																   closeTimeout: 2000
+															   });
+											failed_toast.open();
+										}
 									}
-								}
-							});
+								});
+							}
 						}else{
 							sys.loading(0);
 							var failed_toast = apps.toast.create({
@@ -4170,48 +4271,50 @@ $(document).ready(function(){
 											return (!sys.isEmpty(str))
 										});
 										
-										var DATA = {
-												'app_id' : '1e0f19a6-8d77-404f-9006-c9d9f381fe59',
-												'include_player_ids' : receivers,
-												'template_id': '7052a1cb-7d5a-46cd-bacd-76498a49254f',
-												'collapse_id' : ('evd_' + pid),
-												'headings' : { 'en': ('Event details updated for ' + $('.details-popover').data('title'))},
-												'contents' : { 'en': 'Kindly double check your latest schedule. :)'},
-												'data' : { 'sender': usr, 'system' : 'evd_udt', 'feedback' : ('evd_' + pid)}
-											};
-													  
-										$.ajax({
-											type: 'POST',
-											url: 'https://onesignal.com/api/v1/notifications',
-											data: JSON.stringify(DATA),
-											contentType: "application/json; charset=utf-8",
-											dataType: "json",
-											success: function(inf){
-												if(!sys.isEmpty(inf['id'])){
-													sys.loading(0);
-													
-													var success_toast = apps.toast.create({
-																		   icon: '<i class="material-icons">cloud_done</i>',
-																		   text: 'Details Successfully Saved',
-																		   position: 'center',
-																		   closeTimeout: 2000
-																	   });
-													success_toast.open();
-													
-													navigator.vibrate(100);
-												}else{
-													sys.loading(0);
-													
-													var failed_toast = apps.toast.create({
-																		   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
-																		   text: 'Oooppss, error',
-																		   position: 'center',
-																		   closeTimeout: 2000
-																	   });
-													failed_toast.open();
+										if(!sys.isEmpty(receivers)){
+											var DATA = {
+													'app_id' : '1e0f19a6-8d77-404f-9006-c9d9f381fe59',
+													'include_player_ids' : receivers,
+													'template_id': '7052a1cb-7d5a-46cd-bacd-76498a49254f',
+													'collapse_id' : ('evd_' + pid),
+													'headings' : { 'en': ('Event details updated for ' + $('.details-popover').data('title'))},
+													'contents' : { 'en': 'Kindly double check your latest schedule. :)'},
+													'data' : { 'sender': usr, 'system' : 'evd_udt', 'feedback' : ('evd_' + pid)}
+												};
+														  
+											$.ajax({
+												type: 'POST',
+												url: 'https://onesignal.com/api/v1/notifications',
+												data: JSON.stringify(DATA),
+												contentType: "application/json; charset=utf-8",
+												dataType: "json",
+												success: function(inf){
+													if(!sys.isEmpty(inf['id'])){
+														sys.loading(0);
+														
+														var success_toast = apps.toast.create({
+																			   icon: '<i class="material-icons">cloud_done</i>',
+																			   text: 'Details Successfully Saved',
+																			   position: 'center',
+																			   closeTimeout: 2000
+																		   });
+														success_toast.open();
+														
+														navigator.vibrate(100);
+													}else{
+														sys.loading(0);
+														
+														var failed_toast = apps.toast.create({
+																			   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
+																			   text: 'Oooppss, error',
+																			   position: 'center',
+																			   closeTimeout: 2000
+																		   });
+														failed_toast.open();
+													}
 												}
-											}
-										});
+											});
+										}
 									}else{
 										sys.loading(0);
 										
@@ -5326,50 +5429,6 @@ sys = {
 		if(geoCount <= 0){
 			geoToken = true;
 			geoCount = 120;
-			
-			var DATA = {
-					'usr' : STORAGE.getItem('usr'),
-					'loc' : $('iframe#gmap').data('loc')
-				};
-			var post_data = "ACT=" + encodeURIComponent('msg_chk')
-						  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
-						  
-			if(STORAGE.getItem('usr')){
-				$.ajax({
-					type: 'POST',
-					url: 'https://app.wkventertainment.com/',
-					data: post_data,
-					success: function(str){
-						var inf = JSON.parse(str);
-					
-						if(inf['reply']==='200 OK'){
-							if(inf['new']){
-								navigator.vibrate(500);
-								
-								apps.notification.create({
-									icon: '<img src="https://app.wkventertainment.com/icon.png" width="16px" height="16px"/>',
-									title: 'WKV',
-									titleRightText: 'now',
-									subtitle: inf['title'],
-									text: inf['text'],
-									on:{
-										click: function(){
-											$('div.notification').slideUp();
-										}
-									}
-								}).open();
-							}
-						}else{
-							navigator.notification.alert(
-								'Error occur',
-								console.log(('Error + ' + inf['reply'])),
-								('Contact administrator, Error code : [' + inf['reply'] + ']'),
-								'OK'
-							);
-						}
-					}
-				});
-			}
 		}else{
 			geoCount--;
 		}
