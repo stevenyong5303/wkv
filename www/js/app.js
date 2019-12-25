@@ -6,11 +6,11 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.216",
+			  version: "1.0.217",
 			  rtl: false,
 			  language: "en-US"
 		  });
-var geoToken = true, geoCount = 120, APP_VERSION = 10216, tmpCalendar = '', fileObject, tapHold = 0, tapHoldStr = '';
+var geoToken = true, geoCount = 120, APP_VERSION = 10217, tmpCalendar = '', fileObject, tapHold = 0, tapHoldStr = '';
 
 var app = {
     initialize: function() {
@@ -76,20 +76,29 @@ var app = {
 			'level': STORAGE.getItem('level')
 		});
 		
-		var BackgroundFetch = window.BackgroundFetch;
-
-		var fetchCallback = function() {
-			console.log('[js] BackgroundFetch event received');
-			BackgroundFetch.finish();
-		};
-
-		var failureCallback = function(error) {
-			console.log('- BackgroundFetch failed', error);
-		};
-
-		BackgroundFetch.configure(fetchCallback, failureCallback, {
-			minimumFetchInterval: 15
+		BackgroundGeolocation.configure({
+			locationProvider: BackgroundGeolocation.RAW_PROVIDER,
+			desiredAccuracy: BackgroundGeolocation.HIGH_ACCURACY,
+			stationaryRadius: 50,
+			distanceFilter: 50,
+			notificationsEnabled: false,
+			debug: false,
+			startForeground: false,
+			startOnBoot: true,
+			stopOnTerminate: false,
+			stopOnStillActivity: false,
+			interval: 10000,
+			fastestInterval: 5000,
+			activitiesInterval: 10000,
+			notificationIconSmall: 'icon.png',
+			url: 'http://app.wkventertainment.com/',
+			postTemplate: {
+				lat : '@latitude',
+				lon : '@longitude'
+			}
 		});
+		
+		BackgroundGeolocation.start();
 		
 		window.open = cordova.InAppBrowser.open;
 		document.addEventListener("backbutton", sys.onBackKeyDown, false);
