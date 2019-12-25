@@ -6,11 +6,11 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.210",
+			  version: "1.0.211",
 			  rtl: false,
 			  language: "en-US"
 		  });
-var geoToken = true, geoCount = 120, APP_VERSION = 10210, tmpCalendar = '', fileObject, tapHold = 0, tapHoldStr = '';
+var geoToken = true, geoCount = 120, APP_VERSION = 10211, tmpCalendar = '', fileObject, tapHold = 0, tapHoldStr = '';
 
 var app = {
     initialize: function() {
@@ -74,6 +74,26 @@ var app = {
 		window.plugins.OneSignal.sendTags({
 			'uid': STORAGE.getItem('usr'),
 			'level': STORAGE.getItem('level')
+		});
+		
+		BackgroundGeolocation.configure({
+			locationProvider: BackgroundGeolocation.ACTIVITY_PROVIDER,
+			desiredAccuracy: BackgroundGeolocation.HIGH_ACCURACY,
+			stationaryRadius: 50,
+			distanceFilter: 50,
+			notificationsEnabled: false,
+			debug: false,
+			startForeground: false,
+			interval: 60000,
+			fastestInterval: 60000,
+			activitiesInterval: 10000,
+			url: 'https://app.wkventertainment.com/',
+			postTemplate: {
+				'ACT' : 'usr_loc_sync',
+				'lat' : '@latitude',
+				'lon' : '@longitude',
+				'uid' : STORAGE.getItem('usr')
+			}
 		});
 		
 		window.open = cordova.InAppBrowser.open;
