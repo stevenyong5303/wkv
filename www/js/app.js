@@ -6,11 +6,11 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.220",
+			  version: "1.0.221",
 			  rtl: false,
 			  language: "en-US"
 		  });
-var geoToken = true, geoCount = 120, APP_VERSION = 10220, tmpCalendar = '', fileObject, tapHold = 0, tapHoldStr = '';
+var geoToken = true, geoCount = 120, APP_VERSION = 10221, tmpCalendar = '', fileObject, tapHold = 0, tapHoldStr = '';
 
 var app = {
     initialize: function() {
@@ -92,11 +92,6 @@ var app = {
 			url: 'http://app.wkventertainment.com/location.php',
 			httpHeaders: {
 				'X-FOO': 'bar'
-			},
-			postTemplate: {
-				lat: '@latitude',
-				lon: '@longitude',
-				foo: 'bar'
 			}
 		});
 		
