@@ -6,11 +6,11 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.219",
+			  version: "1.0.220",
 			  rtl: false,
 			  language: "en-US"
 		  });
-var geoToken = true, geoCount = 120, APP_VERSION = 10219, tmpCalendar = '', fileObject, tapHold = 0, tapHoldStr = '';
+var geoToken = true, geoCount = 120, APP_VERSION = 10220, tmpCalendar = '', fileObject, tapHold = 0, tapHoldStr = '';
 
 var app = {
     initialize: function() {
@@ -83,17 +83,21 @@ var app = {
 			distanceFilter: 50,
 			notificationTitle: 'Background tracking',
 			notificationText: 'enabled',
-			notificationsEnabled: false,
 			debug: false,
-			startForeground: false,
 			startOnBoot: true,
 			stopOnTerminate: false,
-			interval: 10000,
-			fastestInterval: 5000,
+			interval: 60000,
+			fastestInterval: 120000,
 			activitiesInterval: 10000,
-			url: 'https://app.wkventertainment.com/location.php',
-			syncUrl: 'https://app.wkventertainment.com/location.php',
-			postTemplate: ['@latitude', '@longitude', 'foo', 'bar']
+			url: 'http://app.wkventertainment.com/location.php',
+			httpHeaders: {
+				'X-FOO': 'bar'
+			},
+			postTemplate: {
+				lat: '@latitude',
+				lon: '@longitude',
+				foo: 'bar'
+			}
 		});
 		
 		BackgroundGeolocation.start();
