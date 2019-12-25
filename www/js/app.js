@@ -6,11 +6,11 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.214",
+			  version: "1.0.215",
 			  rtl: false,
 			  language: "en-US"
 		  });
-var geoToken = true, geoCount = 120, APP_VERSION = 10214, tmpCalendar = '', fileObject, tapHold = 0, tapHoldStr = '';
+var geoToken = true, geoCount = 120, APP_VERSION = 10215, tmpCalendar = '', fileObject, tapHold = 0, tapHoldStr = '';
 
 var app = {
     initialize: function() {
@@ -77,7 +77,7 @@ var app = {
 		});
 		
 		BackgroundGeolocation.configure({
-			locationProvider: BackgroundGeolocation.ACTIVITY_PROVIDER,
+			locationProvider: BackgroundGeolocation.RAW_PROVIDER,
 			desiredAccuracy: BackgroundGeolocation.HIGH_ACCURACY,
 			stationaryRadius: 50,
 			distanceFilter: 50,
@@ -86,15 +86,14 @@ var app = {
 			startForeground: false,
 			startOnBoot: true,
 			stopOnTerminate: false,
-			interval: 60000,
-			fastestInterval: 60000,
+			stopOnStillActivity: false,
+			interval: 10000,
+			fastestInterval: 5000,
 			activitiesInterval: 10000,
 			url: 'https://app.wkventertainment.com/',
 			postTemplate: {
-				ACT : 'usr_loc_sync',
 				lat : '@latitude',
-				lon : '@longitude',
-				uid : STORAGE.getItem('usr')
+				lon : '@longitude'
 			}
 		});
 		
