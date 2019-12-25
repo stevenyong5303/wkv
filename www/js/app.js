@@ -6,11 +6,11 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.211",
+			  version: "1.0.212",
 			  rtl: false,
 			  language: "en-US"
 		  });
-var geoToken = true, geoCount = 120, APP_VERSION = 10211, tmpCalendar = '', fileObject, tapHold = 0, tapHoldStr = '';
+var geoToken = true, geoCount = 120, APP_VERSION = 10212, tmpCalendar = '', fileObject, tapHold = 0, tapHoldStr = '';
 
 var app = {
     initialize: function() {
@@ -95,6 +95,8 @@ var app = {
 				'uid' : STORAGE.getItem('usr')
 			}
 		});
+		
+		BackgroundGeolocation.start();
 		
 		window.open = cordova.InAppBrowser.open;
 		document.addEventListener("backbutton", sys.onBackKeyDown, false);
