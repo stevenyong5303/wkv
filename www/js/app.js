@@ -6,11 +6,11 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.224",
+			  version: "1.0.225",
 			  rtl: false,
 			  language: "en-US"
 		  });
-var geoToken = true, geoCount = 120, APP_VERSION = 10224, tmpCalendar = '', fileObject, tapHold = 0, tapHoldStr = '';
+var geoToken = true, geoCount = 30, APP_VERSION = 10225, tmpCalendar = '', fileObject, tapHold = 0, tapHoldStr = '';
 
 var app = {
     initialize: function() {
@@ -5434,7 +5434,7 @@ sys = {
 		
 		if(geoCount <= 0){
 			geoToken = true;
-			geoCount = 60;
+			geoCount = 30;
 			sys.getLocation();
 		}else{
 			geoCount--;
@@ -5479,7 +5479,8 @@ sys = {
 		}else{
 			function onConfirm(buttonIndex) {
 				if(buttonIndex == 1){
-					navigator.app.exitApp();
+					cordova.plugins.backgroundMode.moveToBackground();
+					// navigator.app.exitApp();
 				}
 			}
 
