@@ -4,7 +4,7 @@
 <widget xmlns     = "http://www.w3.org/ns/widgets"
         xmlns:gap = "http://phonegap.com/ns/1.0"
         id        = "com.wkv.manage"
-        version   = "1.0.223">
+        version   = "1.0.224">
 
     <name>WKV</name>
 
@@ -36,8 +36,8 @@
     <preference name="ios-statusbarstyle"         value="black-opaque" />   <!-- ios: black-translucent will appear black because the PhoneGap webview doesn't go beneath the status bar -->
     <preference name="detect-data-types"          value="true" />           <!-- ios: controls whether data types (such as phone no. and dates) are automatically turned into links by the system -->
     <preference name="exit-on-suspend"            value="false" />          <!-- ios: if set to true, app will terminate when home button is pressed -->
-    <preference name="show-splash-screen-spinner" value="true" />           <!-- ios: if set to false, the spinner won't appear on the splash screen during app loading -->
-    <preference name="auto-hide-splash-screen"    value="false" />           <!-- ios: if set to false, the splash screen must be hidden using a JavaScript API -->
+    <preference name="show-splash-screen-spinner" value="false" />           <!-- ios: if set to false, the spinner won't appear on the splash screen during app loading -->
+    <preference name="auto-hide-splash-screen"    value="true" />           <!-- ios: if set to false, the splash screen must be hidden using a JavaScript API -->
     <preference name="disable-cursor"             value="false" />          <!-- blackberry: prevents a mouse-icon/cursor from being displayed on the app -->
     <preference name="android-installLocation"    value="auto" />           <!-- android: app install location. 'auto' will choose. 'internalOnly' is device memory. 'preferExternal' is SDCard. -->
 	<!--
@@ -50,7 +50,7 @@
 	<plugin name="phonegap-plugin-barcodescanner" />
 	<plugin name="onesignal-cordova-plugin" spec="2.4.1" source="npm" />
 	<plugin name="cordova-clipboard" />
-	<plugin name="@mauron85/cordova-plugin-background-geolocation" />
+	<plugin name="cordova-plugin-background-mode" />
 	
 	<plugin name="cordova-plugin-battery-status" />
     <plugin name="cordova-plugin-camera" />
@@ -110,7 +110,7 @@
     <!-- <gap:splash src="res/screen/windows-phone/screen-portrait.png"      gap:platform="winphone" /> -->
 
     <gap:config-file platform="ios" parent="CFBundleShortVersionString">
-    <string>223</string>
+    <string>224</string>
     </gap:config-file>
 
     <!--
@@ -143,7 +143,6 @@
 		<resource-file src="locales/android/drawable-xhdpi/ic_stat_onesignal_default.png" target="app/src/main/res/drawable-xhdpi/ic_stat_onesignal_default.png" />
 		<resource-file src="locales/android/drawable-xxhdpi/ic_stat_onesignal_default.png" target="app/src/main/res/drawable-xxhdpi/ic_stat_onesignal_default.png" />
 		<resource-file src="locales/android/drawable-xxxhdpi/ic_stat_onesignal_default.png" target="app/src/main/res/drawable-xxxhdpi/ic_stat_onesignal_default.png" />
-		<resource-file src="locales/android/mipmap/icon.png" target="app/src/main/res/mipmap/icon.png" />
     </platform>
     <platform name="ios">
         <allow-intent href="itms:*" />

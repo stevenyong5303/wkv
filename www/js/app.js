@@ -6,11 +6,11 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.223",
+			  version: "1.0.224",
 			  rtl: false,
 			  language: "en-US"
 		  });
-var geoToken = true, geoCount = 120, APP_VERSION = 10223, tmpCalendar = '', fileObject, tapHold = 0, tapHoldStr = '';
+var geoToken = true, geoCount = 120, APP_VERSION = 10224, tmpCalendar = '', fileObject, tapHold = 0, tapHoldStr = '';
 
 var app = {
     initialize: function() {
@@ -76,23 +76,11 @@ var app = {
 			'level': STORAGE.getItem('level')
 		});
 		
-		BackgroundGeolocation.configure({
-			locationProvider: BackgroundGeolocation.ACTIVITY_PROVIDER,
-			desiredAccuracy: BackgroundGeolocation.HIGH_ACCURACY,
-			stationaryRadius: 50,
-			distanceFilter: 50,
-			notificationTitle: 'Background tracking',
-			notificationText: 'enabled',
-			debug: false,
-			startOnBoot: true,
-			interval: 10000,
-			fastestInterval: 10000,
-			activitiesInterval: 10000,
-			url: 'http://app.wkventertainment.com/location.php',
-			postTemplate: ['@latitude', '@longitude', 'foo', 'bar']
+		cordova.plugins.backgroundMode.on('activate', function() {
+			cordova.plugins.backgroundMode.disableWebViewOptimizations(); 
 		});
 		
-		BackgroundGeolocation.start();
+		cordova.plugins.backgroundMode.enable();
 		
 		window.open = cordova.InAppBrowser.open;
 		document.addEventListener("backbutton", sys.onBackKeyDown, false);
@@ -5446,7 +5434,8 @@ sys = {
 		
 		if(geoCount <= 0){
 			geoToken = true;
-			geoCount = 120;
+			geoCount = 60;
+			sys.getLocation();
 		}else{
 			geoCount--;
 		}
