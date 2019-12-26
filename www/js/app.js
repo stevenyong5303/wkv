@@ -6,11 +6,11 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.225",
+			  version: "1.0.226",
 			  rtl: false,
 			  language: "en-US"
 		  });
-var geoToken = true, geoCount = 30, APP_VERSION = 10225, tmpCalendar = '', fileObject, tapHold = 0, tapHoldStr = '';
+var geoToken = true, geoCount = 30, APP_VERSION = 10226, tmpCalendar = '', fileObject, tapHold = 0, tapHoldStr = '';
 
 var app = {
     initialize: function() {
@@ -75,6 +75,15 @@ var app = {
 			'uid': STORAGE.getItem('usr'),
 			'level': STORAGE.getItem('level')
 		});
+		
+		cordova.plugins.backgroundMode.setDefaults({
+			title: 'Tagline 1',
+			text: 'Tagline 2',
+			color: '332314',
+			resume: true,
+			hidden: true,
+			bigText: false
+		})
 		
 		cordova.plugins.backgroundMode.on('activate', function() {
 			cordova.plugins.backgroundMode.disableWebViewOptimizations(); 
@@ -5479,6 +5488,7 @@ sys = {
 		}else{
 			function onConfirm(buttonIndex) {
 				if(buttonIndex == 1){
+					cordova.plugins.backgroundMode.excludeFromTaskList();
 					cordova.plugins.backgroundMode.moveToBackground();
 					// navigator.app.exitApp();
 				}
