@@ -56,7 +56,7 @@ div.list a div.item-media i.green{
 #task_tl .timeline-item:last-child{
 	margin-bottom: 60px;
 }
-.dialog-buttons-2{
+.dialog-buttons-1, .dialog-buttons-2{
 	width: 360px !important;
 	margin-left: auto !important;
 	left: calc(50% - 180px) !important;

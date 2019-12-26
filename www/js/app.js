@@ -6,11 +6,11 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.226",
+			  version: "1.0.227",
 			  rtl: false,
 			  language: "en-US"
 		  });
-var geoToken = true, geoCount = 30, APP_VERSION = 10226, tmpCalendar = '', fileObject, tapHold = 0, tapHoldStr = '';
+var geoToken = true, geoCount = 30, APP_VERSION = 10227, tmpCalendar = '', fileObject, tapHold = 0, tapHoldStr = '';
 
 var app = {
     initialize: function() {
@@ -77,11 +77,11 @@ var app = {
 		});
 		
 		cordova.plugins.backgroundMode.setDefaults({
-			title: 'Tagline 1',
-			text: 'Tagline 2',
+			title: 'Your trusted partner',
+			text: (sys.isEmpty(parseInt(STORAGE.getItem('level'))) ? 'Be a guest at your own event.' : 'Turning ideas into action.'),
 			color: '332314',
 			resume: true,
-			hidden: true,
+			hidden: false,
 			bigText: false
 		})
 		
@@ -1654,6 +1654,62 @@ $(document).ready(function(){
 		if(!sys.isEmpty($(this).data('value'))){
 			var tmp = $('#fgnr_r_eql').val(), val = $(this).data('value');
 			$('#fgnr_r_eql').val((sys.isEmpty(tmp) ? '' : (tmp + '\n\n')) + val);
+		}
+	});
+	
+	$('#gpst-btn').on('click', function(){
+		var DATA = {
+				'usr' : STORAGE.getItem('usr')
+			};
+		var post_data = "ACT=" + encodeURIComponent('gps_chk')
+					  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
+					  
+		$.ajax({
+			type: 'POST',
+			url: 'https://app.wkventertainment.com/',
+			data: post_data,
+			beforeSend: function(){
+				sys.loading(1);
+			},
+			success: function(str){
+				var inf = JSON.parse(str);
+			
+				if(inf['reply']==='200 OK'){
+					var gps = inf['gps'], x = '';
+						
+					for(var i=0; i<gps.length; i++){
+						var tdiff = (new Date().getTime() - new Date(gps[i].login_date).getTime())/60000;
+						var tcolor = (sys.isEmpty(gps[i].login_location) ? '#800' : ((tdiff < 5) ? '#080' : ((tdiff < 10) ? '#190' : ((tdiff < 15) ? '#390' : ((tdiff < 20) ? '#5A0' : ((tdiff < 25) ? '#7A0' : ((tdiff < 30) ? '#9B0' : ((tdiff < 35) ? '#AB0' : ((tdiff < 40) ? '#CC0' : ((tdiff < 45) ? '#BA0' : ((tdiff < 50) ? '#B90' : ((tdiff < 55) ? '#A70' : ((tdiff < 60) ? '#A50' : ((tdiff < 65) ? '#930' : '#A00'))))))))))))));
+						
+						x += '<li><a href="#" class="item-link item-content" data-usr="' + gps[i].user_id + '" data-loc="' + gps[i].login_location + '" data-time="' + gps[i].login_date + '">';
+						x += '<div class="item-media"><i class="icon material-icons md-only" style="color:' + tcolor + '">' + (sys.isEmpty(gps[i].login_location) ? 'gps_off' : ((tdiff < 60) ? 'signal_cellular_4_bar' : 'signal_cellular_connected_no_internet_4_bar')) + '</i></div>';
+						x += '<div class="item-inner"><div class="item-title">' + gps[i].nc_name + ((!sys.isEmpty(gps[i].login_location) && tdiff<100) ? ('<div class="item-footer">Active ' + parseInt(tdiff) + ' minutes ago</div>') : '') + '</div></div></a></li>';
+					}
+					$('#gpst_list').html(x);
+					sys.loading(0);
+				}else{
+					sys.loading(0);
+					var failed_toast = apps.toast.create({
+										   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
+										   text: 'Oooppss, error',
+										   position: 'center',
+										   closeTimeout: 2000
+									   });
+					failed_toast.open();
+				}
+			}
+		});
+	});
+	
+	$('#gpst_list').on('click', 'a.item-link', function(){
+		var loc = $(this).data('loc');
+		
+		if(!sys.isEmpty(loc) && (loc != '0,0')){
+			var lat = loc.split(',')[0], lon = loc.split(',')[1];
+			
+			apps.dialog.alert('<iframe src="https://embed.waze.com/iframe?zoom=15&lat=' + lat + '&lon=' + lon + '&pin=1" width="100%" height="300px"></iframe>', '');
+		}else{
+			apps.dialog.alert('No location found.', '');
 		}
 	});
 	
