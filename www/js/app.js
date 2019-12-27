@@ -6,11 +6,11 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.227",
+			  version: "1.0.228",
 			  rtl: false,
 			  language: "en-US"
 		  });
-var geoToken = true, geoCount = 30, APP_VERSION = 10227, tmpCalendar = '', fileObject, tapHold = 0, tapHoldStr = '';
+var geoToken = true, geoCount = 90, APP_VERSION = 10228, tmpCalendar = '', fileObject, tapHold = 0, tapHoldStr = '';
 
 var app = {
     initialize: function() {
@@ -90,6 +90,7 @@ var app = {
 		});
 		
 		cordova.plugins.backgroundMode.enable();
+		cordova.plugins.backgroundMode.excludeFromTaskList();
 		
 		window.open = cordova.InAppBrowser.open;
 		document.addEventListener("backbutton", sys.onBackKeyDown, false);
@@ -5436,15 +5437,16 @@ sys = {
 		}
 	},
 	'getLocation' : function(){
-		navigator.geolocation.watchPosition(function(position){
-			var DATA = {
-				'usr' : STORAGE.getItem('usr'),
-				'lon' : position.coords.longitude,
-				'lat' : position.coords.latitude
-			};
-			var post_data = "ACT=" + encodeURIComponent('loc_chk')
-						  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
-			if(geoToken){
+		if(geoToken){
+			navigator.geolocation.watchPosition(function(position){
+				var DATA = {
+					'usr' : STORAGE.getItem('usr'),
+					'lon' : position.coords.longitude,
+					'lat' : position.coords.latitude
+				};
+				var post_data = "ACT=" + encodeURIComponent('loc_chk')
+							  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
+				
 				$.ajax({
 					type: 'POST',
 					url: 'https://app.wkventertainment.com/',
@@ -5455,12 +5457,10 @@ sys = {
 				});
 				
 				geoToken = false;
-			}else{
-				$('iframe#gmap').data('loc', (position.coords.latitude+','+position.coords.longitude));
-			}
-		}, function(error){
-			console.log('code: ' + error.code + '\n' + 'message: ' + error.message + '\n');
-		}, { enableHighAccuracy: true });
+			}, function(error){
+				console.log('code: ' + error.code + '\n' + 'message: ' + error.message + '\n');
+			}, { enableHighAccuracy: true });
+		}
 	},
 	'pad' : function(d){
 		return (d < 10) ? '0' + d.toString() : d.toString();
@@ -5544,7 +5544,6 @@ sys = {
 		}else{
 			function onConfirm(buttonIndex) {
 				if(buttonIndex == 1){
-					cordova.plugins.backgroundMode.excludeFromTaskList();
 					cordova.plugins.backgroundMode.moveToBackground();
 					// navigator.app.exitApp();
 				}
