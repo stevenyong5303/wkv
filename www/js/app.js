@@ -6,11 +6,11 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.228",
+			  version: "1.0.229",
 			  rtl: false,
 			  language: "en-US"
 		  });
-var geoToken = true, geoCount = 90, APP_VERSION = 10228, tmpCalendar = '', fileObject, tapHold = 0, tapHoldStr = '';
+var geoToken = true, geoCount = 60, APP_VERSION = 10229, tmpCalendar = '', fileObject, tapHold = 0, tapHoldStr = '';
 
 var app = {
     initialize: function() {
@@ -255,7 +255,8 @@ $(document).ready(function(){
 								}
 							}
 							
-							apps.loginScreen.close('#lgn');
+							location.reload();
+							// apps.loginScreen.close('#lgn');
 						}else{
 							var failed_toast = apps.toast.create({
 												   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
@@ -4819,6 +4820,10 @@ $(document).ready(function(){
 		}
 	});
 	
+	$('#app_rld').on('click', function(){
+		location.reload();
+	});
+	
 	DATA = {
 		'usr' : usr,
 		'pwd' : pwd,
@@ -5499,7 +5504,7 @@ sys = {
 		
 		if(geoCount <= 0){
 			geoToken = true;
-			geoCount = 30;
+			geoCount = 60;
 			sys.getLocation();
 		}else{
 			geoCount--;
