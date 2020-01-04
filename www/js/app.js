@@ -6,11 +6,11 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.229",
+			  version: "1.0.230",
 			  rtl: false,
 			  language: "en-US"
 		  });
-var geoToken = true, geoCount = 60, APP_VERSION = 10229, tmpCalendar = '', fileObject, tapHold = 0, tapHoldStr = '';
+var geoToken = true, geoCount = 60, APP_VERSION = 10230, tmpCalendar = '', fileObject, tapHold = 0, tapHoldStr = '';
 
 var app = {
     initialize: function() {
@@ -75,22 +75,6 @@ var app = {
 			'uid': STORAGE.getItem('usr'),
 			'level': STORAGE.getItem('level')
 		});
-		
-		cordova.plugins.backgroundMode.setDefaults({
-			title: 'Your trusted partner',
-			text: (sys.isEmpty(parseInt(STORAGE.getItem('level'))) ? 'Be a guest at your own event.' : 'Turning ideas into action.'),
-			color: '332314',
-			resume: true,
-			hidden: false,
-			bigText: false
-		})
-		
-		cordova.plugins.backgroundMode.on('activate', function() {
-			cordova.plugins.backgroundMode.disableWebViewOptimizations(); 
-		});
-		
-		cordova.plugins.backgroundMode.enable();
-		cordova.plugins.backgroundMode.excludeFromTaskList();
 		
 		window.open = cordova.InAppBrowser.open;
 		document.addEventListener("backbutton", sys.onBackKeyDown, false);
@@ -1479,6 +1463,7 @@ $(document).ready(function(){
 	$('#fgnr_q_gnr').on('click', function(){
 		var DATA = {
 				'usr' : STORAGE.getItem('usr'),
+				'emlSent' : $('#fgnr_q_seml')[0].checked,
 				'sales' : $('span.ncf-name').data('value'),
 				'tel' : $('span.ncf-tel').data('value'),
 				'email' : $('span.ncf-email').data('value'),
@@ -1602,6 +1587,7 @@ $(document).ready(function(){
 		var DATA = {
 				'usr' : STORAGE.getItem('usr'),
 				'ref' : $('#fgnr_i_ref').val(),
+				'emlSent' : $('#fgnr_i_seml')[0].checked,
 				'sales' : $('span.ncf-name').data('value'),
 				'tel' : $('span.ncf-tel').data('value'),
 				'email' : $('span.ncf-email').data('value'),
@@ -4952,7 +4938,9 @@ $(document).ready(function(){
 				apps.tab.show('#pg-home', false);
 			}
 			
-			setTimeout(function(){ sys.loading(0) }, 3000);
+			$('.popup-event .fab-right-bottom').draggable();
+			
+			setTimeout(function(){ sys.loading(0) }, 1000);
 		}
 	});
 	
@@ -5549,8 +5537,7 @@ sys = {
 		}else{
 			function onConfirm(buttonIndex) {
 				if(buttonIndex == 1){
-					cordova.plugins.backgroundMode.moveToBackground();
-					// navigator.app.exitApp();
+					navigator.app.exitApp();
 				}
 			}
 

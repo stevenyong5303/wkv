@@ -5,6 +5,14 @@
     font-weight: normal;
     font-style: normal;
 }
+i.icon.email-tick{
+	margin: 0 0 5px 5px;
+	color: #FFF;
+	padding: 4px 11px 10px 6px;
+}
+.fab-buttons-top{
+	left: 29px !important;
+}
 .popup-apklp .accordion-item-content.list  li .item-title{
 	margin-top: 7px;
 }
