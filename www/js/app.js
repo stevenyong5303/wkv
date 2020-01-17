@@ -6,11 +6,11 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.231",
+			  version: "1.0.232",
 			  rtl: false,
 			  language: "en-US"
 		  });
-var geoToken = true, geoCount = 60, APP_VERSION = 10231, tmpCalendar = '', fileObject, tapHold = 0, tapHoldStr = '';
+var geoToken = true, geoCount = 60, APP_VERSION = 10232, tmpCalendar = '', fileObject, tapHold = 0, tapHoldStr = '';
 
 var app = {
     initialize: function() {
@@ -5044,7 +5044,7 @@ $(document).ready(function(){
 			dnm = $('#npr input[name="npr_dnm"]').val(),
 			cpn = $('#npr input[name="npr_cpn"]').val(),
 			eml = $('#npr input[name="npr_eml"]').val(),
-			add = $('#npr input[name="npr_add1"]').val() + ((!sys.isEmpty($('#npr input[name="npr_add2"]').val())) ? '' : ('**' + $('#npr input[name="npr_add2"]').val())) + ((!sys.isEmpty($('#npr input[name="npr_add3"]').val())) ? '' : ('**' + $('#npr input[name="npr_add3"]').val()));
+			add = $('#npr input[name="npr_add1"]').val() + ((sys.isEmpty($('#npr input[name="npr_add2"]').val())) ? '' : ('**' + $('#npr input[name="npr_add2"]').val())) + ((sys.isEmpty($('#npr input[name="npr_add3"]').val())) ? '' : ('**' + $('#npr input[name="npr_add3"]').val()));
 		
 		if(!sys.isEmpty(pw1)){
 			if(pw1 == pw2){
@@ -5142,7 +5142,7 @@ $(document).ready(function(){
 				
 				setTimeout(function(){
 					var success_toast = apps.toast.create({
-									   text: 'Welcome to WKV Application',
+									   text: '<span style="font-size:13px;">Welcome to WKV Application</span>',
 									   position: 'center',
 									   closeTimeout: 2700
 								   });
@@ -5160,7 +5160,7 @@ $(document).ready(function(){
 				
 				setTimeout(function(){
 					var success_toast = apps.toast.create({
-									   text: '<span style="font-size:13px;">Kindly fill up the following details.</span>',
+									   text: '<span style="font-size:12px;">Kindly fill up the following details.</span>',
 									   position: 'center',
 									   closeTimeout: 3200
 								   });
