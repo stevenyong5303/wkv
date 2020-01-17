@@ -6,11 +6,11 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.230",
+			  version: "1.0.231",
 			  rtl: false,
 			  language: "en-US"
 		  });
-var geoToken = true, geoCount = 60, APP_VERSION = 10230, tmpCalendar = '', fileObject, tapHold = 0, tapHoldStr = '';
+var geoToken = true, geoCount = 60, APP_VERSION = 10231, tmpCalendar = '', fileObject, tapHold = 0, tapHoldStr = '';
 
 var app = {
     initialize: function() {
@@ -149,102 +149,188 @@ $(document).ready(function(){
 				},
 				success: function(str){
 					var inf = JSON.parse(str);
-					sys.getLocation();
+					// sys.getLocation();
 					
-					if(inf['clocked']=='1'){
-						sys.clockToggle('in');
+					// if(inf['clocked']=='1'){
+						// sys.clockToggle('in');
+					// }else{
+						// sys.clockToggle('out');
+					// }
+					// $('body').data('user_level', inf['level']);
+					// $('body').data('crew', inf['status']);
+					// $('body').data('loc', inf['location']);
+					// $('body').data('car', inf['car']);
+					
+					if(inf['reply']==='200 OK'){
+						STORAGE.setItem('usr', inf['uid']);
+						STORAGE.setItem('pwd', inf['pwd']);
+						
+						// if(!sys.isEmpty(inf['pos1'])){
+							// $('span.ncf-pos1').text(inf['pos1'].toLowerCase());
+						// }
+						// if(!sys.isEmpty(inf['pos2'])){
+							// $('span.ncf-pos2').text(inf['pos2'].toLowerCase());
+						// }
+						// $('span.ncf-name').text(inf['name'].toLowerCase());
+						// $('span.ncf-name').html($('span.ncf-name').text().replace(/ /g, '&nbsp;&nbsp;&nbsp;'));
+						// $('#edpf_name').val(inf['name']);
+						// $('span.ncf-tel').text(inf['contact']);
+						// $('#edpf_tel').val(inf['contact']);
+						// $('span.ncf-email').text(inf['email'].toLowerCase());
+						// $('#edpf_eml').val(inf['email']);
+						
+						// $('span.ncf-name').data('value', inf['name']);
+						// $('span.ncf-tel').data('value', inf['contact']);
+						// $('span.ncf-email').data('value', (inf['email'].toLowerCase()));
+						// $('div.views').css('opacity', '1');
+						
+						// $('#lgn input[name="lgn_usr"]').val('');
+						// $('#lgn input[name="lgn_pwd"]').val('');
+						
+						// sys.eventCheck(usr, (new Date().getMonth()), new Date().getYear()+1900);
+						
+						// if(inf['status']){
+							// var status = inf['status'], x = '';
+							
+							// for(var i=0; i<status.length; i++){
+								// x += '<li><a href="#" class="item-link item-content" data-usr="' + status[i].user_id + '" data-who="' + status[i].nc_name + '">';
+								// x += '<div class="item-media"><i class="icon material-icons md-only">' + (status[i].clocked_in == 1 ? 'directions_run' : 'hotel') + '</i></div>';
+								// x += '<div class="item-inner"><div class="item-title">' + status[i].nc_name + (status[i].clocked_in == 1 ? ('<div class="item-footer">' + status[i].clocked_time + '</div>') : '') + '</div></div></a></li>';
+							// }
+							// $('#user-status').html(x);
+						// }
+						
+						// if(inf['task'][0] != 'none'){
+							// var task = inf['task'], x = '', sameAs = 0;
+							
+							// for(var i=0; i<task.length; i++){
+								// if(task[i]['date'] != sameAs){
+									// x += '<div class="timeline-item">';
+									// x += '<div class="timeline-item-date">' + task[i]['date'].substr(8,2) + ' <small>' + sys.toMonth(task[i]['date']) + '</small></div>';
+									// x += '<div class="timeline-item-divider"></div>';
+									// x += '<div class="timeline-item-content">';
+								// }
+								
+								// x += '<div class="timeline-item-inner tsk' + task[i]['primary_id'] + '" data-locpid="' + (sys.isEmpty(task[i]['venue']) ? 0 : (task[i]['venue'].indexOf('#PID#') != -1 ? task[i]['venue'] : 0)) + '" data-rmk="' + task[i]['remarks'] + '" data-crew="' + task[i]['crew'] + '">';
+								
+								// if(task[i]['time']){
+									// x += '<div class="timeline-item-time">' + task[i]['time'] + '</div>';
+								// }
+								
+								// x += '<strong>' + (sys.isEmpty(task[i]['venue']) ?  '-' : (task[i]['venue'].indexOf('#PID#') != -1 ? sys.pidToLoc(task[i]['venue']).loc_name : task[i]['venue'])) + '</strong>' + (task[i]['description'] ? ('<br/><span>' + task[i]['description'] + '</span>') : '');
+								// x += '</div>';
+								
+								// sameAs = task[i]['date'];
+								
+								// if(sys.isEmpty(task[i+1]) || task[i+1]['date'] != sameAs){
+									// x += '</div></div>';
+								// }
+							// }
+							// $('#task_tl').html(x);
+						// }
+						
+						// for(var i=10; i>parseInt(inf['level']); i--){
+							// if($('.level'+i).length > 0){
+								// $('.level'+i).remove();
+							// }
+						// }
+						
+						// for(var i=0; i<parseInt(inf['level']); i++){
+							// if($('.ltlevel'+i).length > 0){
+								// $('.ltlevel'+i).remove();
+							// }
+						// }
+						
+						location.reload();
+						// apps.loginScreen.close('#lgn');
 					}else{
-						sys.clockToggle('out');
-					}
-					$('body').data('user_level', inf['level']);
-					$('body').data('crew', inf['status']);
-					$('body').data('loc', inf['location']);
-					$('body').data('car', inf['car']);
-					
-					setTimeout(function(){
 						sys.loading(0);
-						if(inf['reply']==='200 OK'){
-							STORAGE.setItem('usr', usr);
-							STORAGE.setItem('pwd', pwd);
+						var failed_toast = apps.toast.create({
+											   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
+											   text: 'ID or password invalid',
+											   position: 'center',
+											   closeTimeout: 2000
+										   });
+						failed_toast.open();
+						
+						navigator.vibrate(100);
+					}
+				}
+			});
+		}else{
+			var failed_toast = apps.toast.create({
+								   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
+								   text: 'Error, field is empty',
+								   position: 'center',
+								   closeTimeout: 2000
+							   });
+			failed_toast.open();
+			
+			navigator.vibrate(100);
+		}
+	});
+	
+	$('#lgn_sgu').on('click', function(){
+		apps.loginScreen.open('#sgu');
+		apps.loginScreen.close('#lgn');
+	});
+	
+	$('#sgu_bck').on('click', function(){
+		apps.loginScreen.open('#lgn');
+		apps.loginScreen.close('#sgu');
+	});
+	
+	$('#sgu_rpw').on('click', function(){
+		var con = $('#sgu input[name="sgu_con"]').val();
+		
+		if(!sys.isEmpty(con)){
+			var pattern = new RegExp(/^[0-9]*$/);
+			
+			if((con.substr(0,2) == '01' && pattern.test(con)) && ((con.length == 10 && con.substr(2,1) != '1') || (con.length == 11 && con.substr(2,1) == '1'))){
+				DATA = {
+					'contact' : con
+				};
+				
+				post_data = "ACT=" + encodeURIComponent('sgu_rpw')
+						  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
+						  
+				$.ajax({
+					type: 'POST',
+					url: 'https://app.wkventertainment.com/',
+					data: post_data,
+					beforeSend: function(){
+						sys.loading(1);
+					},
+					success: function(str){
+						if(str==='200 OK'){
+							sys.loading(0);
+							var success_toast = apps.toast.create({
+												   icon: '<i class="material-icons">speaker_phone</i>',
+												   text: ('Password will be sms to +6' + con + ' in a minute'),
+												   position: 'center',
+												   closeTimeout: 20000
+											   });
+							success_toast.open();
 							
-							$('span.ncf-pos1').text(inf['pos1'].toLowerCase());
-							$('span.ncf-pos2').text(inf['pos2'].toLowerCase());
-							$('span.ncf-name').text(inf['name'].toLowerCase());
-							$('span.ncf-name').html($('span.ncf-name').text().replace(/ /g, '&nbsp;&nbsp;&nbsp;'));
-							$('#edpf_name').val(inf['name']);
-							$('span.ncf-tel').text(inf['contact'].toLowerCase());
-							$('#edpf_tel').val(inf['contact']);
-							$('span.ncf-email').text(inf['email'].toLowerCase());
-							$('#edpf_eml').val(inf['email']);
+							apps.loginScreen.open('#lgn');
+							apps.loginScreen.close('#sgu');
+							$('#sgu input[name="sgu_con"]').val('');
+						}else if(str==='401 Unauthorized'){
+							sys.loading(0);
+							var failed_toast = apps.toast.create({
+												   icon: '<i class="material-icons">screen_lock_portrait</i>',
+												   text: 'Contact number already registered',
+												   position: 'center',
+												   closeTimeout: 2000
+											   });
+							failed_toast.open();
 							
-							$('span.ncf-name').data('value', inf['name']);
-							$('span.ncf-tel').data('value', inf['contact']);
-							$('span.ncf-email').data('value', (inf['email'].toLowerCase()));
-							$('div.views').css('opacity', '1');
-							
-							$('#lgn input[name="lgn_usr"]').val('');
-							$('#lgn input[name="lgn_pwd"]').val('');
-							
-							sys.eventCheck(usr, (new Date().getMonth()), new Date().getYear()+1900);
-							
-							if(inf['status']){
-								var status = inf['status'], x = '';
-								
-								for(var i=0; i<status.length; i++){
-									x += '<li><a href="#" class="item-link item-content" data-usr="' + status[i].user_id + '" data-who="' + status[i].nc_name + '">';
-									x += '<div class="item-media"><i class="icon material-icons md-only">' + (status[i].clocked_in == 1 ? 'directions_run' : 'hotel') + '</i></div>';
-									x += '<div class="item-inner"><div class="item-title">' + status[i].nc_name + (status[i].clocked_in == 1 ? ('<div class="item-footer">' + status[i].clocked_time + '</div>') : '') + '</div></div></a></li>';
-								}
-								$('#user-status').html(x);
-							}
-							
-							if(inf['task'][0] != 'none'){
-								var task = inf['task'], x = '', sameAs = 0;
-								
-								for(var i=0; i<task.length; i++){
-									if(task[i]['date'] != sameAs){
-										x += '<div class="timeline-item">';
-										x += '<div class="timeline-item-date">' + task[i]['date'].substr(8,2) + ' <small>' + sys.toMonth(task[i]['date']) + '</small></div>';
-										x += '<div class="timeline-item-divider"></div>';
-										x += '<div class="timeline-item-content">';
-									}
-									
-									x += '<div class="timeline-item-inner tsk' + task[i]['primary_id'] + '" data-locpid="' + (sys.isEmpty(task[i]['venue']) ? 0 : (task[i]['venue'].indexOf('#PID#') != -1 ? task[i]['venue'] : 0)) + '" data-rmk="' + task[i]['remarks'] + '" data-crew="' + task[i]['crew'] + '">';
-									
-									if(task[i]['time']){
-										x += '<div class="timeline-item-time">' + task[i]['time'] + '</div>';
-									}
-									
-									x += '<strong>' + (sys.isEmpty(task[i]['venue']) ?  '-' : (task[i]['venue'].indexOf('#PID#') != -1 ? sys.pidToLoc(task[i]['venue']).loc_name : task[i]['venue'])) + '</strong>' + (task[i]['description'] ? ('<br/><span>' + task[i]['description'] + '</span>') : '');
-									x += '</div>';
-									
-									sameAs = task[i]['date'];
-									
-									if(sys.isEmpty(task[i+1]) || task[i+1]['date'] != sameAs){
-										x += '</div></div>';
-									}
-								}
-								$('#task_tl').html(x);
-							}
-							
-							for(var i=10; i>parseInt(inf['level']); i--){
-								if($('.level'+i).length > 0){
-									$('.level'+i).remove();
-								}
-							}
-							
-							for(var i=0; i<parseInt(inf['level']); i++){
-								if($('.ltlevel'+i).length > 0){
-									$('.ltlevel'+i).remove();
-								}
-							}
-							
-							location.reload();
-							// apps.loginScreen.close('#lgn');
+							navigator.vibrate(100);
 						}else{
+							sys.loading(0);
 							var failed_toast = apps.toast.create({
 												   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
-												   text: 'ID or password invalid',
+												   text: 'Oooppss, error',
 												   position: 'center',
 												   closeTimeout: 2000
 											   });
@@ -252,9 +338,19 @@ $(document).ready(function(){
 							
 							navigator.vibrate(100);
 						}
-					}, 5000);
-				}
-			});
+					}
+				});
+			}else{
+				var failed_toast = apps.toast.create({
+									   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
+									   text: 'Invalid contact number',
+									   position: 'center',
+									   closeTimeout: 2000
+								   });
+				failed_toast.open();
+				
+				navigator.vibrate(100);
+			}
 		}else{
 			var failed_toast = apps.toast.create({
 								   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
@@ -978,32 +1074,60 @@ $(document).ready(function(){
 				if(inf['reply']==='200 OK'){
 					if(!sys.isEmpty($('#rprt_pic').val())){
 						var match = false, x = '', total = 0, patternD = new RegExp(/\((.*?)\)/), patternP = new RegExp(/[0-9.]*/), pic = ($('#rprt_pic').val()).toLowerCase().replace(/\s/g, '');
-					
-						for(var i=0, j=0; i<inf['sales'].length; i++){
-							if((inf['sales'][i].pic).toLowerCase().replace(/\s/g, '') == pic){
-								if(sys.isEmpty(inf['sales'][i].price)){
-									inf['sales'][i].price = 0;
-								}
-								
-								var tprice = 0;
-								
-								if(patternD.test(inf['sales'][i].price)){
-									var day = patternD.exec(inf['sales'][i].price)[1];
-									var price = patternP.exec(inf['sales'][i].price)[0];
+						
+						if($('input.rprt_mww')[0].checked){
+							for(var i=0, j=0; i<inf['sales'].length; i++){
+								if((inf['sales'][i].pic).toLowerCase().replace(/\s/g, '') == pic){
+									if(sys.isEmpty(inf['sales'][i].price)){
+										inf['sales'][i].price = 0;
+									}
 									
-									tprice = (parseFloat(price) / parseFloat(day));
-									total += tprice;
-								}else{
-									tprice = parseFloat(inf['sales'][i].price);
-									total += tprice;
+									var tprice = 0;
+									
+									if(patternD.test(inf['sales'][i].price)){
+										var day = patternD.exec(inf['sales'][i].price)[1];
+										var price = patternP.exec(inf['sales'][i].price)[0];
+										
+										tprice = (parseFloat(price) / parseFloat(day));
+										total += tprice;
+									}else{
+										tprice = parseFloat(inf['sales'][i].price);
+										total += tprice;
+									}
+									
+									x += '<li class="item-content"><div class="item-inner"><div class="row small-font"><div class="col-10' + ((inf['sales'][i].price != 0) ? (inf['sales'][i].paid=='1' ? ' tb-paid pay-btn' : ' tb-not-paid pay-btn') : '') + '" data-pid="' + inf['sales'][i].primary_id + '">' + (j+1) + '</div><div class="tt col-20" data-rmk="' + inf['sales'][i].remarks + '">' + (inf['sales'][i].date).substr(0,10) + '</div><div class="col-45">' + (sys.isEmpty(sys.pidToLoc(inf['sales'][i].venue).loc_name) ? inf['sales'][i].venue : (sys.pidToLoc(inf['sales'][i].venue).loc_name))  + '</div><div class="col-15">RM ' + tprice + '</div></div></div></li>';
+									j++;
+									match = true;
 								}
-								
-								x += '<li class="item-content"><div class="item-inner"><div class="row small-font"><div class="tt col-10' + ((inf['sales'][i].price != 0) ? (inf['sales'][i].paid=='1' ? ' tb-paid' : ' tb-not-paid') : '') + '" data-pid="' + inf['sales'][i].primary_id + '" data-rmk="' + inf['sales'][i].remarks + '">' + (j+1) + '</div><div class="col-20">' + (inf['sales'][i].date).substr(0,10) + '</div><div class="col-45">' + (sys.isEmpty(sys.pidToLoc(inf['sales'][i].venue).loc_name) ? inf['sales'][i].venue : (sys.pidToLoc(inf['sales'][i].venue).loc_name))  + '</div><div class="col-15">RM ' + tprice + '</div></div></div></li>';
-								j++;
-								match = true;
 							}
+							x += '<li class="item-content"><div class="item-inner">Total sales: RM ' + total.toFixed(2) + '</div></li>';
+						}else{
+							for(var i=0, j=0; i<inf['sales'].length; i++){
+								if(((inf['sales'][i].pic).toLowerCase().replace(/\s/g, '')).indexOf(pic) != -1){
+									if(sys.isEmpty(inf['sales'][i].price)){
+										inf['sales'][i].price = 0;
+									}
+									
+									var tprice = 0;
+									
+									if(patternD.test(inf['sales'][i].price)){
+										var day = patternD.exec(inf['sales'][i].price)[1];
+										var price = patternP.exec(inf['sales'][i].price)[0];
+										
+										tprice = (parseFloat(price) / parseFloat(day));
+										total += tprice;
+									}else{
+										tprice = parseFloat(inf['sales'][i].price);
+										total += tprice;
+									}
+									
+									x += '<li class="item-content"><div class="item-inner"><div class="row small-font"><div class="col-10' + ((inf['sales'][i].price != 0) ? (inf['sales'][i].paid=='1' ? ' tb-paid pay-btn' : ' tb-not-paid pay-btn') : '') + '" data-pid="' + inf['sales'][i].primary_id + '">' + (j+1) + '</div><div class="tt col-20" data-rmk="' + inf['sales'][i].remarks + '">' + (inf['sales'][i].date).substr(0,10) + '</div><div class="col-45">' + (sys.isEmpty(sys.pidToLoc(inf['sales'][i].venue).loc_name) ? inf['sales'][i].venue : (sys.pidToLoc(inf['sales'][i].venue).loc_name))  + '</div><div class="col-15">RM ' + tprice + '</div></div></div></li>';
+									j++;
+									match = true;
+								}
+							}
+							x += '<li class="item-content"><div class="item-inner">Total sales: RM ' + total.toFixed(2) + '</div></li>';
 						}
-						x += '<li class="item-content"><div class="item-inner">Total sales: RM ' + total.toFixed(2) + '</div></li>';
 						
 						if(match){
 							$('.rprt-result ul').html(x);
@@ -1064,6 +1188,97 @@ $(document).ready(function(){
 				}
 			}
 		});
+	});
+	
+	$('.rprt-result').on('click', 'div.pay-btn', function(){
+		var pid = $(this).data('pid'),
+			numBtn = $(this);
+		
+		if($(this).hasClass('tb-not-paid')){
+			apps.dialog.confirm(('Set status to "Green"?'), 'Confirmation', function(){
+				var DATA = {
+					'usr' : STORAGE.getItem('usr'),
+					'pid' : pid,
+					'paid' : 1
+				};
+				var post_data = "ACT=" + encodeURIComponent('pay_udt')
+							  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
+				
+				$.ajax({
+					type: 'POST',
+					url: 'https://app.wkventertainment.com/',
+					data: post_data,
+					beforeSend: function(){
+						sys.loading(1);
+					},
+					success: function(str){
+						sys.loading(0);
+						if(str=='200 OK'){
+							numBtn.removeClass('tb-not-paid');
+							numBtn.addClass('tb-paid');
+							
+							var success_toast = apps.toast.create({
+												   icon: '<i class="material-icons">local_atm</i>',
+												   text: 'Status updated.',
+												   position: 'center',
+												   closeTimeout: 2000
+											   });
+							success_toast.open();
+						}else{
+							var failed_toast = apps.toast.create({
+												   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
+												   text: 'Oooppss, error',
+												   position: 'center',
+												   closeTimeout: 2000
+											   });
+							failed_toast.open();
+						}
+					}
+				});
+			});
+		}else{
+			apps.dialog.confirm(('Set status to "Red"?'), 'Confirmation', function(){
+				var DATA = {
+					'usr' : STORAGE.getItem('usr'),
+					'pid' : pid,
+					'paid' : 0
+				};
+				var post_data = "ACT=" + encodeURIComponent('pay_udt')
+							  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
+				
+				$.ajax({
+					type: 'POST',
+					url: 'https://app.wkventertainment.com/',
+					data: post_data,
+					beforeSend: function(){
+						sys.loading(1);
+					},
+					success: function(str){
+						sys.loading(0);
+						if(str=='200 OK'){
+							numBtn.removeClass('tb-paid');
+							numBtn.addClass('tb-not-paid');
+							
+							var success_toast = apps.toast.create({
+												   icon: '<i class="material-icons">local_atm</i>',
+												   text: 'Status updated.',
+												   position: 'center',
+												   closeTimeout: 2000
+											   });
+							success_toast.open();
+						}else{
+							var failed_toast = apps.toast.create({
+												   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
+												   text: 'Oooppss, error',
+												   position: 'center',
+												   closeTimeout: 2000
+											   });
+							failed_toast.open();
+						}
+					}
+				});
+			});
+		}
 	});
 	
 	$('#rwht-btn').on('click', function(){
@@ -1666,7 +1881,7 @@ $(document).ready(function(){
 					var gps = inf['gps'], x = '';
 						
 					for(var i=0; i<gps.length; i++){
-						var tdiff = (new Date().getTime() - new Date(gps[i].login_date).getTime())/60000;
+						var tdiff = ((new Date().getTime() + ((new Date().getTimezoneOffset() + 480) * 60000)) - new Date(gps[i].login_date).getTime())/60000;
 						var tcolor = (sys.isEmpty(gps[i].login_location) ? '#800' : ((tdiff < 5) ? '#080' : ((tdiff < 10) ? '#190' : ((tdiff < 15) ? '#390' : ((tdiff < 20) ? '#5A0' : ((tdiff < 25) ? '#7A0' : ((tdiff < 30) ? '#9B0' : ((tdiff < 35) ? '#AB0' : ((tdiff < 40) ? '#CC0' : ((tdiff < 45) ? '#BA0' : ((tdiff < 50) ? '#B90' : ((tdiff < 55) ? '#A70' : ((tdiff < 60) ? '#A50' : ((tdiff < 65) ? '#930' : '#A00'))))))))))))));
 						
 						x += '<li><a href="#" class="item-link item-content" data-usr="' + gps[i].user_id + '" data-loc="' + gps[i].login_location + '" data-time="' + gps[i].login_date + '">';
@@ -3876,6 +4091,18 @@ $(document).ready(function(){
 		});
 	});
 	
+	$('a.fab_move').on('click', function(){
+		var floatBtn = $('.popup-event').find('.fab.fab-right-bottom');
+		
+		if(floatBtn.hasClass('floatLeft')){
+			floatBtn.css('right', '15px');
+			floatBtn.removeClass('floatLeft');
+		}else{
+			floatBtn.css('right', 'calc(100% - 71px)');
+			floatBtn.addClass('floatLeft');
+		}
+	});
+	
 	$('a.leave_app').on('click', function(){
 		apps.dialog.prompt('Reason :', 'Leave Request', function(reason){
 			var date = $('.popup-event .event_list').data('date');
@@ -4810,6 +5037,79 @@ $(document).ready(function(){
 		location.reload();
 	});
 	
+	$('#npr_sve').on('click', function(){
+		var usr = $('#npr input[name="npr_con"]').data('uid'),
+			pw1 = $('#npr input[name="npr_pw1"]').val(),
+			pw2 = $('#npr input[name="npr_pw2"]').val(),
+			dnm = $('#npr input[name="npr_dnm"]').val(),
+			cpn = $('#npr input[name="npr_cpn"]').val(),
+			eml = $('#npr input[name="npr_eml"]').val(),
+			add = $('#npr input[name="npr_add1"]').val() + ((!sys.isEmpty($('#npr input[name="npr_add2"]').val())) ? '' : ('**' + $('#npr input[name="npr_add2"]').val())) + ((!sys.isEmpty($('#npr input[name="npr_add3"]').val())) ? '' : ('**' + $('#npr input[name="npr_add3"]').val()));
+		
+		if(!sys.isEmpty(pw1)){
+			if(pw1 == pw2){
+				DATA = {
+					'usr' : $('#npr input[name="npr_con"]').data('uid'),
+					'pwd' : pw1,
+					'dnm' : dnm,
+					'cpn' : cpn,
+					'eml' : eml,
+					'add' : add
+				};
+				
+				post_data = "ACT=" + encodeURIComponent('npr_udt')
+						  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
+				
+				$.ajax({
+					type: 'POST',
+					url: 'https://app.wkventertainment.com/',
+					data: post_data,
+					beforeSend: function(){
+						sys.loading(1);
+					},
+					success: function(str){
+						if(str==='200 OK'){
+							STORAGE.setItem('usr', usr);
+							STORAGE.setItem('pwd', pw1);
+							
+							location.reload();
+						}else{
+							sys.loading(0);
+							
+							var failed_toast = apps.toast.create({
+												   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
+												   text: 'Oooppss, error',
+												   position: 'center',
+												   closeTimeout: 2000
+											   });
+							failed_toast.open();
+						}
+					}
+				});
+			}else{
+				var failed_toast = apps.toast.create({
+									   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
+									   text: 'Password does not match.',
+									   position: 'center',
+									   closeTimeout: 2000
+								   });
+				failed_toast.open();
+				
+				navigator.vibrate(100);
+			}
+		}else{
+			var failed_toast = apps.toast.create({
+								   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
+								   text: 'Password cannot be left empty.',
+								   position: 'center',
+								   closeTimeout: 2000
+							   });
+			failed_toast.open();
+			
+			navigator.vibrate(100);
+		}
+	});
+	
 	DATA = {
 		'usr' : usr,
 		'pwd' : pwd,
@@ -4837,6 +5137,57 @@ $(document).ready(function(){
 			var inf = JSON.parse(str);
 			sys.getLocation();
 			
+			if(inf['new']){
+				$('#npr .list').css('opacity', '0');
+				
+				setTimeout(function(){
+					var success_toast = apps.toast.create({
+									   text: 'Welcome to WKV Application',
+									   position: 'center',
+									   closeTimeout: 2700
+								   });
+					success_toast.open();
+				}, 1500);
+				
+				setTimeout(function(){
+					var success_toast = apps.toast.create({
+									   text: 'Before proceed,',
+									   position: 'center',
+									   closeTimeout: 2300
+								   });
+					success_toast.open();
+				}, 4500);
+				
+				setTimeout(function(){
+					var success_toast = apps.toast.create({
+									   text: '<span style="font-size:13px;">Kindly fill up the following details.</span>',
+									   position: 'center',
+									   closeTimeout: 3200
+								   });
+					success_toast.open();
+				}, 7000);
+				setTimeout(function(){ $('#npr .list').css('opacity', '1'); }, 10500);
+				
+				$('#npr input[name="npr_con"]').val(inf['contact']);
+				$('#npr input[name="npr_con"]').data('uid', inf['uid']);
+				$('#npr input[name="npr_dnm"]').val(inf['sname']);
+				$('#npr input[name="npr_cpn"]').val(inf['pos1']);
+				
+				var fad = '';
+				
+				if(inf['pos2']){
+					fad = inf['pos2'].split('**');
+				}
+				
+				$('#npr input[name="npr_add1"]').val(fad[0]);
+				$('#npr input[name="npr_add2"]').val(fad[1]);
+				$('#npr input[name="npr_add3"]').val(fad[2]);
+				
+				$('#npr input[name="npr_eml"]').val(inf['email']);
+				
+				apps.loginScreen.open('#npr');
+			}
+			
 			STORAGE.setItem('level', inf['level']);
 			$('body').data('user_level', inf['level']);
 			$('body').data('crew', inf['status']);
@@ -4857,19 +5208,26 @@ $(document).ready(function(){
 			}else if(inf['reply']=='426 Upgrade Required'){
 				apps.loginScreen.open('#update');
 			}else{
-				$('span.ncf-pos1').text(inf['pos1'].toLowerCase());
-				$('span.ncf-pos2').text(inf['pos2'].toLowerCase());
+				if(!sys.isEmpty(inf['pos1'])){
+					$('span.ncf-pos1').text(inf['pos1'].toLowerCase());
+				}
+				if(!sys.isEmpty(inf['pos2'])){
+					$('span.ncf-pos2').text(inf['pos2'].toLowerCase());
+				}
+				
 				$('span.ncf-name').text(inf['name'].toLowerCase());
 				$('span.ncf-name').html($('span.ncf-name').text().replace(/ /g, '&nbsp;&nbsp;&nbsp;'));
 				$('#edpf_name').val(inf['name']);
-				$('span.ncf-tel').text(inf['contact'].toLowerCase());
+				$('span.ncf-tel').text(inf['contact']);
 				$('#edpf_tel').val(inf['contact']);
-				$('span.ncf-email').text(inf['email'].toLowerCase());
+				if(!sys.isEmpty(inf['email'])){
+					$('span.ncf-email').text(inf['email'].toLowerCase());
+					$('span.ncf-email').data('value', (inf['email'].toLowerCase()));
+				}
 				$('#edpf_eml').val(inf['email']);
 				
 				$('span.ncf-name').data('value', inf['name']);
 				$('span.ncf-tel').data('value', inf['contact']);
-				$('span.ncf-email').data('value', (inf['email'].toLowerCase()));
 				
 				$('div.views').css('opacity', '1');
 			}
@@ -4938,9 +5296,7 @@ $(document).ready(function(){
 				apps.tab.show('#pg-home', false);
 			}
 			
-			$('.popup-event .fab-right-bottom').draggable();
-			
-			setTimeout(function(){ sys.loading(0) }, 1000);
+			setTimeout(function(){ sys.loading(0) }, 2000);
 		}
 	});
 	
@@ -5430,8 +5786,8 @@ sys = {
 		}
 	},
 	'getLocation' : function(){
-		if(geoToken){
-			navigator.geolocation.watchPosition(function(position){
+		navigator.geolocation.watchPosition(function(position){
+			if(geoToken){
 				var DATA = {
 					'usr' : STORAGE.getItem('usr'),
 					'lon' : position.coords.longitude,
@@ -5450,10 +5806,10 @@ sys = {
 				});
 				
 				geoToken = false;
-			}, function(error){
-				console.log('code: ' + error.code + '\n' + 'message: ' + error.message + '\n');
-			}, { enableHighAccuracy: true });
-		}
+			}
+		}, function(error){
+			console.log('code: ' + error.code + '\n' + 'message: ' + error.message + '\n');
+		}, { enableHighAccuracy: true });
 	},
 	'pad' : function(d){
 		return (d < 10) ? '0' + d.toString() : d.toString();

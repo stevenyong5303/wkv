@@ -83,10 +83,10 @@
 							<ul>
 								<li class="item-content item-input">
 									<div class="item-media" style="padding-bottom:13px;">
-										<i class="icon material-icons md-only">assignment_ind</i>
+										<i class="icon material-icons md-only">smartphone</i>
 									</div>
 									<div class="item-inner">
-										<div class="item-title item-label">Username</div>
+										<div class="item-title item-label">Contact Number</div>
 										<div class="item-input-wrap">
 											<input type="text" name="lgn_usr" autocomplete="off">
 										</div>
@@ -109,6 +109,136 @@
 							<ul>
 								<li>
 									<a id="lgn_sgn" class="button button-fill button-raised">Login</a>
+								</li>
+								<li style="margin-top:50px;">
+									<a id="lgn_fgp" class="button button-outline">Forgot Password</a>
+								</li>
+								<li style="margin-top:5px;">
+									<a id="lgn_sgu" class="button button-outline">Signup for Dealer</a>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="login-screen" id="sgu">
+			<div class="view">
+				<div class="page">
+					<div class="page-content login-screen-content">
+						<div class="login-screen-title">WKV</div>
+						<div class="list">
+							<ul>
+								<li class="item-content item-input">
+									<div class="item-media" style="padding-bottom:13px;">
+										<i class="icon material-icons md-only">smartphone</i>
+									</div>
+									<div class="item-inner">
+										<div class="item-title item-label">Contact Number</div>
+										<div class="item-input-wrap">
+											<input type="text" name="sgu_con" autocomplete="off" placeholder="01********">
+										</div>
+									</div>
+								</li>
+							</ul>
+						</div>
+						<div class="list inset" style="padding:30px 10px;">
+							<ul>
+								<li>
+									<a id="sgu_rpw" class="button button-fill button-raised">Sign Up</a>
+								</li>
+								<li style="margin-top:50px;">
+									<a id="sgu_bck" class="button button-outline">Back</a>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="login-screen" id="npr">
+			<div class="view">
+				<div class="page">
+					<div class="page-content login-screen-content">
+						<div class="login-screen-title">WKV</div>
+						<div class="list">
+							<ul>
+								<li class="item-content item-input">
+									<div class="item-inner">
+										<div class="item-title item-label">Contact Number</div>
+										<div class="item-input-wrap disabled">
+											<input type="text" name="npr_con" autocomplete="off">
+										</div>
+									</div>
+								</li>
+								<li class="item-content item-input" style="margin-top:30px;">
+									<div class="item-inner">
+										<div class="item-title item-label">Password</div>
+										<div class="item-input-wrap">
+											<input type="password" name="npr_pw1" autocomplete="off">
+										</div>
+									</div>
+								</li>
+								<li class="item-content item-input">
+									<div class="item-inner">
+										<div class="item-title item-label">Confirm Password</div>
+										<div class="item-input-wrap">
+											<input type="password" name="npr_pw2" autocomplete="off">
+										</div>
+									</div>
+								</li>
+								<li class="item-content item-input" style="margin-top:30px;">
+									<div class="item-inner">
+										<div class="item-title item-label">Display Name</div>
+										<div class="item-input-wrap">
+											<input type="text" name="npr_dnm" autocomplete="off">
+										</div>
+									</div>
+								</li>
+								<li class="item-content item-input" style="margin-top:30px;">
+									<div class="item-inner">
+										<div class="item-title item-label">Company</div>
+										<div class="item-input-wrap">
+											<input type="text" name="npr_cpn" autocomplete="off">
+										</div>
+									</div>
+								</li>
+								<li class="item-content item-input" style="margin-top:30px;">
+									<div class="item-inner">
+										<div class="item-title item-label">Address</div>
+										<div class="item-input-wrap">
+											<input type="text" name="npr_add1" autocomplete="off">
+										</div>
+									</div>
+								</li>
+								<li class="item-content item-input">
+									<div class="item-inner">
+										<div class="item-input-wrap">
+											<input type="text" name="npr_add2" autocomplete="off">
+										</div>
+									</div>
+								</li>
+								<li class="item-content item-input">
+									<div class="item-inner">
+										<div class="item-input-wrap">
+											<input type="text" name="npr_add3" autocomplete="off">
+										</div>
+									</div>
+								</li>
+								<li class="item-content item-input" style="margin-top:30px;">
+									<div class="item-inner">
+										<div class="item-title item-label">Email</div>
+										<div class="item-input-wrap">
+											<input type="text" name="npr_eml" autocomplete="off">
+										</div>
+									</div>
+								</li>
+							</ul>
+						</div>
+						<div class="list inset" style="padding:30px 10px;">
+							<ul>
+								<li>
+									<a id="npr_sve" class="button button-fill button-raised">Save</a>
 								</li>
 							</ul>
 						</div>
@@ -478,7 +608,7 @@
 								<div class="block-title">Profile</div>
 								<div class="list">
 									<ul>
-										<li class="level2">
+										<li class="level3">
 											<div class="item-content">
 												<div class="item-media">
 													<i class="icon material-icons md-only">contacts</i>
@@ -4174,8 +4304,15 @@ data-value=''>
 						<li class="item-content item-input">
 							<div class="item-inner">
 								<div class="item-title item-label">Person In Charge</div>
-								<div class="item-input-wrap">
+								<div class="item-input-wrap" style="width:calc(100% - 120px);display:inline-block;">
 									<input id="rprt_pic" type="text" value="" autocomplete="off">
+								</div>
+								<div style="display:inline-block;">
+									<label class="checkbox">
+										<input class="rprt_mww" type="checkbox">
+										<i class="icon-checkbox"></i>
+									</label>
+									<span style="font-size:11px;margin-bottom:2px;">Match whole word</span>
 								</div>
 							</div>
 						</li>
@@ -4553,6 +4690,9 @@ data-value=''>
 							</a>
 							<a href="#" class="evts_shr">
 								<i class="icon material-icons md-only">share</i>
+							</a>
+							<a href="#" class="fab_move">
+								<i class="icon material-icons md-only">settings_ethernet</i>
 							</a>
 							<div class="fab fab-morph evts_add level9" data-morph-to=".evts_input">
 								<a href="#">
@@ -6648,7 +6788,7 @@ data-value=''>
 				<div class="block">
 					<div align="center">
 						 <img src="icon.png" alt="WKV Logo" height="128" width="128">
-						 <span style="color:#999;position:absolute;top:40px;font-size:12px;">&emsp;Version 1.0.230</span>
+						 <span style="color:#999;position:absolute;top:40px;font-size:12px;">&emsp;Version 1.0.231</span>
 					</div>
 					<p>WKV Application serves as a platform for of WKV’s member to obtain basic information and calculation method can easily obtain by accessing to the application.</p>
 					<p>For general usage, clock in and clock out is built in the application for employees of WKV to check in whenever they report to event venue.</p>
@@ -6836,7 +6976,6 @@ data-value=''>
 	<script type="text/javascript" src="cordova.js"></script>
 	<script src="framework7/js/framework7.min.js"></script>
 	<script src="js/jquery-3.4.1.min.js"></script>
-	<script src="js/jquery-ui.min.js"></script>
 	<script src="js/routes.js"></script>
 	<script src="js/md5.min.js"></script>
 	<script src="js/app.js"></script>
