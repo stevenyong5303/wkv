@@ -177,9 +177,15 @@ input.evtd_price, label.evtd_paid{
 	user-select: none;
 	-o-user-select: none;
 }
-.workClock {
+.workClock, #fgp_rdm {
 	font-family: 'orbitronbold';
 	font-size: 40px;
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
 }
 .workClock .h1, .workClock .m1, .workClock .s1, .workClock .h2, .workClock .m2, .workClock .s2{
 	width: 43px;

@@ -6,11 +6,11 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.232",
+			  version: "1.0.233",
 			  rtl: false,
 			  language: "en-US"
 		  });
-var geoToken = true, geoCount = 60, APP_VERSION = 10232, tmpCalendar = '', fileObject, tapHold = 0, tapHoldStr = '';
+var geoToken = true, geoCount = 60, APP_VERSION = 10233, tmpCalendar = '', fileObject, tapHold = 0, tapHoldStr = '';
 
 var app = {
     initialize: function() {
@@ -247,7 +247,7 @@ $(document).ready(function(){
 						sys.loading(0);
 						var failed_toast = apps.toast.create({
 											   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
-											   text: 'ID or password invalid',
+											   text: 'Invalid ID or password',
 											   position: 'center',
 											   closeTimeout: 2000
 										   });
@@ -279,7 +279,182 @@ $(document).ready(function(){
 		apps.loginScreen.open('#lgn');
 		apps.loginScreen.close('#sgu');
 	});
+
+	$('#lgn_fgp').on('click', function(){
+		var tmp = Math.random().toString(36).substring(2, 15);
+		$('#fgp_rdm').text(tmp.substring(0,8));
+		$('#fgp_rdm').data('verify', tmp.substring(0,8));
+		
+		apps.loginScreen.open('#fgp');
+		apps.loginScreen.close('#lgn');
+	});
 	
+	$('#fgp_gnr').on('click', function(){
+		sys.loading(1);
+		
+		setTimeout(function(){
+			var tmp = Math.random().toString(36).substring(2, 15);
+			$('#fgp_rdm').text(tmp.substring(0,8));
+			$('#fgp_rdm').data('verify', tmp.substring(0,8));
+			
+			sys.loading(0);
+		}, 1500);
+	});
+	
+	$('#fgp_bck').on('click', function(){
+		apps.loginScreen.open('#lgn');
+		apps.loginScreen.close('#fgp');
+	});
+	
+	$('#fgp_rpw').on('click', function(){
+		var con = $('#fgp input[name="fgp_con"]').val(),
+			ver = $('#fgp input[name="fgp_ver"]').val();
+		
+		if($('#fgp_rdm').data('verify') == ver){
+			if((con.substr(0,2) == '01' && pattern.test(con)) && ((con.length == 10 && con.substr(2,1) != '1') || (con.length == 11 && con.substr(2,1) == '1'))){
+				DATA = {
+					'contact' : con
+				};
+				
+				post_data = "ACT=" + encodeURIComponent('fgp_rpw')
+						  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
+						  
+				$.ajax({
+					type: 'POST',
+					url: 'https://app.wkventertainment.com/',
+					data: post_data,
+					beforeSend: function(){
+						sys.loading(1);
+					},
+					success: function(str){
+						if(str==='200 OK'){
+							sys.loading(0);
+							var success_toast = apps.toast.create({
+												   icon: '<i class="material-icons">speaker_phone</i>',
+												   text: ('Password will be sms to +6' + con + ' in a minute'),
+												   position: 'center',
+												   closeTimeout: 20000
+											   });
+							success_toast.open();
+							
+							apps.loginScreen.open('#lgn');
+							apps.loginScreen.close('#fgp');
+							
+							$('#fgp input[name="fgp_con"]').val('');
+							$('#fgp input[name="fgp_ver"]').val('');
+						}else if(str==='401 Unauthorized'){
+							sys.loading(0);
+							var failed_toast = apps.toast.create({
+												   icon: '<i class="material-icons">screen_lock_portrait</i>',
+												   text: 'Contact number is not registered',
+												   position: 'center',
+												   closeTimeout: 2000
+											   });
+							failed_toast.open();
+							
+							navigator.vibrate(100);
+						}else{
+							sys.loading(0);
+							var failed_toast = apps.toast.create({
+												   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
+												   text: 'Oooppss, error',
+												   position: 'center',
+												   closeTimeout: 2000
+											   });
+							failed_toast.open();
+							
+							navigator.vibrate(100);
+						}
+					}
+				});
+			}else{
+				var failed_toast = apps.toast.create({
+									   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
+									   text: 'Invalid contact number',
+									   position: 'center',
+									   closeTimeout: 2000
+								   });
+				failed_toast.open();
+				
+				navigator.vibrate(100);
+			}
+		}else{
+			var failed_toast = apps.toast.create({
+								   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
+								   text: 'Invalid verification code',
+								   position: 'center',
+								   closeTimeout: 2000
+							   });
+			failed_toast.open();
+			
+			navigator.vibrate(100);
+		}
+	});
+	
+	$('#rpw_sve').on('click', function(){
+		var pw1 = $('#rpw input[name="rpw_pw1"]').val(),
+			pw2 = $('#rpw input[name="rpw_pw2"]').val();
+			
+		if(!sys.isEmpty(pw1)){
+			if(pw1 == pw2){
+				DATA = {
+					'usr' : $('#rpw input[name="rpw_pw1"]').data('uid'),
+					'pwd' : pw1
+				};
+				
+				post_data = "ACT=" + encodeURIComponent('rpw_udt')
+						  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
+				
+				$.ajax({
+					type: 'POST',
+					url: 'https://app.wkventertainment.com/',
+					data: post_data,
+					beforeSend: function(){
+						sys.loading(1);
+					},
+					success: function(str){
+						if(str==='200 OK'){
+							STORAGE.setItem('usr', usr);
+							STORAGE.setItem('pwd', pw1);
+							
+							location.reload();
+						}else{
+							sys.loading(0);
+							
+							var failed_toast = apps.toast.create({
+												   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
+												   text: 'Oooppss, error',
+												   position: 'center',
+												   closeTimeout: 2000
+											   });
+							failed_toast.open();
+						}
+					}
+				});
+			}else{
+				var failed_toast = apps.toast.create({
+									   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
+									   text: 'Password does not match.',
+									   position: 'center',
+									   closeTimeout: 2000
+								   });
+				failed_toast.open();
+				
+				navigator.vibrate(100);
+			}
+		}else{
+			var failed_toast = apps.toast.create({
+								   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
+								   text: 'Password cannot be left empty.',
+								   position: 'center',
+								   closeTimeout: 2000
+							   });
+			failed_toast.open();
+			
+			navigator.vibrate(100);
+		}
+	});
+
 	$('#sgu_rpw').on('click', function(){
 		var con = $('#sgu input[name="sgu_con"]').val();
 		
@@ -4674,8 +4849,6 @@ $(document).ready(function(){
 						STORAGE.removeItem('usr');
 						STORAGE.removeItem('pwd');
 						
-						apps.loginScreen.open('#lgn');
-						
 						var logout_toast = apps.toast.create({
 												icon: '<i class="material-icons">screen_lock_portrait</i>',
 												text: 'Logged Out',
@@ -4683,6 +4856,10 @@ $(document).ready(function(){
 												closeTimeout: 2000
 											});
 						logout_toast.open();
+						
+						setTimeout(function(){
+							location.reload();
+						}, 2000);
 					}else{
 						var failed_toast = apps.toast.create({
 											   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
@@ -4997,7 +5174,7 @@ $(document).ready(function(){
 					}else{
 						var failed_toast = apps.toast.create({
 											   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
-											   text: 'Current Password Invalid',
+											   text: 'Invalid current password',
 											   position: 'center',
 											   closeTimeout: 2000
 										   });
@@ -5137,7 +5314,7 @@ $(document).ready(function(){
 			var inf = JSON.parse(str);
 			sys.getLocation();
 			
-			if(inf['new']){
+			if(inf['new']=='1'){
 				$('#npr .list').css('opacity', '0');
 				
 				setTimeout(function(){
@@ -5186,6 +5363,10 @@ $(document).ready(function(){
 				$('#npr input[name="npr_eml"]').val(inf['email']);
 				
 				apps.loginScreen.open('#npr');
+			}else if(inf['new']=='-1'){
+				$('#rpw input[name="rpw_pw1"]').data('uid', inf['uid']);
+				
+				apps.loginScreen.open('#rpw');
 			}
 			
 			STORAGE.setItem('level', inf['level']);
