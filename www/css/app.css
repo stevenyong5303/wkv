@@ -5,6 +5,15 @@
     font-weight: normal;
     font-style: normal;
 }
+p.segmented.rstar{
+	width: 100%;
+}
+p.segmented.rstar button.button.on{
+	color: #EEAA00;
+}
+p.segmented.rstar button.button.off{
+	color: #CCCCCC;
+}
 i.icon.email-tick{
 	margin: 0 0 5px 5px;
 	color: #FFF;
@@ -83,7 +92,7 @@ div.list a div.item-media i.green{
 	margin-bottom: 10px;
 	display: block;
 }
-#pg-home .timeline-item-date{
+#pg-home .timeline-item-date, #pg-DLhome .timeline-item-date{
 	background: none;
 }
 span.wazeBtn {
@@ -92,7 +101,7 @@ span.wazeBtn {
 .fab.evtd_shr, .eqls{
 	display: none;
 }
-input.evtd_price, label.evtd_paid{
+input.evtd_price, label.evtd_paid, input.evtd_price_DL, label.evtd_paid_DL {
 	width: auto !important;
 	display: inline-block;
 }
@@ -208,10 +217,10 @@ div.views {
 .toolbar-inner .left {
 	padding-left: 13px;
 }
-td.tb-pic.tb-paid, div.col-10.tb-paid{
+td.tb-ld.tb-paid, td.tb-pic.tb-paid, div.col-10.tb-paid{
 	border-right: 5px solid green;
 }
-td.tb-pic.tb-not-paid, div.col-10.tb-not-paid{
+td.tb-ld.tb-not-paid, td.tb-pic.tb-not-paid, div.col-10.tb-not-paid{
 	border-right: 5px solid red;
 }
 .rotate-90 {
@@ -292,6 +301,21 @@ td.tb-pic.tb-not-paid, div.col-10.tb-not-paid{
 #wkv-calendar .calendar-month-current .calendar-day.hl16 span {
 	background-color: #990000;
 }
+#wkv-DLcalendar .calendar-month-current .calendar-day.hl1 span {
+	background-color: #ccffcc;
+}
+#wkv-DLcalendar .calendar-month-current .calendar-day.hl2 span {
+	background-color: #33ff33;
+}
+#wkv-DLcalendar .calendar-month-current .calendar-day.hl3 span {
+	background-color: #00dd00;
+}
+#wkv-DLcalendar .calendar-month-current .calendar-day.hl4 span {
+	background-color: #00bb00;
+}
+#wkv-DLcalendar .calendar-month-current .calendar-day.hl5 span {
+	background-color: #007700;
+}
 .data-table table.event_list td.label-cell, .data-table table.event_list th.label-cell {
 	padding-left: 10px;
 	padding-right: 10px;
@@ -308,11 +332,11 @@ td.tb-pic.tb-not-paid, div.col-10.tb-not-paid{
 	display: inline-block;
 	width: 55px;
 }
-.details-popover .autocomplete-dropdown.autocomplete-dropdown-in ul, .tskld-popover .autocomplete-dropdown.autocomplete-dropdown-in ul{
+.DLdetails-popover .autocomplete-dropdown.autocomplete-dropdown-in ul, .details-popover .autocomplete-dropdown.autocomplete-dropdown-in ul, .tskld-popover .autocomplete-dropdown.autocomplete-dropdown-in ul{
 	padding-left: 0px !important;
 	font-size: 12px;
 }
-.details-popover .autocomplete-dropdown.autocomplete-dropdown-in ul li, .tskld-popover .autocomplete-dropdown.autocomplete-dropdown-in ul li{
+.DLdetails-popover .autocomplete-dropdown.autocomplete-dropdown-in ul li, .details-popover .autocomplete-dropdown.autocomplete-dropdown-in ul li, .tskld-popover .autocomplete-dropdown.autocomplete-dropdown-in ul li{
 	height: 32px;
 }
 .popup-audiop audio{

@@ -6,11 +6,11 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.233",
+			  version: "1.0.234",
 			  rtl: false,
 			  language: "en-US"
 		  });
-var geoToken = true, geoCount = 60, APP_VERSION = 10233, tmpCalendar = '', fileObject, tapHold = 0, tapHoldStr = '';
+var geoToken = true, geoCount = 60, APP_VERSION = 10234, tmpCalendar = '', fileObject, tapHold = 0, tapHoldStr = '';
 
 var app = {
     initialize: function() {
@@ -23,6 +23,8 @@ var app = {
 	
     onDeviceReady: function(){
         app.receivedEvent('deviceready');
+		
+		console.log(device.cordova);
 		
 		var notificationOpenedCallback = function(jsonData){
 			if(!sys.isEmpty(jsonData['notification']['payload']['additionalData']['feedback'])){
@@ -125,7 +127,7 @@ $(document).ready(function(){
 					sys.eventCheck(usr, c.currentMonth, c.currentYear);
 				}
 			}
-		});
+		}), dlCalendarInline = '';
 	
 	$('#lgn #lgn_sgn').on('click', function(){
 		usr = $('#lgn input[name="lgn_usr"]').val();
@@ -149,100 +151,12 @@ $(document).ready(function(){
 				},
 				success: function(str){
 					var inf = JSON.parse(str);
-					// sys.getLocation();
-					
-					// if(inf['clocked']=='1'){
-						// sys.clockToggle('in');
-					// }else{
-						// sys.clockToggle('out');
-					// }
-					// $('body').data('user_level', inf['level']);
-					// $('body').data('crew', inf['status']);
-					// $('body').data('loc', inf['location']);
-					// $('body').data('car', inf['car']);
 					
 					if(inf['reply']==='200 OK'){
 						STORAGE.setItem('usr', inf['uid']);
 						STORAGE.setItem('pwd', inf['pwd']);
 						
-						// if(!sys.isEmpty(inf['pos1'])){
-							// $('span.ncf-pos1').text(inf['pos1'].toLowerCase());
-						// }
-						// if(!sys.isEmpty(inf['pos2'])){
-							// $('span.ncf-pos2').text(inf['pos2'].toLowerCase());
-						// }
-						// $('span.ncf-name').text(inf['name'].toLowerCase());
-						// $('span.ncf-name').html($('span.ncf-name').text().replace(/ /g, '&nbsp;&nbsp;&nbsp;'));
-						// $('#edpf_name').val(inf['name']);
-						// $('span.ncf-tel').text(inf['contact']);
-						// $('#edpf_tel').val(inf['contact']);
-						// $('span.ncf-email').text(inf['email'].toLowerCase());
-						// $('#edpf_eml').val(inf['email']);
-						
-						// $('span.ncf-name').data('value', inf['name']);
-						// $('span.ncf-tel').data('value', inf['contact']);
-						// $('span.ncf-email').data('value', (inf['email'].toLowerCase()));
-						// $('div.views').css('opacity', '1');
-						
-						// $('#lgn input[name="lgn_usr"]').val('');
-						// $('#lgn input[name="lgn_pwd"]').val('');
-						
-						// sys.eventCheck(usr, (new Date().getMonth()), new Date().getYear()+1900);
-						
-						// if(inf['status']){
-							// var status = inf['status'], x = '';
-							
-							// for(var i=0; i<status.length; i++){
-								// x += '<li><a href="#" class="item-link item-content" data-usr="' + status[i].user_id + '" data-who="' + status[i].nc_name + '">';
-								// x += '<div class="item-media"><i class="icon material-icons md-only">' + (status[i].clocked_in == 1 ? 'directions_run' : 'hotel') + '</i></div>';
-								// x += '<div class="item-inner"><div class="item-title">' + status[i].nc_name + (status[i].clocked_in == 1 ? ('<div class="item-footer">' + status[i].clocked_time + '</div>') : '') + '</div></div></a></li>';
-							// }
-							// $('#user-status').html(x);
-						// }
-						
-						// if(inf['task'][0] != 'none'){
-							// var task = inf['task'], x = '', sameAs = 0;
-							
-							// for(var i=0; i<task.length; i++){
-								// if(task[i]['date'] != sameAs){
-									// x += '<div class="timeline-item">';
-									// x += '<div class="timeline-item-date">' + task[i]['date'].substr(8,2) + ' <small>' + sys.toMonth(task[i]['date']) + '</small></div>';
-									// x += '<div class="timeline-item-divider"></div>';
-									// x += '<div class="timeline-item-content">';
-								// }
-								
-								// x += '<div class="timeline-item-inner tsk' + task[i]['primary_id'] + '" data-locpid="' + (sys.isEmpty(task[i]['venue']) ? 0 : (task[i]['venue'].indexOf('#PID#') != -1 ? task[i]['venue'] : 0)) + '" data-rmk="' + task[i]['remarks'] + '" data-crew="' + task[i]['crew'] + '">';
-								
-								// if(task[i]['time']){
-									// x += '<div class="timeline-item-time">' + task[i]['time'] + '</div>';
-								// }
-								
-								// x += '<strong>' + (sys.isEmpty(task[i]['venue']) ?  '-' : (task[i]['venue'].indexOf('#PID#') != -1 ? sys.pidToLoc(task[i]['venue']).loc_name : task[i]['venue'])) + '</strong>' + (task[i]['description'] ? ('<br/><span>' + task[i]['description'] + '</span>') : '');
-								// x += '</div>';
-								
-								// sameAs = task[i]['date'];
-								
-								// if(sys.isEmpty(task[i+1]) || task[i+1]['date'] != sameAs){
-									// x += '</div></div>';
-								// }
-							// }
-							// $('#task_tl').html(x);
-						// }
-						
-						// for(var i=10; i>parseInt(inf['level']); i--){
-							// if($('.level'+i).length > 0){
-								// $('.level'+i).remove();
-							// }
-						// }
-						
-						// for(var i=0; i<parseInt(inf['level']); i++){
-							// if($('.ltlevel'+i).length > 0){
-								// $('.ltlevel'+i).remove();
-							// }
-						// }
-						
 						location.reload();
-						// apps.loginScreen.close('#lgn');
 					}else{
 						sys.loading(0);
 						var failed_toast = apps.toast.create({
@@ -545,292 +459,492 @@ $(document).ready(function(){
 		}
 		
 		if(!sys.isEmpty(user)){
-			sys.dateClick = function(tmp){
-				if(!sys.isEmpty(tmp)){
-					DATA = {
-						'usr' : user,
-						'date' : tmp.toDateString().substr(4)
-					};
-					post_data = "ACT=" + encodeURIComponent('cal_get')
-							  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
-							  
-					$.ajax({
-						type: 'POST',
-						url: 'https://app.wkventertainment.com/',
-						data: post_data,
-						beforeSend: function(){
-							sys.loading(1);
-						},
-						success: function(str){
-							$('.popup-event .event_list').data('date', tmp.toDateString().substr(4));
-							var hidden = (((tmp.getTime() - (new Date()).getTime()) > 86400000 ) ? ((parseInt($('body').data('user_level'))<7) ? true : false) : false);
-							$('a.leave_app').removeClass('disabled');
-							
-							if(str==='204 No Response'){
-								$('.popup-event .event_list').html('<p style="margin-left:10px;">No event found.</p>');
+			if(sys.isDealer()){
+				sys.dateClick = function(tmp){
+					if(!sys.isEmpty(tmp)){
+						DATA = {
+							'usr' : user,
+							'date' : tmp.toDateString().substr(4)
+						};
+						post_data = "ACT=" + encodeURIComponent('cal_get_DL')
+								  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
+								  
+						$.ajax({
+							type: 'POST',
+							url: 'https://app.wkventertainment.com/',
+							data: post_data,
+							beforeSend: function(){
+								sys.loading(1);
+							},
+							success: function(str){
+								$('.popup-DLevent .event_list').data('date', tmp.toDateString().substr(4));
 								
-								if(((tmp.getTime() - (new Date()).getTime()) <= 0 )){
-									$('a.leave_app').addClass('disabled');
-								}
-							}else{
-								var x = '<thead><tr><th class="label-cell"></th>'
-									  + '<th class="label-cell">&emsp;PIC&emsp;&emsp;&emsp;&emsp;&emsp;</th>'
-									  + '<th class="label-cell">L/D</th>'
-									  + '<th class="label-cell">&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Venue&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;</th>'
-									  + '<th class="label-cell">&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Desc.&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;</th>'
-									  + '<th class="tablet-only">Band</th>'
-									  + '<th class="label-cell">&emsp;&emsp;&emsp;Crew&emsp;&emsp;&emsp;</th>'
-									  + '<th class="label-cell">&emsp;IN&emsp;&emsp;</th>'
-									  + '<th class="label-cell">&emsp;OUT&emsp;&emsp;</th></tr></thead><tbody>',
-									inf = JSON.parse(str);
-								
-								for(var i=0; i<inf.length; i++){
-									x += '<tr name="el'+(i+1)+'"><td class="label-cell"><span class="button button-fill" name="el'+(i+1)+'">'+(i+1)+'</span></td>';
-									x += '<td class="tb-pic label-cell '+(((parseInt($('body').data('user_level'))>=8) && ((sys.ldToShort(inf[i].luncheon_dinner)!='ST') && (sys.ldToShort(inf[i].luncheon_dinner)!='RH') && (sys.ldToShort(inf[i].luncheon_dinner)!='XX'))) ? (inf[i].paid=='1' ? 'tb-paid' : 'tb-not-paid') : '' )+'">'+inf[i].pic+'</td>';
-									x += '<td class="tb-ld label-cell">'+(sys.ldToShort(inf[i].luncheon_dinner))+'</td>';
-									x += '<td class="tb-venue label-cell" data-pid="' + inf[i].venue + '">'+((inf[i].venue==null) ? '-' : (inf[i].venue.indexOf('#PID#') != -1 ? sys.pidToLoc(inf[i].venue).loc_name : inf[i].venue))+'</td>';
-									x += '<td class="tb-desc label-cell">'+((inf[i].description==null) ? '-' : inf[i].description)+'</td>';
-									x += '<td class="tb-band tablet-only">'+((inf[i].band==null) ? '-' : inf[i].band)+'</td>';
-									x += '<td class="tb-crew label-cell">'+((hidden || inf[i].crew==null) ? '-' : sys.unameToSname(inf[i].crew))+'</td>';
-									x += '<td class="tb-cin label-cell">'+((hidden || inf[i].car_in==null) ? '-' : sys.carToTcar(inf[i].car_in))+'</td>';
-									x += '<td class="tb-cout label-cell">'+((hidden || inf[i].car_out==null) ? '-' : sys.carToTcar(inf[i].car_out))+'</td>';
-									x += '</tr>';
-								}
-								x += '</tbody>';
-								
-								$('.popup-event .event_list').html(x);
-								$('table.event_list').data('info', inf);
-								
-								for(var i=0; i<inf.length; i++){
-									$('tr[name="el'+(i+1)+'"]').data('info', inf[i]);
-								}
-								
-								if(((tmp.getTime() - (new Date()).getTime()) <= 0 ) || inf.length > 10){
-									$('a.leave_app').addClass('disabled');
-								}
-							}
-							$('.popup-event .event_date').text(tmp.toDateString().substr(4));
-							
-							if(parseInt($('body').data('user_level'))>=9){
-								DATA = {
-									'usr' : user,
-									'date' : tmp.toDateString().substr(4)
-								};
-								post_data = "ACT=" + encodeURIComponent('evt_lvc')
-										  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
-										  
-								$.ajax({
-									type: 'POST',
-									url: 'https://app.wkventertainment.com/',
-									data: post_data,
-									success: function(str){
-										sys.loading(0);
-										
-										if(str==='204 No Response'){
-											$('.details-popover').data('leave', '');
-										}else{
-											$('.details-popover').data('leave', str);
-										}
-										apps.popup.open('.popup-event');
+								if(str==='204 No Response'){
+									$('.popup-DLevent .event_list').html('<p style="margin-left:10px;">No event found.</p>');
+								}else{
+									var x = '<thead><tr><th class="label-cell"></th>'
+										  + '<th class="label-cell">&emsp;L/D&emsp;</th>'
+										  + '<th class="label-cell">&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Venue&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;</th>'
+										  + '<th class="label-cell">&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Desc.&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;</th>'
+										  + '<th class="label-cell">&nbsp;Time&emsp;</th>'
+										  + '<th class="label-cell">&emsp;Bride & Groom / Company&emsp;</th>'
+										  + '<th class="label-cell">&emsp;&emsp;&emsp;Band Details&emsp;&emsp;&emsp;</th>'
+										  + '<th class="label-cell">&emsp;&emsp;&emsp;Price&emsp;&emsp;</th></tr></thead><tbody>',
+										inf = JSON.parse(str);
+									
+									for(var i=0; i<inf.length; i++){
+										x += '<tr name="el'+(i+1)+'"><td class="label-cell"><span class="button button-fill" name="el'+(i+1)+'">'+(i+1)+'</span></td>';
+										x += '<td class="tb-ld label-cell ' + (((sys.ldToShort(inf[i].luncheon_dinner)!='ST') && (sys.ldToShort(inf[i].luncheon_dinner)!='RH') && (sys.ldToShort(inf[i].luncheon_dinner)!='XX')) ? (inf[i].paid=='1' ? 'tb-paid' : 'tb-not-paid') : '') + '">'+(sys.ldToShort(inf[i].luncheon_dinner))+'</td>';
+										x += '<td class="tb-venue label-cell" data-pid="' + inf[i].venue + '">'+((inf[i].venue==null) ? '-' : (inf[i].venue.indexOf('#PID#') != -1 ? sys.pidToLoc(inf[i].venue).loc_name : inf[i].venue))+'</td>';
+										x += '<td class="tb-desc label-cell">'+((inf[i].description==null) ? '-' : sys.shorten(inf[i].description))+'</td>';
+										x += '<td class="tb-time label-cell">'+((inf[i].time==null) ? '-' : inf[i].time)+'</td>';
+										x += '<td class="tb-bng label-cell">'+((inf[i].bride_groom==null) ? '-' : inf[i].bride_groom)+'</td>';
+										x += '<td class="tb-band label-cell">'+((inf[i].band==null) ? '-' : inf[i].band)+'</td>';
+										x += '<td class="tb-price label-cell">'+((inf[i].price==0 || inf[i].price==null) ? '-' : ('RM ' + parseFloat(inf[i].price).toFixed(2)))+'</td>';
+										x += '</tr>';
 									}
-								});
-							}else{
+									x += '</tbody>';
+									
+									$('.popup-DLevent .event_list').html(x);
+									$('.popup-DLevent table.event_list').data('info', inf);
+									
+									for(var i=0; i<inf.length; i++){
+										$('.popup-DLevent tr[name="el'+(i+1)+'"]').data('info', inf[i]);
+									}
+								}
+								$('.popup-DLevent .event_date').text(tmp.toDateString().substr(4));
+								
 								sys.loading(0);
-								apps.popup.open('.popup-event');
-							}
-							
-							
-							$('.event_list span.button').on('click', function(){
-								var x = '';
-								var inf = $('tr[name="' + $(this).attr('name') + '"]').data('info');
-								var trName = $(this).attr('name');
+								apps.popup.open('.popup-DLevent');
 								
-								DATA = {
-									'usr' : user,
-									'level' : $('body').data('user_level'),
-									'pid' : inf.primary_id
-								};
-								post_data = "ACT=" + encodeURIComponent('evt_lck')
-										  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
-										  
-								$.ajax({
-									type: 'POST',
-									url: 'https://app.wkventertainment.com/',
-									data: post_data,
-									beforeSend: function(){
-										sys.loading(1);
-									},
-									success: function(str){
-										sys.loading(0);
+								$('.popup-DLevent .event_list span.button').on('click', function(){
+									var x = '';
+									var trName = $(this).attr('name');
+									var inf = $('.popup-DLevent tr[name="' + trName + '"]').data('info');
+									
+									$('.DLdetails-popover').data('date', (new Date(inf.date)).getTime());
 										
-										var inf1 = JSON.parse(str);
-										
-										$('.details-popover').data('md5', md5(((inf.luncheon_dinner==null) ? '' : inf.luncheon_dinner)+((inf.time==null) ? '' : inf.time)+((inf.venue==null) ? '' : inf.venue)+((inf.description==null) ? '' : inf.description)+((inf.band==null) ? '' : inf.band)+((inf.crew==null) ? '' : inf.crew)+((inf.car_in==null) ? '' : inf.car_in)+((inf.car_out==null) ? '' : inf.car_out)+((inf.remarks==null) ? '' : inf.remarks)));
-										$('.details-popover').data('title', (inf.pic + ' on ' + (inf.date.substr(8,2)) + '/' + (inf.date.substr(5,2))));
-										$('.details-popover').data('date', (new Date(inf.date)).getTime());
-										
-										if(parseInt($('body').data('user_level'))>=9 && inf1.lock==0){
-											$('.details-popover').data('lock', 0);
-											x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Person In Charge</div><div class="item-input-wrap">' + ((inf.pic==null) ? '-' : inf.pic) + '</div></div></div></li>';
-											x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Luncheon/Dinner</div><div class="item-input-wrap"><input class="evtd_ld" type="text" autocomplete="off" value="' + ((inf.luncheon_dinner==null) ? '' : inf.luncheon_dinner) + '"></div></div></div></li>';
-											x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Standby Time</div><div class="item-input-wrap"><input class="evtd_sbtm" type="text" autocomplete="off" value="' + ((inf.time==null) ? '' : inf.time) + '"></div></div></div></li>';
-											x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Venue</div><div class="item-input-wrap"><input class="evtd_venue" type="text" autocomplete="off" value="' + ((inf.venue==null) ? '' : (inf.venue.indexOf('#PID#') != -1 ? sys.pidToLoc(inf.venue).loc_name : inf.venue)) + '"></div></div></div></li>';
-											x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Description</div><div class="item-input-wrap"><input class="evtd_desc" type="text" autocomplete="off" value="' + ((inf.description==null) ? '' : inf.description) + '"></div></div></div></li>';
-											x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Remarks</div><div class="item-input-wrap"><input class="evtd_rmk" type="text" autocomplete="off" value="' + ((inf.remarks==null) ? '' : inf.remarks) + '"></div></div></div></li>';
-											x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Price</div><div class="item-input-wrap"><input class="evtd_price" type="text" autocomplete="off" value="' + ((inf.price==null) ? '' : inf.price) + '"><label class="toggle toggle-init color-green evtd_paid"><input type="checkbox"' + (inf.paid=='1' ? ' checked' : '') + '><span class="toggle-icon"></span></label></div></div></div></li>';
-											x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Live Band Information</div><div class="item-input-wrap"><input class="evtd_band" type="text" autocomplete="off" value="' + ((inf.band==null) ? '' : inf.band) + '"></div></div></div></li>';
-											x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Crew</div><div class="item-input-wrap"><input class="evtd_crew" type="text" autocomplete="off" data-uname="' + inf.crew + '" value="' + ((inf.crew==null) ? '' : sys.unameToSname(inf.crew)) + '"></div></div></div></li>';
-											x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Vehicle to Event</div><div class="item-input-wrap"><input class="evtd_cin" type="text" autocomplete="off" value="' + ((inf.car_in==null) ? '' : sys.carToTcar(inf.car_in, 'r')) + '" data-ori="' + ((inf.car_in==null) ? '' : inf.car_in) + '" data-val="' + ((inf.car_in==null) ? '' : sys.carToTcar(inf.car_in, 'r')) + '"></div></div></div></li>';
-											x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Vehicle back from Event</div><div class="item-input-wrap"><input class="evtd_cout" type="text" autocomplete="off" value="' + ((inf.car_out==null) ? '' : sys.carToTcar(inf.car_out, 'r')) + '" data-ori="' + ((inf.car_out==null) ? '' : inf.car_out) + '" data-val="' + ((inf.car_out==null) ? '' : sys.carToTcar(inf.car_out, 'r')) + '"></div></div></div></li>';
-											x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-input-wrap row">';
-											x += '<button class="evtd_dlt button col button-fill" data-eid="' + inf.primary_id + '">Delete</button>';
-											x += '<button class="evtd_cls button col button-fill" data-eid="' + inf.primary_id + '">Close</button>';
-											x += '</div></div></div></li>';
-										}else{
-											$('.details-popover').data('lock', 1);
-											x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Person In Charge</div><div class="item-input-wrap">' + ((inf.pic==null) ? '-' : inf.pic) + '</div></div></div></li>';
-											x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Luncheon/Dinner</div><div class="item-input-wrap">' + ((inf.luncheon_dinner==null) ? '-' : inf.luncheon_dinner) + '</div></div></div></li>';
-											x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Standby Time</div><div class="item-input-wrap">' + ((inf.time==null) ? '-' : inf.time) + '</div></div></div></li>';
-											x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Venue</div><div class="item-input-wrap">' + ((inf.venue==null) ? '-' : (inf.venue.indexOf('#PID#') != -1 ? sys.pidToLoc(inf.venue).loc_name : inf.venue)) + '</div></div></div></li>';
-											x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Description</div><div class="item-input-wrap">' + ((inf.description==null) ? '-' : inf.description) + '</div></div></div></li>';
-											x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Remarks</div><div class="item-input-wrap">' + ((inf.remarks==null) ? '-' : sys.commasToNextLine(inf.remarks, 'h')) + '</div></div></div></li>';
-											if(parseInt($('body').data('user_level'))>=7){
-												x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">price</div><div class="item-input-wrap">' + ((inf.price==null) ? '-' : inf.price) + '</div></div></div></li>';
-											}
-											x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Live Band Information</div><div class="item-input-wrap">' + ((inf.band==null) ? '-' : inf.band) + '</div></div></div></li>';
-											x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Crew</div><div class="item-input-wrap">' + ((hidden || inf.crew==null) ? '-' : sys.unameToSname(inf.crew)) + '</div></div></div></li>';
-											x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Vehicle to Event</div><div class="item-input-wrap">' + ((hidden || inf.car_in==null) ? '-' : sys.carToTcar(inf.car_in, 'r')) + '</div></div></div></li>';
-											x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Vehicle back from Event</div><div class="item-input-wrap">' + ((hidden || inf.car_out==null) ? '-' : sys.carToTcar(inf.car_out, 'r')) + '</div></div></div></li>';
-										}
-										
-										x = x.replace(/(?:\r\n|\r|\n)/g, '<br>');
-										$('.details-popover ul').html(x);
-										$('div.details-popover').data('info', inf);
-										
-										var evtdVenueAutocomplete = apps.autocomplete.create({
-												openIn: 'dropdown',
-												inputEl: '.evtd_venue',
-												limit: 5,
-												source: function(query, render){
-													var results = [], locs = $('body').data('loc');
-													if(query.length === 0){
-														render(results);
-														return;
-													}
-													
-													for(var i = 0; i < locs.length; i++){
-														if (locs[i].loc_name.toLowerCase().indexOf(query.toLowerCase()) >= 0) results.push(locs[i].loc_name);
-													}
-													
-													render(results);
-												},
-												off: { blur }
-											});
-										
-										if(parseInt($('body').data('user_level'))>=9 && inf1.lock==0){
-											$('.details-popover button.evtd_cls').data('trName', trName);
-											$('.details-popover button.evtd_cls').on('click', function(){
-												var pid = $(this).data('eid');
-												
-												var DATA = {
-														'usr' : STORAGE.getItem('usr'),
-														'pid' : pid
-													};
-												var post_data = "ACT=" + encodeURIComponent('evt_ulk')
-															  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
-															  
-												$.ajax({
-													type: 'POST',
-													url: 'https://app.wkventertainment.com/',
-													data: post_data,
-													beforeSend: function(){
-														sys.loading(1);
-													},
-													success: function(str){
-														if(str==='200 OK'){
-															sys.loading(0);
-															apps.popover.get('.details-popover').close();
-														}
-													}
-												});
-											});
+									x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Luncheon/Dinner</div><div class="item-input-wrap"><input class="evtd_ld_DL" type="text" autocomplete="off" value="' + ((inf.luncheon_dinner==null) ? '' : inf.luncheon_dinner) + '"></div></div></div></li>';
+									x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Venue</div><div class="item-input-wrap"><input class="evtd_venue_DL" type="text" autocomplete="off" value="' + ((inf.venue==null) ? '' : (inf.venue.indexOf('#PID#') != -1 ? sys.pidToLoc(inf.venue).loc_name : inf.venue)) + '"></div></div></div></li>';
+									x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Description</div><div class="item-input-wrap"><input class="evtd_desc_DL" type="text" autocomplete="off" value="' + ((inf.description==null) ? '' : inf.description) + '"></div></div></div></li>';
+									x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Standby Time</div><div class="item-input-wrap"><input class="evtd_sbtm_DL" type="text" autocomplete="off" value="' + ((inf.time==null) ? '' : inf.time) + '"></div></div></div></li>';
+									x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Bride & Groom / Company</div><div class="item-input-wrap"><input class="evtd_bng_DL" type="text" autocomplete="off" value="' + ((inf.bride_groom==null) ? '' : inf.bride_groom) + '"></div></div></div></li>';
+									x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Live Band Information</div><div class="item-input-wrap"><input class="evtd_band_DL" type="text" autocomplete="off" value="' + ((inf.band==null) ? '' : inf.band) + '"></div></div></div></li>';
+									x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Price</div><div class="item-input-wrap"><input class="evtd_price_DL" type="text" autocomplete="off" value="' + ((inf.price==null) ? '' : inf.price) + '" disabled><label class="toggle toggle-init color-green evtd_paid_DL"><input type="checkbox"' + (inf.paid=='1' ? ' checked' : '') + ' disabled><span class="toggle-icon"></span></label></div></div></div></li>';
+									x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-input-wrap row">';
+									x += '<button class="evtd_cls_DL button col button-fill" data-eid="' + inf.primary_id + '">Close</button>';
+									x += '<button class="evtd_sve_DL button col button-fill">Save</button>';
+									x += '</div></div></div></li>';
 											
-											$('.details-popover button.evtd_dlt').on('click', function(){
-												var pid = $(this).data('eid');
+									x = x.replace(/(?:\r\n|\r|\n)/g, '<br>');
+									$('.DLdetails-popover ul').html(x);
+									$('div.DLdetails-popover').data('info', inf);
+											
+									var evtdVenueAutocomplete = apps.autocomplete.create({
+											openIn: 'dropdown',
+											inputEl: '.evtd_venue_DL',
+											limit: 5,
+											source: function(query, render){
+												var results = [], locs = $('body').data('loc');
+												if(query.length === 0){
+													render(results);
+													return;
+												}
 												
-												var DATA = {
-														'usr' : STORAGE.getItem('usr'),
-														'pid' : pid
-													};
-												var post_data = "ACT=" + encodeURIComponent('evd_dlt')
-															  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
-															  
-												$.ajax({
-													type: 'POST',
-													url: 'https://app.wkventertainment.com/',
-													data: post_data,
-													beforeSend: function(){
-														sys.loading(1);
-													},
-													success: function(str){
-														sys.loading(0);
-														
-														if(str==='200 OK'){
-															$('tr[name="' + trName + '"]').remove();
-															$('.popover-backdrop')[0].click();
-															$('.fab.evtd_shr').css('display', 'none');
-															
-															var success_toast = apps.toast.create({
-																				   icon: '<i class="material-icons">delete</i>',
-																				   text: 'Details Successfully Deleted',
-																				   position: 'center',
-																				   closeTimeout: 2000
-																			   });
-															success_toast.open();
-														}else{
-															var failed_toast = apps.toast.create({
-																				   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
-																				   text: 'Oooppss, error',
-																				   position: 'center',
-																				   closeTimeout: 2000
-																			   });
-															failed_toast.open();
-															
-															navigator.vibrate(100);
-														}
-													}
-												});
-											});
-										}
-										$('.fab.evtd_shr').css('display', 'block');
-										apps.popover.open('.details-popover');
+												for(var i = 0; i < locs.length; i++){
+													if (locs[i].loc_name.toLowerCase().indexOf(query.toLowerCase()) >= 0) results.push(locs[i].loc_name);
+												}
+												
+												render(results);
+											},
+											off: { blur }
+										});
+											
+									$('.DLdetails-popover button.evtd_cls_DL').data('trName', trName);
+									$('.DLdetails-popover button.evtd_cls_DL').on('click', function(){
+										apps.popover.get('.DLdetails-popover').close();
+									});
+									
+									$('.DLdetails-popover button.evtd_sve_DL').on('click', function(){
+										var trName = $('.DLdetails-popover button.evtd_cls_DL').data('trName'),
+											inf = $('div.DLdetails-popover').data('info'),
+											pid = $('.DLdetails-popover button.evtd_cls_DL').data('eid'),
+											ld = $('input.evtd_ld_DL').val(),
+											time = $('input.evtd_sbtm_DL').val(),
+											venue = sys.locToPid($('input.evtd_venue_DL').val()),
+											desc = $('input.evtd_desc_DL').val(),
+											band = $('input.evtd_band_DL').val(),
+											bng = $('input.evtd_bng_DL').val();
+											
+										var DATA = {
+											'usr' : STORAGE.getItem('usr'),
+											'pid' : pid,
+											'ld' : ld,
+											'time' : time,
+											'venue' : venue,
+											'desc' : desc,
+											'band' : band,
+											'bng' : bng
+										};
 										
-										if(parseInt($('body').data('user_level'))>=9 && inf1.lock!=0){
-											var success_toast = apps.toast.create({
-																   icon: '<i class="material-icons">pan_tool</i>',
-																   text: (sys.unameToSname(inf1.lock) + ' is editing the details.'),
-																   position: 'center',
-																   closeTimeout: 2000
-															   });
-											success_toast.open();
-										}
-									}
+										var post_data = "ACT=" + encodeURIComponent('evd_udt_DL')
+													  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
+													  
+										$.ajax({
+											type: 'POST',
+											url: 'https://app.wkventertainment.com/',
+											data: post_data,
+											beforeSend: function(){
+												sys.loading(1);
+											},
+											success: function(str){
+												if(str==='200 OK'){
+													inf.luncheon_dinner = ((ld == '') ? 'Dinner' : ld);
+													inf.time = ((time == '') ? null : time);
+													inf.venue = ((venue == '') ? null : venue);
+													inf.description = ((desc == '') ? null : desc);
+													inf.band = ((band == '') ? null : band);
+													inf.bng = ((bng == '') ? null : bng);
+								
+													$('tr[name="' + trName + '"]').data('info', inf);
+													$('div.DLdetails-popover').data('info', inf);
+								
+													$('tr[name="' + trName + '"] td.tb-ld').text((sys.ldToShort(ld)));
+													$('tr[name="' + trName + '"] td.tb-venue').text((venue == '' ? '-' : (venue.indexOf('#PID#') != -1 ? sys.pidToLoc(venue).loc_name : venue)));
+													$('tr[name="' + trName + '"] td.tb-venue').data('pid', venue);
+													$('tr[name="' + trName + '"] td.tb-desc').text((desc == '' ? '-' : desc));
+													$('tr[name="' + trName + '"] td.tb-time').text((time == '' ? '-' : time));
+													$('tr[name="' + trName + '"] td.tb-band').text((band == '' ? '-' : band));
+													$('tr[name="' + trName + '"] td.tb-bng').text((bng == '' ? '-' : bng));
+													
+													sys.loading(0);
+													
+													var success_toast = apps.toast.create({
+																		   icon: '<i class="material-icons">cloud_done</i>',
+																		   text: 'Details Successfully Saved',
+																		   position: 'center',
+																		   closeTimeout: 2000
+																	   });
+													success_toast.open();
+													
+													navigator.vibrate(100);
+													
+													apps.popover.get('.DLdetails-popover').close();
+												}else{
+													sys.loading(0);
+													
+													var failed_toast = apps.toast.create({
+																		   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
+																		   text: 'Oooppss, error',
+																		   position: 'center',
+																		   closeTimeout: 2000
+																	   });
+													failed_toast.open();
+													
+													navigator.vibrate(100);
+												}
+											}
+										});
+									});
+									
+									apps.popover.open('.DLdetails-popover');
 								});
-							});
-						}
-					});
-				}
-			};
-			
-			$('#wkv-calendar .calendar-month-current .calendar-day').on('click', function(){
-				if($(this).hasClass('calendar-day-selected')){
-					sys.dateClick(new Date(calendarInline.getValue()[0]))
-				}
-			});
+							}
+						});
+					}
+				};
+				
+				$('#wkv-DLcalendar .calendar-month-current .calendar-day').on('click', function(){
+					if($(this).hasClass('calendar-day-selected')){
+						sys.dateClick(new Date(dlCalendarInline.getValue()[0]))
+					}
+				});
+			}else{
+				sys.dateClick = function(tmp){
+					if(!sys.isEmpty(tmp)){
+						DATA = {
+							'usr' : user,
+							'date' : tmp.toDateString().substr(4)
+						};
+						post_data = "ACT=" + encodeURIComponent('cal_get')
+								  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
+								  
+						$.ajax({
+							type: 'POST',
+							url: 'https://app.wkventertainment.com/',
+							data: post_data,
+							beforeSend: function(){
+								sys.loading(1);
+							},
+							success: function(str){
+								$('.popup-event .event_list').data('date', tmp.toDateString().substr(4));
+								var hidden = (((tmp.getTime() - (new Date()).getTime()) > 86400000 ) ? ((parseInt($('body').data('user_level'))<7) ? true : false) : false);
+								$('a.leave_app').removeClass('disabled');
+								
+								if(str==='204 No Response'){
+									$('.popup-event .event_list').html('<p style="margin-left:10px;">No event found.</p>');
+									
+									if(((tmp.getTime() - (new Date()).getTime()) <= 0 )){
+										$('a.leave_app').addClass('disabled');
+									}
+								}else{
+									var x = '<thead><tr><th class="label-cell"></th>'
+										  + '<th class="label-cell">&emsp;PIC&emsp;&emsp;&emsp;&emsp;&emsp;</th>'
+										  + '<th class="label-cell">L/D</th>'
+										  + '<th class="label-cell">&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Venue&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;</th>'
+										  + '<th class="label-cell">&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Desc.&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;</th>'
+										  + '<th class="tablet-only">Band</th>'
+										  + '<th class="label-cell">&emsp;&emsp;&emsp;Crew&emsp;&emsp;&emsp;</th>'
+										  + '<th class="label-cell">&emsp;IN&emsp;&emsp;</th>'
+										  + '<th class="label-cell">&emsp;OUT&emsp;&emsp;</th></tr></thead><tbody>',
+										inf = JSON.parse(str);
+									
+									for(var i=0; i<inf.length; i++){
+										x += '<tr name="el'+(i+1)+'"><td class="label-cell"><span class="button button-fill" name="el'+(i+1)+'">'+(i+1)+'</span></td>';
+										x += '<td class="tb-pic label-cell '+(((parseInt($('body').data('user_level'))>=8) && ((sys.ldToShort(inf[i].luncheon_dinner)!='ST') && (sys.ldToShort(inf[i].luncheon_dinner)!='RH') && (sys.ldToShort(inf[i].luncheon_dinner)!='XX'))) ? (inf[i].paid=='1' ? 'tb-paid' : 'tb-not-paid') : '' )+'">'+inf[i].pic+'</td>';
+										x += '<td class="tb-ld label-cell">'+(sys.ldToShort(inf[i].luncheon_dinner))+'</td>';
+										x += '<td class="tb-venue label-cell" data-pid="' + inf[i].venue + '">'+((inf[i].venue==null) ? '-' : (inf[i].venue.indexOf('#PID#') != -1 ? sys.pidToLoc(inf[i].venue).loc_name : inf[i].venue))+'</td>';
+										x += '<td class="tb-desc label-cell">'+((inf[i].description==null) ? '-' : sys.shorten(inf[i].description))+'</td>';
+										x += '<td class="tb-band tablet-only">'+((inf[i].band==null) ? '-' : inf[i].band)+'</td>';
+										x += '<td class="tb-crew label-cell">'+((hidden || inf[i].crew==null) ? '-' : sys.unameToSname(inf[i].crew))+'</td>';
+										x += '<td class="tb-cin label-cell">'+((hidden || inf[i].car_in==null) ? '-' : sys.carToTcar(inf[i].car_in))+'</td>';
+										x += '<td class="tb-cout label-cell">'+((hidden || inf[i].car_out==null) ? '-' : sys.carToTcar(inf[i].car_out))+'</td>';
+										x += '</tr>';
+									}
+									x += '</tbody>';
+									
+									$('.popup-event .event_list').html(x);
+									$('.popup-event table.event_list').data('info', inf);
+									
+									for(var i=0; i<inf.length; i++){
+										$('.popup-event tr[name="el'+(i+1)+'"]').data('info', inf[i]);
+									}
+									
+									if(((tmp.getTime() - (new Date()).getTime()) <= 0 ) || inf.length > 10){
+										$('a.leave_app').addClass('disabled');
+									}
+								}
+								$('.popup-event .event_date').text(tmp.toDateString().substr(4));
+								
+								if(parseInt($('body').data('user_level'))>=9){
+									DATA = {
+										'usr' : user,
+										'date' : tmp.toDateString().substr(4)
+									};
+									post_data = "ACT=" + encodeURIComponent('evt_lvc')
+											  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
+											  
+									$.ajax({
+										type: 'POST',
+										url: 'https://app.wkventertainment.com/',
+										data: post_data,
+										success: function(str){
+											sys.loading(0);
+											
+											if(str==='204 No Response'){
+												$('.details-popover').data('leave', '');
+											}else{
+												$('.details-popover').data('leave', str);
+											}
+											apps.popup.open('.popup-event');
+										}
+									});
+								}else{
+									sys.loading(0);
+									apps.popup.open('.popup-event');
+								}
+								
+								$('.popup-event .event_list span.button').on('click', function(){
+									var x = '';
+									var trName = $(this).attr('name');
+									var inf = $('.popup-event tr[name="' + trName + '"]').data('info');
+									
+									
+									DATA = {
+										'usr' : user,
+										'level' : $('body').data('user_level'),
+										'pid' : inf.primary_id
+									};
+									post_data = "ACT=" + encodeURIComponent('evt_lck')
+											  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
+											  
+									$.ajax({
+										type: 'POST',
+										url: 'https://app.wkventertainment.com/',
+										data: post_data,
+										beforeSend: function(){
+											sys.loading(1);
+										},
+										success: function(str){
+											sys.loading(0);
+											
+											var inf1 = JSON.parse(str);
+											
+											$('.details-popover').data('md5', md5(((inf.luncheon_dinner==null) ? '' : inf.luncheon_dinner)+((inf.time==null) ? '' : inf.time)+((inf.venue==null) ? '' : inf.venue)+((inf.description==null) ? '' : inf.description)+((inf.band==null) ? '' : inf.band)+((inf.crew==null) ? '' : inf.crew)+((inf.car_in==null) ? '' : inf.car_in)+((inf.car_out==null) ? '' : inf.car_out)+((inf.remarks==null) ? '' : inf.remarks)));
+											$('.details-popover').data('title', (inf.pic + ' on ' + (inf.date.substr(8,2)) + '/' + (inf.date.substr(5,2))));
+											$('.details-popover').data('date', (new Date(inf.date)).getTime());
+											
+											if(parseInt($('body').data('user_level'))>=9 && inf1.lock==0){
+												$('.details-popover').data('lock', 0);
+												x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Person In Charge</div><div class="item-input-wrap">' + ((inf.pic==null) ? '-' : inf.pic) + '</div></div></div></li>';
+												x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Luncheon/Dinner</div><div class="item-input-wrap"><input class="evtd_ld" type="text" autocomplete="off" value="' + ((inf.luncheon_dinner==null) ? '' : inf.luncheon_dinner) + '"></div></div></div></li>';
+												x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Standby Time</div><div class="item-input-wrap"><input class="evtd_sbtm" type="text" autocomplete="off" value="' + ((inf.time==null) ? '' : inf.time) + '"></div></div></div></li>';
+												x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Venue</div><div class="item-input-wrap"><input class="evtd_venue" type="text" autocomplete="off" value="' + ((inf.venue==null) ? '' : (inf.venue.indexOf('#PID#') != -1 ? sys.pidToLoc(inf.venue).loc_name : inf.venue)) + '"></div></div></div></li>';
+												x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Description</div><div class="item-input-wrap"><input class="evtd_desc" type="text" autocomplete="off" value="' + ((inf.description==null) ? '' : inf.description) + '"></div></div></div></li>';
+												x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Remarks</div><div class="item-input-wrap"><input class="evtd_rmk" type="text" autocomplete="off" value="' + ((inf.remarks==null) ? '' : inf.remarks) + '"></div></div></div></li>';
+												x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Price</div><div class="item-input-wrap"><input class="evtd_price" type="text" autocomplete="off" value="' + ((inf.price==null) ? '' : inf.price) + '"><label class="toggle toggle-init color-green evtd_paid"><input type="checkbox"' + (inf.paid=='1' ? ' checked' : '') + '><span class="toggle-icon"></span></label></div></div></div></li>';
+												x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Live Band Information</div><div class="item-input-wrap"><input class="evtd_band" type="text" autocomplete="off" value="' + ((inf.band==null) ? '' : inf.band) + '"></div></div></div></li>';
+												x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Crew</div><div class="item-input-wrap"><input class="evtd_crew" type="text" autocomplete="off" data-uname="' + inf.crew + '" value="' + ((inf.crew==null) ? '' : sys.unameToSname(inf.crew)) + '"></div></div></div></li>';
+												x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Vehicle to Event</div><div class="item-input-wrap"><input class="evtd_cin" type="text" autocomplete="off" value="' + ((inf.car_in==null) ? '' : sys.carToTcar(inf.car_in, 'r')) + '" data-ori="' + ((inf.car_in==null) ? '' : inf.car_in) + '" data-val="' + ((inf.car_in==null) ? '' : sys.carToTcar(inf.car_in, 'r')) + '"></div></div></div></li>';
+												x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Vehicle back from Event</div><div class="item-input-wrap"><input class="evtd_cout" type="text" autocomplete="off" value="' + ((inf.car_out==null) ? '' : sys.carToTcar(inf.car_out, 'r')) + '" data-ori="' + ((inf.car_out==null) ? '' : inf.car_out) + '" data-val="' + ((inf.car_out==null) ? '' : sys.carToTcar(inf.car_out, 'r')) + '"></div></div></div></li>';
+												x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-input-wrap row">';
+												x += '<button class="evtd_dlt button col button-fill" data-eid="' + inf.primary_id + '">Delete</button>';
+												x += '<button class="evtd_cls button col button-fill" data-eid="' + inf.primary_id + '">Close</button>';
+												x += '</div></div></div></li>';
+											}else{
+												$('.details-popover').data('lock', 1);
+												x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Person In Charge</div><div class="item-input-wrap">' + ((inf.pic==null) ? '-' : inf.pic) + '</div></div></div></li>';
+												x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Luncheon/Dinner</div><div class="item-input-wrap">' + ((inf.luncheon_dinner==null) ? '-' : inf.luncheon_dinner) + '</div></div></div></li>';
+												x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Standby Time</div><div class="item-input-wrap">' + ((inf.time==null) ? '-' : inf.time) + '</div></div></div></li>';
+												x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Venue</div><div class="item-input-wrap">' + ((inf.venue==null) ? '-' : (inf.venue.indexOf('#PID#') != -1 ? sys.pidToLoc(inf.venue).loc_name : inf.venue)) + '</div></div></div></li>';
+												x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Description</div><div class="item-input-wrap">' + ((inf.description==null) ? '-' : inf.description) + '</div></div></div></li>';
+												x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Remarks</div><div class="item-input-wrap">' + ((inf.remarks==null) ? '-' : sys.commasToNextLine(inf.remarks, 'h')) + '</div></div></div></li>';
+												if(parseInt($('body').data('user_level'))>=7){
+													x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">price</div><div class="item-input-wrap">' + ((inf.price==null) ? '-' : inf.price) + '</div></div></div></li>';
+												}
+												x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Live Band Information</div><div class="item-input-wrap">' + ((inf.band==null) ? '-' : inf.band) + '</div></div></div></li>';
+												x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Crew</div><div class="item-input-wrap">' + ((hidden || inf.crew==null) ? '-' : sys.unameToSname(inf.crew)) + '</div></div></div></li>';
+												x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Vehicle to Event</div><div class="item-input-wrap">' + ((hidden || inf.car_in==null) ? '-' : sys.carToTcar(inf.car_in, 'r')) + '</div></div></div></li>';
+												x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Vehicle back from Event</div><div class="item-input-wrap">' + ((hidden || inf.car_out==null) ? '-' : sys.carToTcar(inf.car_out, 'r')) + '</div></div></div></li>';
+											}
+											
+											x = x.replace(/(?:\r\n|\r|\n)/g, '<br>');
+											$('.details-popover ul').html(x);
+											$('div.details-popover').data('info', inf);
+											
+											var evtdVenueAutocomplete = apps.autocomplete.create({
+													openIn: 'dropdown',
+													inputEl: '.evtd_venue',
+													limit: 5,
+													source: function(query, render){
+														var results = [], locs = $('body').data('loc');
+														if(query.length === 0){
+															render(results);
+															return;
+														}
+														
+														for(var i = 0; i < locs.length; i++){
+															if (locs[i].loc_name.toLowerCase().indexOf(query.toLowerCase()) >= 0) results.push(locs[i].loc_name);
+														}
+														
+														render(results);
+													},
+													off: { blur }
+												});
+											
+											if(parseInt($('body').data('user_level'))>=9 && inf1.lock==0){
+												$('.details-popover button.evtd_cls').data('trName', trName);
+												$('.details-popover button.evtd_cls').on('click', function(){
+													var pid = $(this).data('eid');
+													
+													var DATA = {
+															'usr' : STORAGE.getItem('usr'),
+															'pid' : pid
+														};
+													var post_data = "ACT=" + encodeURIComponent('evt_ulk')
+																  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
+																  
+													$.ajax({
+														type: 'POST',
+														url: 'https://app.wkventertainment.com/',
+														data: post_data,
+														beforeSend: function(){
+															sys.loading(1);
+														},
+														success: function(str){
+															if(str==='200 OK'){
+																sys.loading(0);
+																apps.popover.get('.details-popover').close();
+															}
+														}
+													});
+												});
+												
+												$('.details-popover button.evtd_dlt').on('click', function(){
+													var pid = $(this).data('eid');
+													
+													var DATA = {
+															'usr' : STORAGE.getItem('usr'),
+															'pid' : pid
+														};
+													var post_data = "ACT=" + encodeURIComponent('evd_dlt')
+																  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
+																  
+													$.ajax({
+														type: 'POST',
+														url: 'https://app.wkventertainment.com/',
+														data: post_data,
+														beforeSend: function(){
+															sys.loading(1);
+														},
+														success: function(str){
+															sys.loading(0);
+															
+															if(str==='200 OK'){
+																$('tr[name="' + trName + '"]').remove();
+																$('.popover-backdrop')[0].click();
+																$('.fab.evtd_shr').css('display', 'none');
+																
+																var success_toast = apps.toast.create({
+																					   icon: '<i class="material-icons">delete</i>',
+																					   text: 'Details Successfully Deleted',
+																					   position: 'center',
+																					   closeTimeout: 2000
+																				   });
+																success_toast.open();
+															}else{
+																var failed_toast = apps.toast.create({
+																					   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
+																					   text: 'Oooppss, error',
+																					   position: 'center',
+																					   closeTimeout: 2000
+																				   });
+																failed_toast.open();
+																
+																navigator.vibrate(100);
+															}
+														}
+													});
+												});
+											}
+											$('.fab.evtd_shr').css('display', 'block');
+											apps.popover.open('.details-popover');
+											
+											if(parseInt($('body').data('user_level'))>=9 && inf1.lock!=0){
+												var success_toast = apps.toast.create({
+																	   icon: '<i class="material-icons">pan_tool</i>',
+																	   text: (sys.unameToSname(inf1.lock) + ' is editing the details.'),
+																	   position: 'center',
+																	   closeTimeout: 2000
+																   });
+												success_toast.open();
+											}
+										}
+									});
+								});
+							}
+						});
+					}
+				};
+				
+				$('#wkv-calendar .calendar-month-current .calendar-day').on('click', function(){
+					if($(this).hasClass('calendar-day-selected')){
+						sys.dateClick(new Date(calendarInline.getValue()[0]))
+					}
+				});
+			}
 		}
 	};
-	sys.dayClick(usr);
-	sys.eventCheck(usr, (new Date().getMonth()), new Date().getYear()+1900, true);
 	
 	$('.evts_next').on('click', function(){
 		apps.popover.close('.details-popover');
@@ -1144,6 +1258,12 @@ $(document).ready(function(){
 		}
 	});
 	
+	$('a#DLschedule-btn').on('mousedown touchstart', function(){
+		if($(this).hasClass('tab-link-active')){
+			calendarInline.setYearMonth(((new Date).getYear()+1900), ((new Date).getMonth()), 500);
+		}
+	});
+	
 	$('#task_tl').on('click', '.timeline-item-inner', function(){
 		var pid = $(this).data('locpid'),
 			rmk = sys.commasToNextLine($(this).data('rmk'));
@@ -1179,6 +1299,163 @@ $(document).ready(function(){
 			}).open();
 		}else if(!sys.isEmpty(rmk)){
 			apps.dialog.alert(rmk);
+		}
+	});
+	
+	$('#DLtask_tl').on('click', '.timeline-item-inner', function(){
+		var pid = $(this).data('locpid'),
+			rmk = sys.commasToNextLine($(this).data('rmk')),
+			rvw = $(this).data('review'),
+			rate = '';
+			
+		if(sys.isEmpty(rvw)){
+			if(((new Date().getTime() - new Date($(this).data('datetime')).getTime()) > 0)){
+				rate += '<br/>';
+				rate += '<div class="card card-outline"><div class="card-content card-content-padding">';
+				rate += '<p class="segmented segmented-raised rstar">';
+				rate += '<button class="button rstar1 off" data-num="1"><i class="icon material-icons md-only">grade</i></button>';
+				rate += '<button class="button rstar2 off" data-num="2"><i class="icon material-icons md-only">grade</i></button>';
+				rate += '<button class="button rstar3 off" data-num="3"><i class="icon material-icons md-only">grade</i></button>';
+				rate += '<button class="button rstar4 off" data-num="4"><i class="icon material-icons md-only">grade</i></button>';
+				rate += '<button class="button rstar5 off" data-num="5"><i class="icon material-icons md-only">grade</i></button>';
+				rate += '</p>';
+				rate += '<div class="item-input-wrap">';
+				rate += '<input class="rstar_rvw" type="text" placeholder="Your review for the service" style="width:100%;margin: 20px 0 10px;"/>';
+				rate += '</div>';
+				rate += '<button class="button button-fill rstar_sve" data-eid="' + $(this).data('eid') + '">Submit</button>';
+				rate += '</div></div>';
+			}
+		}else{
+			var star = rvw.substr(1,1),
+				comment = rvw.substr(4);
+			
+			if(((new Date().getTime() - new Date($(this).data('datetime')).getTime()) > 0)){
+				rate += '<br/>';
+				rate += '<div class="card card-outline noselect"><div class="card-content card-content-padding">';
+				rate += '<p class="segmented segmented-raised rstar">';
+				rate += '<button class="button ' + ((star>0) ? 'on' : 'off') + '" disabled><i class="icon material-icons md-only">grade</i></button>';
+				rate += '<button class="button ' + ((star>1) ? 'on' : 'off') + '" disabled><i class="icon material-icons md-only">grade</i></button>';
+				rate += '<button class="button ' + ((star>2) ? 'on' : 'off') + '" disabled><i class="icon material-icons md-only">grade</i></button>';
+				rate += '<button class="button ' + ((star>3) ? 'on' : 'off') + '" disabled><i class="icon material-icons md-only">grade</i></button>';
+				rate += '<button class="button ' + ((star>4) ? 'on' : 'off') + '" disabled><i class="icon material-icons md-only">grade</i></button>';
+				rate += '</p>';
+				rate += '<div class="item-input-wrap">';
+				rate += '<span style="width:100%;margin: 20px 0 10px;">' + comment + '</span>';
+				rate += '</div>';
+				rate += '</div></div>';
+			}
+		}
+		
+		if(pid){
+			var loc = sys.pidToLoc(pid);
+			
+			apps.dialog.create({
+				text: ((sys.isEmpty(rmk) ? (sys.isEmpty($(this).find('span').text()) ? 'No details found.' : ($(this).find('span').text() + (sys.isEmpty($(this).data('crew')) ? '' : ('<br/>' + sys.unameToSname($(this).data('crew'), '@'))))) : rmk) + rate),
+				buttons: [{
+						text: 'Main Lobby',
+						cssClass: 'wazeBtn',
+						onClick: function(){
+							if(loc['point_lobby']){
+								window.open('https://www.waze.com/ul?ll=' + loc['point_lobby'].split(', ')[0] + '%2C' + loc['point_lobby'].split(', ')[1] + '&navigate=yes&zoom=16', '_system');
+							}else{
+								window.open('https://www.waze.com/ul?ll=' + loc['loc_point'].split(', ')[0] + '%2C' + loc['loc_point'].split(', ')[1] + '&navigate=yes&zoom=16', '_system');
+							}
+						}
+					},{
+						text: 'Loading Bay',
+						onClick: function(){
+							if(loc['point_loading']){
+								window.open('https://www.waze.com/ul?ll=' + loc['point_loading'].split(', ')[0] + '%2C' + loc['point_loading'].split(', ')[1] + '&navigate=yes&zoom=16', '_system');
+							}else if(loc['point_lobby']){
+								window.open('https://www.waze.com/ul?ll=' + loc['point_lobby'].split(', ')[0] + '%2C' + loc['point_lobby'].split(', ')[1] + '&navigate=yes&zoom=16', '_system');
+							}else{
+								window.open('https://www.waze.com/ul?ll=' + loc['loc_point'].split(', ')[0] + '%2C' + loc['loc_point'].split(', ')[1] + '&navigate=yes&zoom=16', '_system');
+							}
+						}
+					}],
+				closeByBackdropClick: true
+			}).open();
+		}else if(!sys.isEmpty(rmk)){
+			apps.dialog.alert(rmk + rate);
+		}
+		
+		if(sys.isDealer() && ((new Date().getTime() - new Date($(this).data('datetime')).getTime()) > 0)){
+			$('#app').on('click', 'div.dialog p.rstar button', function(){
+				var num = $(this).data('num');
+				
+				$('p.rstar button').removeClass('on');
+				$('p.rstar button').addClass('off');
+				
+				for(var i=1; i<=num; i++){
+					$('p.rstar button.rstar'+i).removeClass('off');
+					$('p.rstar button.rstar'+i).addClass('on');
+				}
+			});
+			
+			$('#app').on('click', 'div.dialog button.rstar_sve', function(){
+				if($('.rstar button.on').length>0){
+					var review = '#' + $('.rstar button.on').length + '# ' + $('.rstar_rvw').val(),
+						eid = $(this).data('eid');
+					
+					DATA = {
+							'usr' : usr,
+							'pid' : eid,
+							'review' : review
+						};
+					post_data = "ACT=" + encodeURIComponent('rvw_sve')
+							  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
+					
+					$.ajax({
+						type: 'POST',
+						url: 'https://app.wkventertainment.com/',
+						data: post_data,
+						beforeSend: function(){
+							sys.loading(1);
+						},
+						success: function(str){
+							sys.loading(0);
+						
+							if(str==='200 OK'){
+								$(('.tsk' + eid)).data('review', review);
+								
+								if($('div.dialog-buttons-1').length){
+									$('div.dialog-buttons-1').find('.dialog-button.dialog-button-bold').click();
+								}else{
+									$('div.dialog-backdrop')[0].click();
+								}
+								
+								var success_toast = apps.toast.create({
+													   icon: '<i class="material-icons">loyalty</i>',
+													   text: 'Thank you for the review. Please let us know what we can do for you in the future.',
+													   position: 'center',
+													   closeTimeout: 5000
+												   });
+								success_toast.open();
+							}else{
+								var failed_toast = apps.toast.create({
+													   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
+													   text: 'Oooppss, error',
+													   position: 'center',
+													   closeTimeout: 2000
+												   });
+								failed_toast.open();
+								
+								navigator.vibrate(100);
+							}
+						}
+					});
+				}else{
+					var failed_toast = apps.toast.create({
+										   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
+										   text: 'No rating found',
+										   position: 'center',
+										   closeTimeout: 2000
+									   });
+					failed_toast.open();
+					
+					navigator.vibrate(100);
+				}
+			});
 		}
 	});
 	
@@ -4367,7 +4644,7 @@ $(document).ready(function(){
 			share = sys.toMonth(inf[0].date) + ' ' + sys.toDay(inf[0].date) + ' (' + sys.toWeek(inf[0].date) + ')\n\n';
 			
 			for(var i = 0; i < inf.length; i++){
-				share += (i+1) + '. ' + (sys.isEmpty(inf[i].description) ? '' : (inf[i].description + ', ')) + (inf[i].venue.indexOf('#PID#') != -1 ? sys.pidToLoc(inf[i].venue).loc_name : inf[i].venue) + '.\n';
+				share += (i+1) + '. ' + (sys.isEmpty(inf[i].description) ? '' : (sys.shorten(inf[i].description) + ', ')) + (inf[i].venue.indexOf('#PID#') != -1 ? sys.pidToLoc(inf[i].venue).loc_name : inf[i].venue) + '.\n';
 				share += '< *' + (sys.isEmpty(inf[i].crew) ? '-' : sys.unameToSname(inf[i].crew)) + '* >\n';
 			}
 		}
@@ -4722,9 +4999,10 @@ $(document).ready(function(){
 								$('.fab.evtd_shr').css('display', 'none');
 								
 								if((($('.details-popover').data('date') - ((new Date()).getTime())) < 172800000) && !sys.isEmpty(inf.crew)){
+									console.log('01');
+									
 									if((md5(ld+time+venue+desc+band+crew+cin+cout+rmk)) != $('.details-popover').data('md5')){
 										var rcrew = ((inf.crew).split(',')), receivers = [];
-										
 										for(var i=0; i < rcrew.length; i++){
 											rcrew[i] = sys.uidToPyid(rcrew[i]);
 										}
@@ -4775,6 +5053,18 @@ $(document).ready(function(){
 													}
 												}
 											});
+										}else{
+											sys.loading(0);
+											
+											var success_toast = apps.toast.create({
+																   icon: '<i class="material-icons">cloud_done</i>',
+																   text: 'Details Successfully Saved',
+																   position: 'center',
+																   closeTimeout: 2000
+															   });
+											success_toast.open();
+											
+											navigator.vibrate(100);
 										}
 									}else{
 										sys.loading(0);
@@ -4846,20 +5136,20 @@ $(document).ready(function(){
 				success: function(str){
 					sys.loading(0);
 					if(str=='200 OK'){
-						STORAGE.removeItem('usr');
-						STORAGE.removeItem('pwd');
-						
 						var logout_toast = apps.toast.create({
 												icon: '<i class="material-icons">screen_lock_portrait</i>',
 												text: 'Logged Out',
 												position: 'center',
-												closeTimeout: 2000
+												closeTimeout: 1000
 											});
 						logout_toast.open();
 						
 						setTimeout(function(){
+							STORAGE.removeItem('usr');
+							STORAGE.removeItem('pwd');
+							
 							location.reload();
-						}, 2000);
+						}, 1000);
 					}else{
 						var failed_toast = apps.toast.create({
 											   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
@@ -5429,33 +5719,69 @@ $(document).ready(function(){
 			
 			if(!sys.isEmpty(inf['task'])){
 				if(inf['task'][0] != 'none'){
-					var task = inf['task'], x = '', sameAs = 0;
+					if(sys.isDealer()){
+						var task = inf['task'], x = '', sameAs = 0, rmk = '';
 					
-					for(var i=0; i<task.length; i++){
-						if(task[i]['date'] != sameAs){
-							x += '<div class="timeline-item">';
-							x += '<div class="timeline-item-date">' + task[i]['date'].substr(8,2) + ' <small>' + sys.toMonth(task[i]['date']) + '</small></div>';
-							x += '<div class="timeline-item-divider"></div>';
-							x += '<div class="timeline-item-content">';
+						for(var i=0; i<task.length; i++){
+							if(task[i]['date'] != sameAs){
+								x += '<div class="timeline-item">';
+								x += '<div class="timeline-item-date">' + task[i]['date'].substr(8,2) + ' <small>' + sys.toMonth(task[i]['date']) + '</small></div>';
+								x += '<div class="timeline-item-divider"></div>';
+								x += '<div class="timeline-item-content">';
+							}
+							rmk = '<strong>Standby Time</strong> : ' + task[i]['time'] + ',,'
+								+ '<strong>Venue</strong> : ' + (sys.isEmpty(task[i]['venue']) ?  '-' : (task[i]['venue'].indexOf('#PID#') != -1 ? sys.pidToLoc(task[i]['venue']).loc_name : task[i]['venue'])) + ',,'
+								+ '<strong>Description</strong> : ' + (sys.isEmpty(task[i]['description']) ?  '-' : task[i]['description']) + ',,'
+								+ '<strong>E.User</strong> : ' + (sys.isEmpty(task[i]['bride_groom']) ?  '-' : task[i]['bride_groom']) + ',,'
+								+ '<strong>Band</strong> : ' + (sys.isEmpty(task[i]['band']) ?  '-' : task[i]['band']) + ',,'
+								+ '<strong>Price</strong> : ' + ((sys.isEmpty(task[i]['price']) || task[i]['price'] == '0') ?  '-' : ('RM ' + parseFloat(task[i]['price']).toFixed(2))) + ',,'
+								+ ((sys.isEmpty(task[i]['price']) || task[i]['price'] == '0') ? '' : ('<strong>Paid Status</strong> : ' + (task[i]['paid'] == '1' ? 'PAID,,' : 'PENDING,,')));
+							x += '<div class="timeline-item-inner tsk' + task[i]['primary_id'] + '" data-eid="' + task[i]['primary_id'] + '" data-locpid="' + (sys.isEmpty(task[i]['venue']) ? 0 : (task[i]['venue'].indexOf('#PID#') != -1 ? task[i]['venue'] : 0)) + '" data-rmk="' + rmk + '" data-review="' + task[i]['review'] + '" data-datetime="' + (task[i]['date'].substr(0,11) + (sys.isEmpty(task[i]['time']) ? '23:59' : task[i]['time'])) + ':00">';
+							
+							if(task[i]['time']){
+								x += '<div class="timeline-item-time">' + task[i]['time'] + '</div>';
+							}
+							
+							x += '<strong>' + (sys.isEmpty(task[i]['venue']) ?  '-' : (task[i]['venue'].indexOf('#PID#') != -1 ? sys.pidToLoc(task[i]['venue']).loc_name : task[i]['venue'])) + '</strong>' + (task[i]['description'] ? ('<br/><span>' + task[i]['description'] + '</span>') : '');
+							x += '</div>';
+							
+							sameAs = task[i]['date'];
+							
+							if(sys.isEmpty(task[i+1]) || task[i+1]['date'] != sameAs){
+								x += '</div></div>';
+							}
 						}
-						
-						x += '<div class="timeline-item-inner tsk' + task[i]['primary_id'] + '" data-locpid="' + (sys.isEmpty(task[i]['venue']) ? 0 : (task[i]['venue'].indexOf('#PID#') != -1 ? task[i]['venue'] : 0)) + '" data-rmk="' + task[i]['remarks'] + '" data-crew="' + task[i]['crew'] + '">';
-						
-						if(task[i]['time']){
-							x += '<div class="timeline-item-time">' + task[i]['time'] + '</div>';
+						$('#DLtask_tl').data('inf', task);
+						$('#DLtask_tl').html(x);
+					}else{
+						var task = inf['task'], x = '', sameAs = 0;
+					
+						for(var i=0; i<task.length; i++){
+							if(task[i]['date'] != sameAs){
+								x += '<div class="timeline-item">';
+								x += '<div class="timeline-item-date">' + task[i]['date'].substr(8,2) + ' <small>' + sys.toMonth(task[i]['date']) + '</small></div>';
+								x += '<div class="timeline-item-divider"></div>';
+								x += '<div class="timeline-item-content">';
+							}
+							
+							x += '<div class="timeline-item-inner tsk' + task[i]['primary_id'] + '" data-locpid="' + (sys.isEmpty(task[i]['venue']) ? 0 : (task[i]['venue'].indexOf('#PID#') != -1 ? task[i]['venue'] : 0)) + '" data-rmk="' + task[i]['remarks'] + '" data-crew="' + task[i]['crew'] + '">';
+							
+							if(task[i]['time']){
+								x += '<div class="timeline-item-time">' + task[i]['time'] + '</div>';
+							}
+							
+							x += '<strong>' + (sys.isEmpty(task[i]['venue']) ?  '-' : (task[i]['venue'].indexOf('#PID#') != -1 ? sys.pidToLoc(task[i]['venue']).loc_name : task[i]['venue'])) + '</strong>' + (task[i]['description'] ? ('<br/><span>' + task[i]['description'] + '</span>') : '');
+							x += '</div>';
+							
+							sameAs = task[i]['date'];
+							
+							if(sys.isEmpty(task[i+1]) || task[i+1]['date'] != sameAs){
+								x += '</div></div>';
+							}
 						}
-						
-						x += '<strong>' + (sys.isEmpty(task[i]['venue']) ?  '-' : (task[i]['venue'].indexOf('#PID#') != -1 ? sys.pidToLoc(task[i]['venue']).loc_name : task[i]['venue'])) + '</strong>' + (task[i]['description'] ? ('<br/><span>' + task[i]['description'] + '</span>') : '');
-						x += '</div>';
-						
-						sameAs = task[i]['date'];
-						
-						if(sys.isEmpty(task[i+1]) || task[i+1]['date'] != sameAs){
-							x += '</div></div>';
-						}
+						$('#task_tl').data('inf', task);
+						$('#task_tl').html(x);
 					}
-					$('#task_tl').data('inf', task);
-					$('#task_tl').html(x);
 				}
 			}
 			
@@ -5476,6 +5802,46 @@ $(document).ready(function(){
 			}else{
 				apps.tab.show('#pg-home', false);
 			}
+			
+			if(sys.isDealer()){
+				dlCalendarInline = apps.calendar.create({
+						containerEl: '#wkv-DLcalendar',
+						value:  [new Date()],
+						weekHeader: true,
+						renderToolbar: function () {
+							return  '<div class="toolbar calendar-custom-toolbar no-shadow">' +
+									'<div class="toolbar-inner">' +
+									'<div class="left">' +
+									'<a href="#" class="link icon-only"><i class="icon icon-back ' + (apps.theme === 'md' ? 'color-black' : '') + '"></i></a>' +
+									'</div>' +
+									'<div class="center"></div>' +
+									'<div class="right">' +
+									'<a href="#" class="link icon-only"><i class="icon icon-forward ' + (apps.theme === 'md' ? 'color-black' : '') + '"></i></a>' +
+									'</div>' +
+									'</div>' +
+									'</div>';
+						},
+						on: {
+							init: function (c) {
+								$$('.calendar-custom-toolbar .center').text(monthNames[c.currentMonth] +', ' + c.currentYear);
+								$$('.calendar-custom-toolbar .left .link').on('click', function () {
+									dlCalendarInline.prevMonth();
+								});
+								$$('.calendar-custom-toolbar .right .link').on('click', function () {
+									dlCalendarInline.nextMonth();
+								});
+							},
+							monthYearChangeStart: function (c) {
+								$$('.calendar-custom-toolbar .center').text(monthNames[c.currentMonth] +', ' + c.currentYear);
+								sys.dayClick(usr);
+								sys.eventCheck(usr, c.currentMonth, c.currentYear);
+							}
+						}
+					});
+			}
+			
+			sys.dayClick(usr);
+			sys.eventCheck(usr, (new Date().getMonth()), new Date().getYear()+1900, true);
 			
 			setTimeout(function(){ sys.loading(0) }, 2000);
 		}
@@ -5652,6 +6018,12 @@ sys = {
 			val += ';';
 		}
 		return val;
+	},
+	'isDealer' : function(){
+		return (STORAGE.getItem('level')==='0');
+	},
+	'shorten' : function(text){
+		return (text.slice(0, 100) + (text.length > 100 ? '...' : ''));
 	},
 	'commasToNextLine' : function(str, mode){
 		if(str){
@@ -5931,39 +6303,75 @@ sys = {
 		}
 		
 		if(!sys.isEmpty(user)){
-			var DATA = {
-				'usr' : user,
-				'month' : month,
-				'year' : year
-			};
-			var post_data = "ACT=" + encodeURIComponent('evt_chk')
-						  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
-			
-			$.ajax({
-				type: 'POST',
-				url: 'https://app.wkventertainment.com/',
-				data: post_data,
-				beforeSend: function(){
-					sys.loading(1);
-				},
-				success: function(str){
-					if(str!=='204 No Response'){
-						var inf = JSON.parse(str);
-						
-						for(var i=1; i<=31; i++){
-							var tmpDay = ''+(i < 10 ? ('0'+i) : (i));
-							if(inf[tmpDay]){
-								var tmpClass = (inf[tmpDay] > 15 ? 'hl16' : ('hl'+inf[tmpDay]));
-								$('#wkv-calendar .calendar-month-current .calendar-day:not(.calendar-day-next):not(.calendar-day-prev):eq('+(i-1)+')').addClass(tmpClass);
+			if(sys.isDealer()){
+				var DATA = {
+					'usr' : user,
+					'month' : month,
+					'year' : year
+				};
+				var post_data = "ACT=" + encodeURIComponent('evt_chk_DL')
+							  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
+				
+				$.ajax({
+					type: 'POST',
+					url: 'https://app.wkventertainment.com/',
+					data: post_data,
+					beforeSend: function(){
+						sys.loading(1);
+					},
+					success: function(str){
+						if(str!=='204 No Response'){
+							var inf = JSON.parse(str);
+							
+							for(var i=1; i<=31; i++){
+								var tmpDay = ''+(i < 10 ? ('0'+i) : (i));
+								if(inf[tmpDay]){
+									var tmpClass = (inf[tmpDay] > 4 ? 'hl5' : ('hl'+inf[tmpDay]));
+									$('#wkv-DLcalendar .calendar-month-current .calendar-day:not(.calendar-day-next):not(.calendar-day-prev):eq('+(i-1)+')').addClass(tmpClass);
+								}
 							}
 						}
+						
+						if(!skip){
+							sys.loading(0);
+						}
 					}
-					
-					if(!skip){
-						sys.loading(0);
+				});
+			}else{
+				var DATA = {
+					'usr' : user,
+					'month' : month,
+					'year' : year
+				};
+				var post_data = "ACT=" + encodeURIComponent('evt_chk')
+							  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
+				
+				$.ajax({
+					type: 'POST',
+					url: 'https://app.wkventertainment.com/',
+					data: post_data,
+					beforeSend: function(){
+						sys.loading(1);
+					},
+					success: function(str){
+						if(str!=='204 No Response'){
+							var inf = JSON.parse(str);
+							
+							for(var i=1; i<=31; i++){
+								var tmpDay = ''+(i < 10 ? ('0'+i) : (i));
+								if(inf[tmpDay]){
+									var tmpClass = (inf[tmpDay] > 15 ? 'hl16' : ('hl'+inf[tmpDay]));
+									$('#wkv-calendar .calendar-month-current .calendar-day:not(.calendar-day-next):not(.calendar-day-prev):eq('+(i-1)+')').addClass(tmpClass);
+								}
+							}
+						}
+						
+						if(!skip){
+							sys.loading(0);
+						}
 					}
-				}
-			});
+				});
+			}
 		}
 	},
 	'getLocation' : function(){

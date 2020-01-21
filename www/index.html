@@ -411,11 +411,11 @@
 							<i class="icon material-icons md-only">settings</i>
 							<span class="tabbar-label">Settings</span>
 						</a>
-						<a href="#pg-DLhome" class="tab-link ltlevel0">
+						<a id="DLhome-btn" href="#pg-DLhome" class="tab-link ltlevel0">
 							<i class="icon material-icons md-only">important_devices</i>
 							<span class="tabbar-label">Home</span>
 						</a>
-						<a href="#pg-DLschedule" class="tab-link ltlevel0">
+						<a id="DLschedule-btn" href="#pg-DLschedule" class="tab-link ltlevel0">
 							<i class="icon material-icons md-only">today</i>
 							<span class="tabbar-label">Schedule</span>
 						</a>
@@ -821,7 +821,7 @@
 						</div>
 						<div id="pg-DLhome" class="tab page-content ltlevel0">
 							<div class="block">
-								
+								<div id="DLtask_tl" class="timeline"></div>
 							</div>
 						</div>
 						<div id="pg-DLschedule" class="tab page-content ltlevel0">
@@ -830,7 +830,7 @@
 								<div class="block block-strong no-padding">
 									<div id="wkv-DLcalendar"></div>
 								</div>
-								<div class="popover details-popover">
+								<div class="popover DLdetails-popover">
 									<div class="popover-inner">
 										<div class="list">
 											<ul></ul>
@@ -4792,6 +4792,17 @@ data-value=''>
 					</div>
 				</div>
 			</div>
+			<div class="popup popup-DLevent ltlevel0">
+				<div class="toolbar">
+					<div class="toolbar-inner">
+						<div class="left"><span class="event_date"></span>&emsp;-&emsp;Event List</div>
+						<div class="right"><a class="link popup-close" href="#">Close</a></div>
+					</div>
+				</div>
+				<div class="data-table">
+					<table class="event_list"></table>
+				</div>
+			</div>
 			<div class="popup popup-power level2">
 				<div class="toolbar">
 					<div class="toolbar-inner">
@@ -6877,7 +6888,7 @@ data-value=''>
 				<div class="block">
 					<div align="center">
 						 <img src="icon.png" alt="WKV Logo" height="128" width="128">
-						 <span style="color:#999;position:absolute;top:40px;font-size:12px;">&emsp;Version 1.0.233</span>
+						 <span style="color:#999;position:absolute;top:40px;font-size:12px;">&emsp;Version 1.0.234</span>
 					</div>
 					<p>WKV Application serves as a platform for of WKV’s member to obtain basic information and calculation method can easily obtain by accessing to the application.</p>
 					<p>For general usage, clock in and clock out is built in the application for employees of WKV to check in whenever they report to event venue.</p>
