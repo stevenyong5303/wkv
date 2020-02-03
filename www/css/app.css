@@ -5,13 +5,27 @@
     font-weight: normal;
     font-style: normal;
 }
+i.icon.rstr_on{
+	color: #EEAA00;
+}
+i.icon.rstr_off{
+	color: #CCCCCC;
+}
 p.segmented.rstar{
 	width: 100%;
 }
 p.segmented.rstar button.button.on{
+	-webkit-transition: all 0s;
+	-moz-transition: all 0s;
+	-o-transition: all 0s;
+	transition: all 0s;
 	color: #EEAA00;
 }
 p.segmented.rstar button.button.off{
+	-webkit-transition: all 0s;
+	-moz-transition: all 0s;
+	-o-transition: all 0s;
+	transition: all 0s;
 	color: #CCCCCC;
 }
 i.icon.email-tick{
@@ -32,6 +46,7 @@ i.icon.email-tick{
 	-moz-user-select: none;
 	-ms-user-select: none;
 	user-select: none;
+	cursor: default;
 }
 .colorRed {
 	color: #ff3333;
@@ -112,7 +127,7 @@ input.evtd_price, label.evtd_paid, input.evtd_price_DL, label.evtd_paid_DL {
 .panel{
 	width: 350px;
 }
-.evts_input {
+.evts_input{
 	position: absolute;
 	left: 10px;
 	right: 10px;
@@ -123,6 +138,66 @@ input.evtd_price, label.evtd_paid, input.evtd_price_DL, label.evtd_paid_DL {
 	border-radius: 5px 5px 0 0;
 	box-shadow: 0 3px 30px rgba(0,0,0,.4);
 	overflow: hidden;
+}
+.evt_ord_DL{
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	background: #fff;
+	z-index: 1600;
+	box-shadow: 0 3px 30px rgba(0,0,0,.4);
+	overflow: hidden;
+}
+.evt_ord_tab{
+	display: none;
+	z-index: 550;
+}
+.evt_ord_DL a.fab-close{
+	position: absolute;
+	right: 5px;
+	top: -5px;
+}
+.evt_ord_DL .list.accordion-list{
+	margin: 0;
+	width: 100%;
+}
+.evt_ord_DL .list.accordion-list ul{
+	padding-left: 0;
+}
+.evt_ord_DL button.button.evts_cart_DL{
+	display: inline-block;
+	width: 64px;
+	margin-right: 10px;
+}
+.evt_ord_tab button.button{
+	width: 300px;
+	margin: auto;
+}
+div.toolbar.evt_ord_tab, div.evt_ord_DL div.toolbar{
+	background-color: #333333 !important;
+}
+div.evt_dlg_cart{
+	font-size: 14px;
+}
+div.evt_ord_0, div.evt_ord_1, div.evt_ord_2, div.evt_ord_3{
+	height: 100%;
+}
+div.evt_ord_0{
+	top: 0;
+    position: absolute;
+    left: 0;
+    width: 100%;
+    background-color: #fff;
+    height: 100%;
+    z-index: -1;
+	opacity: 0;
+}
+div.evt_ord_2 .block.list .item-checkbox span, div.evt_ord_3 .block.list .item-checkbox span{
+	position: relative;
+	top: -8px;
+	font-size: 12px;
 }
 .fab-opened .fab-buttons .evts_add{
 	opacity: 1;
@@ -302,19 +377,26 @@ td.tb-ld.tb-not-paid, td.tb-pic.tb-not-paid, div.col-10.tb-not-paid{
 	background-color: #990000;
 }
 #wkv-DLcalendar .calendar-month-current .calendar-day.hl1 span {
-	background-color: #ccffcc;
+	background-color: #c6986c;
+}
+#wkv-DLcalendar .calendar-month-current .calendar-day.calendar-day-selected span.calendar-day-number {
+	color: #FFFFFF;
 }
 #wkv-DLcalendar .calendar-month-current .calendar-day.hl2 span {
-	background-color: #33ff33;
+	background-color: #b47b46;
+	color: #E0E0E0;
 }
 #wkv-DLcalendar .calendar-month-current .calendar-day.hl3 span {
-	background-color: #00dd00;
+	background-color: #8c5f36;
+	color: #E0E0E0;
 }
 #wkv-DLcalendar .calendar-month-current .calendar-day.hl4 span {
-	background-color: #00bb00;
+	background-color: #634427;
+	color: #E0E0E0;
 }
 #wkv-DLcalendar .calendar-month-current .calendar-day.hl5 span {
-	background-color: #007700;
+	background-color: #332314;
+	color: #E0E0E0;
 }
 .data-table table.event_list td.label-cell, .data-table table.event_list th.label-cell {
 	padding-left: 10px;

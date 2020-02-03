@@ -387,8 +387,39 @@
 				</div>
 			</div>
 		</div>
+		<div class="login-screen" id="barcode">
+			<div class="view">
+				<div class="page">
+					<div class="page-content login-screen-content">
+						<div class="toolbar">
+							<div class="toolbar-inner">
+								<div class="left">Item Identification</div>
+							</div>
+						</div>
+						<div class="block">
+							<div class="list">
+								<div class="item-content item-input">
+									<div class="item-inner" style="text-align:center;">
+										Ready to scan.<br/><br/>
+										<a class="button button-fill button-raised">Back</a>
+										<br/>
+										<input class="itid-bcs noselect" type="text" value="" autocomplete="off" style="opacity:0;"/>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 		<div class="views">
 			<div class="view view-main">
+				<div class="toolbar tabbar-labels toolbar-bottom-md ltlevel0 evt_ord_tab">
+					<div class="toolbar-inner">
+						<button class="button button-raised button-fill evt_ord_proceed disabled" disabled>Next</button>
+						<button class="button button-raised button-fill evt_ord_checkout" disabled style="opacity:0;width:100px;">Done</button>
+					</div>
+				</div>
 				<div class="toolbar tabbar-labels toolbar-bottom-md">
 					<div class="toolbar-inner">
 						<a id="home-btn" href="#pg-home" class="tab-link level2">
@@ -934,15 +965,14 @@
 							<li>
 								<div class="item-content item-input">
 									<div class="item-inner">
-										<span class="map-locater">&#215;</span>
-										<iframe
+										<iframe 
 											id="gmap"
 											width="100%"
-											height="300"
+											height="300px"
 											frameborder="0"
 											style="border:0;"
 											data-loc="0,0"
-											src="https://www.google.com/maps/embed/v1/view?key=AIzaSyCRKiFjg2CA78cD09yIXuHFCxADjOh75rg&center=3.8995251,102.2320596&zoom=6">
+											src="https://embed.waze.com/iframe?zoom=6&lat=3.8995251&lon=102.2320596&pin=0">
 										</iframe>
 									</div>
 								</div>
@@ -4713,7 +4743,7 @@ data-value=''>
 				</div>
 				<div class="data-table">
 					<table class="event_list"></table>
-					<div class="evts_input level8 fab-morph-target">
+					<div class="evts_input level9 fab-morph-target">
 						<div class="block-title">Event Information</div>
 						<div class="list">
 							<ul>
@@ -4801,6 +4831,744 @@ data-value=''>
 				</div>
 				<div class="data-table">
 					<table class="event_list"></table>
+					<div class="evt_ord_DL fab-morph-target">
+						<div class="evt_ord_1">
+							<div class="block-title">
+								Package List
+								<a href="#" class="fab-close">
+									<i class="icon material-icons md-only">close</i>
+								</a>
+							</div>
+							<div class="list" style="height:calc(100% - 152px);overflow:auto;">
+								<ul>
+									<li>
+										<label class="item-radio item-content">
+											<input type="radio" name="evt-ord-item" value="SD_hset"/>
+											<i class="icon icon-radio"></i>
+											<div class="list accordion-list">
+												<ul>
+													<li class="accordion-item">
+														<a href="#" class="item-content item-link">
+															<div class="item-inner">
+																<div class="item-title">Sound System - <strong>Half Set</strong></div>
+															</div>
+														</a>
+														<div class="accordion-item-content">
+															<div class="block">
+																<p>
+																	&emsp;-&emsp;2 u x Speaker<br/>
+																	&emsp;-&emsp;1 u x Mixer<br/>
+																	&emsp;-&emsp;2 u x Wireless Handheld Microphone<br/>
+																	&emsp;-&emsp;1 u x Dual Channel DI Box<br/>
+																	&emsp;-&emsp;3 u x Microphone Stand<br/>
+																	&emsp;-&emsp;2 u x Speaker Stand<br/>
+																	&emsp;-&emsp;1 lot x Microphone Stand / Speaker Stand<br/>
+																	&emsp;-&emsp;1 lot x All Necessary cables & Extensions<br/>
+																	&emsp;-&emsp;1 x Sound Engineer<br/>
+																</p>
+															</div>
+														</div>
+													</li>
+												</ul>
+											</div>
+										</label>
+									</li>
+									<li>
+										<label class="item-radio item-content">
+											<input type="radio" name="evt-ord-item" value="SD_2t2m"/>
+											<i class="icon icon-radio"></i>
+											<div class="list accordion-list">
+												<ul>
+													<li class="accordion-item">
+														<a href="#" class="item-content item-link">
+															<div class="item-inner">
+																<div class="item-title">Sound System - <strong>2 Top 2 Mon</strong></div>
+															</div>
+														</a>
+														<div class="accordion-item-content">
+															<div class="block">
+																<p>
+																	&emsp;-&emsp;2 u x Speaker (Top)<br/>
+																	&emsp;-&emsp;2 u x Speaker (Monitor)<br/>
+																	&emsp;-&emsp;1 u x Mixer<br/>
+																	&emsp;-&emsp;2 u x Wireless Handheld Microphone<br/>
+																	&emsp;-&emsp;1 u x Dual Channel DI Box<br/>
+																	&emsp;-&emsp;3 u x Microphone Stand<br/>
+																	&emsp;-&emsp;2 u x Speaker Stand<br/>
+																	&emsp;-&emsp;1 lot x All Necessary cables & Extensions<br/>
+																	&emsp;-&emsp;1 x Sound Engineer<br/>
+																</p>
+															</div>
+														</div>
+													</li>
+												</ul>
+											</div>
+										</label>
+									</li>
+									<li>
+										<label class="item-radio item-content">
+											<input type="radio" name="evt-ord-item" value="SD_4t2m"/>
+											<i class="icon icon-radio"></i>
+											<div class="list accordion-list">
+												<ul>
+													<li class="accordion-item">
+														<a href="#" class="item-content item-link">
+															<div class="item-inner">
+																<div class="item-title">Sound System - <strong>4 Top 2 Mon</strong></div>
+															</div>
+														</a>
+														<div class="accordion-item-content">
+															<div class="block">
+																<p>
+																	&emsp;-&emsp;4 u x Speaker (Top)<br/>
+																	&emsp;-&emsp;2 u x Speaker (Monitor)<br/>
+																	&emsp;-&emsp;1 u x Mixer<br/>
+																	&emsp;-&emsp;2 u x Wireless Handheld Microphone<br/>
+																	&emsp;-&emsp;1 u x Dual Channel DI Box<br/>
+																	&emsp;-&emsp;3 u x Microphone Stand<br/>
+																	&emsp;-&emsp;4 u x Speaker Stand<br/>
+																	&emsp;-&emsp;1 lot x All Necessary cables & Extensions<br/>
+																	&emsp;-&emsp;1 x Sound Engineer<br/>
+																</p>
+															</div>
+														</div>
+													</li>
+												</ul>
+											</div>
+										</label>
+									</li>
+									<li>
+										<label class="item-radio item-content">
+											<input type="radio" name="evt-ord-item" value="SD_6t2m"/>
+											<i class="icon icon-radio"></i>
+											<div class="list accordion-list">
+												<ul>
+													<li class="accordion-item">
+														<a href="#" class="item-content item-link">
+															<div class="item-inner">
+																<div class="item-title">Sound System - <strong>6 Top 2 Mon</strong></div>
+															</div>
+														</a>
+														<div class="accordion-item-content">
+															<div class="block">
+																<p>
+																	&emsp;-&emsp;6 u x Speaker (Top)<br/>
+																	&emsp;-&emsp;2 u x Speaker (Monitor)<br/>
+																	&emsp;-&emsp;1 u x Mixer<br/>
+																	&emsp;-&emsp;2 u x Wireless Handheld Microphone<br/>
+																	&emsp;-&emsp;1 u x Dual Channel DI Box<br/>
+																	&emsp;-&emsp;3 u x Microphone Stand<br/>
+																	&emsp;-&emsp;6 u x Speaker Stand<br/>
+																	&emsp;-&emsp;1 lot x All Necessary cables & Extensions<br/>
+																	&emsp;-&emsp;1 x Sound Engineer<br/>
+																</p>
+															</div>
+														</div>
+													</li>
+												</ul>
+											</div>
+										</label>
+									</li>
+									<li>
+										<label class="item-radio item-content">
+											<input type="radio" name="evt-ord-item" value="SG_4f4f"/>
+											<i class="icon icon-radio"></i>
+											<div class="list accordion-list">
+												<ul>
+													<li class="accordion-item">
+														<a href="#" class="item-content item-link">
+															<div class="item-inner">
+																<div class="item-title">Stage System</div>
+															</div>
+														</a>
+														<div class="accordion-item-content">
+															<div class="block">
+																<p>
+																	&emsp;-&emsp;4ft(L) x 4ft(W) x 2ft(H) Stage<br/>
+																	&emsp;-&emsp;Setup &amp; Dismantle<br/>
+																</p>
+															</div>
+														</div>
+													</li>
+												</ul>
+											</div>
+										</label>
+									</li>
+								</ul>
+							</div>
+						</div>
+						<div class="evt_ord_2" style="display:none;">
+							<div class="block-title">
+								Sound System : ADD ON
+								<a href="#" class="fab-close"><i class="icon material-icons md-only">close</i></a>
+							</div>
+							<div class="list" style="height:calc(100% - 152px);overflow:auto;">
+								<ul>
+									<li class="accordion-item">
+										<a href="#" class="item-content item-link">
+											<div class="item-inner">
+												<div class="item-title">Speaker</div>
+											</div>
+										</a>
+										<div class="accordion-item-content">
+											<div class="block list">
+												<ul>
+													<li>
+														<label class="item-checkbox item-content">
+															<input type="checkbox" name="SD_adon" value="aD_tops"/>
+															<i class="icon icon-checkbox"></i>
+															<div class="item-inner">
+																<div class="item-title">
+																	<div class="stepper stepper-small stepper-fill stepper-init">
+																		<div class="stepper-button-minus"></div>
+																		<div class="stepper-input-wrap">
+																			<input name="aD_tops" type="text" value="0" min="0" max="99" step="1" readonly>
+																		</div>
+																		<div class="stepper-button-plus"></div>
+																	</div>
+																	&emsp;<span>Top Speaker</span>
+																</div>
+															</div>
+														</label>
+													</li>
+													<li>
+														<label class="item-checkbox item-content">
+															<input type="checkbox" name="SD_adon" value="aD_mons"/>
+															<i class="icon icon-checkbox"></i>
+															<div class="item-inner">
+																<div class="item-title">
+																	<div class="stepper stepper-small stepper-fill stepper-init">
+																		<div class="stepper-button-minus"></div>
+																		<div class="stepper-input-wrap">
+																			<input name="aD_mons" type="text" value="0" min="0" max="99" step="1" readonly>
+																		</div>
+																		<div class="stepper-button-plus"></div>
+																	</div>
+																	&emsp;<span>Monitor Speaker</span>
+																</div>
+															</div>
+														</label>
+													</li>
+													<li>
+														<label class="item-checkbox item-content">
+															<input type="checkbox" name="SD_adon" value="aD_sbwf"/>
+															<i class="icon icon-checkbox"></i>
+															<div class="item-inner">
+																<div class="item-title">
+																	<div class="stepper stepper-small stepper-fill stepper-init">
+																		<div class="stepper-button-minus"></div>
+																		<div class="stepper-input-wrap">
+																			<input name="aD_sbwf" type="text" value="0" min="0" max="99" step="1" readonly>
+																		</div>
+																		<div class="stepper-button-plus"></div>
+																	</div>
+																	&emsp;<span>Subwoofer</span>
+																</div>
+															</div>
+														</label>
+													</li>
+												</ul>
+											</div>
+										</div>
+									</li>
+									<li class="accordion-item">
+										<a href="#" class="item-content item-link">
+											<div class="item-inner">
+												<div class="item-title">Microphone</div>
+											</div>
+										</a>
+										<div class="accordion-item-content">
+											<div class="block list">
+												<ul>
+													<li>
+														<label class="item-checkbox item-content">
+															<input type="checkbox" name="SD_adon" value="aD_wrsm"/>
+															<i class="icon icon-checkbox"></i>
+															<div class="item-inner">
+																<div class="item-title">
+																	<div class="stepper stepper-small stepper-fill stepper-init">
+																		<div class="stepper-button-minus"></div>
+																		<div class="stepper-input-wrap">
+																			<input name="aD_wrsm" type="text" value="0" min="0" max="98" step="2" readonly>
+																		</div>
+																		<div class="stepper-button-plus"></div>
+																	</div>
+																	&emsp;<span>Wireless Microphone</span>
+																</div>
+															</div>
+														</label>
+													</li>
+													<li>
+														<label class="item-checkbox item-content">
+															<input type="checkbox" name="SD_adon" value="aD_b58a"/>
+															<i class="icon icon-checkbox"></i>
+															<div class="item-inner">
+																<div class="item-title">
+																	<div class="stepper stepper-small stepper-fill stepper-init">
+																		<div class="stepper-button-minus"></div>
+																		<div class="stepper-input-wrap">
+																			<input name="aD_b58a" type="text" value="0" min="0" max="99" step="1" readonly>
+																		</div>
+																		<div class="stepper-button-plus"></div>
+																	</div>
+																	&emsp;<span>Shure SLX Beta 58A Wireless Mic</span>
+																</div>
+															</div>
+														</label>
+													</li>
+													<li>
+														<label class="item-checkbox item-content">
+															<input type="checkbox" name="SD_adon" value="aD_hsmc"/>
+															<i class="icon icon-checkbox"></i>
+															<div class="item-inner">
+																<div class="item-title">
+																	<div class="stepper stepper-small stepper-fill stepper-init">
+																		<div class="stepper-button-minus"></div>
+																		<div class="stepper-input-wrap">
+																			<input name="aD_hsmc" type="text" value="0" min="0" max="99" step="2" readonly>
+																		</div>
+																		<div class="stepper-button-plus"></div>
+																	</div>
+																	&emsp;<span>Headworn Microphone</span>
+																</div>
+															</div>
+														</label>
+													</li>
+													<li>
+														<label class="item-checkbox item-content">
+															<input type="checkbox" name="SD_adon" value="aD_wsbp"/>
+															<i class="icon icon-checkbox"></i>
+															<div class="item-inner">
+																<div class="item-title">
+																	<div class="stepper stepper-small stepper-fill stepper-init">
+																		<div class="stepper-button-minus"></div>
+																		<div class="stepper-input-wrap">
+																			<input name="aD_wsbp" type="text" value="0" min="0" max="99" step="1" readonly>
+																		</div>
+																		<div class="stepper-button-plus"></div>
+																	</div>
+																	&emsp;<span>Wireless Body Pack (for instrument)</span>
+																</div>
+															</div>
+														</label>
+													</li>
+													<li>
+														<label class="item-checkbox item-content">
+															<input type="checkbox" name="SD_adon" value="aD_sxmc"/>
+															<i class="icon icon-checkbox"></i>
+															<div class="item-inner">
+																<div class="item-title">
+																	<div class="stepper stepper-small stepper-fill stepper-init">
+																		<div class="stepper-button-minus"></div>
+																		<div class="stepper-input-wrap">
+																			<input name="aD_sxmc" type="text" value="0" min="0" max="99" step="1" readonly>
+																		</div>
+																		<div class="stepper-button-plus"></div>
+																	</div>
+																	&emsp;<span>Saxophone Mic Clip</span>
+																</div>
+															</div>
+														</label>
+													</li>
+													<li>
+														<label class="item-checkbox item-content">
+															<input type="checkbox" name="SD_adon" value="aD_vlmc"/>
+															<i class="icon icon-checkbox"></i>
+															<div class="item-inner">
+																<div class="item-title">
+																	<div class="stepper stepper-small stepper-fill stepper-init">
+																		<div class="stepper-button-minus"></div>
+																		<div class="stepper-input-wrap">
+																			<input name="aD_vlmc" type="text" value="0" min="0" max="99" step="1" readonly>
+																		</div>
+																		<div class="stepper-button-plus"></div>
+																	</div>
+																	&emsp;<span>Violin Mic Clip</span>
+																</div>
+															</div>
+														</label>
+													</li>
+													<li>
+														<label class="item-checkbox item-content">
+															<input type="checkbox" name="SD_adon" value="aD_dmst"/>
+															<i class="icon icon-checkbox"></i>
+															<div class="item-inner">
+																<div class="item-title">
+																	<div class="stepper stepper-small stepper-fill stepper-init">
+																		<div class="stepper-button-minus"></div>
+																		<div class="stepper-input-wrap">
+																			<input name="aD_dmst" type="text" value="0" min="0" max="99" step="1" readonly>
+																		</div>
+																		<div class="stepper-button-plus"></div>
+																	</div>
+																	&emsp;<span>Drum Mic Set</span>
+																</div>
+															</div>
+														</label>
+													</li>
+													<li>
+														<label class="item-checkbox item-content">
+															<input type="checkbox" name="SD_adon" value="aD_istm"/>
+															<i class="icon icon-checkbox"></i>
+															<div class="item-inner">
+																<div class="item-title">
+																	<div class="stepper stepper-small stepper-fill stepper-init">
+																		<div class="stepper-button-minus"></div>
+																		<div class="stepper-input-wrap">
+																			<input name="aD_istm" type="text" value="0" min="0" max="99" step="1" readonly>
+																		</div>
+																		<div class="stepper-button-plus"></div>
+																	</div>
+																	&emsp;<span>Wired Instrument Mic</span>
+																</div>
+															</div>
+														</label>
+													</li>
+													<li>
+														<label class="item-checkbox item-content">
+															<input type="checkbox" name="SD_adon" value="aD_cdsm"/>
+															<i class="icon icon-checkbox"></i>
+															<div class="item-inner">
+																<div class="item-title">
+																	<div class="stepper stepper-small stepper-fill stepper-init">
+																		<div class="stepper-button-minus"></div>
+																		<div class="stepper-input-wrap">
+																			<input name="aD_cdsm" type="text" value="0" min="0" max="99" step="1" readonly>
+																		</div>
+																		<div class="stepper-button-plus"></div>
+																	</div>
+																	&emsp;<span>Wired Condenser Mic</span>
+																</div>
+															</div>
+														</label>
+													</li>
+												</ul>
+											</div>
+										</div>
+									</li>
+									<li class="accordion-item">
+										<a href="#" class="item-content item-link">
+											<div class="item-inner">
+												<div class="item-title">Stand</div>
+											</div>
+										</a>
+										<div class="accordion-item-content">
+											<div class="block list">
+												<ul>
+													<li>
+														<label class="item-checkbox item-content">
+															<input type="checkbox" name="SD_adon" value="aD_mcst"/>
+															<i class="icon icon-checkbox"></i>
+															<div class="item-inner">
+																<div class="item-title">
+																	<div class="stepper stepper-small stepper-fill stepper-init">
+																		<div class="stepper-button-minus"></div>
+																		<div class="stepper-input-wrap">
+																			<input name="aD_mcst" type="text" value="0" min="0" max="99" step="1" readonly>
+																		</div>
+																		<div class="stepper-button-plus"></div>
+																	</div>
+																	&emsp;<span>Microphone Stand</span>
+																</div>
+															</div>
+														</label>
+													</li>
+													<li>
+														<label class="item-checkbox item-content">
+															<input type="checkbox" name="SD_adon" value="aD_bkst"/>
+															<i class="icon icon-checkbox"></i>
+															<div class="item-inner">
+																<div class="item-title">
+																	<div class="stepper stepper-small stepper-fill stepper-init">
+																		<div class="stepper-button-minus"></div>
+																		<div class="stepper-input-wrap">
+																			<input name="aD_bkst" type="text" value="0" min="0" max="99" step="1" readonly>
+																		</div>
+																		<div class="stepper-button-plus"></div>
+																	</div>
+																	&emsp;<span>Book Stand</span>
+																</div>
+															</div>
+														</label>
+													</li>
+												</ul>
+											</div>
+										</div>
+									</li>
+									<li class="accordion-item">
+										<a href="#" class="item-content item-link">
+											<div class="item-inner">
+												<div class="item-title">Man Power</div>
+											</div>
+										</a>
+										<div class="accordion-item-content">
+											<div class="block list">
+												<ul>
+													<li>
+														<label class="item-checkbox item-content">
+															<input type="checkbox" name="SD_adon" value="aD_sdcw"/>
+															<i class="icon icon-checkbox"></i>
+															<div class="item-inner">
+																<div class="item-title">
+																	<div class="stepper stepper-small stepper-fill stepper-init">
+																		<div class="stepper-button-minus"></div>
+																		<div class="stepper-input-wrap">
+																			<input name="aD_sdcw" type="text" value="0" min="0" max="99" step="1" readonly>
+																		</div>
+																		<div class="stepper-button-plus"></div>
+																	</div>
+																	&emsp;<span>Sound Crew</span>
+																</div>
+															</div>
+														</label>
+													</li>
+													<li>
+														<label class="item-checkbox item-content">
+															<input type="checkbox" name="SD_adon" value="aD_sgcw"/>
+															<i class="icon icon-checkbox"></i>
+															<div class="item-inner">
+																<div class="item-title">
+																	<div class="stepper stepper-small stepper-fill stepper-init">
+																		<div class="stepper-button-minus"></div>
+																		<div class="stepper-input-wrap">
+																			<input name="aD_sgcw" type="text" value="0" min="0" max="99" step="1" readonly>
+																		</div>
+																		<div class="stepper-button-plus"></div>
+																	</div>
+																	&emsp;<span>Stage Crew</span>
+																</div>
+															</div>
+														</label>
+													</li>
+												</ul>
+											</div>
+										</div>
+									</li>
+									<li class="accordion-item">
+										<a href="#" class="item-content item-link">
+											<div class="item-inner">
+												<div class="item-title">Others</div>
+											</div>
+										</a>
+										<div class="accordion-item-content">
+											<div class="block list">
+												<ul>
+													<li>
+														<label class="item-checkbox item-content">
+															<input type="checkbox" name="SD_adon" value="aD_dibx"/>
+															<i class="icon icon-checkbox"></i>
+															<div class="item-inner">
+																<div class="item-title">
+																	<div class="stepper stepper-small stepper-fill stepper-init">
+																		<div class="stepper-button-minus"></div>
+																		<div class="stepper-input-wrap">
+																			<input name="aD_dibx" type="text" value="0" min="0" max="99" step="1" readonly>
+																		</div>
+																		<div class="stepper-button-plus"></div>
+																	</div>
+																	&emsp;<span>Dual Channel DI Box</span>
+																</div>
+															</div>
+														</label>
+													</li>
+													<li>
+														<label class="item-checkbox item-content">
+															<input type="checkbox" name="SD_adon" value="aD_ovtm"/>
+															<i class="icon icon-checkbox"></i>
+															<div class="item-inner">
+																<div class="item-title">
+																	<div class="stepper stepper-small stepper-fill stepper-init">
+																		<div class="stepper-button-minus"></div>
+																		<div class="stepper-input-wrap">
+																			<input name="aD_ovtm" type="text" value="0" min="0" max="99" step="1" readonly>
+																		</div>
+																		<div class="stepper-button-plus"></div>
+																	</div>
+																	&emsp;<span>Extra hours after 12am</span>
+																</div>
+															</div>
+														</label>
+													</li>
+													<li>
+														<label class="item-checkbox item-content">
+															<input type="checkbox" name="SD_adon" value="aD_dgtm"/>
+															<i class="icon icon-checkbox"></i>
+															<div class="item-inner">
+																<div class="item-title">
+																	<input name="aD_dgtm" type="hidden" value="1">
+																	Upgrade to Digital Mixer
+																</div>
+															</div>
+														</label>
+													</li>
+													<li>
+														<label class="item-checkbox item-content">
+															<input type="checkbox" name="SD_adon" value="aD_estp"/>
+															<i class="icon icon-checkbox"></i>
+															<div class="item-inner">
+																<div class="item-title">
+																	<input name="aD_estp" type="hidden" value="1">
+																	Early setup
+																</div>
+															</div>
+														</label>
+													</li>
+													<li>
+														<label class="item-checkbox item-content">
+															<input type="checkbox" name="SD_adon" value="aD_dmrs"/>
+															<i class="icon icon-checkbox"></i>
+															<div class="item-inner">
+																<div class="item-title">
+																	<input name="aD_dmrs" type="hidden" value="1">
+																	Dismantle &amp; Resetup
+																</div>
+															</div>
+														</label>
+													</li>
+												</ul>
+											</div>
+										</div>
+									</li>
+								</ul>
+							</div>
+						</div>
+						<div class="evt_ord_3" style="display:none;">
+							<div class="block-title">
+								Stage : ADD ON
+								<a href="#" class="fab-close"><i class="icon material-icons md-only">close</i></a>
+							</div>
+							<div class="list" style="height:calc(100% - 152px);overflow:auto;">
+								<ul>
+									<li class="accordion-item evt_ord_stug">
+										<a href="#" class="item-content item-link">
+											<div class="item-inner">
+												<div class="item-title">Upgrade Stage Size</div>
+											</div>
+										</a>
+										<div class="accordion-item-content">
+											<div class="block list">
+												<ul>
+													<li>
+														<label class="item-checkbox item-content">
+															<input type="checkbox" name="SG_adon" value="aG_sslg" checked disabled/>
+															<i class="icon icon-checkbox"></i>
+															<div class="item-inner">
+																<div class="item-title">
+																	<div class="stepper stepper-small stepper-fill stepper-init">
+																		<div class="stepper-button-minus"></div>
+																		<div class="stepper-input-wrap">
+																			<input name="aG_sslg" type="text" value="4" min="4" max="80" step="4" data-default="4" readonly>
+																		</div>
+																		<div class="stepper-button-plus"></div>
+																	</div>
+																	&emsp;<span>Length (ft)</span>
+																</div>
+															</div>
+														</label>
+													</li>
+													<li>
+														<label class="item-checkbox item-content">
+															<input type="checkbox" name="SG_adon" value="aG_sswh" checked disabled/>
+															<i class="icon icon-checkbox"></i>
+															<div class="item-inner">
+																<div class="item-title">
+																	<div class="stepper stepper-small stepper-fill stepper-init">
+																		<div class="stepper-button-minus"></div>
+																		<div class="stepper-input-wrap">
+																			<input name="aG_sswh" type="text" value="4" min="4" max="80" step="4" data-default="4" readonly>
+																		</div>
+																		<div class="stepper-button-plus"></div>
+																	</div>
+																	&emsp;<span>Width (ft)</span>
+																</div>
+															</div>
+														</label>
+													</li>
+													<li>
+														<label class="item-checkbox item-content">
+															<input type="checkbox" name="SG_adon" value="aG_sshg" checked disabled/>
+															<i class="icon icon-checkbox"></i>
+															<div class="item-inner">
+																<div class="item-title">
+																	<div class="stepper stepper-small stepper-fill stepper-init">
+																		<div class="stepper-button-minus"></div>
+																		<div class="stepper-input-wrap">
+																			<input name="aG_sshg" type="text" value="2.0" min="2" max="3" step="0.1" data-default="2.0" readonly>
+																		</div>
+																		<div class="stepper-button-plus"></div>
+																	</div>
+																	&emsp;<span>Height (ft)</span>
+																</div>
+															</div>
+														</label>
+													</li>
+												</ul>
+											</div>
+										</div>
+									</li>
+									<li class="accordion-item">
+										<a href="#" class="item-content item-link">
+											<div class="item-inner">
+												<div class="item-title">Others</div>
+											</div>
+										</a>
+										<div class="accordion-item-content">
+											<div class="block list">
+												<ul>
+													<li>
+														<label class="item-checkbox item-content">
+															<input type="checkbox" name="SG_adon" value="aG_stcs"/>
+															<i class="icon icon-checkbox"></i>
+															<div class="item-inner">
+																<div class="item-title">
+																	<div class="stepper stepper-small stepper-fill stepper-init">
+																		<div class="stepper-button-minus"></div>
+																		<div class="stepper-input-wrap">
+																			<input name="aG_stcs" type="text" value="0" min="0" max="9" step="1" readonly>
+																		</div>
+																		<div class="stepper-button-plus"></div>
+																	</div>
+																	&emsp;<span>Staircase</span>
+																</div>
+															</div>
+														</label>
+													</li>
+													<li>
+														<label class="item-checkbox item-content">
+															<input type="checkbox" name="SG_adon" value="aG_crpt"/>
+															<i class="icon icon-checkbox"></i>
+															<div class="item-inner">
+																<div class="item-title">
+																	<input name="aG_crpt" type="hidden" value="1">
+																	Carpet
+																</div>
+															</div>
+														</label>
+													</li>
+												</ul>
+											</div>
+										</div>
+									</li>
+								</ul>
+							</div>
+						</div>
+						<div class="evt_ord_0"></div>
+						<div class="toolbar tabbar-labels toolbar-bottom-md" style="position:sticky;">
+							<div class="toolbar-inner">
+								<div style="font-size:24px;position:absolute;right:18px;">
+									<button class="button button-raised button-fill evts_cart_DL">
+										<i class="icon material-icons md-only">shopping_cart</i>
+									</button>
+									RM <span class="evts_ord_price" data-price="0.00">0.00</span>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="fab fab-morph fab-right-bottom" data-morph-to=".evt_ord_DL">
+						<a href="#" class="evts_add_DL">
+							<i class="icon material-icons md-only">add</i>
+						</a>
+					</div>
 				</div>
 			</div>
 			<div class="popup popup-power level2">
@@ -6888,7 +7656,7 @@ data-value=''>
 				<div class="block">
 					<div align="center">
 						 <img src="icon.png" alt="WKV Logo" height="128" width="128">
-						 <span style="color:#999;position:absolute;top:40px;font-size:12px;">&emsp;Version 1.0.234</span>
+						 <span style="color:#999;position:absolute;top:40px;font-size:12px;">&emsp;Version 1.0.235</span>
 					</div>
 					<p>WKV Application serves as a platform for of WKV’s member to obtain basic information and calculation method can easily obtain by accessing to the application.</p>
 					<p>For general usage, clock in and clock out is built in the application for employees of WKV to check in whenever they report to event venue.</p>
