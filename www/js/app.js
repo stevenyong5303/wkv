@@ -6,11 +6,11 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.235",
+			  version: "1.0.2356",
 			  rtl: false,
 			  language: "en-US"
 		  });
-var geoToken = true, geoCount = 60, APP_VERSION = 10235, tmpCalendar = '', fileObject, tapHold = 0, tapHoldStr = '';
+var geoToken = true, geoCount = 60, APP_VERSION = 10236, tmpCalendar = '', fileObject, tapHold = 0, tapHoldStr = '';
 
 var app = {
     initialize: function() {
@@ -738,8 +738,6 @@ $(document).ready(function(){
 										var rstr = parseInt(($(this).data('review')).substr(1,1)),
 											rcmt = ($(this).data('review')).substr(4),
 											rhtml = '<div><div>';
-										
-										console.log(rstr);
 										
 										for(var i=0; i<5; i++){
 											if(rstr>i){
@@ -1516,33 +1514,23 @@ $(document).ready(function(){
 		
 		switch($('input[name="evt-ord-item"]:checked').val()){
 			case 'SD_hset':
-				temp = 500;
-				break;
 			case 'SD_2t2m':
-				temp = 600;
-				break;
 			case 'SD_4t2m':
-				temp = 800;
-				break;
 			case 'SD_6t2m':
-				temp = 1000;
-				break;
 			case 'SG_4f4f':
-				temp = 272;
+				$('.evt_ord_proceed').prop('disabled', false);
+				$('.evt_ord_proceed').removeClass('disabled');
+				$('.evt_ord_checkout').prop('disabled', true);
+				$('.evt_ord_checkout').addClass('disabled');
 				break;
-		}
-		
-		if(temp){
-			$('.evt_ord_proceed').prop('disabled', false);
-			$('.evt_ord_proceed').removeClass('disabled');
-		}else{
-			$('.evt_ord_proceed').prop('disabled', true);
-			$('.evt_ord_proceed').addClass('disabled');
+			default:
+				$('.evt_ord_proceed').prop('disabled', true);
+				$('.evt_ord_proceed').addClass('disabled');
+				break;
 		}
 		
 		$('.evt_ord_proceed').data('item', [$('input[name="evt-ord-item"]:checked').val()]);
-		
-		$('.evts_ord_price').text((parseFloat(price + temp)).toFixed(2));
+		sys.updateCartPrice();
 	});
 	
 	$('button.evts_cart_DL').on('click', function(){
@@ -1592,121 +1580,90 @@ $(document).ready(function(){
 				if(row.substr(0,1)=='c'){
 					if(code == 'SG_4f4f'){
 						item = $('.evts_cart_DL').data('item');
-						var slg = 0, swh = 0, scs = 0, scp = 0, last = 0;
+						
+						item[row.substr(1)] = null;
 						
 						for(var i = (parseInt(row.substr(1)) + 1); i < item.length; i++){
-							if(item[i].substr(0,2)=='aG'){
-								switch(item[i].substr(0,7)){
-									case 'aG_sslg':
-										slg = parseFloat(item[i].substr(7));
-										break;
-									case 'aG_sswh':
-										swh = parseFloat(item[i].substr(7));
-										break;
-									case 'aG_stcs':
-										scs = parseFloat(item[i].substr(7));
-										break;
-									case 'aG_crpt':
-										scp = parseFloat(item[i].substr(7));
-										break;
+							if(!sys.isEmpty(item[i])){
+								if(item[i].substr(0,2)=='aG'){
+									item[i] = null;
+								}else{
+									break;
 								}
-								last = i;
-							}else{
-								break;
 							}
 						}
-						
-						var price = parseFloat($('.evts_ord_price').data('price')),
-							tmp_price = 200,
-							show_price = parseFloat($('.evts_ord_price').text());
-							
-						tmp_price += ((slg * swh) * 4.5);
-						scs += (((slg * swh)>=96) ? -1 : 0);
-						tmp_price += ((scs>0) ? (scs * 150) : 0);
-						tmp_price += ((scp>0) ? (slg * swh) : 0);
-						
-						$('.evts_ord_price').data('price', (price - tmp_price));
-						$('.evts_ord_price').text((show_price - tmp_price).toFixed(2));
-						
-						item.splice(row.substr(1), ((last - parseInt(row.substr(1))) + 1));
 						$('.evts_cart_DL').data('item', item);
+						sys.updateCartPrice();
 						
 						$('div[item_count='+num+']').remove();
 					}else{
-						$(this).remove();
-					
-						$('div[item_count='+num+']').each(function(){
-							var cancel = ($(this).children('.col-10').children('i.icon'));
-							
-							if(cancel.length){
-								cancel.click();
-							}else{
-								$(this).remove();
-							}
-						});
-						
-						var price = parseFloat($('.evts_ord_price').data('price')),
-							tmp_price = sys.checkPrice(code),
-							show_price = parseFloat($('.evts_ord_price').text());
-						
-						$('.evts_ord_price').data('price', (price - tmp_price));
-						$('.evts_ord_price').text((show_price - tmp_price).toFixed(2));
-						
 						item = $('.evts_cart_DL').data('item');
-						item.splice(row.substr(1), 1);
+						
+						item[parseInt(row.substr(1))] = null;
+						for(var i = (parseInt(row.substr(1)) + 1); i < item.length; i++){
+							if(!sys.isEmpty(item[i])){
+								if(item[i].substr(0,2)==('a'+code.substr(1,1))){
+									item[i] = null;
+								}else{
+									break;
+								}
+							}
+						}
 						$('.evts_cart_DL').data('item', item);
+						sys.updateCartPrice();
 						
 						$('div[item_count='+num+']').remove();
 					}
 				}else{
-					var name = $('input[value=' + code.substr(0, 7) + ']').attr('name');
-					$(this).remove();
+					$('input[value=' + code.substr(0, 7) + ']').prop('checked', false);
+					item = $('.evt_ord_proceed').data('item');
+					item[parseInt(row.substr(1))] = null;
+					$('.evt_ord_proceed').data('item', item);
+					sys.updateCartPrice();
+					$('div[item_count='+num+']').remove();
 					
-					$('div[item_count='+num+']').each(function(){
-						var cancel = ($(this).children('.col-10').children('i.icon'));
-						
-						if(cancel.length){
-							cancel.click();
-						}else{
-							$('input[value=' + code.substr(0, 7) + ']').prop('checked', false);
-							$(this).remove();
-						}
-					});
-					$('input[name="'+name+'"]').trigger('change');
+					if(parseInt($('.evts_ord_price').text())==0){
+						$('.evt_ord_checkout').prop('disabled', true);
+						$('.evt_ord_checkout').addClass('disabled');
+					}else{
+						$('.evt_ord_checkout').prop('disabled', false);
+						$('.evt_ord_checkout').removeClass('disabled');
+					}
+					$('.evt_ord_proceed').prop('disabled', true);
+					$('.evt_ord_proceed').addClass('disabled');
 				}
 			}else{
 				if(row.substr(0,1)=='c'){
-					var price = parseFloat($('.evts_ord_price').data('price')),
-						tmp_price = sys.checkPrice(code),
-						show_price = parseFloat($('.evts_ord_price').text());
-					
-					$('.evts_ord_price').data('price', (price - tmp_price));
-					$('.evts_ord_price').text((show_price - tmp_price).toFixed(2));
-					
 					item = $('.evts_cart_DL').data('item');
-					item.splice(row.substr(1), 1);
+					item[parseInt(row.substr(1))] = null;
 					$('.evts_cart_DL').data('item', item);
+					sys.updateCartPrice();
 				}else{
-					var name = $('input[value=' + code.substr(0, 7) + ']').attr('name');
-					
 					$('input[value=' + code.substr(0, 7) + ']').prop('checked', false);
-					$('input[name="'+name+'"]').trigger('change');
 					item = $('.evt_ord_proceed').data('item');
-					item.splice(row.substr(1), 1);
+					item[parseInt(row.substr(1))] = null;
 					$('.evt_ord_proceed').data('item', item);
+					sys.updateCartPrice();
 				}
-				
 				$(this).parents('div.row.no-gap').remove();
 			}
 			
 			if(parseFloat($('.evts_ord_price').text())==0){
+				$('button.evt_ord_checkout').addClass('disabled');
 				$('button.evt_ord_checkout').prop('disabled', true);
-				$('button.evt_ord_checkout').css('opacity', '0');
 			}
 		});
 		
 		$('.evt_dlg_cart').parents('.dialog').attr('style', 'display: block; width: calc(100% - 30px) !important; margin-left: 15px !important; left: 0 !important; top: 15px !important; height: calc(100% - 142px);');
 		$('.evt_dlg_cart').parents('.dialog-inner').attr('style', 'height: calc(100% - 99px); overflow: auto;');
+	});
+	
+	$('#app').on('click', '.dialog-button-bold', function(){
+		var cItem = $('.evts_cart_DL').data('item'),
+			tItem = $('.evt_ord_proceed').data('item');
+			
+		$('.evts_cart_DL').data('item', sys.removeNull(cItem));
+		$('.evt_ord_proceed').data('item', sys.removeNull(tItem));
 	});
 	
 	$('.evt_ord_2 .stepper-button-minus').on('click', function(e){
@@ -1724,58 +1681,26 @@ $(document).ready(function(){
 			el: $(this),
 			on: {
 				change: function(){
-					var price = parseFloat($('.evts_ord_price').data('price')),
-						uprice = 0,
-						temp = 0,
-						addOn = [];
+					var addOn = [];
+						
+					if($(this)[0].value){
+						($('input[name="SD_adon"][value="'+$(this)[0].inputEl.name+'"]')).prop('checked', true);
+					}
+					
+					($('input[name="SD_adon"][value="'+$(this)[0].inputEl.name+'"]'))[0]
 						
 					if(($('input[name="SD_adon"][value="'+$(this)[0].inputEl.name+'"]'))[0].checked){
 						$('input[name="SD_adon"]:checked').each(function(){
 							var qty = $('div.item-title input[name="'+$(this).val()+'"]').val();
 							
 							if(qty){
-								switch($(this).val()){
-									case 'aD_istm':
-									case 'aD_cdsm':
-									case 'aD_mcst':
-									case 'aD_bkst':
-									case 'aD_dibx':
-										uprice = 25;
-										break;
-									case 'aD_wrsm':
-									case 'aD_hsmc':
-									case 'aD_dmst':
-										uprice = 50;
-										break;
-									case 'aD_tops':
-									case 'aD_mons':
-									case 'aD_b58a':
-									case 'aD_wsbp':
-									case 'aD_sxmc':
-									case 'aD_vlmc':
-										uprice = 100;
-										break;
-									case 'aD_sgcw':
-										uprice = 120;
-										break;
-									case 'aD_sdcw':
-									case 'aD_ovtm':
-										uprice = 150;
-										break;				
-									case 'aD_sbwf':
-									case 'aD_dgtm':
-									case 'aD_estp':
-										uprice = 200;
-										break;
-								}
-								temp += (uprice*qty);
 								addOn.push($(this).val()+qty);
 							}
 						});
 						
 						$('.evt_ord_proceed').data('item', addOn);
 						
-						$('.evts_ord_price').text((parseFloat(price + temp)).toFixed(2));
+						sys.updateCartPrice();
 					}
 				}
 			}
@@ -1783,60 +1708,19 @@ $(document).ready(function(){
 	});
 	
 	$('div.evt_ord_2').on('change', 'input[name="SD_adon"]', function(){
-		var price = parseFloat($('.evts_ord_price').data('price')),
-			uprice = 0,
-			temp = 0,
-			addOn = [];
+		var addOn = [];
 		
 		$('input[name="SD_adon"]:checked').each(function(){
 			var qty = $('div.item-title input[name="'+$(this).val()+'"]').val();
 			
 			if(qty){
-				switch($(this).val()){
-					case 'aD_istm':
-					case 'aD_cdsm':
-					case 'aD_mcst':
-					case 'aD_bkst':
-					case 'aD_dibx':
-						uprice = 25;
-						break;
-					case 'aD_wrsm':
-					case 'aD_hsmc':
-					case 'aD_dmst':
-						uprice = 50;
-						break;
-					case 'aD_tops':
-					case 'aD_mons':
-					case 'aD_b58a':
-					case 'aD_wsbp':
-					case 'aD_sxmc':
-					case 'aD_vlmc':
-						uprice = 100;
-						break;
-					case 'aD_sgcw':
-						uprice = 120;
-						break;
-					case 'aD_sdcw':
-					case 'aD_ovtm':
-						uprice = 150;
-						break;				
-					case 'aD_sbwf':
-					case 'aD_dgtm':
-					case 'aD_estp':
-						uprice = 200;
-						break;
-					case 'aD_dmrs':
-						uprice = 300;
-						break;
-				}
-				temp += (uprice*qty);
 				addOn.push($(this).val()+qty);
 			}
 		});
 		
 		$('.evt_ord_proceed').data('item', addOn);
 		
-		$('.evts_ord_price').text((parseFloat(price + temp)).toFixed(2));
+		sys.updateCartPrice();
 	});
 	
 	$('.evt_ord_3 .stepper-button-minus').on('click', function(e){
@@ -1854,26 +1738,13 @@ $(document).ready(function(){
 			el: $(this),
 			on: {
 				change: function(){
-					var price = parseFloat($('.evts_ord_price').data('price')),
-						uprice = 0,
-						temp = 0,
-						addOn = [];
+					var addOn = [];
+					
+					if($(this)[0].value){
+						($('input[name="SG_adon"][value="'+$(this)[0].inputEl.name+'"]')).prop('checked', true);
+					}
 						
 					if(($('input[name="SG_adon"][value="'+$(this)[0].inputEl.name+'"]'))[0].checked){
-						var stL = parseInt($('input[name="aG_sslg"]').val()),
-							stW = parseInt($('input[name="aG_sswh"]').val()),
-							stSC = (($('input[name="SG_adon"][value="aG_stcs"]').prop('checked')) ? $('input[name="aG_stcs"]').val() : 0),
-							stCP = ($('input[name="SG_adon"][value="aG_crpt"]').prop('checked'));
-						
-						temp += (((stL * stW) * 4.5) - 72);
-						if(stCP){
-							temp += (stL * stW);
-						}
-						if(stSC != 0){
-							var disc = (((stL * stW) >= 96) ? 150 : 0);
-							temp += ((stSC*150)-disc);
-						}
-						
 						$('input[name="SG_adon"]:checked').each(function(){
 							var qty = $('div.item-title input[name="'+$(this).val()+'"]').val();
 							
@@ -1884,7 +1755,7 @@ $(document).ready(function(){
 						
 						$('.evt_ord_proceed').data('item', addOn);
 						
-						$('.evts_ord_price').text((parseFloat(price + temp)).toFixed(2));
+						sys.updateCartPrice();
 					}
 				}
 			}
@@ -1892,25 +1763,8 @@ $(document).ready(function(){
 	});
 	
 	$('div.evt_ord_3').on('change', 'input[name="SG_adon"]', function(){
-		var price = parseFloat($('.evts_ord_price').data('price')),
-			uprice = 0,
-			temp = 0,
-			addOn = [];
+		var addOn = [];
 
-		var stL = parseInt($('input[name="aG_sslg"]').val()),
-			stW = parseInt($('input[name="aG_sswh"]').val()),
-			stSC = (($('input[name="SG_adon"][value="aG_stcs"]').prop('checked')) ? $('input[name="aG_stcs"]').val() : 0),
-			stCP = ($('input[name="SG_adon"][value="aG_crpt"]').prop('checked'));
-		
-		temp += (((stL * stW) * 4.5) - 72);
-		if(stCP){
-			temp += (stL * stW);
-		}
-		if(stSC != 0){
-			var disc = (((stL * stW) >= 96) ? 150 : 0);
-			temp += ((stSC*150)-disc);
-		}
-		
 		$('input[name="SG_adon"]:checked').each(function(){
 			var qty = $('div.item-title input[name="'+$(this).val()+'"]').val();
 			
@@ -1921,7 +1775,7 @@ $(document).ready(function(){
 		
 		$('.evt_ord_proceed').data('item', addOn);
 		
-		$('.evts_ord_price').text((parseFloat(price + temp)).toFixed(2));
+		sys.updateCartPrice();
 	});
 	
 	$('button.evt_ord_proceed').on('click', function(){
@@ -1950,9 +1804,9 @@ $(document).ready(function(){
 					});
 					$('.evt_ord_'+sys.getAddOn(temp[0])).find('input[type="text"]').each(function(){
 						if($(this).data('default')){
-							apps.stepper.setValue($(this), 0);
+							apps.stepper.setValue($(this).parents('.stepper'), $(this).data('default'));
 						}else{
-							apps.stepper.setValue($(this), $(this).data('default'));
+							apps.stepper.setValue($(this).parents('.stepper'), 0);
 						}
 					});
 					
@@ -1962,8 +1816,9 @@ $(document).ready(function(){
 					if(sys.getAddOn(temp[0])==3){
 						$('.evt_ord_proceed').data('item', ["aG_sslg4", "aG_sswh4", "aG_sshg2.0"]);
 						apps.accordion.open($('.evt_ord_stug'));
-						
 					}
+					$('button.evt_ord_checkout').addClass('disabled');
+					$('button.evt_ord_checkout').prop('disabled', true);
 				}, 900);
 				setTimeout(function(){
 					$('.evt_ord_0').css('z-index', '-1');
@@ -1997,8 +1852,8 @@ $(document).ready(function(){
 				$('.evt_ord_1').css('display', 'block');
 				$('.evt_ord_0').css('opacity', '0');
 				
+				$('button.evt_ord_checkout').removeClass('disabled');
 				$('button.evt_ord_checkout').prop('disabled', false);
-				$('button.evt_ord_checkout').css('opacity', '1');
 			}, 900);
 			setTimeout(function(){
 				$('.evt_ord_0').css('z-index', '-1');
@@ -7156,373 +7011,392 @@ sys = {
 			}).open();
 		}
 	},
+	'removeNull' : function(arr){
+		var result = [];
+		
+		if(!sys.isEmpty(arr)){
+			for(var i=0; i<arr.length; i++){
+				if(arr[i]){
+					result.push(arr[i]);
+				}
+			}
+		}
+		
+		return result;
+	},
 	'orderCode' : function(code, num, row, cBtn){
 		var html = '', code;
 		
-		switch((code.substr(0,7))){
-			case 'SD_hset':
-				html += '<div class="row no-gap" item_count="' + num + '">';
-				html += '<div class="col-10">' + num + '.</div>';
-				html += '<div class="col-80"><strong>Sound System - Half Set</strong></div>';
-				if(cBtn){
-					html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-main="1" data-row="' + row + '">cancel</i></div>';
-				}else{
-					html += '<div class="col-10"></div>';
-				}
-				html += '</div>';
-				html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">2 u x Speaker</div></div>';
-				html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 u x Mixer</div></div>';
-				html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">2 u x Wireless Handheld Microphone</div></div>';
-				html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 u x Dual Channel DI Box</div></div>';
-				html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">3 u x Microphone Stand</div></div>';
-				html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">2 u x Speaker Stand</div></div>';
-				html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 lot x Microphone Stand / Speaker Stand</div></div>';
-				html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 lot x All Necessary cables & Extensions</div></div>';
-				html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 x Sound Engineer</div></div>';
-				break;
-			case 'SD_2t2m':
-				html += '<div class="row no-gap" item_count="' + num + '">';
-				html += '<div class="col-10">' + num + '.</div>';
-				html += '<div class="col-80"><strong>Sound System - 2 Top 2 Mon</strong></div>';
-				if(cBtn){
-					html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-main="1" data-row="' + row + '">cancel</i></div>';
-				}else{
-					html += '<div class="col-10"></div>';
-				}
-				html += '</div>';
-				html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">2 u x Speaker (Top)</div></div>';
-				html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">2 u x Speaker (Monitor)</div></div>';
-				html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 u x Mixer</div></div>';
-				html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">2 u x Wireless Handheld Microphone</div></div>';
-				html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 u x Dual Channel DI Box</div></div>';
-				html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">3 u x Microphone Stand</div></div>';
-				html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">2 u x Speaker Stand</div></div>';
-				html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 lot x Microphone Stand / Speaker Stand</div></div>';
-				html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 lot x All Necessary cables & Extensions</div></div>';
-				html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 x Sound Engineer</div></div>';
-				break;
-			case 'SD_4t2m':
-				html += '<div class="row no-gap" item_count="' + num + '">';
-				html += '<div class="col-10">' + num + '.</div>';
-				html += '<div class="col-80"><strong>Sound System - 4 Top 2 Mon</strong></div>';
-				if(cBtn){
-					html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-main="1" data-row="' + row + '">cancel</i></div>';
-				}else{
-					html += '<div class="col-10"></div>';
-				}
-				html += '</div>';
-				html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">4 u x Speaker (Top)</div></div>';
-				html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">2 u x Speaker (Monitor)</div></div>';
-				html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 u x Mixer</div></div>';
-				html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">2 u x Wireless Handheld Microphone</div></div>';
-				html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 u x Dual Channel DI Box</div></div>';
-				html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">3 u x Microphone Stand</div></div>';
-				html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">4 u x Speaker Stand</div></div>';
-				html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 lot x Microphone Stand / Speaker Stand</div></div>';
-				html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 lot x All Necessary cables & Extensions</div></div>';
-				html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 x Sound Engineer</div></div>';
-				break;
-			case 'SD_6t2m':
-				html += '<div class="row no-gap" item_count="' + num + '">';
-				html += '<div class="col-10">' + num + '.</div>';
-				html += '<div class="col-80"><strong>Sound System - 6 Top 2 Mon</strong></div>';
-				if(cBtn){
-					html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-main="1" data-row="' + row + '">cancel</i></div>';
-				}else{
-					html += '<div class="col-10"></div>';
-				}
-				html += '</div>';
-				html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">6 u x Speaker (Top)</div></div>';
-				html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">2 u x Speaker (Monitor)</div></div>';
-				html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 u x Mixer</div></div>';
-				html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">2 u x Wireless Handheld Microphone</div></div>';
-				html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 u x Dual Channel DI Box</div></div>';
-				html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">3 u x Microphone Stand</div></div>';
-				html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">6 u x Speaker Stand</div></div>';
-				html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 lot x Microphone Stand / Speaker Stand</div></div>';
-				html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 lot x All Necessary cables & Extensions</div></div>';
-				html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 x Sound Engineer</div></div>';
-				break;
-			case 'aD_istm':
-				html += '<div class="row no-gap" item_count="' + num + '">';
-				html += '<div class="col-20"></div>';
-				html += '<div class="col-70"><strong>* Extra</strong>&emsp;' + code.substr(7) + ' x Wired Instrument Mic</div>';
-				if(cBtn){
-					html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
-				}else{
-					html += '<div class="col-10"></div>';
-				}
-				html += '</div>';
-				break;
-			case 'aD_cdsm':
-				html += '<div class="row no-gap" item_count="' + num + '">';
-				html += '<div class="col-20"></div>';
-				html += '<div class="col-70"><strong>* Extra</strong>&emsp;' + code.substr(7) + ' x Wired Condenser Mic</div>';
-				if(cBtn){
-					html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
-				}else{
-					html += '<div class="col-10"></div>';
-				}
-				html += '</div>';
-				break;
-			case 'aD_mcst':
-				html += '<div class="row no-gap" item_count="' + num + '">';
-				html += '<div class="col-20"></div>';
-				html += '<div class="col-70"><strong>* Extra</strong>&emsp;' + code.substr(7) + ' x Microphone Stand</div>';
-				if(cBtn){
-					html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
-				}else{
-					html += '<div class="col-10"></div>';
-				}
-				html += '</div>';
-				break;
-			case 'aD_bkst':
-				html += '<div class="row no-gap" item_count="' + num + '">';
-				html += '<div class="col-20"></div>';
-				html += '<div class="col-70"><strong>* Extra</strong>&emsp;' + code.substr(7) + ' x Book Stand</div>';
-				if(cBtn){
-					html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
-				}else{
-					html += '<div class="col-10"></div>';
-				}
-				html += '</div>';
-				break;
-			case 'aD_dibx':
-				html += '<div class="row no-gap" item_count="' + num + '">';
-				html += '<div class="col-20"></div>';
-				html += '<div class="col-70"><strong>* Extra</strong>&emsp;' + code.substr(7) + ' x Dual Channel DI Box</div>';
-				if(cBtn){
-					html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
-				}else{
-					html += '<div class="col-10"></div>';
-				}
-				html += '</div>';
-				break;
-			case 'aD_wrsm':
-				html += '<div class="row no-gap" item_count="' + num + '">';
-				html += '<div class="col-20"></div>';
-				html += '<div class="col-70"><strong>* Extra</strong>&emsp;' + code.substr(7) + ' x Wireless Microphone</div>';
-				if(cBtn){
-					html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
-				}else{
-					html += '<div class="col-10"></div>';
-				}
-				html += '</div>';
-				break;
-			case 'aD_hsmc':
-				html += '<div class="row no-gap" item_count="' + num + '">';
-				html += '<div class="col-20"></div>';
-				html += '<div class="col-70"><strong>* Extra</strong>&emsp;' + code.substr(7) + ' x Headworn Microphone</div>';
-				if(cBtn){
-					html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
-				}else{
-					html += '<div class="col-10"></div>';
-				}
-				html += '</div>';
-				break;
-			case 'aD_dmst':
-				html += '<div class="row no-gap" item_count="' + num + '">';
-				html += '<div class="col-20"></div>';
-				html += '<div class="col-70"><strong>* Extra</strong>&emsp;' + code.substr(7) + ' x Drum Mic Set</div>';
-				if(cBtn){
-					html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
-				}else{
-					html += '<div class="col-10"></div>';
-				}
-				html += '</div>';
-				break;
-			case 'aD_tops':
-				html += '<div class="row no-gap" item_count="' + num + '">';
-				html += '<div class="col-20"></div>';
-				html += '<div class="col-70"><strong>* Extra</strong>&emsp;' + code.substr(7) + ' x Top Speaker</div>';
-				if(cBtn){
-					html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
-				}else{
-					html += '<div class="col-10"></div>';
-				}
-				html += '</div>';
-				break;
-			case 'aD_mons':
-				html += '<div class="row no-gap" item_count="' + num + '">';
-				html += '<div class="col-20"></div>';
-				html += '<div class="col-70"><strong>* Extra</strong>&emsp;' + code.substr(7) + ' x Monitor Speaker</div>';
-				if(cBtn){
-					html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
-				}else{
-					html += '<div class="col-10"></div>';
-				}
-				html += '</div>';
-				break;
-			case 'aD_b58a':
-				html += '<div class="row no-gap" item_count="' + num + '">';
-				html += '<div class="col-20"></div>';
-				html += '<div class="col-70"><strong>* Extra</strong>&emsp;' + code.substr(7) + ' x Shure SLX Beta 58A Wireless Mic</div>';
-				if(cBtn){
-					html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
-				}else{
-					html += '<div class="col-10"></div>';
-				}
-				html += '</div>';
-				break;
-			case 'aD_wsbp':
-				html += '<div class="row no-gap" item_count="' + num + '">';
-				html += '<div class="col-20"></div>';
-				html += '<div class="col-70"><strong>* Extra</strong>&emsp;' + code.substr(7) + ' x Wireless Body Pack (for instrument)</div>';
-				if(cBtn){
-					html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
-				}else{
-					html += '<div class="col-10"></div>';
-				}
-				html += '</div>';
-				break;
-			case 'aD_sxmc':
-				html += '<div class="row no-gap" item_count="' + num + '">';
-				html += '<div class="col-20"></div>';
-				html += '<div class="col-70"><strong>* Extra</strong>&emsp;' + code.substr(7) + ' x Saxophone Mic Clip</div>';
-				if(cBtn){
-					html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
-				}else{
-					html += '<div class="col-10"></div>';
-				}
-				html += '</div>';
-				break;
-			case 'aD_vlmc':
-				html += '<div class="row no-gap" item_count="' + num + '">';
-				html += '<div class="col-20"></div>';
-				html += '<div class="col-70"><strong>* Extra</strong>&emsp;' + code.substr(7) + ' x Violin Mic Clip</div>';
-				if(cBtn){
-					html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
-				}else{
-					html += '<div class="col-10"></div>';
-				}
-				html += '</div>';
-				break;
-			case 'aD_sgcw':
-				html += '<div class="row no-gap" item_count="' + num + '">';
-				html += '<div class="col-20"></div>';
-				html += '<div class="col-70"><strong>* Extra</strong>&emsp;' + code.substr(7) + ' x Stage Crew</div>';
-				if(cBtn){
-					html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
-				}else{
-					html += '<div class="col-10"></div>';
-				}
-				html += '</div>';
-				break;
-			case 'aD_sdcw':
-				html += '<div class="row no-gap" item_count="' + num + '">';
-				html += '<div class="col-20"></div>';
-				html += '<div class="col-70"><strong>* Extra</strong>&emsp;' + code.substr(7) + ' x Sound Crew</div>';
-				if(cBtn){
-					html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
-				}else{
-					html += '<div class="col-10"></div>';
-				}
-				html += '</div>';
-				break;
-			case 'aD_ovtm':
-				html += '<div class="row no-gap" item_count="' + num + '">';
-				html += '<div class="col-20"></div>';
-				html += '<div class="col-70"><strong>* Extra</strong>&emsp;' + code.substr(7) + ' x Extra hours</div>';
-				if(cBtn){
-					html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
-				}else{
-					html += '<div class="col-10"></div>';
-				}
-				html += '</div>';
-				break;
-			case 'aD_sbwf':
-				html += '<div class="row no-gap" item_count="' + num + '">';
-				html += '<div class="col-20"></div>';
-				html += '<div class="col-70"><strong>* Extra</strong>&emsp;' + code.substr(7) + ' x Subwoofer</div>';
-				if(cBtn){
-					html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
-				}else{
-					html += '<div class="col-10"></div>';
-				}
-				html += '</div>';
-				break;
-			case 'aD_dgtm':
-				html += '<div class="row no-gap" item_count="' + num + '">';
-				html += '<div class="col-20"></div>';
-				html += '<div class="col-70"><strong>* Extra &emsp; - Upgrade to Digital Mixer</strong></div>';
-				if(cBtn){
-					html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
-				}else{
-					html += '<div class="col-10"></div>';
-				}
-				html += '</div>';
-				break;
-			case 'aD_estp':
-				html += '<div class="row no-gap" item_count="' + num + '">';
-				html += '<div class="col-20"></div>';
-				html += '<div class="col-70"><strong>* Extra &emsp; - Early setup</strong></div>';
-				if(cBtn){
-					html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
-				}else{
-					html += '<div class="col-10"></div>';
-				}
-				html += '</div>';
-				break;
-			case 'aD_dmrs':
-				html += '<div class="row no-gap" item_count="' + num + '">';
-				html += '<div class="col-20"></div>';
-				html += '<div class="col-70"><strong>* Extra &emsp; - Dismantle &amp; Resetup</strong></div>';
-				if(cBtn){
-					html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
-				}else{
-					html += '<div class="col-10"></div>';
-				}
-				html += '</div>';
-				break;
-			case 'SG_4f4f':
-				html += '<div class="row no-gap" item_count="' + num + '">';
-				html += '<div class="col-10">' + num + '.</div>';
-				html += '<div class="col-80"><strong>Stage System</strong></div>';
-				if(cBtn){
-					html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-main="1" data-row="' + row + '">cancel</i></div>';
-				}else{
-					html += '<div class="col-10"></div>';
-				}
-				html += '</div>';
-				break;
-			case 'aG_sslg':
-				html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-20">Length</div><div class="col-70">:&emsp;<strong>' + code.substr(7) + ' ft</strong></div></div>';
-				break;
-			case 'aG_sswh':
-				html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-20">Width</div><div class="col-70">:&emsp;<strong>' + code.substr(7) + ' ft</strong></div></div>';
-				break;
-			case 'aG_sshg':
-				html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-20">Height</div><div class="col-70">:&emsp;<strong>' + parseFloat(code.substr(7)).toFixed(2) + ' ft</strong></div></div>';
-				html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">Setup & Dismantle</div></div>';
-				html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">* Skirting included.</div></div>';
-				break;
-			case 'aG_stcs':
-				html += '<div class="row no-gap" item_count="' + num + '">';
-				html += '<div class="col-20"></div>';
-				html += '<div class="col-70"><strong>* Extra</strong>&emsp;' + code.substr(7) + ' x Staircase</div>';
-				if(cBtn){
-					html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
-				}else{
-					html += '<div class="col-10"></div>';
-				}
-				html += '</div>';
-				break;
-			case 'aG_crpt':
-				html += '<div class="row no-gap" item_count="' + num + '">';
-				html += '<div class="col-20"></div>';
-				html += '<div class="col-70"><strong>* Extra</strong>&emsp;- Carpet</div>';
-				if(cBtn){
-					html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
-				}else{
-					html += '<div class="col-10"></div>';
-				}
-				html += '</div>';
-				break;
+		if(code.substr(7) != '0'){
+			switch((code.substr(0,7))){
+				case 'SD_hset':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-10">' + num + '.</div>';
+					html += '<div class="col-80"><strong>Sound System - Half Set</strong></div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-main="1" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">2 u x Speaker</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 u x Mixer</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">2 u x Wireless Handheld Microphone</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 u x Dual Channel DI Box</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">3 u x Microphone Stand</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">2 u x Speaker Stand</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 lot x Microphone Stand / Speaker Stand</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 lot x All Necessary cables & Extensions</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 x Sound Engineer</div></div>';
+					break;
+				case 'SD_2t2m':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-10">' + num + '.</div>';
+					html += '<div class="col-80"><strong>Sound System - 2 Top 2 Mon</strong></div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-main="1" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">2 u x Speaker (Top)</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">2 u x Speaker (Monitor)</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 u x Mixer</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">2 u x Wireless Handheld Microphone</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 u x Dual Channel DI Box</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">3 u x Microphone Stand</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">2 u x Speaker Stand</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 lot x Microphone Stand / Speaker Stand</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 lot x All Necessary cables & Extensions</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 x Sound Engineer</div></div>';
+					break;
+				case 'SD_4t2m':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-10">' + num + '.</div>';
+					html += '<div class="col-80"><strong>Sound System - 4 Top 2 Mon</strong></div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-main="1" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">4 u x Speaker (Top)</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">2 u x Speaker (Monitor)</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 u x Mixer</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">2 u x Wireless Handheld Microphone</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 u x Dual Channel DI Box</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">3 u x Microphone Stand</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">4 u x Speaker Stand</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 lot x Microphone Stand / Speaker Stand</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 lot x All Necessary cables & Extensions</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 x Sound Engineer</div></div>';
+					break;
+				case 'SD_6t2m':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-10">' + num + '.</div>';
+					html += '<div class="col-80"><strong>Sound System - 6 Top 2 Mon</strong></div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-main="1" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">6 u x Speaker (Top)</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">2 u x Speaker (Monitor)</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 u x Mixer</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">2 u x Wireless Handheld Microphone</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 u x Dual Channel DI Box</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">3 u x Microphone Stand</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">6 u x Speaker Stand</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 lot x Microphone Stand / Speaker Stand</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 lot x All Necessary cables & Extensions</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 x Sound Engineer</div></div>';
+					break;
+				case 'aD_istm':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-20"></div>';
+					html += '<div class="col-70"><strong>* Extra</strong>&emsp;' + code.substr(7) + ' x Wired Instrument Mic</div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					break;
+				case 'aD_cdsm':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-20"></div>';
+					html += '<div class="col-70"><strong>* Extra</strong>&emsp;' + code.substr(7) + ' x Wired Condenser Mic</div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					break;
+				case 'aD_mcst':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-20"></div>';
+					html += '<div class="col-70"><strong>* Extra</strong>&emsp;' + code.substr(7) + ' x Microphone Stand</div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					break;
+				case 'aD_bkst':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-20"></div>';
+					html += '<div class="col-70"><strong>* Extra</strong>&emsp;' + code.substr(7) + ' x Book Stand</div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					break;
+				case 'aD_dibx':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-20"></div>';
+					html += '<div class="col-70"><strong>* Extra</strong>&emsp;' + code.substr(7) + ' x Dual Channel DI Box</div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					break;
+				case 'aD_wrsm':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-20"></div>';
+					html += '<div class="col-70"><strong>* Extra</strong>&emsp;' + code.substr(7) + ' x Wireless Microphone</div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					break;
+				case 'aD_hsmc':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-20"></div>';
+					html += '<div class="col-70"><strong>* Extra</strong>&emsp;' + code.substr(7) + ' x Headworn Microphone</div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					break;
+				case 'aD_dmst':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-20"></div>';
+					html += '<div class="col-70"><strong>* Extra</strong>&emsp;' + code.substr(7) + ' x Drum Mic Set</div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					break;
+				case 'aD_tops':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-20"></div>';
+					html += '<div class="col-70"><strong>* Extra</strong>&emsp;' + code.substr(7) + ' x Top Speaker</div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					break;
+				case 'aD_mons':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-20"></div>';
+					html += '<div class="col-70"><strong>* Extra</strong>&emsp;' + code.substr(7) + ' x Monitor Speaker</div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					break;
+				case 'aD_b58a':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-20"></div>';
+					html += '<div class="col-70"><strong>* Extra</strong>&emsp;' + code.substr(7) + ' x Shure SLX Beta 58A Wireless Mic</div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					break;
+				case 'aD_wsbp':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-20"></div>';
+					html += '<div class="col-70"><strong>* Extra</strong>&emsp;' + code.substr(7) + ' x Wireless Body Pack (for instrument)</div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					break;
+				case 'aD_sxmc':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-20"></div>';
+					html += '<div class="col-70"><strong>* Extra</strong>&emsp;' + code.substr(7) + ' x Saxophone Mic Clip</div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					break;
+				case 'aD_vlmc':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-20"></div>';
+					html += '<div class="col-70"><strong>* Extra</strong>&emsp;' + code.substr(7) + ' x Violin Mic Clip</div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					break;
+				case 'aD_sgcw':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-20"></div>';
+					html += '<div class="col-70"><strong>* Extra</strong>&emsp;' + code.substr(7) + ' x Stage Crew</div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					break;
+				case 'aD_sdcw':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-20"></div>';
+					html += '<div class="col-70"><strong>* Extra</strong>&emsp;' + code.substr(7) + ' x Sound Crew</div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					break;
+				case 'aD_ovtm':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-20"></div>';
+					html += '<div class="col-70"><strong>* Extra</strong>&emsp;' + code.substr(7) + ' x Extra hours</div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					break;
+				case 'aD_sbwf':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-20"></div>';
+					html += '<div class="col-70"><strong>* Extra</strong>&emsp;' + code.substr(7) + ' x Subwoofer</div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					break;
+				case 'aD_dgtm':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-20"></div>';
+					html += '<div class="col-70"><strong>* Extra &emsp; - Upgrade to Digital Mixer</strong></div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					break;
+				case 'aD_estp':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-20"></div>';
+					html += '<div class="col-70"><strong>* Extra &emsp; - Early setup</strong></div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					break;
+				case 'aD_dmrs':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-20"></div>';
+					html += '<div class="col-70"><strong>* Extra &emsp; - Dismantle &amp; Resetup</strong></div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					break;
+				case 'SG_4f4f':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-10">' + num + '.</div>';
+					html += '<div class="col-80"><strong>Stage System</strong></div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-main="1" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					break;
+				case 'aG_sslg':
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-20">Length</div><div class="col-70">:&emsp;<strong>' + code.substr(7) + ' ft</strong></div></div>';
+					break;
+				case 'aG_sswh':
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-20">Width</div><div class="col-70">:&emsp;<strong>' + code.substr(7) + ' ft</strong></div></div>';
+					break;
+				case 'aG_sshg':
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-20">Height</div><div class="col-70">:&emsp;<strong>' + parseFloat(code.substr(7)).toFixed(2) + ' ft</strong></div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">Setup & Dismantle</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">* Skirting included.</div></div>';
+					break;
+				case 'aG_stcs':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-20"></div>';
+					html += '<div class="col-70"><strong>* Extra</strong>&emsp;' + code.substr(7) + ' x Staircase</div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					break;
+				case 'aG_crpt':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-20"></div>';
+					html += '<div class="col-70"><strong>* Extra</strong>&emsp;- Carpet</div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					break;
+			}
 		}
 		
 		return html;
 	},
 	'checkPrice' : function(code){
+		if(sys.isEmpty(code)){
+			return 0;
+		}
+		
 		var price = 0,
 			name = code.substr(0, 7),
 			qty = ((sys.isEmpty(code.substr(7))) ? 1 : parseFloat(code.substr(7)));
@@ -7578,6 +7452,156 @@ sys = {
 		}
 		
 		return (price * qty);
+	},
+	'updateCartPrice' : function(){
+		var cart_item = $('.evts_cart_DL').data('item'),
+			temp_item = $('.evt_ord_proceed').data('item'),
+			total = 0;
+			
+		if(!sys.isEmpty(cart_item)){
+			for(var i=0; i<cart_item.length; i++){
+				var uprice = sys.checkPrice(cart_item[i]);
+				
+				if(uprice){
+					total += uprice;
+				}else{
+					if(cart_item[i] == 'SG_4f4f'){
+						var lgth = 4,
+							wdth = 4,
+							crpt = 0,
+							stcs = 0,
+							limit = ((cart_item.length > (i+6)) ? (i+6) : cart_item.length);
+							
+						for(var j=(i+1); j<limit; j++){
+							if(!sys.isEmpty(cart_item[j])){
+								switch(cart_item[j].substr(0, 7)){
+									case 'aG_sslg':
+										lgth = parseFloat(cart_item[j].substr(7));
+										break;
+									case 'aG_sswh':
+										wdth = parseFloat(cart_item[j].substr(7));
+										break;
+									case 'aG_stcs':
+										stcs = parseFloat(cart_item[j].substr(7));
+										break;
+									case 'aG_crpt':
+										crpt = parseFloat(cart_item[j].substr(7));
+										break;
+								}
+							}
+						}
+						
+						uprice += 200;
+						uprice += (( lgth * wdth ) * 4.5);
+						if(crpt){
+							uprice += ( lgth * wdth );
+						}
+						if(stcs){
+							uprice += ( stcs * 150);
+							
+							if((lgth * wdth) >= 96){
+								uprice -= 150;
+							}
+						}
+						
+						total += uprice;
+					}
+				}
+			}
+		}
+		
+		if(!sys.isEmpty(temp_item)){
+			for(var i=0; i<temp_item.length; i++){
+				var uprice = sys.checkPrice(temp_item[i]);
+				
+				if(uprice){
+					total += uprice;
+				}else{
+					if(!sys.isEmpty(temp_item[i])){
+						if(temp_item[i] == 'SG_4f4f'){
+							var lgth = 4,
+								wdth = 4,
+								crpt = 0,
+								stcs = 0,
+								limit = ((temp_item.length > (i+6)) ? (i+6) : temp_item.length);
+								
+							for(var j=(i+1); j<limit; j++){
+								switch(temp_item[j].substr(0, 7)){
+									case 'aG_sslg':
+										lgth = parseFloat(temp_item[j].substr(7));
+										break;
+									case 'aG_sswh':
+										wdth = parseFloat(temp_item[j].substr(7));
+										break;
+									case 'aG_stcs':
+										stcs = parseFloat(temp_item[j].substr(7));
+										break;
+									case 'aG_crpt':
+										crpt = parseFloat(temp_item[j].substr(7));
+										break;
+								}
+							}
+							
+							uprice += 200;
+							uprice += (( lgth * wdth ) * 4.5);
+							if(crpt){
+								uprice += ( lgth * wdth );
+							}
+							if(stcs){
+								uprice += ( stcs * 150);
+								
+								if((lgth * wdth) >= 96){
+									uprice -= 150;
+								}
+							}
+							
+							total += uprice;
+						}else if(temp_item[i].substr(0, 7) == 'aG_sslg'){
+							var lgth = 4,
+								wdth = 4,
+								crpt = 0,
+								stcs = 0,
+								limit = ((temp_item.length > (i+5)) ? (i+6) : temp_item.length);
+								
+							for(var j=i; j<limit; j++){
+								switch(temp_item[j].substr(0, 7)){
+									case 'aG_sslg':
+										lgth = parseFloat(temp_item[j].substr(7));
+										break;
+									case 'aG_sswh':
+										wdth = parseFloat(temp_item[j].substr(7));
+										break;
+									case 'aG_stcs':
+										stcs = parseFloat(temp_item[j].substr(7));
+										break;
+									case 'aG_crpt':
+										crpt = parseFloat(temp_item[j].substr(7));
+										break;
+								}
+							}
+							
+							uprice -= 272;
+							uprice += 200;
+							uprice += (( lgth * wdth ) * 4.5);
+							if(crpt){
+								uprice += ( lgth * wdth );
+							}
+							if(stcs){
+								uprice += ( stcs * 150);
+								
+								if((lgth * wdth) >= 96){
+									uprice -= 150;
+								}
+							}
+							
+							total += uprice;
+						}
+					}
+				}
+			}
+		}
+		
+		$('.evts_ord_price').text(total.toFixed(2));
 	},
 	'getAddOn' : function(code){
 		switch(code){

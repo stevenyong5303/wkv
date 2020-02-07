@@ -172,7 +172,7 @@ input.evtd_price, label.evtd_paid, input.evtd_price_DL, label.evtd_paid_DL {
 	margin-right: 10px;
 }
 .evt_ord_tab button.button{
-	width: 300px;
+	width: 200px;
 	margin: auto;
 }
 div.toolbar.evt_ord_tab, div.evt_ord_DL div.toolbar{
