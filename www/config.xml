@@ -95,32 +95,32 @@
 
     <!-- Define app icon for each platform. -->
     <platform name="android">
-        <icon   src="www/res/icon/android/drawable-ldpi/icon.png"               density="ldpi" />
-        <icon   src="www/res/icon/android/drawable-mdpi/icon.png"               density="mdpi" />
-        <icon   src="www/res/icon/android/drawable-hdpi/icon.png"               density="hdpi" />
-        <icon   src="www/res/icon/android/drawable-xhdpi/icon.png"              density="xhdpi" />
-        <icon   src="www/res/icon/android/drawable-xxhdpi/icon.png"             density="xxhdpi" />
-        <icon   src="www/res/icon/android/drawable-xxxhdpi/icon.png"            density="xxxhdpi" />
+        <icon   src="res/icon/android/drawable-ldpi/icon.png"               density="ldpi" />
+        <icon   src="res/icon/android/drawable-mdpi/icon.png"               density="mdpi" />
+        <icon   src="res/icon/android/drawable-hdpi/icon.png"               density="hdpi" />
+        <icon   src="res/icon/android/drawable-xhdpi/icon.png"              density="xhdpi" />
+        <icon   src="res/icon/android/drawable-xxhdpi/icon.png"             density="xxhdpi" />
+        <icon   src="res/icon/android/drawable-xxxhdpi/icon.png"            density="xxxhdpi" />
     </platform>
 
     <platform name="ios">
-        <icon   src="www/res/icon/ios/57/icon.png"                platform="ios" width="57"   height="57" />
-        <icon   src="www/res/icon/ios/114/icon.png"               platform="ios" width="114"  height="114" />
-        <icon   src="www/res/icon/ios/40/icon.png"                platform="ios" width="40"   height="40" />
-        <icon   src="www/res/icon/ios/80/icon.png"                platform="ios" width="80"   height="80" />
-        <icon   src="www/res/icon/ios/50/icon.png"                platform="ios" width="50"   height="50" />
-        <icon   src="www/res/icon/ios/100/icon.png"               platform="ios" width="100"  height="100" />
-        <icon   src="www/res/icon/ios/60/icon.png"                platform="ios" width="60"   height="60" />
-        <icon   src="www/res/icon/ios/120/icon.png"               platform="ios" width="120"  height="120" />
-        <icon   src="www/res/icon/ios/180/icon.png"               platform="ios" width="180"  height="180" />
-        <icon   src="www/res/icon/ios/72/icon.png"                platform="ios" width="72"   height="72" />
-        <icon   src="www/res/icon/ios/144/icon.png"               platform="ios" width="144"  height="144" />
-        <icon   src="www/res/icon/ios/76/icon.png"                platform="ios" width="76"   height="76" />
-        <icon   src="www/res/icon/ios/152/icon.png"               platform="ios" width="152"  height="152" />
-        <icon   src="www/res/icon/ios/29/icon.png"                platform="ios" width="29"   height="29" />
-        <icon   src="www/res/icon/ios/58/icon.png"                platform="ios" width="58"   height="58" />
-        <icon   src="www/res/icon/ios/87/icon.png"                platform="ios" width="87"   height="87" />
-		<icon   src="www/res/icon/ios/1024/icon.png"	   		  platform="ios" width="1024"   height="1024" />
+        <icon   src="res/icon/ios/57/icon.png"                platform="ios" width="57"   height="57" />
+        <icon   src="res/icon/ios/114/icon.png"               platform="ios" width="114"  height="114" />
+        <icon   src="res/icon/ios/40/icon.png"                platform="ios" width="40"   height="40" />
+        <icon   src="res/icon/ios/80/icon.png"                platform="ios" width="80"   height="80" />
+        <icon   src="res/icon/ios/50/icon.png"                platform="ios" width="50"   height="50" />
+        <icon   src="res/icon/ios/100/icon.png"               platform="ios" width="100"  height="100" />
+        <icon   src="res/icon/ios/60/icon.png"                platform="ios" width="60"   height="60" />
+        <icon   src="res/icon/ios/120/icon.png"               platform="ios" width="120"  height="120" />
+        <icon   src="res/icon/ios/180/icon.png"               platform="ios" width="180"  height="180" />
+        <icon   src="res/icon/ios/72/icon.png"                platform="ios" width="72"   height="72" />
+        <icon   src="res/icon/ios/144/icon.png"               platform="ios" width="144"  height="144" />
+        <icon   src="res/icon/ios/76/icon.png"                platform="ios" width="76"   height="76" />
+        <icon   src="res/icon/ios/152/icon.png"               platform="ios" width="152"  height="152" />
+        <icon   src="res/icon/ios/29/icon.png"                platform="ios" width="29"   height="29" />
+        <icon   src="res/icon/ios/58/icon.png"                platform="ios" width="58"   height="58" />
+        <icon   src="res/icon/ios/87/icon.png"                platform="ios" width="87"   height="87" />
+		<icon   src="res/icon/ios/1024/icon.png"	   		  platform="ios" width="1024"   height="1024" />
     </platform>
 
     <!-- Define app splash screen for each platform. -->
