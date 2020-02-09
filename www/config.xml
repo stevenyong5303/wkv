@@ -4,7 +4,7 @@
 <widget xmlns     = "http://www.w3.org/ns/widgets"
         xmlns:gap = "http://phonegap.com/ns/1.0"
         id        = "com.wkv.manage"
-        version   = "1.0.241">
+        version   = "1.0.242">
 
     <name>WKV</name>
 
@@ -140,18 +140,20 @@
     <!-- <gap:splash src="res/screen/windows-phone/screen-portrait.png"      gap:platform="winphone" /> -->
 
     <gap:config-file platform="ios" parent="CFBundleShortVersionString">
-    <string>241</string>
+    <string>242</string>
     </gap:config-file>
-	<gap:config-file parent="NSCameraUsageDescription" platform="ios" target="*-Info.plist">
-    <string>Camera permission is required because the camera is need to scan the 2d barcode to check the inventory.</string>
-    </gap:config-file>
-	<gap:config-file parent="NSLocationAlwaysUsageDescription" platform="ios" target="*-Info.plist">
-    <string>Location permission is required because there is a feature of this apps that allow the crew to clock in based on their current location.</string>
-    </gap:config-file>
-	<gap:config-file parent="NSLocationWhenInUseUsageDescription" platform="ios" target="*-Info.plist">
-    <string>Location permission is required because there is a feature of this apps that allow the crew to clock in based on their current location.</string>
-    </gap:config-file>
-
+	
+	<platform name="ios">
+		<edit-config target="NSCameraUsageDescription" file="*-Info.plist" mode="merge" overwrite="true">
+			<string>Camera permission is required because the camera is needed to scan the 2D barcode to add, update, check the inventory.</string>
+		</edit-config>
+		<edit-config target="NSLocationAlwaysUsageDescription" file="*-Info.plist" mode="merge" overwrite="true">
+			<string>Location permission is required because there is a feature of this apps that allow the crew to clock in based on their current location.</string>
+		</edit-config>
+		<edit-config target="NSLocationWhenInUseUsageDescription" file="*-Info.plist" mode="merge" overwrite="true">
+			<string>Location permission is required because there is a feature of this apps that allow the crew to clock in based on their current location.</string>
+		</edit-config>
+	</platform>
     <!--
         Define access to external domains.
         <access />            - a blank access tag denies access to all external resources.
