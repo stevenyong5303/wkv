@@ -181,7 +181,7 @@ div.toolbar.evt_ord_tab, div.evt_ord_DL div.toolbar{
 div.evt_dlg_cart{
 	font-size: 14px;
 }
-div.evt_ord_0, div.evt_ord_1, div.evt_ord_2, div.evt_ord_3{
+div.evt_ord_0, div.evt_ord_1, div.evt_ord_2, div.evt_ord_3, div.evt_ord_4{
 	height: 100%;
 }
 div.evt_ord_0{
@@ -414,11 +414,11 @@ td.tb-ld.tb-not-paid, td.tb-pic.tb-not-paid, div.col-10.tb-not-paid{
 	display: inline-block;
 	width: 55px;
 }
-.DLdetails-popover .autocomplete-dropdown.autocomplete-dropdown-in ul, .details-popover .autocomplete-dropdown.autocomplete-dropdown-in ul, .tskld-popover .autocomplete-dropdown.autocomplete-dropdown-in ul{
+.evt_ord_4 .autocomplete-dropdown.autocomplete-dropdown-in ul, .DLdetails-popover .autocomplete-dropdown.autocomplete-dropdown-in ul, .details-popover .autocomplete-dropdown.autocomplete-dropdown-in ul, .tskld-popover .autocomplete-dropdown.autocomplete-dropdown-in ul{
 	padding-left: 0px !important;
 	font-size: 12px;
 }
-.DLdetails-popover .autocomplete-dropdown.autocomplete-dropdown-in ul li, .details-popover .autocomplete-dropdown.autocomplete-dropdown-in ul li, .tskld-popover .autocomplete-dropdown.autocomplete-dropdown-in ul li{
+.evt_ord_4 .autocomplete-dropdown.autocomplete-dropdown-in ul li, .DLdetails-popover .autocomplete-dropdown.autocomplete-dropdown-in ul li, .details-popover .autocomplete-dropdown.autocomplete-dropdown-in ul li, .tskld-popover .autocomplete-dropdown.autocomplete-dropdown-in ul li{
 	height: 32px;
 }
 .popup-audiop audio{
