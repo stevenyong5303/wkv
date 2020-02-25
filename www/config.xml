@@ -4,7 +4,7 @@
 <widget xmlns     = "http://www.w3.org/ns/widgets"
         xmlns:gap = "http://phonegap.com/ns/1.0"
         id        = "com.wkv.manage"
-        version   = "1.0.245">
+        version   = "1.0.246">
 
     <name>WKV</name>
 
@@ -126,21 +126,21 @@
         <icon src="res/ios/icon-83.5@2x.png" width="167" height="167" />
     </platform>
 
-    <!-- Define app splash screen for each platform. -->
-    <!-- <gap:splash src="res/screen/android/screen-ldpi-portrait.png"       gap:platform="android" gap:qualifier="port-ldpi" /> -->
-    <!-- <gap:splash src="res/screen/android/screen-mdpi-portrait.png"       gap:platform="android" gap:qualifier="port-mdpi" /> -->
-    <!-- <gap:splash src="res/screen/android/screen-hdpi-portrait.png"       gap:platform="android" gap:qualifier="port-hdpi" /> -->
-    <!-- <gap:splash src="res/screen/android/screen-xhdpi-portrait.png"      gap:platform="android" gap:qualifier="port-xhdpi" /> -->
-    <!-- <gap:splash src="res/screen/blackberry/screen-225.png"              gap:platform="blackberry" /> -->
-    <!-- <gap:splash src="res/screen/ios/screen-iphone-portrait.png"         gap:platform="ios"     width="320" height="480" /> -->
-    <!-- <gap:splash src="res/screen/ios/screen-iphone-portrait-2x.png"      gap:platform="ios"     width="640" height="960" /> -->
-    <!-- <gap:splash src="res/screen/ios/screen-iphone-portrait-568h-2x.png" gap:platform="ios"     width="640" height="1136" /> -->
-    <!-- <gap:splash src="res/screen/ios/screen-ipad-portrait.png"           gap:platform="ios"     width="768" height="1024" /> -->
-    <!-- <gap:splash src="res/screen/ios/screen-ipad-landscape.png"          gap:platform="ios"     width="1024" height="768" /> -->
-    <!-- <gap:splash src="res/screen/windows-phone/screen-portrait.png"      gap:platform="winphone" /> -->
+    <platform name="ios">
+		<splash src="res/ios/Default~iphone.png" width="320" height="480"/>
+		<splash src="res/ios/Default@2x~iphone.png" width="640" height="960"/>
+		<splash src="res/ios/Default-Portrait~ipad.png" width="768" height="1024"/>
+		<splash src="res/ios/Default-Portrait@2x~ipad.png" width="1536" height="2048"/>
+		<splash src="res/ios/Default-Landscape~ipad.png" width="1024" height="768"/>
+		<splash src="res/ios/Default-Landscape@2x~ipad.png" width="2048" height="1536"/>
+		<splash src="res/ios/Default-568h@2x~iphone.png" width="640" height="1136"/>
+		<splash src="res/ios/Default-667h.png" width="750" height="1334"/>
+		<splash src="res/ios/Default-736h.png" width="1242" height="2208"/>
+		<splash src="res/ios/Default-Landscape-736h.png" width="2208" height="1242"/>
+	</platform>
 
     <gap:config-file platform="ios" parent="CFBundleShortVersionString">
-    <string>245</string>
+    <string>246</string>
     </gap:config-file>
 	
 	<platform name="ios">

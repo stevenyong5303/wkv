@@ -6,11 +6,11 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.245",
+			  version: "1.0.246",
 			  rtl: false,
 			  language: "en-US"
 		  });
-var geoToken = true, geoCount = 60, APP_VERSION = 10245, tmpCalendar = '', fileObject, tapHold = 0, tapHoldStr = '';
+var geoToken = true, geoCount = 60, APP_VERSION = 10246, tmpCalendar = '', fileObject, tapHold = 0, tapHoldStr = '';
 
 var app = {
     initialize: function() {
@@ -1217,7 +1217,13 @@ $(document).ready(function(){
 	});
 	
 	$('div.popup-staa .block img, #update a.button').on('click', function(){
-		window.open("market://details?id=com.wkv.manage", "_system");
+		if(sys.getMobileOS()=='Android'){
+			window.open("market://details?id=com.wkv.manage", "_system");
+		}else if(sys.getMobileOS()=='iOS'){
+			window.open("itms-apps://itunes.apple.com/app/wkv/id1492921260", "_system");
+		}else{
+			window.open("https://app.wkventertainment.com/", "_system");
+		}
 	});
 	
 	$('body').on('touchstart', function(e){
@@ -2460,6 +2466,116 @@ $(document).ready(function(){
 			}else{
 				navigator.vibrate(100);
 			}
+		});
+		
+		$('#sfcl-btn').on('click', function(){
+			var DATA = {
+					'usr' : STORAGE.getItem('usr')
+				};
+			var post_data = "ACT=" + encodeURIComponent('sfc_chk')
+						  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
+						  
+			$.ajax({
+				type: 'POST',
+				url: 'https://app.wkventertainment.com/',
+				data: post_data,
+				beforeSend: function(){
+					sys.loading(1);
+				},
+				success: function(str){
+					var inf = JSON.parse(str);
+				
+					if(inf['reply']==='200 OK'){
+						var selfc = inf['selfc'], x = '';
+							
+						for(var i=0; i<selfc.length; i++){
+							x += '<li><a href="#" class="item-link item-content" data-pid="' + selfc[i].primary_id + '" data-text="' + selfc[i].pic + ' ('+(selfc[i].date).substr(0,10)+')"><div class="item-media">';
+							x += '<i class="icon material-icons md-only" style="color:#' + ((selfc[i].status == '1') ? '080' : ((selfc[i].status == '0') ? 'A00' : 'EA0')) + ';">' + ((selfc[i].status == '1') ? 'call_received' : ((selfc[i].status == '0') ? 'call_made' : 'clear_all')) + '</i></div>';
+							x += '<div class="item-inner"><div class="item-title">' + selfc[i].pic + '<div class="item-header">' + (sys.isEmpty(selfc[i].description) ? '-' : selfc[i].description) + '</div>';
+							x += '</div><div class="item-after">' + (selfc[i].date).substr(5,5) + '</div></div></a></li>';
+						}
+						$('#selfc_list').html(x);
+						sys.loading(0);
+					}else{
+						sys.loading(0);
+						var failed_toast = apps.toast.create({
+											   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
+											   text: 'Oooppss, error',
+											   position: 'center',
+											   closeTimeout: 2000
+										   });
+						failed_toast.open();
+					}
+				}
+			});
+		});
+		
+		$('#selfc_list').on('click', 'a.item-link', function(){
+			var pid = $(this).data('pid'), link = $(this);
+			
+			apps.dialog.create({
+				title: 'Status for',
+				text: $(this).data('text'),
+				buttons: [{
+						text: 'Pending',
+					},{
+						text: 'Collected',
+					},{
+						text: 'Returned',
+					},
+				],
+				verticalButtons: true,
+				onClick: function(dialog, index){
+					var DATA = {
+						'usr' : STORAGE.getItem('usr'),
+						'pid' : pid,
+						'status' : (index == 0 ? '' : (index-1))
+					};
+					var post_data = "ACT=" + encodeURIComponent('sfc_udt')
+								  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
+					
+					$.ajax({
+						type: 'POST',
+						url: 'https://app.wkventertainment.com/',
+						data: post_data,
+						beforeSend: function(){
+							sys.loading(1);
+						},
+						success: function(str){
+							sys.loading(0);
+							
+							if(str=='200 OK'){
+								if(index == 2){
+									link.find('i.icon').css('color', '#080');
+									link.find('i.icon').html('call_received');
+								}else if(index == 1){
+									link.find('i.icon').css('color', '#A00');
+									link.find('i.icon').html('call_made');
+								}else{
+									link.find('i.icon').css('color', '#EA0');
+									link.find('i.icon').html('clear_all');
+								}
+								
+								var success_toast = apps.toast.create({
+													   icon: '<i class="material-icons">done_outline</i>',
+													   text: 'Status updated.',
+													   position: 'center',
+													   closeTimeout: 2000
+												   });
+								success_toast.open();
+							}else{
+								var failed_toast = apps.toast.create({
+													   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
+													   text: 'Oooppss, error',
+													   position: 'center',
+													   closeTimeout: 2000
+												   });
+								failed_toast.open();
+							}
+						}
+					});
+				}
+			}).open();
 		});
 		
 		$('#sntf-btn').on('click', function(){
@@ -4059,20 +4175,6 @@ $(document).ready(function(){
 			}
 		});
 		
-		$('button.apkl_add').on('click', function(){
-			apps.popup.close('.popup-apkl', true);
-			apps.popup.open('.popup-apklp', true);
-			$('.popup-backdrop').addClass('backdrop-in');
-			
-			$('.popup-apklp .stepper').each(function(i){
-				var id = $(this).data('id');
-				apps.stepper.create({
-					el: '.popup-apklp .stp-' + id + '.stepper'
-				});
-			});
-			
-		});
-		
 		$('#picl-btn').on('click', function(){
 			var x = '', crews = $('body').data('crew');
 			
@@ -5060,71 +5162,6 @@ $(document).ready(function(){
 						}
 					}
 				});
-			});
-		});
-		
-		$('#ivtk-btn').on('click', function(){
-			$('.ivt_list ul').find('li').remove();
-			
-			var searchbar = apps.searchbar.create({
-					el: '.popup-ivtk .searchbar',
-					searchContainer: '.popup-ivtk .list.ivt_list',
-					searchIn: '.eqls'
-				});
-				
-			var inv = $('body').data('inv'), equip = [], place = {};
-			
-			for(var i=0; i < inv.length; i++){
-				var point = inv[i].point;
-				equip[i] = ((sys.isEmpty(inv[i].brand) ? '' : ( inv[i].brand + ' ')) + inv[i].description);
-				
-				if(!sys.isEmpty(point)){
-					var pnt = JSON.parse(point.replace(/\\/g, ""));
-					
-					for(var j=0; j < pnt.length; j++){
-						var tmp_c = $('.eqls[name="' + pnt[j].p + '"]').text(),
-							tmp = {
-									'name': equip[i],
-									'qty' : pnt[j].q
-								  };
-						if(sys.isEmpty(place[pnt[j].p])){
-							place[pnt[j].p] = [];
-							
-							var x = '';
-							
-							x += '<li><a href="#" class="item-link item-content"><div class="item-inner"><div class="item-title">' + sys.capFirst(pnt[j].p);
-							x += '<span name="' + pnt[j].p + '" class="eqls"></span></div></div></a></li>';
-							
-							$('.ivt_list ul').append(x);
-						}else{
-							tmp_c += ', ';
-						}
-						place[pnt[j].p].push(tmp);
-						$('.eqls[name="' + pnt[j].p + '"]').text((tmp_c + equip[i]));
-						$('.eqls[name="' + pnt[j].p + '"]').data('equip', place[pnt[j].p]);
-					}
-				}
-			}
-
-			var autoSearch = apps.autocomplete.create({
-				openIn: 'dropdown',
-				inputEl: '.ivtk-search',
-				limit: 5,
-				source: function(query, render){
-					var results = [];
-					
-					if(query.length === 0){
-						render(results);
-						return;
-					}
-					
-					for(var i = 0; i < equip.length; i++){
-						if (equip[i].toLowerCase().indexOf(query.toLowerCase()) >= 0) results.push(equip[i]);
-					}
-					
-					render(results);
-				},
-				off: { blur }
 			});
 		});
 		
@@ -6227,10 +6264,23 @@ $(document).ready(function(){
 			
 			if(!sys.isEmpty(inf['task'])){
 				if(inf['task'][0] != 'none'){
+					var today = new Date(),
+						dd = String(today.getDate()).padStart(2, '0'),
+						mm = String(today.getMonth() + 1).padStart(2, '0'),
+						yyyy = today.getFullYear();
+					var todayString = (yyyy + '-' + mm + '-' + dd + ' 00:00:00'),
+						todayClass = '';
+					
 					if(sys.isDealer()){
 						var task = inf['task'], x = '', sameAs = 0, rmk = '';
 					
 						for(var i=0; i<task.length; i++){
+							if(task[i]['date'] == todayString){
+								todayClass = ' todayTask';
+							}else{
+								todayClass = '';
+							}
+							
 							if(task[i]['date'] != sameAs){
 								x += '<div class="timeline-item">';
 								x += '<div class="timeline-item-date">' + task[i]['date'].substr(8,2) + ' <small>' + sys.toMonth(task[i]['date']) + '</small></div>';
@@ -6244,7 +6294,7 @@ $(document).ready(function(){
 								+ '<strong>Band</strong> : ' + (sys.isEmpty(task[i]['band']) ?  '-' : task[i]['band']) + ',,'
 								+ '<strong>Price</strong> : ' + ((sys.isEmpty(task[i]['price']) || task[i]['price'] == '0') ?  '-' : ('RM ' + parseFloat(task[i]['price']).toFixed(2))) + ',,'
 								+ ((sys.isEmpty(task[i]['price']) || task[i]['price'] == '0') ? '' : ('<strong>Paid Status</strong> : ' + (task[i]['paid'] == '1' ? 'PAID,,' : 'PENDING,,')));
-							x += '<div class="timeline-item-inner tsk' + task[i]['primary_id'] + '" data-eid="' + task[i]['primary_id'] + '" data-locpid="' + (sys.isEmpty(task[i]['venue']) ? 0 : (task[i]['venue'].indexOf('#PID#') != -1 ? task[i]['venue'] : 0)) + '" data-rmk="' + rmk + '" data-review="' + task[i]['review'] + '" data-datetime="' + (task[i]['date'].substr(0,11) + (sys.isEmpty(task[i]['time']) ? '23:59' : task[i]['time'])) + ':00">';
+							x += '<div class="timeline-item-inner tsk' + task[i]['primary_id'] + todayClass + '" data-eid="' + task[i]['primary_id'] + '" data-locpid="' + (sys.isEmpty(task[i]['venue']) ? 0 : (task[i]['venue'].indexOf('#PID#') != -1 ? task[i]['venue'] : 0)) + '" data-rmk="' + rmk + '" data-review="' + task[i]['review'] + '" data-datetime="' + (task[i]['date'].substr(0,11) + (sys.isEmpty(task[i]['time']) ? '23:59' : task[i]['time'])) + ':00">';
 							
 							if(task[i]['time']){
 								x += '<div class="timeline-item-time">' + task[i]['time'] + '</div>';
@@ -6265,6 +6315,12 @@ $(document).ready(function(){
 						var task = inf['task'], x = '', sameAs = 0;
 					
 						for(var i=0; i<task.length; i++){
+							if(task[i]['date'] == todayString){
+								todayClass = ' todayTask';
+							}else{
+								todayClass = '';
+							}
+							
 							if(task[i]['date'] != sameAs){
 								x += '<div class="timeline-item">';
 								x += '<div class="timeline-item-date">' + task[i]['date'].substr(8,2) + ' <small>' + sys.toMonth(task[i]['date']) + '</small></div>';
@@ -6272,7 +6328,7 @@ $(document).ready(function(){
 								x += '<div class="timeline-item-content">';
 							}
 							
-							x += '<div class="timeline-item-inner tsk' + task[i]['primary_id'] + '" data-locpid="' + (sys.isEmpty(task[i]['venue']) ? 0 : (task[i]['venue'].indexOf('#PID#') != -1 ? task[i]['venue'] : 0)) + '" data-rmk="' + task[i]['remarks'] + '" data-crew="' + task[i]['crew'] + '">';
+							x += '<div class="timeline-item-inner tsk' + task[i]['primary_id'] + todayClass + '" data-locpid="' + (sys.isEmpty(task[i]['venue']) ? 0 : (task[i]['venue'].indexOf('#PID#') != -1 ? task[i]['venue'] : 0)) + '" data-rmk="' + task[i]['remarks'] + '" data-crew="' + task[i]['crew'] + '">';
 							
 							if(task[i]['time']){
 								x += '<div class="timeline-item-time">' + task[i]['time'] + '</div>';
@@ -6484,6 +6540,23 @@ sys = {
 			val += ';';
 		}
 		return val;
+	},
+	'getMobileOS': function(){
+		var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+		
+		if (/windows phone/i.test(userAgent)) {
+			return "Windows Phone";
+		}
+
+		if (/android/i.test(userAgent)) {
+			return "Android";
+		}
+		
+		if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+			return "iOS";
+		}
+		
+		return "unknown";
 	},
 	'isDealer' : function(){
 		return (STORAGE.getItem('level')==='0');
