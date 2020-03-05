@@ -6,11 +6,11 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.246",
+			  version: "1.0.247",
 			  rtl: false,
 			  language: "en-US"
 		  });
-var geoToken = true, geoCount = 60, APP_VERSION = 10246, tmpCalendar = '', fileObject, tapHold = 0, tapHoldStr = '';
+var geoToken = true, geoCount = 60, APP_VERSION = 10247, tmpCalendar = '', fileObject, tapHold = 0, tapHoldStr = '';
 
 var app = {
     initialize: function() {
@@ -822,7 +822,7 @@ $(document).ready(function(){
 											
 											var inf1 = JSON.parse(str);
 											
-											$('.details-popover').data('md5', md5(((inf.luncheon_dinner==null) ? '' : inf.luncheon_dinner)+((inf.time==null) ? '' : inf.time)+((inf.venue==null) ? '' : inf.venue)+((inf.description==null) ? '' : inf.description)+((inf.band==null) ? '' : inf.band)+((inf.crew==null) ? '' : inf.crew)+((inf.car_in==null) ? '' : inf.car_in)+((inf.car_out==null) ? '' : inf.car_out)+((inf.remarks==null) ? '' : inf.remarks)));
+											$('.details-popover').data('md5', md5(((inf.luncheon_dinner==null) ? '' : inf.luncheon_dinner)+((inf.time==null) ? '' : inf.time)+((inf.venue==null) ? '' : inf.venue)+((inf.description==null) ? '' : inf.description)+((inf.band==null) ? '' : inf.band)+((inf.crew==null) ? '' : inf.crew)+((inf.crew_st==null) ? '' : inf.crew_st)+((inf.crew_ob==null) ? '' : inf.crew_ob)+((inf.crew_xx==null) ? '' : inf.crew_xx)+((inf.car_in==null) ? '' : inf.car_in)+((inf.car_out==null) ? '' : inf.car_out)+((inf.remarks==null) ? '' : inf.remarks)));
 											$('.details-popover').data('title', (inf.pic + ' on ' + (inf.date.substr(8,2)) + '/' + (inf.date.substr(5,2))));
 											$('.details-popover').data('date', (new Date(inf.date)).getTime());
 											
@@ -830,13 +830,13 @@ $(document).ready(function(){
 												$('.details-popover').data('lock', 0);
 												x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Person In Charge</div><div class="item-input-wrap">' + ((inf.pic==null) ? '-' : inf.pic) + '</div></div></div></li>';
 												x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Luncheon/Dinner</div><div class="item-input-wrap"><input class="evtd_ld" type="text" autocomplete="off" value="' + ((inf.luncheon_dinner==null) ? '' : inf.luncheon_dinner) + '"></div></div></div></li>';
-												x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Standby Time</div><div class="item-input-wrap"><input class="evtd_sbtm" type="text" autocomplete="off" value="' + ((inf.time==null) ? '' : inf.time) + '"></div></div></div></li>';
+												x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Standby Time&emsp;&emsp;&emsp;&emsp;<span class="evtd_sbta">&#9949;</span></div><div class="item-input-wrap"><input class="evtd_sbtm" type="text" autocomplete="off" value="' + ((inf.time==null) ? '' : (((inf.time).indexOf(', ') == -1) ? inf.time : (inf.time.split(', '))[0])) + '" data-val="' + ((inf.time==null) ? '' : inf.time) + '"><input class="evtd_sbtm1" type="text" autocomplete="off" value="' + ((inf.time==null) ? '' : (((inf.time).indexOf(', ') == -1) ? inf.time : (inf.time.split(', '))[1])) + '"><input class="evtd_sbtm2" type="text" autocomplete="off" value="' + ((inf.time==null) ? '' : (((inf.time).indexOf(', ') == -1) ? inf.time : (inf.time.split(', '))[2])) + '"></div></div></div></li>';
 												x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Venue</div><div class="item-input-wrap"><input class="evtd_venue" type="text" autocomplete="off" value="' + ((inf.venue==null) ? '' : (inf.venue.indexOf('#PID#') != -1 ? sys.pidToLoc(inf.venue).loc_name : inf.venue)) + '"></div></div></div></li>';
 												x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Description</div><div class="item-input-wrap"><input class="evtd_desc" type="text" autocomplete="off" value="' + ((inf.description==null) ? '' : inf.description) + '"></div></div></div></li>';
 												x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Remarks</div><div class="item-input-wrap"><input class="evtd_rmk" type="text" autocomplete="off" value="' + ((inf.remarks==null) ? '' : inf.remarks) + '"></div></div></div></li>';
 												x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Price</div><div class="item-input-wrap"><input class="evtd_price" type="text" autocomplete="off" value="' + ((inf.price==null) ? '' : inf.price) + '"><label class="toggle toggle-init color-green evtd_paid"><input type="checkbox"' + (inf.paid=='1' ? ' checked' : '') + '><span class="toggle-icon"></span></label></div></div></div></li>';
 												x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Live Band Information</div><div class="item-input-wrap"><input class="evtd_band" type="text" autocomplete="off" value="' + ((inf.band==null) ? '' : inf.band) + '"></div></div></div></li>';
-												x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Crew</div><div class="item-input-wrap"><input class="evtd_crew" type="text" autocomplete="off" data-uname="' + inf.crew + '" value="' + ((inf.crew==null) ? '' : sys.unameToSname(inf.crew)) + '"></div></div></div></li>';
+												x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Crew</div><div class="item-input-wrap"><input class="evtd_crew" type="text" autocomplete="off" data-uname="' + inf.crew + '" value="' + ((inf.crew==null) ? '' : sys.unameToSname(inf.crew)) + '" data-st="' + ((inf.crew_st==null) ? '' : inf.crew_st) + '" data-ob="' + ((inf.crew_ob==null) ? '' : inf.crew_ob) + '" data-xx="' + ((inf.crew_xx==null) ? '' : inf.crew_xx) + '" ></div></div></div></li>';
 												x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Vehicle to Event</div><div class="item-input-wrap"><input class="evtd_cin" type="text" autocomplete="off" value="' + ((inf.car_in==null) ? '' : sys.carToTcar(inf.car_in, 'r')) + '" data-ori="' + ((inf.car_in==null) ? '' : inf.car_in) + '" data-val="' + ((inf.car_in==null) ? '' : sys.carToTcar(inf.car_in, 'r')) + '"></div></div></div></li>';
 												x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Vehicle back from Event</div><div class="item-input-wrap"><input class="evtd_cout" type="text" autocomplete="off" value="' + ((inf.car_out==null) ? '' : sys.carToTcar(inf.car_out, 'r')) + '" data-ori="' + ((inf.car_out==null) ? '' : inf.car_out) + '" data-val="' + ((inf.car_out==null) ? '' : sys.carToTcar(inf.car_out, 'r')) + '"></div></div></div></li>';
 												x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-input-wrap row">';
@@ -958,9 +958,37 @@ $(document).ready(function(){
 														}
 													});
 												});
+												
+												$('.details-popover').on('change', 'input.evtd_sbtm, input.evtd_sbtm1, input.evtd_sbtm2', function(){
+													var ST = $('input.evtd_sbtm').val(),
+														OB = $('input.evtd_sbtm1').val(),
+														XX = $('input.evtd_sbtm2').val();
+														
+													$('input.evtd_sbtm').data('val', (ST + ', ' + OB + ', ' + XX));
+												});
 											}
 											$('.fab.evtd_shr').css('display', 'block');
 											apps.popover.open('.details-popover');
+											
+											$('span.evtd_sbta').on('click', function(){
+												if($('.evtd_sbtm1').css('opacity')=='1'){
+													$('.evtd_sbtm1').css('opacity', '0');
+													$('.evtd_sbtm2').css('opacity', '0');
+													
+													setTimeout(function(){
+														$('.evtd_sbtm1').css('display', 'none');
+														$('.evtd_sbtm2').css('display', 'none');
+													}, 1100);
+												}else{
+													$('.evtd_sbtm1').css('display', 'inline-block');
+													$('.evtd_sbtm2').css('display', 'inline-block');
+													
+													setTimeout(function(){
+														$('.evtd_sbtm1').css('opacity', '1');
+														$('.evtd_sbtm2').css('opacity', '1');
+													}, 100);
+												}
+											});
 											
 											if(parseInt($('body').data('user_level'))>=9 && inf1.lock!=0){
 												var success_toast = apps.toast.create({
@@ -1507,6 +1535,10 @@ $(document).ready(function(){
 			$('.evt_ord_proceed').data('item', []);
 			sys.updateCartPrice();
 			
+			$('.evt_ord_1').css('display', 'block');
+			$('.evt_ord_2').css('display', 'none');
+			$('.evt_ord_3').css('display', 'none');
+			$('.evt_ord_4').css('display', 'none');
 			$('.popup-backdrop').css('display', 'block');
 			$('.evt_ord_tab').css('display', 'none');
 		});
@@ -3169,6 +3201,9 @@ $(document).ready(function(){
 			var crews = $('body').data('crew'),
 				work = (sys.isEmpty($('input.evtd_crew').data('uname')) ? [] : ($('input.evtd_crew').data('uname').indexOf(',') != -1 ? $('input.evtd_crew').data('uname').split(',') : [$('input.evtd_crew').data('uname')])),
 				leave = (sys.isEmpty($('.details-popover').data('leave')) ? [] : ($('.details-popover').data('leave').indexOf(',') != -1 ? $('.details-popover').data('leave').split(',') : [$('.details-popover').data('leave')])),
+				ST = (sys.isEmpty($('input.evtd_crew').data('st')) ? [] : ($('input.evtd_crew').data('st').indexOf(',') != -1 ? $('input.evtd_crew').data('st').split(',') : [$('input.evtd_crew').data('st')])),
+				OB = (sys.isEmpty($('input.evtd_crew').data('ob')) ? [] : ($('input.evtd_crew').data('ob').indexOf(',') != -1 ? $('input.evtd_crew').data('ob').split(',') : [$('input.evtd_crew').data('ob')])),
+				XX = (sys.isEmpty($('input.evtd_crew').data('xx')) ? [] : ($('input.evtd_crew').data('xx').indexOf(',') != -1 ? $('input.evtd_crew').data('xx').split(',') : [$('input.evtd_crew').data('xx')])),
 				x = '';
 			
 			for(var i = 0; i < crews.length; i++){
@@ -3187,11 +3222,18 @@ $(document).ready(function(){
 							break;
 						}
 					}
-					x += '<li><label class="item-checkbox item-content"><input type="checkbox" ' + (select ? 'checked="checked"' : '') + ' name="evcw-checkbox" value="' + crews[i]['user_id'] + '" data-sn="' + crews[i]['short_name'] + '" />';
-					x += '<i class="icon icon-checkbox"></i><div class="item-inner"><div class="item-title' + (leaveApproved ? ' colorRed' : '') + '">' + crews[i]['short_name'] + '</div></div></label></li>';
+					x += '<li><div class="row"><div style="width:calc( 100% - 90px );"><label class="item-checkbox item-content"><input type="checkbox" ' + (select ? 'checked="checked"' : '') + ' name="evcw-checkbox" value="' + crews[i]['user_id'] + '" data-sn="' + crews[i]['short_name'] + '" />';
+					x += '<i class="icon icon-checkbox"></i><div class="item-inner"><div class="item-title' + (leaveApproved ? ' colorRed' : '') + '">' + crews[i]['short_name'] + '</div></div></label></div><div class="crw_tme_a" style="width:90px;">';
+					x += '<label class="checkbox evt_setup"><input type="checkbox" name="' + crews[i]['user_id'] + '" value="ST" ' + (((ST.indexOf(crews[i]['user_id'])) != -1) ? 'checked="checked"' : '') + '><i class="icon-checkbox"></i></label>';
+					x += '<label class="checkbox evt_onboard"><input type="checkbox" name="' + crews[i]['user_id'] + '" value="OB" ' + (((OB.indexOf(crews[i]['user_id'])) != -1) ? 'checked="checked"' : '') + '><i class="icon-checkbox"></i></label>';
+					x += '<label class="checkbox evt_dismantle"><input type="checkbox" name="' + crews[i]['user_id'] + '" value="XX" ' + (((XX.indexOf(crews[i]['user_id'])) != -1) ? 'checked="checked"' : '') + '><i class="icon-checkbox"></i></label></div></div></li>';
 				}
 			}
 			$('.evt-crew ul').html(x);
+			
+			$('label.evt_setup i.icon-checkbox').text('ST');
+			$('label.evt_onboard i.icon-checkbox').text('0B');
+			$('label.evt_dismantle i.icon-checkbox').text('XX');
 			$('.panel-evt-rmk').hide();
 			$('.panel-evt-car').hide();
 			$('.panel-evt-crew').show();
@@ -3205,6 +3247,22 @@ $(document).ready(function(){
 				});
 				
 			$('.panel-evt-crew .searchbar input').focus();
+		});
+		
+		$('#app').on('click', 'span.evt-crew-ta', function(){
+			if($('div.crw_tme_a').css('opacity')=='1'){
+				$('div.crw_tme_a').css('opacity', '0');
+				
+				setTimeout(function(){
+					$('div.crw_tme_a').css('display', 'none');
+				}, 1100);
+			}else{
+				$('div.crw_tme_a').css('display', 'block');
+				
+				setTimeout(function(){
+					$('div.crw_tme_a').css('opacity', '1');
+				}, 100);
+			}
 		});
 		
 		$('input#tskld_crew').on('click', function(){
@@ -3244,15 +3302,50 @@ $(document).ready(function(){
 		});
 		
 		$('div.evt-crew').on('change', 'input[name="evcw-checkbox"]', function(){
-			var wcrew = [], wcrewsn = [];
+			var wcrew = [], wcrewsn = [], ST = [], OB = [], XX = [];
 			
 			for(var i=0; i<$('input[name="evcw-checkbox"]:checked').length; i++){
 				wcrew.push($('input[name="evcw-checkbox"]:checked:eq('+i+')').val());
 				wcrewsn.push($('input[name="evcw-checkbox"]:checked:eq('+i+')').data('sn'));
 			}
 			
+			for(var i=0; i<$('label.evt_setup input[value="ST"]:checked').length; i++){
+				ST.push($('label.evt_setup input[value="ST"]:checked:eq('+i+')').attr('name'));
+			}
+			$('input.evt-crew-edit').data('st', ST.join(','));
+			
+			for(var i=0; i<$('label.evt_onboard input[value="OB"]:checked').length; i++){
+				OB.push($('label.evt_onboard input[value="OB"]:checked:eq('+i+')').attr('name'));
+			}
+			$('input.evt-crew-edit').data('ob', OB.join(','));
+			
+			for(var i=0; i<$('label.evt_dismantle input[value="XX"]:checked').length; i++){
+				XX.push($('label.evt_dismantle input[value="XX"]:checked:eq('+i+')').attr('name'));
+			}
+			$('input.evt-crew-edit').data('xx', XX.join(','));
+			
 			$('input.evt-crew-edit').data('uname', wcrew.join(','));
 			$('input.evt-crew-edit').val(wcrewsn.join(', '));
+		});
+		
+		$('div.evt-crew').on('click', 'label.item-checkbox', function(){
+			var input = $(this).find('input');
+			var uid = input.val();
+			
+			if(!input.prop("checked")){
+				$('input[name="'+uid+'"]').prop("checked", false);
+			}
+		});
+		
+		$('div.evt-crew').on('click', 'label.evt_setup, label.evt_onboard, label.evt_dismantle', function(){
+			var name = $(this).find('input').attr('name');
+			
+			if($('input[name="' + name + '"]:checked').length){
+				$('input[name="evcw-checkbox"][value="' + name + '"]').prop("checked", true);
+			}else{
+				$('input[name="evcw-checkbox"][value="' + name + '"]').prop("checked", false);
+			}
+			$('input[name="evcw-checkbox"][value="' + name + '"]').trigger('change');
 		});
 		
 		$('.details-popover').on('click', 'input.evtd_cin, input.evtd_cout', function(){
@@ -5368,7 +5461,7 @@ $(document).ready(function(){
 								if(parseInt($('body').data('user_level'))>=9){
 									x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Person In Charge</div><div class="item-input-wrap">' + ((inf.pic==null) ? '-' : inf.pic) + '</div></div></div></li>';
 									x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Luncheon/Dinner</div><div class="item-input-wrap"><input class="evtd_ld" type="text" autocomplete="off" value="' + ((inf.luncheon_dinner==null) ? '' : inf.luncheon_dinner) + '"></div></div></div></li>';
-									x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Standby Time</div><div class="item-input-wrap"><input class="evtd_sbtm" type="text" autocomplete="off" value="' + ((inf.time==null) ? '' : inf.time) + '"></div></div></div></li>';
+									x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Standby Time&emsp;&emsp;&emsp;&emsp;<span class="evtd_sbta">&#9949;</span></div><div class="item-input-wrap"><input class="evtd_sbtm" type="text" autocomplete="off" value="' + ((inf.time==null) ? '' : (((inf.time).indexOf(', ') == -1) ? inf.time : (inf.time.split(', '))[0])) + '" data-val="' + ((inf.time==null) ? '' : inf.time) + '"><input class="evtd_sbtm1" type="text" autocomplete="off" value="' + ((inf.time==null) ? '' : (((inf.time).indexOf(', ') == -1) ? inf.time : (inf.time.split(', '))[1])) + '"><input class="evtd_sbtm2" type="text" autocomplete="off" value="' + ((inf.time==null) ? '' : (((inf.time).indexOf(', ') == -1) ? inf.time : (inf.time.split(', '))[2])) + '"></div></div></div></li>';
 									x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Venue</div><div class="item-input-wrap"><input class="evtd_venue" type="text" autocomplete="off" value="' + ((inf.venue==null) ? '' : (inf.venue.indexOf('#PID#') != -1 ? sys.pidToLoc(inf.venue).loc_name : inf.venue)) + '"></div></div></div></li>';
 									x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Description</div><div class="item-input-wrap"><input class="evtd_desc" type="text" autocomplete="off" value="' + ((inf.description==null) ? '' : inf.description) + '"></div></div></div></li>';
 									x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Remarks</div><div class="item-input-wrap"><input class="evtd_rmk" type="text" autocomplete="off" value="' + ((inf.remarks==null) ? '' : inf.remarks) + '"></div></div></div></li>';
@@ -5453,7 +5546,28 @@ $(document).ready(function(){
 										});
 									});
 								}
+								
 								apps.popover.open('.details-popover');
+								
+								$('span.evtd_sbta').on('click', function(){
+									if($('.evtd_sbtm1').css('opacity')=='1'){
+										$('.evtd_sbtm1').css('opacity', '0');
+										$('.evtd_sbtm2').css('opacity', '0');
+										
+										setTimeout(function(){
+											$('.evtd_sbtm1').css('display', 'none');
+											$('.evtd_sbtm2').css('display', 'none');
+										}, 1100);
+									}else{
+										$('.evtd_sbtm1').css('display', 'inline-block');
+										$('.evtd_sbtm2').css('display', 'inline-block');
+										
+										setTimeout(function(){
+											$('.evtd_sbtm1').css('opacity', '1');
+											$('.evtd_sbtm2').css('opacity', '1');
+										}, 100);
+									}
+								});
 							});
 							
 							var DATA = {
@@ -5547,13 +5661,16 @@ $(document).ready(function(){
 							inf = $('div.details-popover').data('info'),
 							pid = $('.details-popover button.evtd_cls').data('eid'),
 							ld = $('input.evtd_ld').val(),
-							time = $('input.evtd_sbtm').val(),
+							time = $('input.evtd_sbtm').data('val'),
 							venue = sys.locToPid($('input.evtd_venue').val()),
 							desc = $('input.evtd_desc').val(),
 							price = $('input.evtd_price').val(),
 							paid = $('.evtd_paid input')[0].checked,
 							band = $('input.evtd_band').val(),
 							crew = (($('input.evtd_crew').data('uname') == null) ? '' : $('input.evtd_crew').data('uname')),
+							st = ((sys.isEmpty($('input.evtd_crew').data('st'))) ? '' : $('input.evtd_crew').data('st')),
+							ob = ((sys.isEmpty($('input.evtd_crew').data('ob'))) ? '' : $('input.evtd_crew').data('ob')),
+							xx = ((sys.isEmpty($('input.evtd_crew').data('xx'))) ? '' : $('input.evtd_crew').data('xx')),
 							cin = ($('input.evtd_cin').val() == $('input.evtd_cin').data('val')) ? $('input.evtd_cin').data('ori') : $('input.evtd_cin').val(),
 							cout = ($('input.evtd_cout').val() == $('input.evtd_cout').data('val')) ? $('input.evtd_cout').data('ori') : $('input.evtd_cout').val(),
 							rmk = $('input.evtd_rmk').val();
@@ -5569,6 +5686,9 @@ $(document).ready(function(){
 							'paid' : paid,
 							'band' : band,
 							'crew' : crew,
+							'crew_st' : st,
+							'crew_ob' : ob,
+							'crew_xx' : xx,
 							'cin' : cin,
 							'cout' : cout,
 							'rmk' : rmk
@@ -5593,6 +5713,9 @@ $(document).ready(function(){
 									inf.paid = paid;
 									inf.band = ((band == '') ? null : band);
 									inf.crew = ((crew == '') ? null : crew);
+									inf.crew_st = ((st == '') ? null : st);
+									inf.crew_ob = ((ob == '') ? null : ob);
+									inf.crew_xx = ((xx == '') ? null : xx);
 									inf.car_in = ((cin == '') ? null : cin);
 									inf.car_out = ((cout == '') ? null : cout);
 									inf.remarks = ((rmk == '') ? null : rmk);
@@ -5621,7 +5744,7 @@ $(document).ready(function(){
 									$('.fab.evtd_shr').css('display', 'none');
 									
 									if((($('.details-popover').data('date') - ((new Date()).getTime())) < 172800000) && !sys.isEmpty(inf.crew)){
-										if((md5(ld+time+venue+desc+band+crew+cin+cout+rmk)) != $('.details-popover').data('md5')){
+										if((md5(ld+time+venue+desc+band+crew+st+ob+xx+cin+cout+rmk)) != $('.details-popover').data('md5')){
 											var rcrew = ((inf.crew).split(',')), receivers = [];
 											for(var i=0; i < rcrew.length; i++){
 												rcrew[i] = sys.uidToPyid(rcrew[i]);
@@ -7027,6 +7150,10 @@ sys = {
 			$('.popup-backdrop')[0].click();
 			$('#home-btn')[0].click();
 			
+			if($('.evt_ord_tab').length){
+				$('.evt_ord_tab').css('display', 'none');
+			}
+			
 			return false;
 		}else{
 			function onConfirm(buttonIndex) {
@@ -7145,6 +7272,73 @@ sys = {
 			}).open();
 		}
 	},
+	'getLeave' : function(){
+		var leave = {};
+		
+		leave['wrk'] = 0;
+		leave['cpl'] = 0;
+		leave['mcl'] = 0;
+		leave['pbh'] = 0;
+		leave['scl'] = 0;
+		leave['tcpl'] = 3;
+		leave['tmcl'] = 14;
+		leave['twrk'] = sys.getDayNum(new Date());
+		leave['odl'] = sys.getWeekNum(new Date());
+		
+		if(STORAGE.getItem('level')>=8){
+			leave['tanl'] = 14;
+		}else{
+			leave['tanl'] = 10;
+		}
+		
+		var DATA = {
+			'usr' : STORAGE.getItem('usr'),
+			'date' : new Date().toDateString()
+		};
+		var post_data = "ACT=" + encodeURIComponent('lvn_chk')
+					  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
+		
+		$.ajax({
+			type: 'POST',
+			url: 'https://app.wkventertainment.com/',
+			data: post_data,
+			beforeSend: function(){
+				sys.loading(1);
+			},
+			success: function(str){
+				var inf = JSON.parse(str);
+					
+				if(inf['reply']==='200 OK'){
+					if(inf['work']){
+						var sameAs = '';
+						
+						for(var i=0; i<inf['work'].length; i++){
+							if(sameAs != inf['work'][i].date){
+								sameAs = inf['work'][i].date;
+								leave['wrk']++;
+							}
+						}
+					}
+					
+					if(inf['leave']){
+						for(var i=0; i<inf['leave'].length; i++){
+							if(inf['leave'][i].clock_action == 'PBH'){
+								leave['pbh']++;
+							}else if(inf['leave'][i].clock_action == 'MCL'){
+								leave['mcl']++;
+							}else if(inf['leave'][i].clock_action == 'SCL'){
+								leave['scl']++;
+							}else if(inf['leave'][i].clock_action == 'CPL'){
+								leave['cpl']++;
+							}
+						}
+					}
+				}
+			}
+		});
+		
+		return leave;
+	},
 	'getDistance' : function(loc, state){
 		function toRadians(degree){
 			var pi = Math.PI;
@@ -7167,6 +7361,7 @@ sys = {
 				case 'Kuala Kubu Baru':
 				case 'Kuala Lipis':
 				case 'Kuala Selangor':
+				case 'Port Dickson':
 				case 'Puncak Alam':
 				case 'Raub':
 				case 'Rawang':
@@ -7199,7 +7394,6 @@ sys = {
 				case 'Mont Kiara':
 				case 'Nilai':
 				case 'Petaling Jaya':
-				case 'Port Dickson':
 				case 'Puchong':
 				case 'Putrajaya':
 				case 'Selayang':
@@ -7881,5 +8075,29 @@ sys = {
 		}
 		
 		return 0;
+	},
+	'getWeekNum' : function(dt){
+		var tdt = new Date(dt.valueOf());
+		var dayn = (dt.getDay() + 6) % 7;
+		
+		tdt.setDate(tdt.getDate() - dayn + 3);
+		
+		var firstThursday = tdt.valueOf();
+		
+		tdt.setMonth(0, 1);
+		
+		if (tdt.getDay() !== 4){
+			tdt.setMonth(0, 1 + ((4 - tdt.getDay()) + 7) % 7);
+		}
+		
+		return 1 + Math.ceil((firstThursday - tdt) / 604800000);
+	},
+	'getDayNum' : function(dt){
+		var start = new Date(dt.getFullYear(), 0, 0);
+		var diff = dt - start;
+		var oneDay = 1000 * 60 * 60 * 24;
+		var day = Math.floor(diff / oneDay);
+		
+		return day;
 	}
 }
