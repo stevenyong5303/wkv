@@ -176,7 +176,7 @@ input.evtd_price, label.evtd_paid, input.evtd_price_DL, label.evtd_paid_DL {
 	background-color: #DDD;
 }
 .panel{
-	width: 450px;
+	width: calc(100% - 50px);
 }
 .evts_input{
 	position: absolute;

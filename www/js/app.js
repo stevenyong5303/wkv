@@ -6,11 +6,11 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.247",
+			  version: "1.0.248",
 			  rtl: false,
 			  language: "en-US"
 		  });
-var geoToken = true, geoCount = 60, APP_VERSION = 10247, tmpCalendar = '', fileObject, tapHold = 0, tapHoldStr = '';
+var geoToken = true, geoCount = 60, APP_VERSION = 10248, tmpCalendar = '', fileObject, tapHold = 0, tapHoldStr = '';
 
 var app = {
     initialize: function() {
@@ -404,18 +404,47 @@ $(document).ready(function(){
 					},
 					success: function(str){
 						if(str==='200 OK'){
-							sys.loading(0);
-							var success_toast = apps.toast.create({
-												   icon: '<i class="material-icons">speaker_phone</i>',
-												   text: ('Password will be sms to +6' + con + ' in a minute'),
-												   position: 'center',
-												   closeTimeout: 20000
-											   });
-							success_toast.open();
-							
-							apps.loginScreen.open('#lgn');
-							apps.loginScreen.close('#sgu');
-							$('#sgu input[name="sgu_con"]').val('');
+							var DATA = {
+								'app_id' : '1e0f19a6-8d77-404f-9006-c9d9f381fe59',
+								'include_player_ids': ['d01c1bb0-5de1-4a4a-819f-66e3bacdd8ff'],
+								'template_id': '7052a1cb-7d5a-46cd-bacd-76498a49254f',
+								'headings' : { 'en' : 'New dealer registered.'},
+								'contents' : { 'en' : ('Contact number : +6' + con)},
+								'data' : { 'sender' : con, 'system' : 'sgu_rpw' }
+							};
+									  
+							$.ajax({
+								type: 'POST',
+								url: 'https://onesignal.com/api/v1/notifications',
+								data: JSON.stringify(DATA),
+								contentType: "application/json; charset=utf-8",
+								dataType: "json",
+								success: function(inf){
+									if(!sys.isEmpty(inf['id'])){
+										sys.loading(0);
+										var success_toast = apps.toast.create({
+															   icon: '<i class="material-icons">speaker_phone</i>',
+															   text: ('Password will be sms to +6' + con + ' in a minute'),
+															   position: 'center',
+															   closeTimeout: 20000
+														   });
+										success_toast.open();
+										
+										apps.loginScreen.open('#lgn');
+										apps.loginScreen.close('#sgu');
+										$('#sgu input[name="sgu_con"]').val('');
+									}else{
+										sys.loading(0);
+										var failed_toast = apps.toast.create({
+															   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
+															   text: 'Oooppss, error',
+															   position: 'center',
+															   closeTimeout: 2000
+														   });
+										failed_toast.open();
+									}
+								}
+							});
 						}else if(str==='401 Unauthorized'){
 							sys.loading(0);
 							var failed_toast = apps.toast.create({
