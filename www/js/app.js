@@ -6,11 +6,11 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.248",
+			  version: "1.0.249",
 			  rtl: false,
 			  language: "en-US"
 		  });
-var geoToken = true, geoCount = 60, APP_VERSION = 10248, tmpCalendar = '', fileObject, tapHold = 0, tapHoldStr = '';
+var geoToken = true, geoCount = 60, APP_VERSION = 10249, tmpCalendar = '', fileObject, tapHold = 0, tapHoldStr = '';
 
 var app = {
     initialize: function() {
@@ -25,6 +25,12 @@ var app = {
         app.receivedEvent('deviceready');
 		
 		console.log(device.cordova);
+		STORAGE.setItem('D_model', device.model);
+		STORAGE.setItem('D_platform', device.platform);
+		STORAGE.setItem('D_uuid', device.uuid);
+		STORAGE.setItem('D_version', device.version);
+		STORAGE.setItem('D_manufacturer', device.manufacturer);
+		STORAGE.setItem('D_serial', device.serial);
 		
 		var notificationOpenedCallback = function(jsonData){
 			if(!sys.isEmpty(jsonData['notification']['payload']['additionalData']['feedback'])){
@@ -1580,6 +1586,10 @@ $(document).ready(function(){
 				case 'SD_2t2m':
 				case 'SD_4t2m':
 				case 'SD_6t2m':
+				case 'LT_1_0k':
+				case 'LT_1_5k':
+				case 'LT_2_0k':
+				case 'LT_2_5k':
 				case 'SG_4f4f':
 					$('.evt_ord_proceed').prop('disabled', false);
 					$('.evt_ord_proceed').removeClass('disabled');
@@ -1841,6 +1851,63 @@ $(document).ready(function(){
 			sys.updateCartPrice();
 		});
 		
+		$('.evt_ord_5 .stepper-button-minus').on('click', function(e){
+			e.preventDefault();
+			e.stopPropagation();
+		});
+		
+		$('.evt_ord_5 .stepper-button-plus').on('click', function(e){
+			e.preventDefault();
+			e.stopPropagation();
+		});
+		
+		$('.evt_ord_5 div.stepper-init').each(function(){
+			apps.stepper.create({
+				el: $(this),
+				on: {
+					change: function(){
+						var addOn = [];
+							
+						if($(this)[0].value){
+							($('input[name="LT_adon"][value="'+$(this)[0].inputEl.name+'"]')).prop('checked', true);
+						}
+						
+						($('input[name="LT_adon"][value="'+$(this)[0].inputEl.name+'"]'))[0]
+							
+						if(($('input[name="LT_adon"][value="'+$(this)[0].inputEl.name+'"]'))[0].checked){
+							$('input[name="LT_adon"]:checked').each(function(){
+								var qty = $('div.item-title input[name="'+$(this).val()+'"]').val();
+								
+								if(qty){
+									addOn.push($(this).val()+qty);
+								}
+							});
+							
+							$('.evt_ord_proceed').data('item', addOn);
+							
+							sys.updateCartPrice();
+						}
+					}
+				}
+			})
+		});
+		
+		$('div.evt_ord_5').on('change', 'input[name="LT_adon"]', function(){
+			var addOn = [];
+			
+			$('input[name="LT_adon"]:checked').each(function(){
+				var qty = $('div.item-title input[name="'+$(this).val()+'"]').val();
+				
+				if(qty){
+					addOn.push($(this).val()+qty);
+				}
+			});
+			
+			$('.evt_ord_proceed').data('item', addOn);
+			
+			sys.updateCartPrice();
+		});
+		
 		$('button.evt_ord_proceed').on('click', function(){
 			var temp = $('.evt_ord_proceed').data('item'),
 				cart = (sys.isEmpty($('.evts_cart_DL').data('item')) ? [] : $('.evts_cart_DL').data('item'));
@@ -1988,6 +2055,16 @@ $(document).ready(function(){
 		});
 		
 		$('#evt_ord_co_tme').on('change', function(){
+			if(!sys.isTime($(this).val())){
+				var failed_toast = apps.toast.create({
+									   icon: '<i class="material-icons">access_time</i>',
+									   text: 'Invalid time format',
+									   position: 'center',
+									   closeTimeout: 2000
+								   });
+				failed_toast.open();
+			}
+			
 			if(sys.isEmpty($('#evt_ord_co_vne').val()) || !sys.isTime($(this).val())){
 				$('button.evt_ord_checkout').prop('disabled', true);
 				$('button.evt_ord_checkout').addClass('disabled');
@@ -6163,6 +6240,24 @@ $(document).ready(function(){
 			apps.dialog.alert(x, '');
 		});
 		
+		$('.btn-stht').on('click', function(){
+			if(!$(this).hasClass('button-active')){
+				$('.btn-strl').removeClass('button-active');
+				$('.btn-stht').addClass('button-active');
+				$('.list-strl').css('display', 'none');
+				$('.list-stht').css('display', 'block');
+			}
+		});
+		
+		$('.btn-strl').on('click', function(){
+			if(!$(this).hasClass('button-active')){
+				$('.btn-stht').removeClass('button-active');
+				$('.btn-strl').addClass('button-active');
+				$('.list-stht').css('display', 'none');
+				$('.list-strl').css('display', 'block');
+			}
+		});
+		
 		$('#wkhs-btn').on('click', function(){
 			var wcrew = STORAGE.getItem('usr'),
 				DATA = {
@@ -6216,16 +6311,16 @@ $(document).ready(function(){
 						}
 						
 						if(match){
-							$('.popup-stht .list ul').html(x);
+							$('.popup-stht .list.list-stht ul').html(x);
 							
-							$('.popup-stht .list ul .tt').each(function(){
+							$('.popup-stht .list.list-stht ul .tt').each(function(){
 								apps.tooltip.create({
 									targetEl: $(this),
 									text: sys.commasToNextLine($(this).data('rmk'), 'h')
 								});
 							});
 						}else{
-							$('.popup-stht .list ul').html('<li class="item-content"><div class="item-inner">No history found.</div></li>');
+							$('.popup-stht .list.list-stht ul').html('<li class="item-content"><div class="item-inner">No history found.</div></li>');
 							var failed_toast = apps.toast.create({
 												   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
 												   text: 'No report found.',
@@ -6235,9 +6330,200 @@ $(document).ready(function(){
 							failed_toast.open();
 						}
 						
-						sys.loading(0);
+						var leave = {};
+		
+						leave['bfw'] = 0;
+						leave['wrk'] = 0;
+						leave['cpl'] = 0;
+						leave['mcl'] = 0;
+						leave['pbh'] = 0;
+						leave['scl'] = 0;
+						leave['tcpl'] = 3;
+						leave['tmcl'] = 14;
+						leave['twrk'] = sys.getDayNum(new Date());
+						leave['odl'] = sys.getWeekNum(new Date());
+						
+						if(STORAGE.getItem('level')>=8){
+							leave['tanl'] = 14;
+						}else{
+							leave['tanl'] = 10;
+						}
+						
+						switch(STORAGE.getItem('usr')){
+							case 'aiman':
+								leave['bfw'] = 2;
+								break;
+							case 'gx':
+								leave['bfw'] = 9.5;
+								break;
+							case 'huizai':
+								leave['bfw'] = 22;
+								break;
+							case 'yiling':
+								leave['bfw'] = 11;
+								break;
+							case 'yokekei':
+								leave['bfw'] = 9;
+								break;
+						}
+						
+						var DATA = {
+							'usr' : STORAGE.getItem('usr'),
+							'start' : STORAGE.getItem('created'),
+							'date' : new Date().toDateString()
+						};
+						var post_data = "ACT=" + encodeURIComponent('lvn_chk')
+									  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
+						
+						$.ajax({
+							type: 'POST',
+							url: 'https://app.wkventertainment.com/',
+							data: post_data,
+							beforeSend: function(){
+								sys.loading(1);
+							},
+							success: function(str){
+								var inf = JSON.parse(str);
+									
+								if(inf['reply']==='200 OK'){
+									if(inf['work']){
+										var sameAs = '';
+										
+										for(var i=0; i<inf['work'].length; i++){
+											var allCrew = (inf['work'][i].crew).split(',');
+											
+											if((sameAs != inf['work'][i].date) && (allCrew.indexOf(STORAGE.getItem('usr')) != -1)){
+												sameAs = inf['work'][i].date;
+												leave['wrk']++;
+											}
+										}
+									}
+									
+									if(inf['leave']){
+										for(var i=0; i<inf['leave'].length; i++){
+											if(inf['leave'][i].clock_action == 'PBH'){
+												leave['pbh']++;
+											}else if(inf['leave'][i].clock_action == 'MCL'){
+												leave['mcl']++;
+											}else if(inf['leave'][i].clock_action == 'SCL'){
+												leave['scl']++;
+											}else if(inf['leave'][i].clock_action == 'CPL'){
+												leave['cpl']++;
+											}
+										}
+									}
+									
+									$('.rl-tanl').text(leave.tanl);
+									$('.rl-tmcl').text(leave.tmcl);
+									$('.rl-mcl').text((leave.tmcl - leave.mcl));
+									$('.rl-tcpl').text(leave.tcpl);
+									$('.rl-cpl').text((leave.tcpl - leave.cpl));
+									
+									var work = (leave.twrk - leave.odl - leave.pbh - leave.mcl - leave.scl - leave.cpl - leave.wrk - leave.bfw);
+									
+									if(work>0){
+										if(work >= leave.tanl){
+											$('.rl-ofd').text(0);
+											$('.rl-anl').text((work - leave.tanl));
+										}else{
+											$('.rl-anl').text((leave.tanl - work));
+											$('.rl-ofd').text(0);
+										}
+									}else{
+										$('.rl-anl').text(leave.tanl);
+										$('.rl-ofd').text((work * (-1)));
+									}
+									
+									$('.popup-stht .list-strl div.strl-tl').html('');
+									var targetDay = new Date(sys.dateToString(new Date(), 'yyyy-mm-dd')),
+										x = '<div class="timeline">';
+									
+									for(var i=0; i<leave.twrk; i++){
+										var diff = (i * 86400000);
+										var today = sys.dateToString(new Date((targetDay.getTime() - diff)), 'yyyy-mm-dd'),
+											noWork = true,
+											creditDebit = false,
+											y = '';
+										
+										y += '<div class="timeline-item">';
+										y += '<div class="timeline-item-date">' + today.substr(8,2) + ' <small>' + sys.toMonth(today) + '</small></div>';
+										y += '<div class="timeline-item-divider"></div>';
+										y += '<div class="timeline-item-content">';
+										
+										if(new Date(today).getDay() == 1){
+											y += '<div class="timeline-item-inner d-credit"><strong>+ 1</strong>&emsp;Off Day</div>';
+											creditDebit = true;
+										}
+										
+										if(inf['leave']){
+											for(var j=0; j<inf['leave'].length; j++){
+												if(inf['leave'][j].clock_in_out.substr(0,10) == today){
+													switch(inf['leave'][j].clock_action){
+														case 'PBH':
+															y += '<div class="timeline-item-inner d-credit"><strong>+ 1</strong>&emsp;Off Day [<small><strong>'+inf['leave'][j].clock_location+'</strong></small>]</div>';
+															creditDebit = true;
+															break;
+														case 'MCL':
+															y += '<div class="timeline-item-inner d-debit"><strong>- 1</strong>&emsp;Sick Leave</div>';
+															y += '<div class="timeline-item-inner d-credit"><strong>+ 1</strong>&emsp;Off Day [<small><strong>Convert from Sick Leave</strong></small>]</div>';
+															creditDebit = true;
+															break;
+														case 'CPL':
+															y += '<div class="timeline-item-inner d-debit"><strong>- 1</strong>&emsp;Compassionate Leave</div>';
+															y += '<div class="timeline-item-inner d-credit"><strong>+ 1</strong>&emsp;Off Day [<small><strong>Convert from Compassionate Leave</strong></small>]</div>';
+															creditDebit = true;
+															break;
+														case 'SCL':
+															y += '<div class="timeline-item-inner d-credit"><strong>+ 1</strong>&emsp;Off Day [<small><strong>'+inf['leave'][j].clock_location+'</strong></small>]</div>';
+															creditDebit = true;
+															break;
+													}
+												}
+											}
+										}
+										
+										for(var j=0; j<inf['work'].length; j++){
+											if(inf['work'][j].date.substr(0,10) == today){
+												var allCrew = (inf['work'][j].crew).split(',');
+												
+												if(allCrew.indexOf(STORAGE.getItem('usr')) != -1){
+													noWork = false;
+													break;
+												}
+											}
+										}
+										
+										if(noWork){
+											y += '<div class="timeline-item-inner d-debit"><strong>- 1</strong>&emsp;Off Day</div>';
+											creditDebit = true;
+										}
+										
+										y += '</div></div>';
+										
+										if(creditDebit){
+											x += y;
+										}
+									}
+									
+									if(leave['bfw']>0){
+										x += '<div class="timeline-item">';
+										x += '<div class="timeline-item-date">' + STORAGE.getItem('created').substr(8,2) + ' <small>' + sys.toMonth(STORAGE.getItem('created').substr(0,10)) + '</small></div>';
+										x += '<div class="timeline-item-divider"></div>';
+										x += '<div class="timeline-item-content">';
+										x += '<div class="timeline-item-inner d-credit"><strong>+ ' + leave['bfw'] + '</strong>&emsp;Off Day [<small><strong>Brought forward</strong></small>]</div>';
+										x += '</div></div>';
+									}
+										
+									x += '</div>';
+									
+									$('.popup-stht .list-strl div.strl-tl').html(x);
+									
+									sys.loading(0);
+								}
+							}
+						});
 					}else if(inf['reply']==='204 No Response'){
-						$('.popup-stht .list ul').html('<li class="item-content"><div class="item-inner">No history found.</div></li>');
+						$('.popup-stht .list.list-stht ul').html('<li class="item-content"><div class="item-inner">No history found.</div></li>');
 						var failed_toast = apps.toast.create({
 											   icon: '<i class="material-icons">sentiment_very_dissatisfied</i>',
 											   text: 'No report found.',
@@ -6260,7 +6546,7 @@ $(document).ready(function(){
 			});
 		});
 		
-		$('.popup-stht .list ul').on('click', 'a', function(){
+		$('.popup-stht .list.list-stht ul').on('click', 'a', function(){
 			var x = '';
 			
 			x += '<span class="dialog-label">In</span>: ' + $(this).data('in') + '<br/>';
@@ -6277,13 +6563,17 @@ $(document).ready(function(){
 		'usr' : usr,
 		'pwd' : pwd,
 		'version' : APP_VERSION
-		// 'model' : device.model,
-		// 'platform' : device.platform,
-		// 'uuid' : device.uuid,
-		// 'version' : device.version,
-		// 'manufacturer' : device.manufacturer,
-		// 'serial' : device.serial
 	};
+	
+	if(!sys.isEmpty(STORAGE.getItem('D_manufacturer'))){
+		DATA['model'] = STORAGE.getItem('D_model');
+		DATA['platform'] = STORAGE.getItem('D_platform');
+		DATA['uuid'] = STORAGE.getItem('D_uuid');
+		DATA['version'] = STORAGE.getItem('version');
+		DATA['manufacturer'] = STORAGE.getItem('D_manufacturer');
+		DATA['serial'] = STORAGE.getItem('D_serial');
+	}
+	
 	post_data = "ACT=" + encodeURIComponent('ssn_chk')
 			  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
 	
@@ -6357,6 +6647,8 @@ $(document).ready(function(){
 			
 			STORAGE.setItem('level', inf['level']);
 			STORAGE.setItem('comp', inf['cid']);
+			STORAGE.setItem('created', inf['created']);
+			
 			$('body').data('user_level', inf['level']);
 			$('body').data('crew', inf['status']);
 			$('body').data('loc', inf['location']);
@@ -6467,6 +6759,8 @@ $(document).ready(function(){
 						var task = inf['task'], x = '', sameAs = 0;
 					
 						for(var i=0; i<task.length; i++){
+							var match = false;
+							
 							if(task[i]['date'] == todayString){
 								todayClass = ' todayTask';
 							}else{
@@ -6480,14 +6774,49 @@ $(document).ready(function(){
 								x += '<div class="timeline-item-content">';
 							}
 							
-							x += '<div class="timeline-item-inner tsk' + task[i]['primary_id'] + todayClass + '" data-locpid="' + (sys.isEmpty(task[i]['venue']) ? 0 : (task[i]['venue'].indexOf('#PID#') != -1 ? task[i]['venue'] : 0)) + '" data-rmk="' + task[i]['remarks'] + '" data-crew="' + task[i]['crew'] + '">';
-							
-							if(task[i]['time']){
-								x += '<div class="timeline-item-time">' + task[i]['time'] + '</div>';
+							if(!sys.isEmpty(task[i]['crew_st']) || !sys.isEmpty(task[i]['crew_ob']) || !sys.isEmpty(task[i]['crew_xx'])){
+								var st = (sys.isEmpty(task[i]['crew_st']) ? [] : task[i]['crew_st'].split(',')),
+									ob = (sys.isEmpty(task[i]['crew_ob']) ? [] : task[i]['crew_ob'].split(',')),
+									xx = (sys.isEmpty(task[i]['crew_xx']) ? [] : task[i]['crew_xx'].split(','));
+								
+								if(st.indexOf(usr) != -1){
+									x += '<div class="timeline-item-inner tsk' + task[i]['primary_id'] + todayClass + '" data-locpid="' + (sys.isEmpty(task[i]['venue']) ? 0 : (task[i]['venue'].indexOf('#PID#') != -1 ? task[i]['venue'] : 0)) + '" data-rmk="' + task[i]['remarks'] + '" data-crew="' + task[i]['crew_st'] + '">';
+									x += '<div class="timeline-item-time">' + task[i]['time'].split(', ')[0]+ '</div>';
+									x += '<strong>' + (sys.isEmpty(task[i]['venue']) ?  '-' : (task[i]['venue'].indexOf('#PID#') != -1 ? sys.pidToLoc(task[i]['venue']).loc_name : task[i]['venue'])) + '</strong>' + (task[i]['description'] ? ('<br/><span>' + task[i]['description'] + '</span>') : '');
+									x += '</div>';
+									
+									match = true;
+								}
+								
+								if(ob.indexOf(usr) != -1){
+									x += '<div class="timeline-item-inner tsk' + task[i]['primary_id'] + todayClass + '" data-locpid="' + (sys.isEmpty(task[i]['venue']) ? 0 : (task[i]['venue'].indexOf('#PID#') != -1 ? task[i]['venue'] : 0)) + '" data-rmk="' + task[i]['remarks'] + '" data-crew="' + task[i]['crew_ob'] + '">';
+									x += '<div class="timeline-item-time">' + task[i]['time'].split(', ')[1]+ '</div>';
+									x += '<strong>' + (sys.isEmpty(task[i]['venue']) ?  '-' : (task[i]['venue'].indexOf('#PID#') != -1 ? sys.pidToLoc(task[i]['venue']).loc_name : task[i]['venue'])) + '</strong>' + (task[i]['description'] ? ('<br/><span>' + task[i]['description'] + '</span>') : '');
+									x += '</div>';
+									
+									match = true;
+								}
+								
+								if(xx.indexOf(usr) != -1){
+									x += '<div class="timeline-item-inner tsk' + task[i]['primary_id'] + todayClass + '" data-locpid="' + (sys.isEmpty(task[i]['venue']) ? 0 : (task[i]['venue'].indexOf('#PID#') != -1 ? task[i]['venue'] : 0)) + '" data-rmk="' + task[i]['remarks'] + '" data-crew="' + task[i]['crew_xx'] + '">';
+									x += '<div class="timeline-item-time">' + task[i]['time'].split(', ')[2]+ '</div>';
+									x += '<strong>' + (sys.isEmpty(task[i]['venue']) ?  '-' : (task[i]['venue'].indexOf('#PID#') != -1 ? sys.pidToLoc(task[i]['venue']).loc_name : task[i]['venue'])) + '</strong>' + (task[i]['description'] ? ('<br/><span>' + task[i]['description'] + '</span>') : '');
+									x += '</div>';
+									
+									match = true;
+								}
 							}
 							
-							x += '<strong>' + (sys.isEmpty(task[i]['venue']) ?  '-' : (task[i]['venue'].indexOf('#PID#') != -1 ? sys.pidToLoc(task[i]['venue']).loc_name : task[i]['venue'])) + '</strong>' + (task[i]['description'] ? ('<br/><span>' + task[i]['description'] + '</span>') : '');
-							x += '</div>';
+							if(!match){
+								x += '<div class="timeline-item-inner tsk' + task[i]['primary_id'] + todayClass + '" data-locpid="' + (sys.isEmpty(task[i]['venue']) ? 0 : (task[i]['venue'].indexOf('#PID#') != -1 ? task[i]['venue'] : 0)) + '" data-rmk="' + task[i]['remarks'] + '" data-crew="' + task[i]['crew'] + '">';
+							
+								if(task[i]['time']){
+									x += '<div class="timeline-item-time">' + ((task[i]['time'].indexOf(', ') != -1) ? (task[i]['time'].split(', ')[0]) : (task[i]['time'])) + '</div>';
+								}
+								
+								x += '<strong>' + (sys.isEmpty(task[i]['venue']) ?  '-' : (task[i]['venue'].indexOf('#PID#') != -1 ? sys.pidToLoc(task[i]['venue']).loc_name : task[i]['venue'])) + '</strong>' + (task[i]['description'] ? ('<br/><span>' + task[i]['description'] + '</span>') : '');
+								x += '</div>';
+							}
 							
 							sameAs = task[i]['date'];
 							
@@ -6497,6 +6826,8 @@ $(document).ready(function(){
 						}
 						$('#task_tl').data('inf', task);
 						$('#task_tl').html(x);
+						
+						sys.arrangeTask();
 					}
 				}
 			}
@@ -6559,7 +6890,10 @@ $(document).ready(function(){
 			sys.dayClick(usr);
 			sys.eventCheck(usr, (new Date().getMonth()), new Date().getYear()+1900, true);
 			
-			setTimeout(function(){ sys.loading(0) }, 2000);
+			setTimeout(function(){
+				$('#app').css('display', 'block');
+				sys.loading(0)
+			}, 2000);
 		}
 	});
 });
@@ -7304,6 +7638,7 @@ sys = {
 	'getLeave' : function(){
 		var leave = {};
 		
+		leave['bfw'] = 0;
 		leave['wrk'] = 0;
 		leave['cpl'] = 0;
 		leave['mcl'] = 0;
@@ -7320,8 +7655,27 @@ sys = {
 			leave['tanl'] = 10;
 		}
 		
+		switch(STORAGE.getItem('usr')){
+			case 'aiman':
+				leave['bfw'] = 2;
+				break;
+			case 'gx':
+				leave['bfw'] = 9.5;
+				break;
+			case 'huizai':
+				leave['bfw'] = 22;
+				break;
+			case 'yiling':
+				leave['bfw'] = 11;
+				break;
+			case 'yokekei':
+				leave['bfw'] = 9;
+				break;
+		}
+		
 		var DATA = {
 			'usr' : STORAGE.getItem('usr'),
+			'start' : STORAGE.getItem('created'),
 			'date' : new Date().toDateString()
 		};
 		var post_data = "ACT=" + encodeURIComponent('lvn_chk')
@@ -7362,6 +7716,8 @@ sys = {
 							}
 						}
 					}
+					
+					sys.loading(0);
 				}
 			}
 		});
@@ -7824,6 +8180,151 @@ sys = {
 					}
 					html += '</div>';
 					break;
+				case 'LT_1_0k':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-10">' + num + '.</div>';
+					html += '<div class="col-80"><strong>Lighting System - 1k (Stage Light)</strong></div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-main="1" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">16 u x LED Par Can (RGBW)</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 u x Smoke Machine</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 u x Avolite Tiger Touch</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">2 u x Lighting Stand</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 lot x All Necessary cables & Extensions</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 x Lighting Programmer</div></div>';
+					break;
+				case 'LT_1_5k':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-10">' + num + '.</div>';
+					html += '<div class="col-80"><strong>Lighting System - 1.5k (Stage Light)</strong></div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-main="1" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">8 u x BEAM 230 Moving Head</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">20 u x LED Par Can (RGBW)</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 u x Followspot</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 u x Smoke Machine</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 u x Avolite Tiger Touch</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">2 u x Lighting Stand</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 lot x All Necessary cables & Extensions</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 x Lighting Programmer</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 x Lighting Crew</div></div>';
+					break;
+				case 'LT_2_0k':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-10">' + num + '.</div>';
+					html += '<div class="col-80"><strong>Lighting System - 2.0k (Hall + Stage Light)</strong></div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-main="1" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">12 u x BEAM 230 Moving Head</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">24 u x LED Par Can (RGBW)</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">6 u x LED City Light</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 u x Followspot</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 u x Smoke Machine</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 u x Avolite Tiger Touch</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">2 u x Lighting Stand</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 lot x All Necessary cables & Extensions</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 x Lighting Programmer</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 x Lighting Crew</div></div>';
+					break;
+				case 'LT_2_5k':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-10">' + num + '.</div>';
+					html += '<div class="col-80"><strong>Lighting System - 2.5k (Hall + Stage Light)</strong></div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-main="1" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">12 u x BEAM 230 Moving Head</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">36 u x LED Par Can (RGBW)</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">10 u x LED City Light</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 u x Followspot</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 u x Smoke Machine</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 u x Avolite Tiger Touch</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">2 u x Lighting Stand</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 lot x All Necessary cables & Extensions</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 x Lighting Programmer</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 x Lighting Crew</div></div>';
+					break;
+				case 'aL_lpcc':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-20"></div>';
+					html += '<div class="col-70"><strong>* Extra</strong>&emsp;' + code.substr(7) + ' x LED Par Can (RGBW)</div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					break;
+				case 'aL_lbmh':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-20"></div>';
+					html += '<div class="col-70"><strong>* Extra</strong>&emsp;' + code.substr(7) + ' x BEAM 230 Moving Head</div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					break;
+				case 'aL_lctl':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-20"></div>';
+					html += '<div class="col-70"><strong>* Extra</strong>&emsp;' + code.substr(7) + ' x LED City Light</div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					break;
+				case 'aL_lfls':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-20"></div>';
+					html += '<div class="col-70"><strong>* Extra</strong>&emsp;' + code.substr(7) + ' x Followspot</div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					break;
+				case 'aL_lfgm':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-20"></div>';
+					html += '<div class="col-70"><strong>* Extra</strong>&emsp;' + code.substr(7) + ' x Fog machine</div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					break;
+				case 'aL_ltcw':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-20"></div>';
+					html += '<div class="col-70"><strong>* Extra</strong>&emsp;' + code.substr(7) + ' x Lighting Crew</div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					break;
 				case 'SG_4f4f':
 					html += '<div class="row no-gap" item_count="' + num + '">';
 					html += '<div class="col-10">' + num + '.</div>';
@@ -7896,9 +8397,13 @@ sys = {
 			case 'aD_dibx':
 				price = 25;
 				break;
+			case 'aL_lpcc':
+				price = 35;
+				break;
 			case 'aD_wrsm':
 			case 'aD_hsmc':
 			case 'aD_dmst':
+			case 'aL_lfgm':
 				price = 50;
 				break;
 			case 'aD_tops':
@@ -7907,6 +8412,7 @@ sys = {
 			case 'aD_wsbp':
 			case 'aD_sxmc':
 			case 'aD_vlmc':
+			case 'aL_lfls':
 				price = 100;
 				break;
 			case 'aD_sgcw':
@@ -7914,6 +8420,9 @@ sys = {
 				break;
 			case 'aD_sdcw':
 			case 'aD_ovtm':
+			case 'aL_lbmh':
+			case 'aL_lctl':
+			case 'aL_ltcw':
 				price = 150;
 				break;				
 			case 'aD_sbwf':
@@ -7934,7 +8443,17 @@ sys = {
 				price = 800;
 				break;
 			case 'SD_6t2m':
+			case 'LT_1_0k':
 				price = 1000;
+				break;
+			case 'LT_1_5k':
+				price = 1500;
+				break;
+			case 'LT_2_0k':
+				price = 2000;
+				break;
+			case 'LT_2_5k':
+				price = 2500;
 				break;
 		}
 		
@@ -8101,32 +8620,61 @@ sys = {
 			case 'SG_4f4f':
 				return 3;
 				break;
+			case 'LT_1_0k':
+			case 'LT_1_5k':
+			case 'LT_2_0k':
+			case 'LT_2_5k':
+				return 5;
+				break;
 		}
 		
 		return 0;
 	},
 	'getWeekNum' : function(dt){
-		var tdt = new Date(dt.valueOf());
-		var dayn = (dt.getDay() + 6) % 7;
+		dt = new Date(Date.UTC(dt.getFullYear(), dt.getMonth(), dt.getDate()));
+		dt.setUTCDate(dt.getUTCDate() + 4 - (dt.getUTCDay()||7));
 		
-		tdt.setDate(tdt.getDate() - dayn + 3);
+		var yearStart = new Date(STORAGE.getItem('created'));
+		var weekNo = Math.ceil(( ( (dt - yearStart) / 86400000) + 1)/7);
 		
-		var firstThursday = tdt.valueOf();
-		
-		tdt.setMonth(0, 1);
-		
-		if (tdt.getDay() !== 4){
-			tdt.setMonth(0, 1 + ((4 - tdt.getDay()) + 7) % 7);
-		}
-		
-		return 1 + Math.ceil((firstThursday - tdt) / 604800000);
+		return weekNo;
 	},
 	'getDayNum' : function(dt){
-		var start = new Date(dt.getFullYear(), 0, 0);
+		var start = new Date(STORAGE.getItem('created'));
 		var diff = dt - start;
 		var oneDay = 1000 * 60 * 60 * 24;
 		var day = Math.floor(diff / oneDay);
 		
-		return day;
+		return (day+1);
+	},
+	'arrangeTask' : function(){
+		var day = $('#task_tl').find('div.timeline-item-content').length;
+		
+		for(var i=0; i<day; i++){
+			var task = $('#task_tl').find('div.timeline-item-content:eq('+i+')').find('div.timeline-item-inner').length,
+				time = [];
+			
+			for(var j=0; j<task; j++){
+				time[j] = {
+					't' : $('#task_tl').find('div.timeline-item-content:eq('+i+')').find('div.timeline-item-inner:eq('+j+')').find('.timeline-item-time').text(),
+					's' : j
+				};
+				$('#task_tl').find('div.timeline-item-content:eq('+i+')').find('div.timeline-item-inner:eq('+j+')').attr('data-num', j);
+			}
+			
+			time.sort(function(a, b){
+				if (a.t < b.t){
+					return -1;
+				}
+				if (a.t > b.t){
+					return 1;
+				}
+				return 0;
+			});
+			
+			for(var j=0; j<time.length; j++){
+				($('#task_tl').find('div.timeline-item-content:eq('+i+')').find('div.timeline-item-inner[data-num="'+time[j].s+'"]')).appendTo($('#task_tl div.timeline-item-content:eq('+i+')'));
+			}
+		}
 	}
 }

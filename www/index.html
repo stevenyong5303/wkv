@@ -72,7 +72,7 @@
 			</div>
 		</div>
 	</div>
-	<div id="app">
+	<div id="app" style="display:none;">
 		<div class="statusbar"></div>
 		<div class="login-screen" id="lgn">
 			<div class="view">
@@ -992,18 +992,18 @@
 					<div class="item-content">
 						<div class="list">
 							<ul>
-								<li>
-									<div class="item-content">
-										<div class="item-media">
-											<i class="icon material-icons md-only">format_shapes</i>
-										</div>
-										<div class="item-inner">
-											<div class="item-title">
-												<a id="abctg-btn" class="link" href="#">Add Barcode Tags</a>
-											</div>
-										</div>
-									</div>
-								</li>
+								<!-- <li> -->
+									<!-- <div class="item-content"> -->
+										<!-- <div class="item-media"> -->
+											<!-- <i class="icon material-icons md-only">format_shapes</i> -->
+										<!-- </div> -->
+										<!-- <div class="item-inner"> -->
+											<!-- <div class="item-title"> -->
+												<!-- <a id="abctg-btn" class="link" href="#">Add Barcode Tags</a> -->
+											<!-- </div> -->
+										<!-- </div> -->
+									<!-- </div> -->
+								<!-- </li> -->
 								<li>
 									<div class="item-content">
 										<div class="item-media">
@@ -1048,6 +1048,18 @@
 										<div class="item-inner">
 											<div class="item-title">
 												<a id="gpst-btn" class="link popup-open" href="#" data-popup=".popup-gpst">GPS Tracking</a>
+											</div>
+										</div>
+									</div>
+								</li>
+								<li>
+									<div class="item-content">
+										<div class="item-media">
+											<i class="icon material-icons md-only">accessibility_new</i>
+										</div>
+										<div class="item-inner">
+											<div class="item-title">
+												<a id="lrml-btn" class="link popup-open" href="#" data-popup=".popup-lrml">Leave Remaining List</a>
 											</div>
 										</div>
 									</div>
@@ -1249,6 +1261,15 @@
 										<i class="icon icon-checkbox"></i>
 										<div class="item-inner">
 											<div class="item-title">Ah Cheong</div>
+										</div>
+									</label>
+								</li>
+								<li>
+									<label class="item-checkbox item-content">
+										<input type="checkbox" name="cnv-checkbox" data-fn="Rock Yee Ka Lok" data-ic="031201-10-2241">
+										<i class="icon icon-checkbox"></i>
+										<div class="item-inner">
+											<div class="item-title">Rock</div>
 										</div>
 									</label>
 								</li>
@@ -4186,6 +4207,31 @@ data-value=''>
 					</div>
 				</div>
 			</div>
+			<div class="popup popup-lrml level9">
+				<div class="toolbar">
+					<div class="toolbar-inner">
+						<div class="left">Leave Remaining List</div>
+						<div class="right"><a class="link popup-close" href="#">Close</a></div>
+					</div>
+				</div>
+				<div class="block">
+					<form class="searchbar">
+						<div class="searchbar-inner">
+							<div class="searchbar-input-wrap">
+								<input type="search" placeholder="Search">
+								<i class="searchbar-icon"></i>
+								<span class="input-clear-button"></span>
+							</div>
+							<span class="searchbar-disable-button if-not-aurora">Cancel</span>
+						</div>
+					</form>
+				</div>
+				<div class="searchbar-backdrop"></div>
+				<div class="block searchbar-hide-on-search"></div>
+				<div class="searchbar-found list lrl_list">
+					<ul></ul>
+				</div>
+			</div>
 			<div class="popup popup-alrl level9">
 				<div class="toolbar">
 					<div class="toolbar-inner">
@@ -4486,6 +4532,133 @@ data-value=''>
 																	&emsp;-&emsp;6 u x Speaker Stand<br/>
 																	&emsp;-&emsp;1 lot x All Necessary cables & Extensions<br/>
 																	&emsp;-&emsp;1 x Sound Engineer<br/>
+																</p>
+															</div>
+														</div>
+													</li>
+												</ul>
+											</div>
+										</label>
+									</li>
+									<li>
+										<label class="item-radio item-content">
+											<input type="radio" name="evt-ord-item" value="LT_1_0k"/>
+											<i class="icon icon-radio"></i>
+											<div class="list accordion-list">
+												<ul>
+													<li class="accordion-item">
+														<a href="#" class="item-content item-link">
+															<div class="item-inner">
+																<div class="item-title">Lighting System - <strong>1k (Stage Light)</strong></div>
+															</div>
+														</a>
+														<div class="accordion-item-content">
+															<div class="block">
+																<p>
+																	&emsp;-&emsp;16 u x LED Par Can (RGBW)<br/>
+																	&emsp;-&emsp;1 u x Smoke Machine<br/>
+																	&emsp;-&emsp;1 u x Avolite Tiger Touch<br/>
+																	&emsp;-&emsp;2 u x Lighting Stand<br/>
+																	&emsp;-&emsp;1 lot x All Necessary cables & Extensions<br/>
+																	&emsp;-&emsp;1 x Lighting Programmer<br/>
+																</p>
+															</div>
+														</div>
+													</li>
+												</ul>
+											</div>
+										</label>
+									</li>
+									<li>
+										<label class="item-radio item-content">
+											<input type="radio" name="evt-ord-item" value="LT_1_5k"/>
+											<i class="icon icon-radio"></i>
+											<div class="list accordion-list">
+												<ul>
+													<li class="accordion-item">
+														<a href="#" class="item-content item-link">
+															<div class="item-inner">
+																<div class="item-title">Lighting System - <strong>1.5k (Stage Light)</strong></div>
+															</div>
+														</a>
+														<div class="accordion-item-content">
+															<div class="block">
+																<p>
+																	&emsp;-&emsp;8 u x BEAM 230 Moving Head<br/>
+																	&emsp;-&emsp;20 u x LED Par Can (RGBW)<br/>
+																	&emsp;-&emsp;1 u x Followspot<br/>
+																	&emsp;-&emsp;1 u x Smoke Machine<br/>
+																	&emsp;-&emsp;1 u x Avolite Tiger Touch<br/>
+																	&emsp;-&emsp;2 u x Lighting Stand<br/>
+																	&emsp;-&emsp;1 lot x All Necessary cables & Extensions<br/>
+																	&emsp;-&emsp;1 x Lighting Programmer<br/>
+																	&emsp;-&emsp;1 x Lighting Crew<br/>
+																</p>
+															</div>
+														</div>
+													</li>
+												</ul>
+											</div>
+										</label>
+									</li>
+									<li>
+										<label class="item-radio item-content">
+											<input type="radio" name="evt-ord-item" value="LT_2_0k"/>
+											<i class="icon icon-radio"></i>
+											<div class="list accordion-list">
+												<ul>
+													<li class="accordion-item">
+														<a href="#" class="item-content item-link">
+															<div class="item-inner">
+																<div class="item-title">Lighting System - <strong>2.0k (Hall + Stage Light)</strong></div>
+															</div>
+														</a>
+														<div class="accordion-item-content">
+															<div class="block">
+																<p>
+																	&emsp;-&emsp;12 u x BEAM 230 Moving Head<br/>
+																	&emsp;-&emsp;24 u x LED Par Can (RGBW)<br/>
+																	&emsp;-&emsp;6 u x LED City Light<br/>
+																	&emsp;-&emsp;1 u x Followspot<br/>
+																	&emsp;-&emsp;1 u x Smoke Machine<br/>
+																	&emsp;-&emsp;1 u x Avolite Tiger Touch<br/>
+																	&emsp;-&emsp;2 u x Lighting Stand<br/>
+																	&emsp;-&emsp;1 lot x All Necessary cables & Extensions<br/>
+																	&emsp;-&emsp;1 x Lighting Programmer<br/>
+																	&emsp;-&emsp;1 x Lighting Crew<br/>
+																</p>
+															</div>
+														</div>
+													</li>
+												</ul>
+											</div>
+										</label>
+									</li>
+									<li>
+										<label class="item-radio item-content">
+											<input type="radio" name="evt-ord-item" value="LT_2_5k"/>
+											<i class="icon icon-radio"></i>
+											<div class="list accordion-list">
+												<ul>
+													<li class="accordion-item">
+														<a href="#" class="item-content item-link">
+															<div class="item-inner">
+																<div class="item-title">Lighting System - <strong>2.5k (Hall + Stage Light)</strong></div>
+															</div>
+														</a>
+														<div class="accordion-item-content">
+															<div class="block">
+																<p>
+																	&emsp;-&emsp;12 u x BEAM 230 Moving Head<br/>
+																	&emsp;-&emsp;36 u x LED Par Can (RGBW)<br/>
+																	&emsp;-&emsp;10 u x LED City Light<br/>
+																	&emsp;-&emsp;1 u x Followspot<br/>
+																	&emsp;-&emsp;1 u x Smoke Machine<br/>
+																	&emsp;-&emsp;1 u x Avolite Tiger Touch<br/>
+																	&emsp;-&emsp;2 u x Lighting Stand<br/>
+																	&emsp;-&emsp;1 lot x All Necessary cables & Extensions<br/>
+																	&emsp;-&emsp;1 x Lighting Programmer<br/>
+																	&emsp;-&emsp;1 x Lighting Crew<br/>
 																</p>
 															</div>
 														</div>
@@ -5152,6 +5325,150 @@ data-value=''>
 								</ul>
 							</div>
 						</div>
+						<div class="evt_ord_5" style="display:none;">
+							<div class="block-title">
+								Lighting System : ADD ON
+								<a href="#" class="fab-close"><i class="icon material-icons md-only">close</i></a>
+							</div>
+							<div class="list" style="height:calc(100% - 152px);overflow:auto;">
+								<ul>
+									<li class="accordion-item">
+										<a href="#" class="item-content item-link">
+											<div class="item-inner">
+												<div class="item-title">Equipment</div>
+											</div>
+										</a>
+										<div class="accordion-item-content">
+											<div class="block list">
+												<ul>
+													<li>
+														<label class="item-checkbox item-content">
+															<input type="checkbox" name="LT_adon" value="aL_lpcc"/>
+															<i class="icon icon-checkbox"></i>
+															<div class="item-inner">
+																<div class="item-title">
+																	<div class="stepper stepper-small stepper-fill stepper-init">
+																		<div class="stepper-button-minus"></div>
+																		<div class="stepper-input-wrap">
+																			<input name="aL_lpcc" type="text" value="0" min="0" max="99" step="1" readonly>
+																		</div>
+																		<div class="stepper-button-plus"></div>
+																	</div>
+																	&emsp;<span>LED Par Can (RGBW)</span>
+																</div>
+															</div>
+														</label>
+													</li>
+													<li>
+														<label class="item-checkbox item-content">
+															<input type="checkbox" name="LT_adon" value="aL_lbmh"/>
+															<i class="icon icon-checkbox"></i>
+															<div class="item-inner">
+																<div class="item-title">
+																	<div class="stepper stepper-small stepper-fill stepper-init">
+																		<div class="stepper-button-minus"></div>
+																		<div class="stepper-input-wrap">
+																			<input name="aL_lbmh" type="text" value="0" min="0" max="99" step="1" readonly>
+																		</div>
+																		<div class="stepper-button-plus"></div>
+																	</div>
+																	&emsp;<span>BEAM 230 Moving Head</span>
+																</div>
+															</div>
+														</label>
+													</li>
+													<li>
+														<label class="item-checkbox item-content">
+															<input type="checkbox" name="LT_adon" value="aL_lctl"/>
+															<i class="icon icon-checkbox"></i>
+															<div class="item-inner">
+																<div class="item-title">
+																	<div class="stepper stepper-small stepper-fill stepper-init">
+																		<div class="stepper-button-minus"></div>
+																		<div class="stepper-input-wrap">
+																			<input name="aL_lctl" type="text" value="0" min="0" max="99" step="1" readonly>
+																		</div>
+																		<div class="stepper-button-plus"></div>
+																	</div>
+																	&emsp;<span>LED City Light</span>
+																</div>
+															</div>
+														</label>
+													</li>
+													<li>
+														<label class="item-checkbox item-content">
+															<input type="checkbox" name="LT_adon" value="aL_lfls"/>
+															<i class="icon icon-checkbox"></i>
+															<div class="item-inner">
+																<div class="item-title">
+																	<div class="stepper stepper-small stepper-fill stepper-init">
+																		<div class="stepper-button-minus"></div>
+																		<div class="stepper-input-wrap">
+																			<input name="aL_lfls" type="text" value="0" min="0" max="99" step="1" readonly>
+																		</div>
+																		<div class="stepper-button-plus"></div>
+																	</div>
+																	&emsp;<span>Followspot</span>
+																</div>
+															</div>
+														</label>
+													</li>
+													<li>
+														<label class="item-checkbox item-content">
+															<input type="checkbox" name="LT_adon" value="aL_lfgm"/>
+															<i class="icon icon-checkbox"></i>
+															<div class="item-inner">
+																<div class="item-title">
+																	<div class="stepper stepper-small stepper-fill stepper-init">
+																		<div class="stepper-button-minus"></div>
+																		<div class="stepper-input-wrap">
+																			<input name="aL_lfgm" type="text" value="0" min="0" max="99" step="1" readonly>
+																		</div>
+																		<div class="stepper-button-plus"></div>
+																	</div>
+																	&emsp;<span>Fog machine</span>
+																</div>
+															</div>
+														</label>
+													</li>
+												</ul>
+											</div>
+										</div>
+									</li>
+									<li class="accordion-item">
+										<a href="#" class="item-content item-link">
+											<div class="item-inner">
+												<div class="item-title">Man Power</div>
+											</div>
+										</a>
+										<div class="accordion-item-content">
+											<div class="block list">
+												<ul>
+													<li>
+														<label class="item-checkbox item-content">
+															<input type="checkbox" name="LT_adon" value="aL_ltcw"/>
+															<i class="icon icon-checkbox"></i>
+															<div class="item-inner">
+																<div class="item-title">
+																	<div class="stepper stepper-small stepper-fill stepper-init">
+																		<div class="stepper-button-minus"></div>
+																		<div class="stepper-input-wrap">
+																			<input name="aL_ltcw" type="text" value="0" min="0" max="99" step="1" readonly>
+																		</div>
+																		<div class="stepper-button-plus"></div>
+																	</div>
+																	&emsp;<span>Lighting Crew</span>
+																</div>
+															</div>
+														</label>
+													</li>
+												</ul>
+											</div>
+										</div>
+									</li>
+								</ul>
+							</div>
+						</div>
 						<div class="evt_ord_0"></div>
 						<div class="toolbar tabbar-labels toolbar-bottom-md" style="position:sticky;">
 							<div class="toolbar-inner">
@@ -5554,7 +5871,6 @@ data-value=''>
 										<div class="item-title item-label">
 											<i class="icon material-icons md-only">create</i> Fixture Legend
 										</div>
-										<div class="item-input-wrap">
 										<div class="item-input-wrap">
 											<select id="ltcl_nme">
 												<option value="PAR" selected>Par Can</option>
@@ -7163,10 +7479,39 @@ data-value=''>
 					</div>
 				</div>
 				<div class="block">
-					<div class="list">
+					<div class="block">
+						<div class="row">
+							<button class="col button button-raised button-active btn-stht">Work History</button>
+							<button class="col button button-raised btn-strl">Remaining Leave</button>
+						</div>
+					</div>
+					<div class="list list-stht">
 						<ul>
 							
 						</ul>
+					</div>
+					<div class="list-strl" style="display:none;">
+						<div class="block">
+							<div class="row">
+								<div class="col-50">Off Day</div>
+								<div class="col-50">:&emsp;<strong class="rl-ofd"></strong></div>
+							</div>
+							<div class="row">
+								<div class="col-50">Annual Leave</div>
+								<div class="col-50">:&emsp;<strong class="rl-anl"></strong>&emsp;/&emsp;<strong class="rl-tanl"></strong></div>
+							</div>
+							<div class="row">
+								<div class="col-50">Sick Leave</div>
+								<div class="col-50">:&emsp;<strong class="rl-mcl"></strong>&emsp;/&emsp;<strong class="rl-tmcl"></strong></div>
+							</div>
+							<div class="row">
+								<div class="col-50">Compassionate Leave</div>
+								<div class="col-50">:&emsp;<strong class="rl-cpl"></strong>&emsp;/&emsp;<strong class="rl-tcpl"></strong></div>
+							</div>
+						</div>
+						<div class="strl-tl">
+							
+						</div>
 					</div>
 				</div>
 			</div>
