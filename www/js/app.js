@@ -6,11 +6,11 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.249",
+			  version: "1.0.250",
 			  rtl: false,
 			  language: "en-US"
 		  });
-var geoToken = true, geoCount = 60, APP_VERSION = 10249, tmpCalendar = '', fileObject, tapHold = 0, tapHoldStr = '';
+var geoToken = true, geoCount = 60, APP_VERSION = 10250, tmpCalendar = '', fileObject, tapHold = 0, tapHoldStr = '';
 
 var app = {
     initialize: function() {
@@ -23,14 +23,6 @@ var app = {
 	
     onDeviceReady: function(){
         app.receivedEvent('deviceready');
-		
-		console.log(device.cordova);
-		STORAGE.setItem('D_model', device.model);
-		STORAGE.setItem('D_platform', device.platform);
-		STORAGE.setItem('D_uuid', device.uuid);
-		STORAGE.setItem('D_version', device.version);
-		STORAGE.setItem('D_manufacturer', device.manufacturer);
-		STORAGE.setItem('D_serial', device.serial);
 		
 		var notificationOpenedCallback = function(jsonData){
 			if(!sys.isEmpty(jsonData['notification']['payload']['additionalData']['feedback'])){
@@ -6564,15 +6556,6 @@ $(document).ready(function(){
 		'pwd' : pwd,
 		'version' : APP_VERSION
 	};
-	
-	if(!sys.isEmpty(STORAGE.getItem('D_manufacturer'))){
-		DATA['model'] = STORAGE.getItem('D_model');
-		DATA['platform'] = STORAGE.getItem('D_platform');
-		DATA['uuid'] = STORAGE.getItem('D_uuid');
-		DATA['version'] = STORAGE.getItem('version');
-		DATA['manufacturer'] = STORAGE.getItem('D_manufacturer');
-		DATA['serial'] = STORAGE.getItem('D_serial');
-	}
 	
 	post_data = "ACT=" + encodeURIComponent('ssn_chk')
 			  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
