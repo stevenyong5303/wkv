@@ -238,7 +238,7 @@ div.toolbar.evt_ord_tab, div.evt_ord_DL div.toolbar{
 div.evt_dlg_cart{
 	font-size: 14px;
 }
-div.evt_ord_0, div.evt_ord_1, div.evt_ord_2, div.evt_ord_3, div.evt_ord_4, div.evt_ord_5{
+div.evt_ord_0, div.evt_ord_1, div.evt_ord_2, div.evt_ord_3, div.evt_ord_4, div.evt_ord_5, div.evt_ord_6, div.evt_ord_7, div.evt_ord_8, div.evt_ord_9, div.evt_ord_10, div.evt_ord_11, div.evt_ord_12, div.evt_ord_13, div.evt_ord_14, div.evt_ord_15{
 	height: 100%;
 }
 div.evt_ord_0{
@@ -251,7 +251,7 @@ div.evt_ord_0{
     z-index: -1;
 	opacity: 0;
 }
-div.evt_ord_2 .block.list .item-checkbox span, div.evt_ord_3 .block.list .item-checkbox span, div.evt_ord_5 .block.list .item-checkbox span{
+div.evt_ord_2 .block.list .item-checkbox span, div.evt_ord_3 .block.list .item-checkbox span, div.evt_ord_5 .block.list .item-checkbox span, div.evt_ord_6 .block.list .item-checkbox span, div.evt_ord_7 .block.list .item-checkbox span, div.evt_ord_8 .block.list .item-checkbox span, div.evt_ord_9 .block.list .item-checkbox span, div.evt_ord_10 .block.list .item-checkbox span, div.evt_ord_11 .block.list .item-checkbox span, div.evt_ord_12 .block.list .item-checkbox span, div.evt_ord_13 .block.list .item-checkbox span, div.evt_ord_14 .block.list .item-checkbox span, div.evt_ord_15 .block.list .item-checkbox span{
 	position: relative;
 	top: -8px;
 	font-size: 12px;

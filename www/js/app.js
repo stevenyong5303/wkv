@@ -6,11 +6,11 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.250",
+			  version: "1.0.251",
 			  rtl: false,
 			  language: "en-US"
 		  });
-var geoToken = true, geoCount = 60, APP_VERSION = 10250, tmpCalendar = '', fileObject, tapHold = 0, tapHoldStr = '';
+var geoToken = true, geoCount = 60, APP_VERSION = 10251, tmpCalendar = '', fileObject, tapHold = 0, tapHoldStr = '';
 
 var app = {
     initialize: function() {
@@ -1566,6 +1566,17 @@ $(document).ready(function(){
 			$('.evt_ord_2').css('display', 'none');
 			$('.evt_ord_3').css('display', 'none');
 			$('.evt_ord_4').css('display', 'none');
+			$('.evt_ord_5').css('display', 'none');
+			$('.evt_ord_6').css('display', 'none');
+			$('.evt_ord_7').css('display', 'none');
+			$('.evt_ord_8').css('display', 'none');
+			$('.evt_ord_9').css('display', 'none');
+			$('.evt_ord_10').css('display', 'none');
+			$('.evt_ord_11').css('display', 'none');
+			$('.evt_ord_12').css('display', 'none');
+			$('.evt_ord_13').css('display', 'none');
+			$('.evt_ord_14').css('display', 'none');
+			$('.evt_ord_15').css('display', 'none');
 			$('.popup-backdrop').css('display', 'block');
 			$('.evt_ord_tab').css('display', 'none');
 		});
@@ -1578,11 +1589,34 @@ $(document).ready(function(){
 				case 'SD_2t2m':
 				case 'SD_4t2m':
 				case 'SD_6t2m':
+				case 'LT_ctst':
+				case 'LT_f600':
 				case 'LT_1_0k':
 				case 'LT_1_5k':
 				case 'LT_2_0k':
 				case 'LT_2_5k':
+				case 'LS_sidr':
+				case 'LS_sfly':
+				case 'LS_sodr':
+				case 'PJ_pjol':
+				case 'PJ_p6x6':
+				case 'PJ_p8x8':
+				case 'TV_tv43':
+				case 'TV_tv55':
+				case 'TV_tv65':
+				case 'KR_krok':
 				case 'SG_4f4f':
+				case 'BL_bkln':
+				case 'TS_gp12':
+				case 'TS_gp16':
+				case 'TS_gpfl':
+				case 'TS_gpct':
+				case 'BD_3f3f':
+				case 'LF_1chd':
+				case 'LF_1cfd':
+				case 'LF_2chd':
+				case 'LF_2cfd':
+				case 'EF_efmc':
 					$('.evt_ord_proceed').prop('disabled', false);
 					$('.evt_ord_proceed').removeClass('disabled');
 					$('.evt_ord_checkout').prop('disabled', true);
@@ -1613,7 +1647,9 @@ $(document).ready(function(){
 						cBtn = false;
 					}
 				}else{
-					if(cart[i].substr(0,2)=='aG'){
+					if(cart[i].substr(0,2)=='aS'){
+						cBtn = false;
+					}else if(cart[i].substr(0,2)=='aG'){
 						cBtn = false;
 					}
 				}
@@ -1643,7 +1679,61 @@ $(document).ready(function(){
 				
 				if($(this).data('main')){
 					if(row.substr(0,1)=='c'){
-						if(code == 'SG_4f4f'){
+						if(code == 'LS_sidr'){
+							item = $('.evts_cart_DL').data('item');
+							
+							item[row.substr(1)] = null;
+							
+							for(var i = (parseInt(row.substr(1)) + 1); i < item.length; i++){
+								if(!sys.isEmpty(item[i])){
+									if(item[i].substr(0,2)=='aS'){
+										item[i] = null;
+									}else{
+										break;
+									}
+								}
+							}
+							$('.evts_cart_DL').data('item', item);
+							sys.updateCartPrice();
+							
+							$('div[item_count='+num+']').remove();
+						}else if(code == 'LS_sfly'){
+							item = $('.evts_cart_DL').data('item');
+							
+							item[row.substr(1)] = null;
+							
+							for(var i = (parseInt(row.substr(1)) + 1); i < item.length; i++){
+								if(!sys.isEmpty(item[i])){
+									if(item[i].substr(0,2)=='aS'){
+										item[i] = null;
+									}else{
+										break;
+									}
+								}
+							}
+							$('.evts_cart_DL').data('item', item);
+							sys.updateCartPrice();
+							
+							$('div[item_count='+num+']').remove();
+						}else if(code == 'LS_sodr'){
+							item = $('.evts_cart_DL').data('item');
+							
+							item[row.substr(1)] = null;
+							
+							for(var i = (parseInt(row.substr(1)) + 1); i < item.length; i++){
+								if(!sys.isEmpty(item[i])){
+									if(item[i].substr(0,2)=='aS'){
+										item[i] = null;
+									}else{
+										break;
+									}
+								}
+							}
+							$('.evts_cart_DL').data('item', item);
+							sys.updateCartPrice();
+							
+							$('div[item_count='+num+']').remove();
+						}else if(code == 'SG_4f4f'){
 							item = $('.evts_cart_DL').data('item');
 							
 							item[row.substr(1)] = null;
@@ -1651,6 +1741,24 @@ $(document).ready(function(){
 							for(var i = (parseInt(row.substr(1)) + 1); i < item.length; i++){
 								if(!sys.isEmpty(item[i])){
 									if(item[i].substr(0,2)=='aG'){
+										item[i] = null;
+									}else{
+										break;
+									}
+								}
+							}
+							$('.evts_cart_DL').data('item', item);
+							sys.updateCartPrice();
+							
+							$('div[item_count='+num+']').remove();
+						}else if(code == 'BD_3f3f'){
+							item = $('.evts_cart_DL').data('item');
+							
+							item[row.substr(1)] = null;
+							
+							for(var i = (parseInt(row.substr(1)) + 1); i < item.length; i++){
+								if(!sys.isEmpty(item[i])){
+									if(item[i].substr(0,2)=='aR'){
 										item[i] = null;
 									}else{
 										break;
@@ -1900,6 +2008,576 @@ $(document).ready(function(){
 			sys.updateCartPrice();
 		});
 		
+		$('.evt_ord_6 .stepper-button-minus').on('click', function(e){
+			e.preventDefault();
+			e.stopPropagation();
+		});
+		
+		$('.evt_ord_6 .stepper-button-plus').on('click', function(e){
+			e.preventDefault();
+			e.stopPropagation();
+		});
+		
+		$('.evt_ord_6 div.stepper-init').each(function(){
+			apps.stepper.create({
+				el: $(this),
+				on: {
+					change: function(){
+						var addOn = [];
+							
+						if($(this)[0].value){
+							($('input[name="LS_adon"][value="'+$(this)[0].inputEl.name+'"]')).prop('checked', true);
+						}
+						
+						($('input[name="LS_adon"][value="'+$(this)[0].inputEl.name+'"]'))[0]
+							
+						if(($('input[name="LS_adon"][value="'+$(this)[0].inputEl.name+'"]'))[0].checked){
+							$('input[name="LS_adon"]:checked').each(function(){
+								var qty = $('div.item-title input[name="'+$(this).val()+'"]').val();
+								
+								if(qty){
+									addOn.push($(this).val()+qty);
+								}
+							});
+							
+							$('.evt_ord_proceed').data('item', addOn);
+							
+							sys.updateCartPrice();
+						}
+					}
+				}
+			})
+		});
+		
+		$('div.evt_ord_6').on('change', 'input[name="LS_adon"]', function(){
+			var addOn = [];
+			
+			$('input[name="LS_adon"]:checked').each(function(){
+				var qty = $('div.item-title input[name="'+$(this).val()+'"]').val();
+				
+				if(qty){
+					addOn.push($(this).val()+qty);
+				}
+			});
+			
+			$('.evt_ord_proceed').data('item', addOn);
+			
+			sys.updateCartPrice();
+		});
+		
+		$('.evt_ord_7 .stepper-button-minus').on('click', function(e){
+			e.preventDefault();
+			e.stopPropagation();
+		});
+		
+		$('.evt_ord_7 .stepper-button-plus').on('click', function(e){
+			e.preventDefault();
+			e.stopPropagation();
+		});
+		
+		$('.evt_ord_7 div.stepper-init').each(function(){
+			apps.stepper.create({
+				el: $(this),
+				on: {
+					change: function(){
+						var addOn = [];
+							
+						if($(this)[0].value){
+							($('input[name="PJ_adon"][value="'+$(this)[0].inputEl.name+'"]')).prop('checked', true);
+						}
+						
+						($('input[name="PJ_adon"][value="'+$(this)[0].inputEl.name+'"]'))[0]
+							
+						if(($('input[name="PJ_adon"][value="'+$(this)[0].inputEl.name+'"]'))[0].checked){
+							$('input[name="PJ_adon"]:checked').each(function(){
+								var qty = $('div.item-title input[name="'+$(this).val()+'"]').val();
+								
+								if(qty){
+									addOn.push($(this).val()+qty);
+								}
+							});
+							
+							$('.evt_ord_proceed').data('item', addOn);
+							
+							sys.updateCartPrice();
+						}
+					}
+				}
+			})
+		});
+		
+		$('div.evt_ord_7').on('change', 'input[name="PJ_adon"]', function(){
+			var addOn = [];
+			
+			$('input[name="PJ_adon"]:checked').each(function(){
+				var qty = $('div.item-title input[name="'+$(this).val()+'"]').val();
+				
+				if(qty){
+					addOn.push($(this).val()+qty);
+				}
+			});
+			
+			$('.evt_ord_proceed').data('item', addOn);
+			
+			sys.updateCartPrice();
+		});
+		
+		$('.evt_ord_8 .stepper-button-minus').on('click', function(e){
+			e.preventDefault();
+			e.stopPropagation();
+		});
+		
+		$('.evt_ord_8 .stepper-button-plus').on('click', function(e){
+			e.preventDefault();
+			e.stopPropagation();
+		});
+		
+		$('.evt_ord_8 div.stepper-init').each(function(){
+			apps.stepper.create({
+				el: $(this),
+				on: {
+					change: function(){
+						var addOn = [];
+							
+						if($(this)[0].value){
+							($('input[name="TV_adon"][value="'+$(this)[0].inputEl.name+'"]')).prop('checked', true);
+						}
+						
+						($('input[name="TV_adon"][value="'+$(this)[0].inputEl.name+'"]'))[0]
+							
+						if(($('input[name="TV_adon"][value="'+$(this)[0].inputEl.name+'"]'))[0].checked){
+							$('input[name="TV_adon"]:checked').each(function(){
+								var qty = $('div.item-title input[name="'+$(this).val()+'"]').val();
+								
+								if(qty){
+									addOn.push($(this).val()+qty);
+								}
+							});
+							
+							$('.evt_ord_proceed').data('item', addOn);
+							
+							sys.updateCartPrice();
+						}
+					}
+				}
+			})
+		});
+		
+		$('div.evt_ord_8').on('change', 'input[name="TV_adon"]', function(){
+			var addOn = [];
+			
+			$('input[name="TV_adon"]:checked').each(function(){
+				var qty = $('div.item-title input[name="'+$(this).val()+'"]').val();
+				
+				if(qty){
+					addOn.push($(this).val()+qty);
+				}
+			});
+			
+			$('.evt_ord_proceed').data('item', addOn);
+			
+			sys.updateCartPrice();
+		});
+		
+		$('.evt_ord_9 .stepper-button-minus').on('click', function(e){
+			e.preventDefault();
+			e.stopPropagation();
+		});
+		
+		$('.evt_ord_9 .stepper-button-plus').on('click', function(e){
+			e.preventDefault();
+			e.stopPropagation();
+		});
+		
+		$('.evt_ord_9 div.stepper-init').each(function(){
+			apps.stepper.create({
+				el: $(this),
+				on: {
+					change: function(){
+						var addOn = [];
+							
+						if($(this)[0].value){
+							($('input[name="KR_adon"][value="'+$(this)[0].inputEl.name+'"]')).prop('checked', true);
+						}
+						
+						($('input[name="KR_adon"][value="'+$(this)[0].inputEl.name+'"]'))[0]
+							
+						if(($('input[name="KR_adon"][value="'+$(this)[0].inputEl.name+'"]'))[0].checked){
+							$('input[name="KR_adon"]:checked').each(function(){
+								var qty = $('div.item-title input[name="'+$(this).val()+'"]').val();
+								
+								if(qty){
+									addOn.push($(this).val()+qty);
+								}
+							});
+							
+							$('.evt_ord_proceed').data('item', addOn);
+							
+							sys.updateCartPrice();
+						}
+					}
+				}
+			})
+		});
+		
+		$('div.evt_ord_9').on('change', 'input[name="KR_adon"]', function(){
+			var addOn = [];
+			
+			$('input[name="KR_adon"]:checked').each(function(){
+				var qty = $('div.item-title input[name="'+$(this).val()+'"]').val();
+				
+				if(qty){
+					addOn.push($(this).val()+qty);
+				}
+			});
+			
+			$('.evt_ord_proceed').data('item', addOn);
+			
+			sys.updateCartPrice();
+		});
+		
+		$('.evt_ord_10 .stepper-button-minus').on('click', function(e){
+			e.preventDefault();
+			e.stopPropagation();
+		});
+		
+		$('.evt_ord_10 .stepper-button-plus').on('click', function(e){
+			e.preventDefault();
+			e.stopPropagation();
+		});
+		
+		$('.evt_ord_10 div.stepper-init').each(function(){
+			apps.stepper.create({
+				el: $(this),
+				on: {
+					change: function(){
+						var addOn = [];
+							
+						if($(this)[0].value){
+							($('input[name="BL_adon"][value="'+$(this)[0].inputEl.name+'"]')).prop('checked', true);
+						}
+						
+						($('input[name="BL_adon"][value="'+$(this)[0].inputEl.name+'"]'))[0]
+							
+						if(($('input[name="BL_adon"][value="'+$(this)[0].inputEl.name+'"]'))[0].checked){
+							$('input[name="BL_adon"]:checked').each(function(){
+								var qty = $('div.item-title input[name="'+$(this).val()+'"]').val();
+								
+								if(qty){
+									addOn.push($(this).val()+qty);
+								}
+							});
+							
+							$('.evt_ord_proceed').data('item', addOn);
+							
+							sys.updateCartPrice();
+						}
+					}
+				}
+			})
+		});
+		
+		$('div.evt_ord_10').on('change', 'input[name="BL_adon"]', function(){
+			var addOn = [];
+			
+			$('input[name="BL_adon"]:checked').each(function(){
+				var qty = $('div.item-title input[name="'+$(this).val()+'"]').val();
+				
+				if(qty){
+					addOn.push($(this).val()+qty);
+				}
+			});
+			
+			$('.evt_ord_proceed').data('item', addOn);
+			
+			sys.updateCartPrice();
+		});
+		
+		$('.evt_ord_11 .stepper-button-minus').on('click', function(e){
+			e.preventDefault();
+			e.stopPropagation();
+		});
+		
+		$('.evt_ord_11 .stepper-button-plus').on('click', function(e){
+			e.preventDefault();
+			e.stopPropagation();
+		});
+		
+		$('.evt_ord_11 div.stepper-init').each(function(){
+			apps.stepper.create({
+				el: $(this),
+				on: {
+					change: function(){
+						var addOn = [];
+							
+						if($(this)[0].value){
+							($('input[name="TZ_adon"][value="'+$(this)[0].inputEl.name+'"]')).prop('checked', true);
+						}
+						
+						($('input[name="TZ_adon"][value="'+$(this)[0].inputEl.name+'"]'))[0]
+							
+						if(($('input[name="TZ_adon"][value="'+$(this)[0].inputEl.name+'"]'))[0].checked){
+							$('input[name="TZ_adon"]:checked').each(function(){
+								var qty = $('div.item-title input[name="'+$(this).val()+'"]').val();
+								
+								if(qty){
+									addOn.push($(this).val()+qty);
+								}
+							});
+							
+							$('.evt_ord_proceed').data('item', addOn);
+							
+							sys.updateCartPrice();
+						}
+					}
+				}
+			})
+		});
+		
+		$('div.evt_ord_11').on('change', 'input[name="TZ_adon"]', function(){
+			var addOn = [];
+			
+			$('input[name="TZ_adon"]:checked').each(function(){
+				var qty = $('div.item-title input[name="'+$(this).val()+'"]').val();
+				
+				if(qty){
+					addOn.push($(this).val()+qty);
+				}
+			});
+			
+			$('.evt_ord_proceed').data('item', addOn);
+			
+			sys.updateCartPrice();
+		});
+		
+		$('.evt_ord_12 .stepper-button-minus').on('click', function(e){
+			e.preventDefault();
+			e.stopPropagation();
+		});
+		
+		$('.evt_ord_12 .stepper-button-plus').on('click', function(e){
+			e.preventDefault();
+			e.stopPropagation();
+		});
+		
+		$('.evt_ord_12 div.stepper-init').each(function(){
+			apps.stepper.create({
+				el: $(this),
+				on: {
+					change: function(){
+						var addOn = [];
+							
+						if($(this)[0].value){
+							($('input[name="TS_adon"][value="'+$(this)[0].inputEl.name+'"]')).prop('checked', true);
+						}
+						
+						($('input[name="TS_adon"][value="'+$(this)[0].inputEl.name+'"]'))[0]
+							
+						if(($('input[name="TS_adon"][value="'+$(this)[0].inputEl.name+'"]'))[0].checked){
+							$('input[name="TS_adon"]:checked').each(function(){
+								var qty = $('div.item-title input[name="'+$(this).val()+'"]').val();
+								
+								if(qty){
+									addOn.push($(this).val()+qty);
+								}
+							});
+							
+							$('.evt_ord_proceed').data('item', addOn);
+							
+							sys.updateCartPrice();
+						}
+					}
+				}
+			})
+		});
+		
+		$('div.evt_ord_12').on('change', 'input[name="TS_adon"]', function(){
+			var addOn = [];
+			
+			$('input[name="TS_adon"]:checked').each(function(){
+				var qty = $('div.item-title input[name="'+$(this).val()+'"]').val();
+				
+				if(qty){
+					addOn.push($(this).val()+qty);
+				}
+			});
+			
+			$('.evt_ord_proceed').data('item', addOn);
+			
+			sys.updateCartPrice();
+		});
+		
+		$('.evt_ord_13 .stepper-button-minus').on('click', function(e){
+			e.preventDefault();
+			e.stopPropagation();
+		});
+		
+		$('.evt_ord_13 .stepper-button-plus').on('click', function(e){
+			e.preventDefault();
+			e.stopPropagation();
+		});
+		
+		$('.evt_ord_13 div.stepper-init').each(function(){
+			apps.stepper.create({
+				el: $(this),
+				on: {
+					change: function(){
+						var addOn = [];
+							
+						if($(this)[0].value){
+							($('input[name="BD_adon"][value="'+$(this)[0].inputEl.name+'"]')).prop('checked', true);
+						}
+						
+						($('input[name="BD_adon"][value="'+$(this)[0].inputEl.name+'"]'))[0]
+							
+						if(($('input[name="BD_adon"][value="'+$(this)[0].inputEl.name+'"]'))[0].checked){
+							$('input[name="BD_adon"]:checked').each(function(){
+								var qty = $('div.item-title input[name="'+$(this).val()+'"]').val();
+								
+								if(qty){
+									addOn.push($(this).val()+qty);
+								}
+							});
+							
+							$('.evt_ord_proceed').data('item', addOn);
+							
+							sys.updateCartPrice();
+						}
+					}
+				}
+			})
+		});
+		
+		$('div.evt_ord_13').on('change', 'input[name="BD_adon"]', function(){
+			var addOn = [];
+			
+			$('input[name="BD_adon"]:checked').each(function(){
+				var qty = $('div.item-title input[name="'+$(this).val()+'"]').val();
+				
+				if(qty){
+					addOn.push($(this).val()+qty);
+				}
+			});
+			
+			$('.evt_ord_proceed').data('item', addOn);
+			
+			sys.updateCartPrice();
+		});
+		
+		$('.evt_ord_14 .stepper-button-minus').on('click', function(e){
+			e.preventDefault();
+			e.stopPropagation();
+		});
+		
+		$('.evt_ord_14 .stepper-button-plus').on('click', function(e){
+			e.preventDefault();
+			e.stopPropagation();
+		});
+		
+		$('.evt_ord_14 div.stepper-init').each(function(){
+			apps.stepper.create({
+				el: $(this),
+				on: {
+					change: function(){
+						var addOn = [];
+							
+						if($(this)[0].value){
+							($('input[name="LF_adon"][value="'+$(this)[0].inputEl.name+'"]')).prop('checked', true);
+						}
+						
+						($('input[name="LF_adon"][value="'+$(this)[0].inputEl.name+'"]'))[0]
+							
+						if(($('input[name="LF_adon"][value="'+$(this)[0].inputEl.name+'"]'))[0].checked){
+							$('input[name="LF_adon"]:checked').each(function(){
+								var qty = $('div.item-title input[name="'+$(this).val()+'"]').val();
+								
+								if(qty){
+									addOn.push($(this).val()+qty);
+								}
+							});
+							
+							$('.evt_ord_proceed').data('item', addOn);
+							
+							sys.updateCartPrice();
+						}
+					}
+				}
+			})
+		});
+		
+		$('div.evt_ord_14').on('change', 'input[name="LF_adon"]', function(){
+			var addOn = [];
+			
+			$('input[name="LF_adon"]:checked').each(function(){
+				var qty = $('div.item-title input[name="'+$(this).val()+'"]').val();
+				
+				if(qty){
+					addOn.push($(this).val()+qty);
+				}
+			});
+			
+			$('.evt_ord_proceed').data('item', addOn);
+			
+			sys.updateCartPrice();
+		});
+		
+		$('.evt_ord_15 .stepper-button-minus').on('click', function(e){
+			e.preventDefault();
+			e.stopPropagation();
+		});
+		
+		$('.evt_ord_15 .stepper-button-plus').on('click', function(e){
+			e.preventDefault();
+			e.stopPropagation();
+		});
+		
+		$('.evt_ord_15 div.stepper-init').each(function(){
+			apps.stepper.create({
+				el: $(this),
+				on: {
+					change: function(){
+						var addOn = [];
+							
+						if($(this)[0].value){
+							($('input[name="EF_adon"][value="'+$(this)[0].inputEl.name+'"]')).prop('checked', true);
+						}
+						
+						($('input[name="EF_adon"][value="'+$(this)[0].inputEl.name+'"]'))[0]
+							
+						if(($('input[name="EF_adon"][value="'+$(this)[0].inputEl.name+'"]'))[0].checked){
+							$('input[name="EF_adon"]:checked').each(function(){
+								var qty = $('div.item-title input[name="'+$(this).val()+'"]').val();
+								
+								if(qty){
+									addOn.push($(this).val()+qty);
+								}
+							});
+							
+							$('.evt_ord_proceed').data('item', addOn);
+							
+							sys.updateCartPrice();
+						}
+					}
+				}
+			})
+		});
+		
+		$('div.evt_ord_15').on('change', 'input[name="EF_adon"]', function(){
+			var addOn = [];
+			
+			$('input[name="EF_adon"]:checked').each(function(){
+				var qty = $('div.item-title input[name="'+$(this).val()+'"]').val();
+				
+				if(qty){
+					addOn.push($(this).val()+qty);
+				}
+			});
+			
+			$('.evt_ord_proceed').data('item', addOn);
+			
+			sys.updateCartPrice();
+		});
+		
 		$('button.evt_ord_proceed').on('click', function(){
 			var temp = $('.evt_ord_proceed').data('item'),
 				cart = (sys.isEmpty($('.evts_cart_DL').data('item')) ? [] : $('.evts_cart_DL').data('item'));
@@ -1931,9 +2609,15 @@ $(document).ready(function(){
 						
 						$('.evt_ord_'+sys.getAddOn(temp[0])).css('display', 'block');
 						$('.evt_ord_0').css('opacity', '0');
-						if(sys.getAddOn(temp[0])==3){
+						if(sys.getAddOn(temp[0])==6){
+							$('.evt_ord_proceed').data('item', ["aS_ledw1", "aS_ledh1"]);
+							apps.accordion.open($('.evt_ord_ldug'));
+						}else if(sys.getAddOn(temp[0])==3){
 							$('.evt_ord_proceed').data('item', ["aG_sslg4", "aG_sswh4", "aG_sshg2.0"]);
 							apps.accordion.open($('.evt_ord_stug'));
+						}else if(sys.getAddOn(temp[0])==13){
+							$('.evt_ord_proceed').data('item', ["aR_bdlg3", "aR_bdhg3"]);
+							apps.accordion.open($('.evt_ord_bdug'));
 						}
 						$('button.evt_ord_checkout').addClass('disabled');
 						$('button.evt_ord_checkout').prop('disabled', true);
@@ -7859,15 +8543,15 @@ sys = {
 						html += '<div class="col-10"></div>';
 					}
 					html += '</div>';
-					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">2 u x Speaker</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">2 u x Speaker (Monitor)</div></div>';
 					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 u x Mixer</div></div>';
 					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">2 u x Wireless Handheld Microphone</div></div>';
 					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 u x Dual Channel DI Box</div></div>';
 					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">3 u x Microphone Stand</div></div>';
-					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">2 u x Speaker Stand</div></div>';
-					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 lot x Microphone Stand / Speaker Stand</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 u x Book Stand</div></div>';
 					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 lot x All Necessary cables & Extensions</div></div>';
 					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 x Sound Engineer</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">Setup & Dismantle</div></div>';
 					break;
 				case 'SD_2t2m':
 					html += '<div class="row no-gap" item_count="' + num + '">';
@@ -7885,10 +8569,11 @@ sys = {
 					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">2 u x Wireless Handheld Microphone</div></div>';
 					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 u x Dual Channel DI Box</div></div>';
 					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">3 u x Microphone Stand</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 u x Book Stand</div></div>';
 					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">2 u x Speaker Stand</div></div>';
-					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 lot x Microphone Stand / Speaker Stand</div></div>';
 					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 lot x All Necessary cables & Extensions</div></div>';
 					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 x Sound Engineer</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">Setup & Dismantle</div></div>';
 					break;
 				case 'SD_4t2m':
 					html += '<div class="row no-gap" item_count="' + num + '">';
@@ -7906,10 +8591,11 @@ sys = {
 					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">2 u x Wireless Handheld Microphone</div></div>';
 					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 u x Dual Channel DI Box</div></div>';
 					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">3 u x Microphone Stand</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 u x Book Stand</div></div>';
 					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">4 u x Speaker Stand</div></div>';
-					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 lot x Microphone Stand / Speaker Stand</div></div>';
 					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 lot x All Necessary cables & Extensions</div></div>';
 					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 x Sound Engineer</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">Setup & Dismantle</div></div>';
 					break;
 				case 'SD_6t2m':
 					html += '<div class="row no-gap" item_count="' + num + '">';
@@ -7927,10 +8613,11 @@ sys = {
 					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">2 u x Wireless Handheld Microphone</div></div>';
 					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 u x Dual Channel DI Box</div></div>';
 					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">3 u x Microphone Stand</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 u x Book Stand</div></div>';
 					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">6 u x Speaker Stand</div></div>';
-					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 lot x Microphone Stand / Speaker Stand</div></div>';
 					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 lot x All Necessary cables & Extensions</div></div>';
 					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 x Sound Engineer</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">Setup & Dismantle</div></div>';
 					break;
 				case 'aD_istm':
 					html += '<div class="row no-gap" item_count="' + num + '">';
@@ -8163,6 +8850,37 @@ sys = {
 					}
 					html += '</div>';
 					break;
+				case 'LT_ctst':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-10">' + num + '.</div>';
+					html += '<div class="col-80"><strong>Lighting System (Custom Settings)</strong></div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-main="1" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 lot x All Necessary cables & Extensions</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 x Lighting Programmer</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">Setup & Dismantle</div></div>';
+					break;
+				case 'LT_f600':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-10">' + num + '.</div>';
+					html += '<div class="col-80"><strong>Lighting System - 600 (Face Light)</strong></div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-main="1" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">8 u x LED Par Can (RGBW)</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 u x Lighting Controller</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">2 u x Lighting Stand</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 lot x All Necessary cables & Extensions</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 x Lighting Programmer</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">Setup & Dismantle</div></div>';
+					break;
 				case 'LT_1_0k':
 					html += '<div class="row no-gap" item_count="' + num + '">';
 					html += '<div class="col-10">' + num + '.</div>';
@@ -8179,6 +8897,7 @@ sys = {
 					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">2 u x Lighting Stand</div></div>';
 					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 lot x All Necessary cables & Extensions</div></div>';
 					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 x Lighting Programmer</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">Setup & Dismantle</div></div>';
 					break;
 				case 'LT_1_5k':
 					html += '<div class="row no-gap" item_count="' + num + '">';
@@ -8199,6 +8918,7 @@ sys = {
 					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 lot x All Necessary cables & Extensions</div></div>';
 					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 x Lighting Programmer</div></div>';
 					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 x Lighting Crew</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">Setup & Dismantle</div></div>';
 					break;
 				case 'LT_2_0k':
 					html += '<div class="row no-gap" item_count="' + num + '">';
@@ -8220,6 +8940,7 @@ sys = {
 					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 lot x All Necessary cables & Extensions</div></div>';
 					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 x Lighting Programmer</div></div>';
 					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 x Lighting Crew</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">Setup & Dismantle</div></div>';
 					break;
 				case 'LT_2_5k':
 					html += '<div class="row no-gap" item_count="' + num + '">';
@@ -8241,6 +8962,7 @@ sys = {
 					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 lot x All Necessary cables & Extensions</div></div>';
 					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 x Lighting Programmer</div></div>';
 					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 x Lighting Crew</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">Setup & Dismantle</div></div>';
 					break;
 				case 'aL_lpcc':
 					html += '<div class="row no-gap" item_count="' + num + '">';
@@ -8308,6 +9030,371 @@ sys = {
 					}
 					html += '</div>';
 					break;
+				case 'aL_lhzm':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-20"></div>';
+					html += '<div class="col-70"><strong>* Extra</strong>&emsp;' + code.substr(7) + ' x Haze Machine</div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					break;
+				case 'aL_lwmh':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-20"></div>';
+					html += '<div class="col-70"><strong>* Extra</strong>&emsp;' + code.substr(7) + ' x LED Wash</div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					break;
+				case 'aL_lpfl':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-20"></div>';
+					html += '<div class="col-70"><strong>* Extra</strong>&emsp;' + code.substr(7) + ' x Profile Light</div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					break;
+				case 'aL_ladl':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-20"></div>';
+					html += '<div class="col-70"><strong>* Extra</strong>&emsp;' + code.substr(7) + ' x Audience Light</div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					break;
+				case 'aL_luvl':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-20"></div>';
+					html += '<div class="col-70"><strong>* Extra</strong>&emsp;' + code.substr(7) + ' x UV Light</div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					break;
+				case 'aL_lgbb':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-20"></div>';
+					html += '<div class="col-70"><strong>* Extra</strong>&emsp;' + code.substr(7) + ' x Customaize Gobo + Gobo Beam</div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					break;
+				case 'aL_ts1m':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-20"></div>';
+					html += '<div class="col-70"><strong>* Extra</strong>&emsp;' + code.substr(7) + ' x 1m Truss c/w Base Plate</div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					break;
+				case 'aL_ts2m':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-20"></div>';
+					html += '<div class="col-70"><strong>* Extra</strong>&emsp;' + code.substr(7) + ' x 2m Truss c/w Base Plate</div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					break;
+				case 'aL_ts3m':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-20"></div>';
+					html += '<div class="col-70"><strong>* Extra</strong>&emsp;' + code.substr(7) + ' x 3m Truss c/w Base Plate</div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					break;
+				case 'aL_tp12':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-20"></div>';
+					html += '<div class="col-70"><strong>* Extra</strong>&emsp;' + code.substr(7) + ' x Goal Post ( < 12m )<br/><sup>( Truss + 2 x Truss Crank )</sup></div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					break;
+				case 'aL_tp16':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-20"></div>';
+					html += '<div class="col-70"><strong>* Extra</strong>&emsp;' + code.substr(7) + ' x Goal Post ( 13m - 16m )<br/><sup>( Truss + 2 x Truss Crank )</sup></div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					break;
+				case 'LS_sidr':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-10">' + num + '.</div>';
+					html += '<div class="col-80"><strong>LED Screen (Indoor)</strong></div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-main="1" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					break;
+				case 'LS_sfly':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-10">' + num + '.</div>';
+					html += '<div class="col-80"><strong>LED Screen (Fly)</strong></div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-main="1" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					break;
+				case 'LS_sodr':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-10">' + num + '.</div>';
+					html += '<div class="col-80"><strong>LED Screen (Outdoor)</strong></div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-main="1" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					break;
+				case 'aS_ledw':
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-20">Width</div><div class="col-70">:&emsp;<strong>' + code.substr(7) + ' m</strong></div></div>';
+					break;
+				case 'aS_ledh':
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-20">Height</div><div class="col-70">:&emsp;<strong>' + code.substr(7) + ' m</strong></div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">Setup & Dismantle</div></div>';
+					break;
+				case 'aS_swt4':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-20"></div>';
+					html += '<div class="col-70"><strong>* Extra</strong>&emsp;' + code.substr(7) + ' x 4CH Blackmagic ATEM Switcher</div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					break;
+				case 'aS_swt8':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-20"></div>';
+					html += '<div class="col-70"><strong>* Extra</strong>&emsp;' + code.substr(7) + ' x 8CH Blackmagic ATEM Switcher</div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					break;
+				case 'PJ_pjol':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-10">' + num + '.</div>';
+					html += '<div class="col-80"><strong>Projector</strong></div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-main="1" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 u x 3800 Ansi Lumen Projector</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 lot x All Necessary cables & Extensions</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">Setup & Dismantle</div></div>';
+					break;
+				case 'PJ_p6x6':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-10">' + num + '.</div>';
+					html += '<div class="col-80"><strong>Projector + Screen <sup>(6 x 6)</sup></strong></div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-main="1" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 u x 3800 Ansi Lumen Projector</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 u x Projector Screen (6ft x 6ft)</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 lot x All Necessary cables & Extensions</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">Setup & Dismantle</div></div>';
+					break;
+				case 'PJ_p8x8':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-10">' + num + '.</div>';
+					html += '<div class="col-80"><strong>Projector + Screen <sup>(8 x 8)</sup></strong></div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-main="1" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 u x 3800 Ansi Lumen Projector</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 u x Projector Screen (8ft x 8ft)</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 lot x All Necessary cables & Extensions</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">Setup & Dismantle</div></div>';
+					break;
+				case 'aJ_sbcw':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-20"></div>';
+					html += '<div class="col-70"><strong>* Extra</strong>&emsp;' + code.substr(7) + ' x Standby Crew</div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					break;
+				case 'TV_tv43':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-10">' + num + '.</div>';
+					html += '<div class="col-80"><strong>43 inch Television</strong></div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-main="1" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 u x 43 inch Television</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 lot x All Necessary cables & Extensions</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">Setup & Dismantle</div></div>';
+					break;
+				case 'TV_tv55':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-10">' + num + '.</div>';
+					html += '<div class="col-80"><strong>55 inch Television</strong></div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-main="1" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 u x 55 inch Television</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 lot x All Necessary cables & Extensions</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">Setup & Dismantle</div></div>';
+					break;
+				case 'TV_tv65':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-10">' + num + '.</div>';
+					html += '<div class="col-80"><strong>65 inch Television</strong></div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-main="1" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 u x 65 inch Television</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 lot x All Necessary cables & Extensions</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">Setup & Dismantle</div></div>';
+					break;
+				case 'aV_tvts':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-20"></div>';
+					html += '<div class="col-70"><strong>* Extra</strong>&emsp;' + code.substr(7) + ' x Truss Stand c/w Base Plate</div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					break;
+				case 'aV_tvcw':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-20"></div>';
+					html += '<div class="col-70"><strong>* Extra</strong>&emsp;' + code.substr(7) + ' x Standby Crew</div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					break;
+				case 'KR_krok':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-10">' + num + '.</div>';
+					html += '<div class="col-80"><strong>Karaoke System</strong></div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-main="1" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 u x Myway Karaoke System</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-15"></div><div class="col-85"><strong><sup>* More than 30,000 updated Chinese / English Songs</sup></strong></div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-15"></div><div class="col-85"><strong><sup>* 1,000 Popular Malay Songs</sup></strong></div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 u x Myway 19" Touch Screen Monitor</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 u x LCD Monitor</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 lot x All Necessary cables & Extensions</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 x Standby Crew</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">Setup & Dismantle</div></div>';
+					break;
+				case 'aK_tv43':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-20"></div>';
+					html += '<div class="col-70"><strong>* Upgrade</strong>&emsp;' + code.substr(7) + ' x 43 inch Television</div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					break;
+				case 'aK_tv55':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-20"></div>';
+					html += '<div class="col-70"><strong>* Upgrade</strong>&emsp;' + code.substr(7) + ' x 55 inch Television</div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					break;
+				case 'aK_tv65':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-20"></div>';
+					html += '<div class="col-70"><strong>* Upgrade</strong>&emsp;' + code.substr(7) + ' x 65 inch Television</div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					break;
+				case 'aK_sbcw':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-20"></div>';
+					html += '<div class="col-70"><strong>* Extra</strong>&emsp;' + code.substr(7) + ' x Standby Crew</div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					break;
 				case 'SG_4f4f':
 					html += '<div class="row no-gap" item_count="' + num + '">';
 					html += '<div class="col-10">' + num + '.</div>';
@@ -8352,6 +9439,451 @@ sys = {
 					}
 					html += '</div>';
 					break;
+				case 'BL_bkln':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-10">' + num + '.</div>';
+					html += '<div class="col-80"><strong>Backline System</strong></div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-main="1" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					break;
+				case 'aB_kb12':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-10"></div>';
+					html += '<div class="col-80">' + code.substr(7) + ' u x Roland KC200 (100watts) 12" 4 channel</div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					break;
+				case 'aB_kb15':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-10"></div>';
+					html += '<div class="col-80">' + code.substr(7) + ' u x Roland KC600 (200watts) 15" 4 channel</div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					break;
+				case 'aB_brb9':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-10"></div>';
+					html += '<div class="col-80">' + code.substr(7) + ' u x Laney RB410 Cabinet c/w RB9 Head</div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					break;
+				case 'aB_blh5':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-10"></div>';
+					html += '<div class="col-80">' + code.substr(7) + ' u x Hartke 410B Cabinet c/w LH500 Head</div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					break;
+				case 'aB_btx6':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-10"></div>';
+					html += '<div class="col-80">' + code.substr(7) + ' u x Hartke 410XL V2 Cabinet c/w TX600 Head</div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					break;
+				case 'aB_gl12':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-10"></div>';
+					html += '<div class="col-80">' + code.substr(7) + ' u x Laney LX412 Cabinet c/w LX120RH Head</div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					break;
+				case 'aB_gmg1':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-10"></div>';
+					html += '<div class="col-80">' + code.substr(7) + ' u x Marshall MG412 Cabinet c/w MG100HCFX Head</div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					break;
+				case 'aB_goc1':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-10"></div>';
+					html += '<div class="col-80">' + code.substr(7) + ' u x Orange CR Pro 412 Cabinet c/w CR120H Head</div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					break;
+				case 'aB_dygz':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-10"></div>';
+					html += '<div class="col-80">' + code.substr(7) + ' u x Yamaha Gig Maker Drumset c/w Zildjian Cymbal</div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					break;
+				case 'aB_dysz':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-10"></div>';
+					html += '<div class="col-80">' + code.substr(7) + ' u x Yamaha Stage Custom Drumset c/w Zildjian S390 Cymbal</div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					break;
+				case 'aB_dtis':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-10"></div>';
+					html += '<div class="col-80">' + code.substr(7) + ' u x Tama ImperialStar Hairline Drumset c/w Stagg SH-Set Cymbal</div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					break;
+				case 'aB_sbcw':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-20"></div>';
+					html += '<div class="col-70"><strong>* Extra</strong>&emsp;' + code.substr(7) + ' x Standby Crew</div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					break;
+				case 'TS_gp12':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-10">' + num + '.</div>';
+					html += '<div class="col-80"><strong>Truss System</strong></div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-main="1" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">2 u x Truss Crank Stand</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 lot x Truss (290mm x 290mm) (Max 12m)</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 lot x All Necessary Connectors, Bullets & Pins</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">Setup & Dismantle</div></div>';
+					break;
+				case 'TS_gp16':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-10">' + num + '.</div>';
+					html += '<div class="col-80"><strong>Truss System</strong></div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-main="1" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">2 u x Truss Crank Stand</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 lot x Truss (400mm x 400mm) (Max 16m)</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 lot x All Necessary Connectors, Bullets & Pins</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">Setup & Dismantle</div></div>';
+					break;
+				case 'TS_gpfl':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-10">' + num + '.</div>';
+					html += '<div class="col-80"><strong>Truss System</strong></div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-main="1" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">2 u x Chain Block Hoist & Slings</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">2 u x Truss Base & Support</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 lot x Truss (400mm x 400mm) (H:6m L:16m)</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 lot x All Necessary Connectors, Bullets & Pins</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">Setup & Dismantle</div></div>';
+					break;
+				case 'TS_gpct':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-10">' + num + '.</div>';
+					html += '<div class="col-80"><strong>Truss System</strong></div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-main="1" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">2 u x Base Plates</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 lot x All Necessary Connectors, Bullets & Pins</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">Setup & Dismantle</div></div>';
+					break;
+				case 'aT_tsjb':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-10"></div>';
+					html += '<div class="col-80">' + code.substr(7) + ' x Joint Box (290mm x 290mm)</div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					break;
+				case 'aT_ts1m':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-10"></div>';
+					html += '<div class="col-80">' + code.substr(7) + ' x 1m Truss (290mm x 290mm)</div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					break;
+				case 'aT_ts2m':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-10"></div>';
+					html += '<div class="col-80">' + code.substr(7) + ' x 2m Truss (290mm x 290mm)</div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					break;
+				case 'aT_ts3m':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-10"></div>';
+					html += '<div class="col-80">' + code.substr(7) + ' x 3m Truss (290mm x 290mm)</div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					break;
+				case 'aT_sbcw':
+				case 'aT_sbcr':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-20"></div>';
+					html += '<div class="col-70"><strong>* Extra</strong>&emsp;' + code.substr(7) + ' x Standby Crew</div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					break;
+				case 'BD_3f3f':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-10">' + num + '.</div>';
+					html += '<div class="col-80"><strong>Truss Backdrop</strong></div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-main="1" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					break;
+				case 'aR_bdlg':
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-20">Length</div><div class="col-70">:&emsp;<strong>' + code.substr(7) + ' ft</strong></div></div>';
+					break;
+				case 'aR_bdhg':
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-20">Height</div><div class="col-70">:&emsp;<strong>' + code.substr(7) + ' ft</strong></div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">Setup & Dismantle</div></div>';
+					break;
+				case 'LF_1chd':
+				case 'LF_1cfd':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-10">' + num + '.</div>';
+					html += '<div class="col-80"><strong>Livefeed</strong></div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-main="1" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 u x Sony NXCAM HXR-NX100</div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 u x Camcorder Stand</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 lot x All Necessary Cables & Extensions</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 x Camera Operator</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">Setup &amp; Dismantle</div></div>';
+					break;
+				case 'LF_2chd':
+				case 'LF_2cfd':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-10">' + num + '.</div>';
+					html += '<div class="col-80"><strong>Livefeed</strong></div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-main="1" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">2 u x Sony NXCAM HXR-NX100</div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">2 u x Camcorder Stand</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">2 u x Blackmagic BiDirectional Converter</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 u x Blackmagic ATEM Television Studio</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 lot x All Necessary Cables & Extensions</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">2 x Camera Operator</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 x Digital Imaging Technician</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">Setup &amp; Dismantle</div></div>';
+					break;
+				case 'aF_bats':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-10"></div>';
+					html += '<div class="col-80">' + code.substr(7) + ' x Blackmagic ATEM Television Studio</div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+				case 'aF_bamn':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-10"></div>';
+					html += '<div class="col-80">' + code.substr(7) + ' x Blackmagic ATEM Mini</div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					break;
+				case 'aF_copr':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-10"></div>';
+					html += '<div class="col-80">' + code.substr(7) + ' x Camera Operator</div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					break;
+				case 'aF_mdit':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-10"></div>';
+					html += '<div class="col-80">' + code.substr(7) + ' x Digital Imaging Technician</div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					break;
+				case 'EF_efmc':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-10">' + num + '.</div>';
+					html += '<div class="col-80"><strong>Effect Machine</strong></div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-main="1" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					break;
+				case 'aE_cnft':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-10"></div>';
+					html += '<div class="col-80">' + code.substr(7) + ' u x Confetti</div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					break;
+				case 'aE_cspk':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-10"></div>';
+					html += '<div class="col-80">' + code.substr(7) + ' u x Cold Spark</div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					break;
+				case 'aE_fgmc':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-10"></div>';
+					html += '<div class="col-80">' + code.substr(7) + ' u x Fog Machine</div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					break;
+				case 'aE_hzmc':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-10"></div>';
+					html += '<div class="col-80">' + code.substr(7) + ' u x Haze Machine</div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					break;
+				case 'aE_lwfg':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-10"></div>';
+					html += '<div class="col-80">' + code.substr(7) + ' u x Low Fog Machine</div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					break;
+				case 'aE_snmc':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-10"></div>';
+					html += '<div class="col-80">' + code.substr(7) + ' u x Snow Machine</div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					break;
+				case 'aE_bbmc':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-10"></div>';
+					html += '<div class="col-80">' + code.substr(7) + ' u x Bubble Machine</div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					break;
 			}
 		}
 		
@@ -8383,11 +9915,26 @@ sys = {
 			case 'aL_lpcc':
 				price = 35;
 				break;
+			case 'aL_llts':
+				price = 40;
+				break;
 			case 'aD_wrsm':
 			case 'aD_hsmc':
 			case 'aD_dmst':
-			case 'aL_lfgm':
+			case 'aV_tvts':
 				price = 50;
+				break;
+			case 'aL_lpfl':
+			case 'aL_luvl':
+				price = 60;
+				break;
+			case 'aL_lfgm':
+			case 'aL_lwmh':
+			case 'aL_ts1m':
+			case 'aT_ts1m':
+			case 'EF_efmc':
+			case 'aE_fgmc':
+				price = 80;
 				break;
 			case 'aD_tops':
 			case 'aD_mons':
@@ -8395,48 +9942,132 @@ sys = {
 			case 'aD_wsbp':
 			case 'aD_sxmc':
 			case 'aD_vlmc':
-			case 'aL_lfls':
+			case 'aL_lbmh':
+			case 'aL_lhzm':
+			case 'aL_ltcw':
+			case 'aJ_sbcw':
+			case 'aV_tvcw':
+			case 'aK_sbcw':
+			case 'aG_sbcw':
+			case 'BL_bkln':
+			case 'aB_sbcw':
+			case 'aT_sbcw':
+			case 'aT_sbcr':
+			case 'aT_tsjb':
+			case 'aR_sbcw':
+			case 'aE_hzmc':
 				price = 100;
 				break;
+			case 'aL_ladl':
 			case 'aD_sgcw':
+			case 'aL_ts2m':
+			case 'aT_ts2m':
 				price = 120;
+				break;
+			case 'aL_lctl':
+				price = 125;
 				break;
 			case 'aD_sdcw':
 			case 'aD_ovtm':
-			case 'aL_lbmh':
-			case 'aL_lctl':
-			case 'aL_ltcw':
+			case 'aL_ts3m':
+			case 'PJ_pjol':
+			case 'aB_kb12':
+			case 'aT_ts3m':
+			case 'aE_cnft':
+			case 'aE_bbmc':
 				price = 150;
 				break;				
 			case 'aD_sbwf':
 			case 'aD_dgtm':
 			case 'aD_estp':
+			case 'aB_brb9':
+			case 'aB_gl12':
+			case 'TS_gpct':
+			case 'aF_copr':
+			case 'aF_mdit':
+			case 'aE_cspk':
+			case 'aE_snmc':
 				price = 200;
 				break;
+			case 'aL_lfls':
+			case 'aS_swt4':
+			case 'PJ_p6x6':
+			case 'aB_kb15':
+			case 'aB_blh5':
+			case 'aB_btx6':
+			case 'aB_gmg1':
+			case 'aB_goc1':
+			case 'aF_bamn':
+				price = 250;
+				break;
 			case 'aD_dmrs':
+			case 'LT_ctst':
+			case 'aB_dygz':
+			case 'aE_lwfg':
 				price = 300;
+				break;
+			case 'PJ_p8x8':
+			case 'TV_tv43':
+			case 'aK_tv43':
+			case 'aB_dtis':
+				price = 350;
+				break;
+			case 'aS_swt8':
+			case 'aB_dysz':
+			case 'aF_bats':
+				price = 400;
+				break;
+			case 'TV_tv55':
+			case 'aK_tv55':
+				price = 450;
 				break;
 			case 'SD_hset':
 				price = 500;
 				break;
+			case 'aL_lgbb':
+			case 'TV_tv65':
+			case 'aK_tv65':
+				price = 550;
+				break;
+			case 'LT_f600':
 			case 'SD_2t2m':
+			case 'KR_krok':
 				price = 600;
 				break;
 			case 'SD_4t2m':
+			case 'LF_1chd':
 				price = 800;
 				break;
 			case 'SD_6t2m':
 			case 'LT_1_0k':
 				price = 1000;
 				break;
+			case 'LF_1cfd':
+				price = 1100;
+				break;
+			case 'aL_tp12':
+			case 'TS_gp12':
+				price = 1200;
+				break;
+			case 'aL_tp16':
 			case 'LT_1_5k':
+			case 'TS_gp16':
 				price = 1500;
+				break;
+			case 'TS_gpfl':
+				price = 1800;
 				break;
 			case 'LT_2_0k':
 				price = 2000;
 				break;
+			case 'LF_2chd':
+				price = 2200;
+				break;
 			case 'LT_2_5k':
 				price = 2500;
+				break;
+			case 'LF_2cfd':
+				price = 2800;
 				break;
 		}
 		
@@ -8445,7 +10076,11 @@ sys = {
 	'updateCartPrice' : function(){
 		var cart_item = $('.evts_cart_DL').data('item'),
 			temp_item = $('.evt_ord_proceed').data('item'),
-			total = 0;
+			total = 0,
+			discount_LT = 0,
+			discount_KR = { 'SD' : false, 'KR' : false , 'PS' : 0, 'UG' : 0},
+			discount_BL = { 'BL' : false, 'aB' : false },
+			discount_EF = { 'EF' : false, 'aE' : false };
 			
 		if(!sys.isEmpty(cart_item)){
 			for(var i=0; i<cart_item.length; i++){
@@ -8453,8 +10088,63 @@ sys = {
 				
 				if(uprice){
 					total += uprice;
+					
+					if(cart_item[i].indexOf('LT_') != -1 || cart_item[i].indexOf('aL_l') != -1 ){
+						discount_LT += uprice;
+					}else if(cart_item[i].indexOf('SD_') != -1){
+						discount_KR.SD = true;
+					}else if(cart_item[i].indexOf('KR_krok') != -1){
+						discount_KR.KR = true;
+						discount_KR.PS++;
+					}else if(cart_item[i].indexOf('aK_tv') != -1){
+						discount_KR.UG += parseInt(cart_item[i].substr(7));
+					}else if(cart_item[i].indexOf('BL_bkln') != -1){
+						discount_BL.BL = true;
+					}else if(cart_item[i].indexOf('aB_') != -1){
+						discount_BL.aB = true;
+					}else if(cart_item[i].indexOf('EF_efmc') != -1){
+						discount_EF.EF = true;
+					}else if(cart_item[i].indexOf('aE_') != -1){
+						discount_EF.aE = true;
+					}
 				}else{
-					if(cart_item[i] == 'SG_4f4f'){
+					if(cart_item[i] == 'LS_sidr' || cart_item[i] == 'LS_sfly' || cart_item[i] == 'LS_sodr'){
+						var wdth = 1,
+							hght = 1,
+							ledTypePrice = 22;
+							limit = ((cart_item.length > (i+3)) ? (i+3) : cart_item.length),
+							screenPrice = 0;
+							
+						for(var j=(i+1); j<limit; j++){
+							if(!sys.isEmpty(cart_item[j])){
+								switch(cart_item[j].substr(0, 7)){
+									case 'aS_ledw':
+										wdth = parseFloat(cart_item[j].substr(7));
+										break;
+									case 'aS_ledh':
+										hght = parseFloat(cart_item[j].substr(7));
+										break;
+								}
+							}
+						}
+						
+						if(cart_item[i] == 'LS_sidr'){
+							ledTypePrice = 20;
+						}
+						
+						screenPrice += (((wdth * 3.28084) * (hght * 3.28084)) * ledTypePrice);
+						uprice += screenPrice;
+						
+						if(screenPrice < 1500){
+							uprice += 400;
+						}else if(screenPrice < 2000){
+							uprice += 300;
+						}else{
+							uprice += 200;
+						}
+						
+						total += uprice;
+					}else if(cart_item[i] == 'SG_4f4f'){
 						var lgth = 4,
 							wdth = 4,
 							crpt = 0,
@@ -8494,6 +10184,27 @@ sys = {
 						}
 						
 						total += uprice;
+					}else if(cart_item[i] == 'BD_3f3f'){
+						var lgth = 3,
+							hgth = 3;
+							limit = ((cart_item.length > (i+3)) ? (i+3) : cart_item.length);
+							
+						for(var j=(i+1); j<limit; j++){
+							if(!sys.isEmpty(cart_item[j])){
+								switch(cart_item[j].substr(0, 7)){
+									case 'aR_bdlg':
+										lgth = parseFloat(cart_item[j].substr(7));
+										break;
+									case 'aR_bdhg':
+										hgth = parseFloat(cart_item[j].substr(7));
+										break;
+								}
+							}
+						}
+						
+						uprice += (( lgth * hgth ) * 6.5);
+						
+						total += uprice;
 					}
 				}
 			}
@@ -8505,9 +10216,100 @@ sys = {
 				
 				if(uprice){
 					total += uprice;
+					
+					if(temp_item[i].indexOf('LT_') != -1 || temp_item[i].indexOf('aL_l') != -1 ){
+						discount_LT += uprice;
+					}else if(temp_item[i].indexOf('SD_') != -1){
+						discount_KR.SD = true;
+					}else if(temp_item[i].indexOf('KR_krok') != -1){
+						discount_KR.KR = true;
+						discount_KR.PS++;
+					}else if(temp_item[i].indexOf('aK_tv') != -1){
+						discount_KR.UG += parseInt(temp_item[i].substr(7));
+					}else if(temp_item[i].indexOf('BL_bkln') != -1){
+						discount_BL.BL = true;
+					}else if(temp_item[i].indexOf('aB_') != -1){
+						discount_BL.aB = true;
+					}else if(temp_item[i].indexOf('EF_efmc') != -1){
+						discount_EF.EF = true;
+					}else if(temp_item[i].indexOf('aE_') != -1){
+						discount_EF.aE = true;
+					}
 				}else{
 					if(!sys.isEmpty(temp_item[i])){
-						if(temp_item[i] == 'SG_4f4f'){
+						if(temp_item[i] == 'LS_sidr' || temp_item[i] == 'LS_sfly' || temp_item[i] == 'LS_sodr'){
+							var wdth = 1,
+								hght = 1,
+								ledTypePrice = 22;
+								limit = ((temp_item.length > (i+3)) ? (i+3) : temp_item.length),
+								screenPrice = 0;
+								
+							for(var j=(i+1); j<limit; j++){
+								if(!sys.isEmpty(temp_item[j])){
+									switch(temp_item[j].substr(0, 7)){
+										case 'aS_ledw':
+											lgth = parseFloat(temp_item[j].substr(7));
+											break;
+										case 'aS_ledh':
+											hght = parseFloat(temp_item[j].substr(7));
+											break;
+									}
+								}
+							}
+							
+							if(temp_item[i] == 'LS_sidr'){
+								ledTypePrice = 20;
+							}
+							
+							screenPrice += (((wdth * 3.28084) * (hght * 3.28084)) * ledTypePrice);
+							uprice += screenPrice;
+							
+							if(screenPrice < 1500){
+								uprice += 400;
+							}else if(screenPrice < 2000){
+								uprice += 300;
+							}else{
+								uprice += 200;
+							}
+							
+							total += uprice;
+						}else if(temp_item[i].substr(0, 7) == 'aS_ledw'){
+							var wdth = 1,
+								hght = 1,
+								ledTypePrice = 22;
+								limit = ((temp_item.length > (i+3)) ? (i+3) : temp_item.length),
+								screenPrice = 0;
+								
+							for(var j=i; j<limit; j++){
+								if(!sys.isEmpty(temp_item[j])){
+									switch(temp_item[j].substr(0, 7)){
+										case 'aS_ledw':
+											wdth = parseFloat(temp_item[j].substr(7));
+											break;
+										case 'aS_ledh':
+											hght = parseFloat(temp_item[j].substr(7));
+											break;
+									}
+								}
+							}
+							
+							if(cart_item[(cart_item.length - 1)] == 'LS_sidr'){
+								ledTypePrice = 20;
+							}
+							uprice -= 400;
+							screenPrice += ((((wdth) * 3.28084) * ((hght) * 3.28084)) * ledTypePrice);
+							uprice += (screenPrice - (3.28084*3.28084*ledTypePrice));
+							
+							if(screenPrice < 1500){
+								uprice += 400;
+							}else if(screenPrice < 2000){
+								uprice += 300;
+							}else{
+								uprice += 200;
+							}
+							
+							total += uprice;
+						}else if(temp_item[i] == 'SG_4f4f'){
 							var lgth = 4,
 								wdth = 4,
 								crpt = 0,
@@ -8584,10 +10386,77 @@ sys = {
 							}
 							
 							total += uprice;
+						}else if(temp_item[i] == 'BD_3f3f'){
+							var lgth = 3,
+								hgth = 3,
+								limit = ((temp_item.length > (i+3)) ? (i+3) : temp_item.length);
+								
+							for(var j=(i+1); j<limit; j++){
+								switch(temp_item[j].substr(0, 7)){
+									case 'aR_bdlg':
+										lgth = parseFloat(temp_item[j].substr(7));
+										break;
+									case 'aR_bdhg':
+										hgth = parseFloat(temp_item[j].substr(7));
+										break;
+								}
+							}
+							
+							uprice += (( lgth * hgth ) * 6.5);
+							
+							total += uprice;
+						}else if(temp_item[i].substr(0, 7) == 'aR_bdlg'){
+							var lgth = 3,
+								hgth = 3,
+								limit = ((temp_item.length > (i+2)) ? (i+3) : temp_item.length);
+								
+							for(var j=i; j<limit; j++){
+								switch(temp_item[j].substr(0, 7)){
+									case 'aR_bdlg':
+										lgth = parseFloat(temp_item[j].substr(7));
+										break;
+									case 'aR_bdhg':
+										hgth = parseFloat(temp_item[j].substr(7));
+										break;
+								}
+							}
+							
+							uprice -= 58.5;
+							uprice += (( lgth * hgth ) * 6.5);
+							
+							total += uprice;
 						}
 					}
 				}
 			}
+		}
+		
+		if(discount_LT >= 3000){
+			total -= (discount_LT/10);
+		}
+		
+		if(discount_KR.SD && discount_KR.KR){
+			total -= 100;
+		}
+		
+		if(discount_KR.PS > 0 && discount_KR.UG > 0){
+			if(discount_KR.PS <= discount_KR.UG){
+				total -= (discount_KR.PS * 150);
+			}else{
+				total -= (discount_KR.UG * 150);
+			}
+		}
+		
+		if(discount_BL.BL && discount_BL.aB){
+			total -= 100;
+		}
+		
+		if(discount_EF.EF && discount_EF.aE){
+			total -= 80;
+		}
+		
+		if(total>0 && total<500){
+			total += 100;
 		}
 		
 		$('.evts_ord_price').text(total.toFixed(2));
@@ -8603,11 +10472,44 @@ sys = {
 			case 'SG_4f4f':
 				return 3;
 				break;
+			case 'LT_ctst':
+			case 'LT_f600':
 			case 'LT_1_0k':
 			case 'LT_1_5k':
 			case 'LT_2_0k':
 			case 'LT_2_5k':
 				return 5;
+			case 'LS_sidr':
+			case 'LS_sfly':
+			case 'LS_sodr':
+				return 6;
+			case 'PJ_pjol':
+			case 'PJ_p6x6':
+			case 'PJ_p8x8':
+				return 7;
+			case 'TV_tv43':
+			case 'TV_tv55':
+			case 'TV_tv65':
+				return 8;
+			case 'KR_krok':
+				return 9;
+			case 'BL_bkln':
+				return 10;
+			case 'TS_gp12':
+			case 'TS_gp16':
+			case 'TS_gpfl':
+				return 11;
+			case 'TS_gpct':
+				return 12;
+			case 'BD_3f3f':
+				return 13;
+			case 'LF_1chd':
+			case 'LF_1cfd':
+			case 'LF_2chd':
+			case 'LF_2cfd':
+				return 14;
+			case 'EF_efmc':
+				return 15;
 				break;
 		}
 		
