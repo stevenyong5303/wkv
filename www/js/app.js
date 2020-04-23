@@ -6,11 +6,11 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.251",
+			  version: "1.0.252",
 			  rtl: false,
 			  language: "en-US"
 		  });
-var geoToken = true, geoCount = 60, APP_VERSION = 10251, tmpCalendar = '', fileObject, tapHold = 0, tapHoldStr = '';
+var geoToken = true, geoCount = 60, APP_VERSION = 10252, tmpCalendar = '', fileObject, tapHold = 0, tapHoldStr = '';
 
 var app = {
     initialize: function() {
@@ -544,8 +544,8 @@ $(document).ready(function(){
 										x += '<tr name="el'+(i+1)+'"><td class="label-cell"><span class="button button-fill" name="el'+(i+1)+'">'+(i+1)+'</span></td>';
 										x += '<td class="tb-ld label-cell ' + (((sys.ldToShort(inf[i].luncheon_dinner)!='ST') && (sys.ldToShort(inf[i].luncheon_dinner)!='RH') && (sys.ldToShort(inf[i].luncheon_dinner)!='XX')) ? (inf[i].paid=='1' ? 'tb-paid' : 'tb-not-paid') : '') + '">'+(sys.ldToShort(inf[i].luncheon_dinner))+'</td>';
 										x += '<td class="tb-venue label-cell" data-pid="' + inf[i].venue + '">'+((inf[i].venue==null) ? '-' : (inf[i].venue.indexOf('#PID#') != -1 ? sys.pidToLoc(inf[i].venue).loc_name : inf[i].venue))+'</td>';
-										x += '<td class="tb-desc label-cell">'+((inf[i].description==null) ? '-' : sys.shorten(inf[i].description))+'</td>';
-										x += '<td class="tb-time label-cell">'+((inf[i].time==null) ? '-' : inf[i].time)+'</td>';
+										x += '<td class="tb-desc label-cell">'+((inf[i].description_DL==null) ? '-' : sys.shorten(inf[i].description_DL))+'</td>';
+										x += '<td class="tb-time label-cell">'+((inf[i].time_DL==null) ? '-' : inf[i].time_DL)+'</td>';
 										x += '<td class="tb-bng label-cell">'+((inf[i].bride_groom==null) ? '-' : inf[i].bride_groom)+'</td>';
 										x += '<td class="tb-band label-cell">'+((inf[i].band==null) ? '-' : inf[i].band)+'</td>';
 										x += '<td class="tb-price label-cell">'+((inf[i].price==0 || inf[i].price==null) ? '-' : ('RM ' + parseFloat(inf[i].price).toFixed(2)))+'</td>';
@@ -574,8 +574,8 @@ $(document).ready(function(){
 										
 									x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Luncheon/Dinner</div><div class="item-input-wrap"><input class="evtd_ld_DL" type="text" autocomplete="off" value="' + ((inf.luncheon_dinner==null) ? '' : inf.luncheon_dinner) + '"></div></div></div></li>';
 									x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Venue</div><div class="item-input-wrap"><input class="evtd_venue_DL" type="text" autocomplete="off" value="' + ((inf.venue==null) ? '' : (inf.venue.indexOf('#PID#') != -1 ? sys.pidToLoc(inf.venue).loc_name : inf.venue)) + '"></div></div></div></li>';
-									x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Description</div><div class="item-input-wrap"><input class="evtd_desc_DL" type="text" autocomplete="off" value="' + ((inf.description==null) ? '' : inf.description) + '"></div></div></div></li>';
-									x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Standby Time</div><div class="item-input-wrap"><input class="evtd_sbtm_DL" type="text" autocomplete="off" value="' + ((inf.time==null) ? '' : inf.time) + '"></div></div></div></li>';
+									x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Description</div><div class="item-input-wrap"><input class="evtd_desc_DL" type="text" autocomplete="off" value="' + ((inf.description_DL==null) ? '' : inf.description_DL) + '"></div></div></div></li>';
+									x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Standby Time</div><div class="item-input-wrap"><input class="evtd_sbtm_DL" type="text" autocomplete="off" value="' + ((inf.time_DL==null) ? '' : inf.time_DL) + '"></div></div></div></li>';
 									x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Bride & Groom / Company</div><div class="item-input-wrap"><input class="evtd_bng_DL" type="text" autocomplete="off" value="' + ((inf.bride_groom==null) ? '' : inf.bride_groom) + '"></div></div></div></li>';
 									x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Live Band Information</div><div class="item-input-wrap"><input class="evtd_band_DL" type="text" autocomplete="off" value="' + ((inf.band==null) ? '' : inf.band) + '"></div></div></div></li>';
 									x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Price</div><div class="item-input-wrap"><input class="evtd_price_DL" type="text" autocomplete="off" value="' + ((inf.price==null) ? '' : inf.price) + '" disabled><label class="toggle toggle-init color-green evtd_paid_DL"><input type="checkbox"' + (inf.paid=='1' ? ' checked' : '') + ' disabled><span class="toggle-icon"></span></label></div></div></div></li>';
@@ -648,9 +648,9 @@ $(document).ready(function(){
 											success: function(str){
 												if(str==='200 OK'){
 													inf.luncheon_dinner = ((ld == '') ? 'Dinner' : ld);
-													inf.time = ((time == '') ? null : time);
+													inf.time_DL = ((time == '') ? null : time);
 													inf.venue = ((venue == '') ? null : venue);
-													inf.description = ((desc == '') ? null : desc);
+													inf.description_DL = ((desc == '') ? null : desc);
 													inf.band = ((band == '') ? null : band);
 													inf.bng = ((bng == '') ? null : bng);
 								
@@ -1555,11 +1555,18 @@ $(document).ready(function(){
 			$('.evt_ord_tab').css('display', 'block');
 			
 			$('.evt_ord_checkout').data('date', ($('.popup-DLevent .event_date').text()));
+			
+			$('input[name=evt-ord-item]').prop('checked', false);
+			apps.accordion.close('.accordion-item-opened');
+			$('.evt_ord_proceed').text('Next');
+			$('.evt_ord_proceed').prop('disabled', true);
+			$('.evt_ord_proceed').addClass('disabled');
 		});
 		
 		$('.evt_ord_DL a.fab-close').on('click', function(){
 			$('.evts_cart_DL').data('item', []);
 			$('.evt_ord_proceed').data('item', []);
+			
 			sys.updateCartPrice();
 			
 			$('.evt_ord_1').css('display', 'block');
@@ -1670,6 +1677,11 @@ $(document).ready(function(){
 			html += '</p>';
 			
 			apps.dialog.alert('<div class="evt_dlg_cart">'+html+'</div>');
+			if($('.only-one-allowed').length > 1){
+				for(var i=$('.only-one-allowed').length; i>0; i--){
+					$('.only-one-allowed:eq('+i+')').remove();
+				}
+			}
 			
 			$('div.evt_dlg_cart i.icon').on('click', function(){
 				var code = $(this).data('code'),
@@ -2589,7 +2601,7 @@ $(document).ready(function(){
 						$('.evt_ord_0').css('opacity', '1');
 					}, 500);
 					setTimeout(function(){
-						for(var i=1; i<=4; i++){
+						for(var i=1; i<=15; i++){
 							$('.evt_ord_'+i).css('display', 'none');
 						}
 						$('.evt_ord_'+sys.getAddOn(temp[0])).find('input[type="checkbox"]').each(function(){
@@ -2770,7 +2782,8 @@ $(document).ready(function(){
 						'bng' : $('#evt_ord_co_bng').val(),
 						'bnd' : $('#evt_ord_co_bnd').val(),
 						'aif' : $('#evt_ord_co_aif').val(),
-						'equipment' : ($('.evts_cart_DL').data('item')).concat($('.evt_ord_proceed').data('item'))
+						'equipment' : ($('.evts_cart_DL').data('item')).concat($('.evt_ord_proceed').data('item')),
+						'price' : sys.updateCartPrice()
 					};
 					var post_data = "ACT=" + encodeURIComponent('ord_smt')
 								  + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
@@ -2784,13 +2797,10 @@ $(document).ready(function(){
 						},
 						success: function(str){
 							if(str=='200 OK'){
-								$('.evt_ord_4').css('display', 'none');
-								$('.evt_ord_1').css('display', 'block');
-								$('button.evt_ord_proceed').text('Next');
 								$('.evt_ord_DL a.fab-close')[0].click();
-								apps.popup.close('.popup-DLevent');
-								
+								$('.popup-backdrop')[0].click();
 								$('a#DLschedule-btn').trigger('mousedown');
+								
 								var success_toast = apps.toast.create({
 													   icon: '<i class="material-icons">done_outline</i>',
 													   text: 'Order submitted, we will contact you for further confirmation/clarification.',
@@ -3636,6 +3646,22 @@ $(document).ready(function(){
 				var tmp = $('#fgnr_q_eql').val(), val = $(this).data('value');
 				$('#fgnr_q_eql').val((sys.isEmpty(tmp) ? '' : (tmp + '\n\n')) + val);
 			}
+		});
+		
+		$('button#fgnr_o_gnr').on('click', function(){
+			var file_id = $('#fgnr_o_pon').val();
+			var file_hash = (md5('WKVadministrator-' + file_id + '[O]'));
+			
+			var DATA = {
+					'hash' : file_hash,
+					'type' : 'O',
+					'id' : file_id
+				};
+			var get_data = "ACT=" + encodeURIComponent('pdf_get')
+						 + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
+			var url = ('https://app.wkventertainment.com/?' + (get_data));
+			
+			window.open(url, "_system");
 		});
 		
 		$('#fgnr_q_gnr').on('click', function(){
@@ -7313,7 +7339,7 @@ $(document).ready(function(){
 			}
 			
 			STORAGE.setItem('level', inf['level']);
-			STORAGE.setItem('comp', inf['cid']);
+			STORAGE.setItem('comp', (inf['cid']==null ? '' : inf['cid']));
 			STORAGE.setItem('created', inf['created']);
 			
 			$('body').data('user_level', inf['level']);
@@ -7398,20 +7424,20 @@ $(document).ready(function(){
 								x += '<div class="timeline-item-divider"></div>';
 								x += '<div class="timeline-item-content">';
 							}
-							rmk = '<strong>Standby Time</strong> : ' + task[i]['time'] + ',,'
+							rmk = '<strong>Standby Time</strong> : ' + task[i]['time_DL'] + ',,'
 								+ '<strong>Venue</strong> : ' + (sys.isEmpty(task[i]['venue']) ?  '-' : (task[i]['venue'].indexOf('#PID#') != -1 ? sys.pidToLoc(task[i]['venue']).loc_name : task[i]['venue'])) + ',,'
-								+ '<strong>Description</strong> : ' + (sys.isEmpty(task[i]['description']) ?  '-' : task[i]['description']) + ',,'
+								+ '<strong>Description</strong> : ' + (sys.isEmpty(task[i]['description_DL']) ?  '-' : task[i]['description_DL']) + ',,'
 								+ '<strong>E.User</strong> : ' + (sys.isEmpty(task[i]['bride_groom']) ?  '-' : task[i]['bride_groom']) + ',,'
 								+ '<strong>Band</strong> : ' + (sys.isEmpty(task[i]['band']) ?  '-' : task[i]['band']) + ',,'
 								+ '<strong>Price</strong> : ' + ((sys.isEmpty(task[i]['price']) || task[i]['price'] == '0') ?  '-' : ('RM ' + parseFloat(task[i]['price']).toFixed(2))) + ',,'
 								+ ((sys.isEmpty(task[i]['price']) || task[i]['price'] == '0') ? '' : ('<strong>Paid Status</strong> : ' + (task[i]['paid'] == '1' ? 'PAID,,' : 'PENDING,,')));
-							x += '<div class="timeline-item-inner tsk' + task[i]['primary_id'] + todayClass + '" data-eid="' + task[i]['primary_id'] + '" data-locpid="' + (sys.isEmpty(task[i]['venue']) ? 0 : (task[i]['venue'].indexOf('#PID#') != -1 ? task[i]['venue'] : 0)) + '" data-rmk="' + rmk + '" data-review="' + task[i]['review'] + '" data-datetime="' + (task[i]['date'].substr(0,11) + (sys.isEmpty(task[i]['time']) ? '23:59' : task[i]['time'])) + ':00">';
+							x += '<div class="timeline-item-inner tsk' + task[i]['primary_id'] + todayClass + '" data-eid="' + task[i]['primary_id'] + '" data-locpid="' + (sys.isEmpty(task[i]['venue']) ? 0 : (task[i]['venue'].indexOf('#PID#') != -1 ? task[i]['venue'] : 0)) + '" data-rmk="' + rmk + '" data-review="' + task[i]['review'] + '" data-datetime="' + (task[i]['date'].substr(0,11) + (sys.isEmpty(task[i]['time_DL']) ? '23:59' : task[i]['time_DL'])) + ':00">';
 							
-							if(task[i]['time']){
-								x += '<div class="timeline-item-time">' + task[i]['time'] + '</div>';
+							if(task[i]['time_DL']){
+								x += '<div class="timeline-item-time">' + task[i]['time_DL'] + '</div>';
 							}
 							
-							x += '<strong>' + (sys.isEmpty(task[i]['venue']) ?  '-' : (task[i]['venue'].indexOf('#PID#') != -1 ? sys.pidToLoc(task[i]['venue']).loc_name : task[i]['venue'])) + '</strong>' + (task[i]['description'] ? ('<br/><span>' + task[i]['description'] + '</span>') : '');
+							x += '<strong>' + (sys.isEmpty(task[i]['venue']) ?  '-' : (task[i]['venue'].indexOf('#PID#') != -1 ? sys.pidToLoc(task[i]['venue']).loc_name : task[i]['venue'])) + '</strong>' + (task[i]['description_DL'] ? ('<br/><span>' + task[i]['description_DL'] + '</span>') : '');
 							x += '</div>';
 							
 							sameAs = task[i]['date'];
@@ -7518,6 +7544,140 @@ $(document).ready(function(){
 			}
 			
 			if(sys.isDealer()){
+				if(!sys.isEmpty(inf['doc']['O'])){
+					var x = '';
+					
+					for(var i=0; i<inf['doc']['O'].length; i++){
+						x += '<li><a href="#" class="item-link item-content"><div class="item-inner">';
+						x += '<div class="item-title">' + inf['doc']['O'][i].id + '</div>';
+						x += '<div class="item-after">RM ' + inf['doc']['O'][i].amt + '</div></div></a></li>';
+					}
+					
+					$('.DLsrc-fl-po .list.fl-po ul').html(x);
+					
+					$('.DLsrc-fl-po .list.fl-po').on('click', 'li', function(){
+						var file_id = $(this).find('.item-title').text();
+						var file_hash = (md5(((sys.isEmpty(STORAGE.getItem('comp')) ? STORAGE.getItem('usr') : STORAGE.getItem('comp')) + '-' + file_id + '[O]')));
+						
+						var DATA = {
+								'hash' : file_hash,
+								'type' : 'O',
+								'id' : file_id
+							};
+						var get_data = "ACT=" + encodeURIComponent('pdf_get')
+									 + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
+						var url = ('https://app.wkventertainment.com/?' + (get_data));
+						
+						window.open(url, "_system");
+					});
+				}if(!sys.isEmpty(inf['doc']['Q'])){
+					var x = '';
+					
+					for(var i=0; i<inf['doc']['Q'].length; i++){
+						x += '<li><a href="#" class="item-link item-content"><div class="item-inner">';
+						x += '<div class="item-title">' + inf['doc']['Q'][i].id + '</div>';
+						x += '<div class="item-after">RM ' + inf['doc']['Q'][i].amt + '</div></div></a></li>';
+					}
+					
+					$('.DLsrc-fl-qt .list.fl-qt ul').html(x);
+					
+					$('.DLsrc-fl-qt .list.fl-qt').on('click', 'li', function(){
+						var file_id = $(this).find('.item-title').text();
+						var file_hash = (md5(((sys.isEmpty(STORAGE.getItem('comp')) ? STORAGE.getItem('usr') : STORAGE.getItem('comp')) + '-' + file_id + '[Q]')));
+						
+						var DATA = {
+								'hash' : file_hash,
+								'type' : 'Q',
+								'id' : file_id
+							};
+						var get_data = "ACT=" + encodeURIComponent('pdf_get')
+									 + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
+						var url = ('https://app.wkventertainment.com/?' + (get_data));
+						
+						window.open(url, "_system");
+					});
+				}if(!sys.isEmpty(inf['doc']['I'])){
+					var x = '';
+					
+					for(var i=0; i<inf['doc']['I'].length; i++){
+						x += '<li><a href="#" class="item-link item-content"><div class="item-inner">';
+						x += '<div class="item-title">' + inf['doc']['I'][i].id + '</div>';
+						x += '<div class="item-after">RM ' + inf['doc']['I'][i].amt + '</div></div></a></li>';
+					}
+					
+					$('.DLsrc-fl-iv .list.fl-iv ul').html(x);
+					
+					$('.DLsrc-fl-iv .list.fl-iv').on('click', 'li', function(){
+						var file_id = $(this).find('.item-title').text();
+						var file_hash = (md5(((sys.isEmpty(STORAGE.getItem('comp')) ? STORAGE.getItem('usr') : STORAGE.getItem('comp')) + '-' + file_id + '[I]')));
+						
+						var DATA = {
+								'hash' : file_hash,
+								'type' : 'I',
+								'id' : file_id
+							};
+						var get_data = "ACT=" + encodeURIComponent('pdf_get')
+									 + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
+						var url = ('https://app.wkventertainment.com/?' + (get_data));
+						
+						window.open(url, "_system");
+					});
+				}
+				
+				var chartElement = $('#dlChart'),
+					chartConfig = {
+						type: 'line',
+						data: {
+							labels: sys.genMonth(inf['sales']['month']),
+							datasets: [{
+								label: 'Sales',
+								backgroundColor: '#8c5f36',
+								borderColor: '#8c5f36',
+								data: inf['sales']['sales'],
+								fill: false
+							},{
+								label: 'Qty',
+								backgroundColor: '#c6986c',
+								borderColor: '#c6986c',
+								data: inf['sales']['qty'],
+								fill: false
+							}]
+						},
+						options: {
+							responsive: true,
+							title: {
+								display: false,
+								text: 'Sales'
+							},
+							tooltips: {
+								mode: 'index',
+								intersect: false
+							},
+							hover: {
+								mode: 'nearest',
+								intersect: true
+							},
+							scales: {
+								xAxes: [{
+									display: true,
+									scaleLabel: {
+										display: false,
+										labelString: 'Month'
+									}
+								}],
+								yAxes: [{
+									display: true,
+									scaleLabel: {
+										display: false,
+										labelString: 'Value'
+									}
+								}]
+							}
+						}
+					};
+				
+				var dlChart = new Chart(chartElement, chartConfig);
+				
 				dlCalendarInline = apps.calendar.create({
 						containerEl: '#wkv-DLcalendar',
 						value:  [new Date()],
@@ -8200,6 +8360,54 @@ sys = {
 			);
 		}
 	},
+	'genMonth' : function(last){
+		var monthName = [];
+		
+		for(var i = 11; i >= 0; i--){
+			var x = ((last - i > 0) ? (last - i) : (last - i + 12));
+			
+			switch(x){
+				case 1:
+					monthName.push('JAN');
+					break;
+				case 2:
+					monthName.push('FEB');
+					break;
+				case 3:
+					monthName.push('MAR');
+					break;
+				case 4:
+					monthName.push('APR');
+					break;
+				case 5:
+					monthName.push('MAY');
+					break;
+				case 6:
+					monthName.push('JUN');
+					break;
+				case 7:
+					monthName.push('JUL');
+					break;
+				case 8:
+					monthName.push('AUG');
+					break;
+				case 9:
+					monthName.push('SEP');
+					break;
+				case 10:
+					monthName.push('OCT');
+					break;
+				case 11:
+					monthName.push('NOV');
+					break;
+				case 12:
+					monthName.push('DEC');
+					break;
+			}
+		}
+		
+		return monthName;
+	},
 	'toMonth' : function(month){
 		var x = month.substr(5, 2);
 		
@@ -8529,7 +8737,7 @@ sys = {
 				case 'TS_nots':
 					html += '<div class="row no-gap">';
 					html += '<div class="col-10"></div>';
-					html += '<div class="col-80"><strong>*** Transportation not included.</strong></div>';
+					html += '<div class="col-80"><strong>*** Transportation fees not included.</strong></div>';
 					html += '<div class="col-10"></div>';
 					html += '</div>';
 					break;
@@ -9189,6 +9397,8 @@ sys = {
 					break;
 				case 'aS_ledh':
 					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-20">Height</div><div class="col-70">:&emsp;<strong>' + code.substr(7) + ' m</strong></div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 lot x All Necessary cables & Extensions</div></div>';
+					html += '<div class="row no-gap only-one-allowed" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 x Visual Playback Cuer</div></div>';
 					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">Setup & Dismantle</div></div>';
 					break;
 				case 'aS_swt4':
@@ -9206,6 +9416,17 @@ sys = {
 					html += '<div class="row no-gap" item_count="' + num + '">';
 					html += '<div class="col-20"></div>';
 					html += '<div class="col-70"><strong>* Extra</strong>&emsp;' + code.substr(7) + ' x 8CH Blackmagic ATEM Switcher</div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					break;
+				case 'aS_sbcw':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-20"></div>';
+					html += '<div class="col-70"><strong>* Extra</strong>&emsp;' + code.substr(7) + ' x Standby Crew</div>';
 					if(cBtn){
 						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
 					}else{
@@ -9716,11 +9937,37 @@ sys = {
 					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-20">Height</div><div class="col-70">:&emsp;<strong>' + code.substr(7) + ' ft</strong></div></div>';
 					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">Setup & Dismantle</div></div>';
 					break;
+				case 'aR_sbcw':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-20"></div>';
+					html += '<div class="col-70"><strong>* Extra</strong>&emsp;' + code.substr(7) + ' x Standby Crew</div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					break;
 				case 'LF_1chd':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-10">' + num + '.</div>';
+					html += '<div class="col-80"><strong>Livefeed (Half Day)</strong></div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-main="1" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 u x Sony NXCAM HXR-NX100</div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 u x Camcorder Stand</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 lot x All Necessary Cables & Extensions</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 x Camera Operator</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">Setup &amp; Dismantle</div></div>';
+					break;
 				case 'LF_1cfd':
 					html += '<div class="row no-gap" item_count="' + num + '">';
 					html += '<div class="col-10">' + num + '.</div>';
-					html += '<div class="col-80"><strong>Livefeed</strong></div>';
+					html += '<div class="col-80"><strong>Livefeed (Full Day)</strong></div>';
 					if(cBtn){
 						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-main="1" data-row="' + row + '">cancel</i></div>';
 					}else{
@@ -9734,10 +9981,28 @@ sys = {
 					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">Setup &amp; Dismantle</div></div>';
 					break;
 				case 'LF_2chd':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-10">' + num + '.</div>';
+					html += '<div class="col-80"><strong>Livefeed (Half Day)</strong></div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-main="1" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">2 u x Sony NXCAM HXR-NX100</div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">2 u x Camcorder Stand</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">2 u x Blackmagic BiDirectional Converter</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 u x Blackmagic ATEM Television Studio</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 lot x All Necessary Cables & Extensions</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">2 x Camera Operator</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">1 x Digital Imaging Technician</div></div>';
+					html += '<div class="row no-gap" item_count="' + num + '"><div class="col-10"></div><div class="col-90">Setup &amp; Dismantle</div></div>';
+					break;
 				case 'LF_2cfd':
 					html += '<div class="row no-gap" item_count="' + num + '">';
 					html += '<div class="col-10">' + num + '.</div>';
-					html += '<div class="col-80"><strong>Livefeed</strong></div>';
+					html += '<div class="col-80"><strong>Livefeed (Full Day)</strong></div>';
 					if(cBtn){
 						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-main="1" data-row="' + row + '">cancel</i></div>';
 					}else{
@@ -9884,6 +10149,17 @@ sys = {
 					}
 					html += '</div>';
 					break;
+				case 'aE_sbcw':
+					html += '<div class="row no-gap" item_count="' + num + '">';
+					html += '<div class="col-20"></div>';
+					html += '<div class="col-70"><strong>* Extra</strong>&emsp;' + code.substr(7) + ' x Standby Crew</div>';
+					if(cBtn){
+						html += '<div class="col-10"><i class="icon material-icons md-only" style="color:#999;" data-num="' + num + '" data-code="' + code + '" data-row="' + row + '">cancel</i></div>';
+					}else{
+						html += '<div class="col-10"></div>';
+					}
+					html += '</div>';
+					break;
 			}
 		}
 		
@@ -9945,6 +10221,7 @@ sys = {
 			case 'aL_lbmh':
 			case 'aL_lhzm':
 			case 'aL_ltcw':
+			case 'aS_sbcw':
 			case 'aJ_sbcw':
 			case 'aV_tvcw':
 			case 'aK_sbcw':
@@ -10078,6 +10355,7 @@ sys = {
 			temp_item = $('.evt_ord_proceed').data('item'),
 			total = 0,
 			discount_LT = 0,
+			discount_LS = { 'exist' : false, 'subtotal' : 0},
 			discount_KR = { 'SD' : false, 'KR' : false , 'PS' : 0, 'UG' : 0},
 			discount_BL = { 'BL' : false, 'aB' : false },
 			discount_EF = { 'EF' : false, 'aE' : false };
@@ -10131,19 +10409,13 @@ sys = {
 						if(cart_item[i] == 'LS_sidr'){
 							ledTypePrice = 20;
 						}
+						discount_LS.exist = true;
 						
 						screenPrice += (((wdth * 3.28084) * (hght * 3.28084)) * ledTypePrice);
 						uprice += screenPrice;
+						discount_LS.subtotal += screenPrice;
 						
-						if(screenPrice < 1500){
-							uprice += 400;
-						}else if(screenPrice < 2000){
-							uprice += 300;
-						}else{
-							uprice += 200;
-						}
-						
-						total += uprice;
+						total += (uprice + 100);
 					}else if(cart_item[i] == 'SG_4f4f'){
 						var lgth = 4,
 							wdth = 4,
@@ -10261,18 +10533,12 @@ sys = {
 								ledTypePrice = 20;
 							}
 							
+							discount_LS.exist = true;
 							screenPrice += (((wdth * 3.28084) * (hght * 3.28084)) * ledTypePrice);
 							uprice += screenPrice;
+							discount_LS.subtotal += screenPrice;
 							
-							if(screenPrice < 1500){
-								uprice += 400;
-							}else if(screenPrice < 2000){
-								uprice += 300;
-							}else{
-								uprice += 200;
-							}
-							
-							total += uprice;
+							total += (uprice + 100);
 						}else if(temp_item[i].substr(0, 7) == 'aS_ledw'){
 							var wdth = 1,
 								hght = 1,
@@ -10296,19 +10562,13 @@ sys = {
 							if(cart_item[(cart_item.length - 1)] == 'LS_sidr'){
 								ledTypePrice = 20;
 							}
-							uprice -= 400;
+							uprice -= 100;
+							discount_LS.exist = true;
 							screenPrice += ((((wdth) * 3.28084) * ((hght) * 3.28084)) * ledTypePrice);
 							uprice += (screenPrice - (3.28084*3.28084*ledTypePrice));
+							discount_LS.subtotal += (screenPrice - (3.28084*3.28084*ledTypePrice));
 							
-							if(screenPrice < 1500){
-								uprice += 400;
-							}else if(screenPrice < 2000){
-								uprice += 300;
-							}else{
-								uprice += 200;
-							}
-							
-							total += uprice;
+							total += (uprice + 100);
 						}else if(temp_item[i] == 'SG_4f4f'){
 							var lgth = 4,
 								wdth = 4,
@@ -10431,6 +10691,16 @@ sys = {
 			}
 		}
 		
+		if(discount_LS.exist){
+			if(discount_LS.subtotal < 1500){
+				total += 300;
+			}else if(discount_LS.subtotal < 2000){
+				total += 200;
+			}else{
+				total += 100;
+			}
+		}
+		
 		if(discount_LT >= 3000){
 			total -= (discount_LT/10);
 		}
@@ -10460,6 +10730,7 @@ sys = {
 		}
 		
 		$('.evts_ord_price').text(total.toFixed(2));
+		return total.toFixed(2);
 	},
 	'getAddOn' : function(code){
 		switch(code){
@@ -10479,35 +10750,45 @@ sys = {
 			case 'LT_2_0k':
 			case 'LT_2_5k':
 				return 5;
+				break;
 			case 'LS_sidr':
 			case 'LS_sfly':
 			case 'LS_sodr':
 				return 6;
+				break;
 			case 'PJ_pjol':
 			case 'PJ_p6x6':
 			case 'PJ_p8x8':
 				return 7;
+				break;
 			case 'TV_tv43':
 			case 'TV_tv55':
 			case 'TV_tv65':
 				return 8;
+				break;
 			case 'KR_krok':
 				return 9;
+				break;
 			case 'BL_bkln':
 				return 10;
+				break;
 			case 'TS_gp12':
 			case 'TS_gp16':
 			case 'TS_gpfl':
 				return 11;
+				break;
 			case 'TS_gpct':
 				return 12;
+				break;
 			case 'BD_3f3f':
 				return 13;
+				break;
 			case 'LF_1chd':
 			case 'LF_1cfd':
 			case 'LF_2chd':
 			case 'LF_2cfd':
 				return 14;
+				break;
 			case 'EF_efmc':
 				return 15;
 				break;

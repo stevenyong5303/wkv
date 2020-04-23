@@ -15,6 +15,7 @@
 	<link rel="apple-touch-icon" sizes="120x120" href="icon.png">
 	<link rel="apple-touch-icon" sizes="152x152" href="icon.png">
 	<link rel="stylesheet" href="framework7/css/framework7.min.css">
+	<link rel="stylesheet" href="css/chart.min.css">
 	<link rel="stylesheet" href="css/icons.css">
 	<link rel="stylesheet" href="css/app.css">
 </head>
@@ -828,6 +829,104 @@
 						</div>
 						<div id="pg-DLhome" class="tab page-content ltlevel0">
 							<div class="block">
+								<div class="card">
+									<div class="card-header">
+										<canvas id="dlChart" width="400" height="200"></canvas>
+									</div>
+									<div class="card-content card-content-padding">
+										<div class="list accordion-list">
+											<ul>
+												<li class="accordion-item">
+													<a href="" class="item-link item-content">
+														<div class="item-inner">
+															<div class="item-title">Files</div>
+														</div>
+													</a>
+													<div class="accordion-item-content">
+														<div class="block">
+															<div class="list accordion-list">
+																<ul>
+																	<li class="accordion-item DLsrc-fl-po">
+																		<a href="" class="item-link item-content">
+																			<div class="item-inner">
+																				<div class="item-title">Purchase Order</div>
+																			</div>
+																		</a>
+																		<div class="accordion-item-content">
+																			<div class="block">
+																				<div class="item-content">
+																					<div class="list fl-po">
+																						<ul>
+																							<li class="searchbar-ignore">
+																								<label class="item-content">
+																									<div class="item-inner">
+																										<div class="item-title">No purchase order found.</div>
+																									</div>
+																								</label>
+																							</li>
+																						</ul>
+																					</div>
+																				</div>
+																			</div>
+																		</div>
+																	</li>
+																	<li class="accordion-item DLsrc-fl-qt">
+																		<a href="" class="item-link item-content">
+																			<div class="item-inner">
+																				<div class="item-title">Quotation</div>
+																			</div>
+																		</a>
+																		<div class="accordion-item-content">
+																			<div class="block">
+																				<div class="item-content">
+																					<div class="list fl-qt">
+																						<ul>
+																							<li class="searchbar-ignore">
+																								<label class="item-content">
+																									<div class="item-inner">
+																										<div class="item-title">No quotation found.</div>
+																									</div>
+																								</label>
+																							</li>
+																						</ul>
+																					</div>
+																				</div>
+																			</div>
+																		</div>
+																	</li>
+																	<li class="accordion-item DLsrc-fl-iv">
+																		<a href="" class="item-link item-content">
+																			<div class="item-inner">
+																				<div class="item-title">Invoice</div>
+																			</div>
+																		</a>
+																		<div class="accordion-item-content">
+																			<div class="block">
+																				<div class="item-content">
+																					<div class="list fl-iv">
+																						<ul>
+																							<li class="searchbar-ignore">
+																								<label class="item-content">
+																									<div class="item-inner">
+																										<div class="item-title">No invoice found.</div>
+																									</div>
+																								</label>
+																							</li>
+																						</ul>
+																					</div>
+																				</div>
+																			</div>
+																		</div>
+																	</li>
+																</ul>
+															</div>
+														</div>
+													</div>
+												</li>
+											</ul>
+										</div>
+									</div>
+								</div>
 								<div id="DLtask_tl" class="timeline"></div>
 							</div>
 						</div>
@@ -1617,6 +1716,36 @@
 				</div>
 				<div class="list accordion-list">
 					<ul>
+						<li class="accordion-item">
+							<a href="#" class="item-content item-link">
+								<div class="item-inner">
+									<div class="item-title">Purchase Order</div>
+								</div>
+							</a>
+							<div class="accordion-item-content">
+								<div class="block">
+									<div class="list">
+										<ul>
+											<li class="item-content item-input">
+												<div class="item-inner">
+													<div class="item-title item-label">PO. Number</div>
+													<div class="item-input-wrap">
+														<input id="fgnr_o_pon" type="text" value="" autocomplete="off">
+													</div>
+												</div>
+											</li>
+											<li class="item-content">
+												<div class="item-inner">
+													<button id="fgnr_o_gnr" class="button button-raised button-fill">
+														<i class="icon material-icons md-only">cloud_download</i>
+													</button>
+												</div>
+											</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</li>
 						<li class="accordion-item">
 							<a href="#" class="item-content item-link">
 								<div class="item-inner">
@@ -3741,18 +3870,6 @@ data-value=''>
 											</li>
 										</ul>
 									</div>
-								</div>
-							</div>
-						</li>
-						<li class="accordion-item">
-							<a href="#" class="item-content item-link">
-								<div class="item-inner">
-									<div class="item-title">Purchase Order</div>
-								</div>
-							</a>
-							<div class="accordion-item-content">
-								<div class="block">
-									<p>Item 2 content. Lorem ipsum dolor sit amet...</p>
 								</div>
 							</div>
 						</li>
@@ -6653,6 +6770,37 @@ data-value=''>
 											</div>
 										</div>
 									</li>
+									<li class="accordion-item">
+										<a href="#" class="item-content item-link">
+											<div class="item-inner">
+												<div class="item-title">Man Power</div>
+											</div>
+										</a>
+										<div class="accordion-item-content">
+											<div class="block list">
+												<ul>
+													<li>
+														<label class="item-checkbox item-content">
+															<input type="checkbox" name="LS_adon" value="aS_sbcw"/>
+															<i class="icon icon-checkbox"></i>
+															<div class="item-inner">
+																<div class="item-title">
+																	<div class="stepper stepper-small stepper-fill stepper-init">
+																		<div class="stepper-button-minus"></div>
+																		<div class="stepper-input-wrap">
+																			<input name="aS_sbcw" type="text" value="0" min="0" max="99" step="1" readonly>
+																		</div>
+																		<div class="stepper-button-plus"></div>
+																	</div>
+																	&emsp;<span>Standby Crew</span>
+																</div>
+															</div>
+														</label>
+													</li>
+												</ul>
+											</div>
+										</div>
+									</li>
 								</ul>
 							</div>
 						</div>
@@ -7690,7 +7838,7 @@ data-value=''>
 												<ul>
 													<li>
 														<label class="item-checkbox item-content">
-															<input type="checkbox" name="BL_adon" value="aB_sbcw"/>
+															<input type="checkbox" name="EF_adon" value="aE_sbcw"/>
 															<i class="icon icon-checkbox"></i>
 															<div class="item-inner">
 																<div class="item-title">
@@ -9830,7 +9978,7 @@ data-value=''>
 				<div class="block">
 					<div align="center">
 						 <img src="icon.png" alt="WKV Logo" height="128" width="128">
-						 <span style="color:#999;position:absolute;top:40px;font-size:12px;">&emsp;Version 1.0.251</span>
+						 <span style="color:#999;position:absolute;top:40px;font-size:12px;">&emsp;Version 1.0.252</span>
 					</div>
 					<p>WKV Application serves as a platform for of WKV’s member to obtain basic information and calculation method can easily obtain by accessing to the application.</p>
 					<p>For general usage, clock in and clock out is built in the application for employees of WKV to check in whenever they report to event venue.</p>
@@ -10018,6 +10166,7 @@ data-value=''>
 	<script type="text/javascript" src="cordova.js"></script>
 	<script src="framework7/js/framework7.min.js"></script>
 	<script src="js/jquery-3.4.1.min.js"></script>
+	<script src="js/chart.min.js"></script>
 	<script src="js/routes.js"></script>
 	<script src="js/md5.min.js"></script>
 	<script src="js/app.js"></script>

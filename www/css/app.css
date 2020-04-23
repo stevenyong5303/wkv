@@ -196,6 +196,11 @@ input.evtd_price, label.evtd_paid, input.evtd_price_DL, label.evtd_paid_DL {
 	box-shadow: 0 3px 30px rgba(0,0,0,.4);
 	overflow: hidden;
 }
+.DLsrc-fl-po .list.fl-po, .DLsrc-fl-qt .list.fl-qt, .DLsrc-fl-iv .list.fl-iv {
+	width: 100%;
+    max-height: 140px;
+    overflow-y: auto;
+}
 .evt_ord_DL{
 	position: absolute;
 	left: 0;
@@ -337,6 +342,7 @@ div.evt_ord_2 .block.list .item-checkbox span, div.evt_ord_3 .block.list .item-c
 }
 div.views {
 	opacity: 0;
+	background-color: #F7F7F7;
 }
 #loading-overlay {
   -webkit-font-smoothing: antialiased;
