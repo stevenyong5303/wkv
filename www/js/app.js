@@ -6,11 +6,11 @@ var apps = new Framework7({
 			  id: 'com.wkv.manage',
 			  name: 'WKV',
 			  theme: 'md',
-			  version: "1.0.252",
+			  version: "1.0.253",
 			  rtl: false,
 			  language: "en-US"
 		  });
-var geoToken = true, geoCount = 60, APP_VERSION = 10252, tmpCalendar = '', fileObject, tapHold = 0, tapHoldStr = '';
+var geoToken = true, geoCount = 60, APP_VERSION = 10253, tmpCalendar = '', fileObject, tapHold = 0, tapHoldStr = '';
 
 var app = {
     initialize: function() {
@@ -571,7 +571,7 @@ $(document).ready(function(){
 									var inf = $('.popup-DLevent tr[name="' + trName + '"]').data('info');
 									
 									$('.DLdetails-popover').data('date', (new Date(inf.date)).getTime());
-										
+									
 									x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Luncheon/Dinner</div><div class="item-input-wrap"><input class="evtd_ld_DL" type="text" autocomplete="off" value="' + ((inf.luncheon_dinner==null) ? '' : inf.luncheon_dinner) + '"></div></div></div></li>';
 									x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Venue</div><div class="item-input-wrap"><input class="evtd_venue_DL" type="text" autocomplete="off" value="' + ((inf.venue==null) ? '' : (inf.venue.indexOf('#PID#') != -1 ? sys.pidToLoc(inf.venue).loc_name : inf.venue)) + '"></div></div></div></li>';
 									x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Description</div><div class="item-input-wrap"><input class="evtd_desc_DL" type="text" autocomplete="off" value="' + ((inf.description_DL==null) ? '' : inf.description_DL) + '"></div></div></div></li>';
@@ -579,6 +579,15 @@ $(document).ready(function(){
 									x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Bride & Groom / Company</div><div class="item-input-wrap"><input class="evtd_bng_DL" type="text" autocomplete="off" value="' + ((inf.bride_groom==null) ? '' : inf.bride_groom) + '"></div></div></div></li>';
 									x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Live Band Information</div><div class="item-input-wrap"><input class="evtd_band_DL" type="text" autocomplete="off" value="' + ((inf.band==null) ? '' : inf.band) + '"></div></div></div></li>';
 									x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Price</div><div class="item-input-wrap"><input class="evtd_price_DL" type="text" autocomplete="off" value="' + ((inf.price==null) ? '' : inf.price) + '" disabled><label class="toggle toggle-init color-green evtd_paid_DL"><input type="checkbox"' + (inf.paid=='1' ? ' checked' : '') + ' disabled><span class="toggle-icon"></span></label></div></div></div></li>';
+									if(!sys.isEmpty(sys.getFiles(inf.primary_id))){
+										var files = sys.getFiles(inf.primary_id);
+										
+										x += '<li><div class="item-content item-input event_files"><div class="item-inner"><div class="item-title item-label">Files</div><div class="list links-list"><ul>';
+										for(var i=0; i<files.length; i++){
+											x += '<li><a href="#" data-id="' + files[i].substr(15) + '" data-type="' + files[i].substr(1,1) + '">'+ files[i] + '</a></li>';
+										}
+										x += '</ul></div></div></div></li>';
+									}
 									x += '<li><div class="item-content item-input"><div class="item-inner"><div class="item-input-wrap row">';
 									x += '<button class="evtd_cls_DL button col button-fill" data-eid="' + inf.primary_id + '">Close</button>';
 									x += '<button class="evtd_sve_DL button col button-fill">Save</button>';
@@ -586,6 +595,24 @@ $(document).ready(function(){
 											
 									x = x.replace(/(?:\r\n|\r|\n)/g, '<br>');
 									$('.DLdetails-popover ul').html(x);
+									
+									$('.DLdetails-popover .event_files').on('click', 'a', function(){
+										var file_id = $(this).data('id'),
+											file_type = $(this).data('type');
+										var file_hash = (md5(((sys.isEmpty(STORAGE.getItem('comp')) ? STORAGE.getItem('usr') : STORAGE.getItem('comp')) + '-' + file_id + '[' + file_type + ']')));
+										
+										var DATA = {
+												'hash' : file_hash,
+												'type' : file_type,
+												'id' : file_id
+											};
+										var get_data = "ACT=" + encodeURIComponent('pdf_get')
+													 + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
+										var url = ('https://app.wkventertainment.com/?' + (get_data));
+										
+										window.open(url, "_system");
+									});
+									
 									$('div.DLdetails-popover').data('info', inf);
 											
 									var evtdVenueAutocomplete = apps.autocomplete.create({
@@ -1551,6 +1578,13 @@ $(document).ready(function(){
 		});
 		
 		$('.evts_add_DL').on('click', function(){
+			$('.evt_ord_DL').css('display', 'block');
+			
+			setTimeout(function(){
+				$('.evt_ord_DL').css('opacity', '1');
+			}, 100);
+			
+			
 			$('.popup-backdrop').css('display', 'none');
 			$('.evt_ord_tab').css('display', 'block');
 			
@@ -1564,6 +1598,12 @@ $(document).ready(function(){
 		});
 		
 		$('.evt_ord_DL a.fab-close').on('click', function(){
+			$('.evt_ord_DL').css('opacity', '0');
+			
+			setTimeout(function(){
+				$('.evt_ord_DL').css('display', 'none');
+			}, 500);
+			
 			$('.evts_cart_DL').data('item', []);
 			$('.evt_ord_proceed').data('item', []);
 			
@@ -2796,10 +2836,34 @@ $(document).ready(function(){
 							sys.loading(1);
 						},
 						success: function(str){
-							if(str=='200 OK'){
+							if(str.indexOf('200 OK') != -1){
 								$('.evt_ord_DL a.fab-close')[0].click();
 								$('.popup-backdrop')[0].click();
 								$('a#DLschedule-btn').trigger('mousedown');
+								
+								var x = '<li><a href="#" class="item-link item-content"><div class="item-inner"><div class="item-title">' + str.substr(9) + '</div><div class="item-after">RM ' + DATA['price'] + '</div></div></a></li>';
+								
+								if($('.DLsrc-fl-po .list.fl-po ul').text().indexOf('found.') == -1){
+									$('.DLsrc-fl-po .list.fl-po ul').append(x);
+								}else{
+									$('.DLsrc-fl-po .list.fl-po ul').html(x);
+									
+									$('.DLsrc-fl-po .list.fl-po').on('click', 'a', function(){
+										var file_id = $(this).find('.item-title').text();
+										var file_hash = (md5(((sys.isEmpty(STORAGE.getItem('comp')) ? STORAGE.getItem('usr') : STORAGE.getItem('comp')) + '-' + file_id + '[O]')));
+										
+										var DATA = {
+												'hash' : file_hash,
+												'type' : 'O',
+												'id' : file_id
+											};
+										var get_data = "ACT=" + encodeURIComponent('pdf_get')
+													 + "&DATA=" + encodeURIComponent(sys.serialize(DATA));
+										var url = ('https://app.wkventertainment.com/?' + (get_data));
+										
+										window.open(url, "_system");
+									});
+								}
 								
 								var success_toast = apps.toast.create({
 													   icon: '<i class="material-icons">done_outline</i>',
@@ -7347,6 +7411,7 @@ $(document).ready(function(){
 			$('body').data('loc', inf['location']);
 			$('body').data('car', inf['car']);
 			$('body').data('inv', inf['inventory']);
+			$('body').data('doc', inf['doc']);
 			
 			if(inf['clocked']=='1'){
 				STORAGE.setItem('clock_in', (new Date(inf['time']).getTime()));
@@ -7555,7 +7620,7 @@ $(document).ready(function(){
 					
 					$('.DLsrc-fl-po .list.fl-po ul').html(x);
 					
-					$('.DLsrc-fl-po .list.fl-po').on('click', 'li', function(){
+					$('.DLsrc-fl-po .list.fl-po').on('click', 'a', function(){
 						var file_id = $(this).find('.item-title').text();
 						var file_hash = (md5(((sys.isEmpty(STORAGE.getItem('comp')) ? STORAGE.getItem('usr') : STORAGE.getItem('comp')) + '-' + file_id + '[O]')));
 						
@@ -7581,7 +7646,7 @@ $(document).ready(function(){
 					
 					$('.DLsrc-fl-qt .list.fl-qt ul').html(x);
 					
-					$('.DLsrc-fl-qt .list.fl-qt').on('click', 'li', function(){
+					$('.DLsrc-fl-qt .list.fl-qt').on('click', 'a', function(){
 						var file_id = $(this).find('.item-title').text();
 						var file_hash = (md5(((sys.isEmpty(STORAGE.getItem('comp')) ? STORAGE.getItem('usr') : STORAGE.getItem('comp')) + '-' + file_id + '[Q]')));
 						
@@ -7607,7 +7672,7 @@ $(document).ready(function(){
 					
 					$('.DLsrc-fl-iv .list.fl-iv ul').html(x);
 					
-					$('.DLsrc-fl-iv .list.fl-iv').on('click', 'li', function(){
+					$('.DLsrc-fl-iv .list.fl-iv').on('click', 'a', function(){
 						var file_id = $(this).find('.item-title').text();
 						var file_hash = (md5(((sys.isEmpty(STORAGE.getItem('comp')) ? STORAGE.getItem('usr') : STORAGE.getItem('comp')) + '-' + file_id + '[I]')));
 						
@@ -8598,6 +8663,31 @@ sys = {
 		});
 		
 		return leave;
+	},
+	'getFiles' : function(eid){
+		var all_files = $('body').data('doc'), output = [];
+		
+		if(!sys.isEmpty(all_files['O'])){
+			for(var i=0; i<all_files['O'].length; i++){
+				if(all_files['O'][i]['eid'] == eid){
+					output.push(('[O]&emsp;&emsp;' + all_files['O'][i]['id']));
+				}
+			}
+		}if(!sys.isEmpty(all_files['Q'])){
+			for(var i=0; i<all_files['Q'].length; i++){
+				if(all_files['Q'][i]['eid'] == eid){
+					output.push(('[Q]&emsp;&emsp;' + all_files['Q'][i]['id']));
+				}
+			}
+		}if(!sys.isEmpty(all_files['I'])){
+			for(var i=0; i<all_files['I'].length; i++){
+				if(all_files['I'][i]['eid'] == eid){
+					output.push(('[I]&emsp;&emsp;' + all_files['I'][i]['id']));
+				}
+			}
+		}
+		
+		return output;
 	},
 	'getDistance' : function(loc, state){
 		function toRadians(degree){

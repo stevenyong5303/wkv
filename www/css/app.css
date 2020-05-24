@@ -196,6 +196,9 @@ input.evtd_price, label.evtd_paid, input.evtd_price_DL, label.evtd_paid_DL {
 	box-shadow: 0 3px 30px rgba(0,0,0,.4);
 	overflow: hidden;
 }
+#dlChart{
+	max-width: 500px;
+}
 .DLsrc-fl-po .list.fl-po, .DLsrc-fl-qt .list.fl-qt, .DLsrc-fl-iv .list.fl-iv {
 	width: 100%;
     max-height: 140px;
@@ -211,6 +214,7 @@ input.evtd_price, label.evtd_paid, input.evtd_price_DL, label.evtd_paid_DL {
 	z-index: 1600;
 	box-shadow: 0 3px 30px rgba(0,0,0,.4);
 	overflow: hidden;
+	opacity: 0;
 }
 .evt_ord_tab{
 	display: none;
@@ -514,6 +518,9 @@ div.popup.popup-stnc{
 	-ms-user-select: none;
 	user-select: none;
 	-o-user-select: none;
+}
+.item-content.event_files .links-list ul{
+	padding-left: 0;
 }
 @media screen and (min-width : 360px)
 {
