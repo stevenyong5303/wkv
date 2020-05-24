@@ -4,7 +4,7 @@
 <widget xmlns     = "http://www.w3.org/ns/widgets"
         xmlns:gap = "http://phonegap.com/ns/1.0"
         id        = "com.wkv.manage"
-        version   = "1.0.253">
+        version   = "1.0.254">
 
     <name>WKV</name>
 
@@ -103,6 +103,21 @@
         <icon src="res/android/xhdpi.png" density="xhdpi" />
         <icon src="res/android/xxhdpi.png" density="xxhdpi" />
         <icon src="res/android/xxxhdpi.png" density="xxxhdpi" />
+    </platform>
+	
+	<platform name="android">
+        <splash src="res/android/ldpi-screen.png" density="ldpi"/>
+		<splash src="res/android/ldpi-screen.png" density="port-ldpi"/>
+        <splash src="res/android/mdpi-screen.png" density="mdpi" />
+        <splash src="res/android/mdpi-screen.png" density="port-mdpi" />
+        <splash src="res/android/hdpi-screen.png" density="hdpi" />
+        <splash src="res/android/hdpi-screen.png" density="port-hdpi" />
+        <splash src="res/android/xhdpi-screen.png" density="xhdpi" />
+        <splash src="res/android/xhdpi-screen.png" density="port-xhdpi" />
+        <splash src="res/android/xxhdpi-screen.png" density="xxhdpi" />
+        <splash src="res/android/xxhdpi-screen.png" density="port-xxhdpi" />
+        <splash src="res/android/xxxhdpi-screen.png" density="xxxhdpi" />
+        <splash src="res/android/xxxhdpi-screen.png" density="port-xxxhdpi" />
     </platform>
 	
 	<platform name="ios">
