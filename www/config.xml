@@ -192,6 +192,7 @@
     <allow-intent href="geo:*" />
     <platform name="android">
         <allow-intent href="market:*" />
+		<preference name="android-build-tool" value="gradle" />
 		<preference name="android-minSdkVersion" value="19" /> 
 		<preference name="android-targetSdkVersion" value="28" /> 
 		<resource-file src="locales/android/drawable-mdpi/ic_stat_onesignal_default.png" target="app/src/main/res/drawable-mdpi/ic_stat_onesignal_default.png" />
