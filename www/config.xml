@@ -48,12 +48,21 @@
     <!-- Plugins -->
 	<plugin name="cordova-plugin-x-socialsharing" />
 	<plugin name="phonegap-plugin-barcodescanner" />
-	<!-- <plugin name="onesignal-cordova-plugin" spec="^2.4.1" source="npm" /> -->
+	<plugin name="onesignal-cordova-plugin" spec="^2.4.1" source="npm" />
 	<plugin name="cordova-clipboard" />
 	
+	<plugin name="cordova-plugin-battery-status" />
     <plugin name="cordova-plugin-camera" />
+	<plugin name="cordova-plugin-console" />
+	<plugin name="cordova-plugin-contacts" />
+	<plugin name="cordova-plugin-device" />
 	<plugin name="cordova-plugin-dialogs" />
+	<plugin name="cordova-plugin-file" />
 	<plugin name="cordova-plugin-geolocation" />
+	<plugin name="cordova-plugin-inappbrowser" />
+	<plugin name="cordova-plugin-media" />
+	<plugin name="cordova-plugin-media-capture" />
+	<plugin name="cordova-plugin-network-information" />
 	<plugin name="cordova-plugin-statusbar" />
 	<plugin name="cordova-plugin-vibration" />
     <!-- Core plugins -->
