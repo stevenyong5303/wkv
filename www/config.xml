@@ -48,7 +48,7 @@
     <!-- Plugins -->
 	<plugin name="cordova-plugin-x-socialsharing" />
 	<plugin name="phonegap-plugin-barcodescanner" />
-	<plugin name="onesignal-cordova-plugin" spec="2.4.1" source="npm" />
+	<plugin name="onesignal-cordova-plugin" spec="^2.4.1" source="npm" />
 	<plugin name="cordova-clipboard" />
 	
     <plugin name="cordova-plugin-camera" />
