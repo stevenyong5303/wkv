@@ -4,7 +4,7 @@
 <widget xmlns     = "http://www.w3.org/ns/widgets"
         xmlns:gap = "http://phonegap.com/ns/1.0"
         id        = "com.wkv.manage"
-        version   = "1.0.256">
+        version   = "1.0.257">
 
     <name>WKV</name>
 
@@ -155,7 +155,7 @@
 	</platform>
 
     <gap:config-file platform="ios" parent="CFBundleShortVersionString">
-    <string>252</string>
+    <string>257</string>
     </gap:config-file>
 	
 	<platform name="ios">
@@ -168,6 +168,14 @@
 		<edit-config target="NSLocationWhenInUseUsageDescription" file="*-Info.plist" mode="merge" overwrite="true">
 			<string>Location permission is required because there is a feature of this apps that allow the crew to clock in based on their current location.</string>
 		</edit-config>
+	</platform>
+	
+	<platform name="ios">
+		<preference name="WKWebViewOnly" value="true" />
+		<feature name="CDVWKWebViewEngine">
+			<param name="ios-package" value="CDVWKWebViewEngine" />
+		</feature>
+		<preference name="CordovaWebViewEngine" value="CDVWKWebViewEngine" />
 	</platform>
     <!--
         Define access to external domains.

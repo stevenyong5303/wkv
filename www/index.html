@@ -741,6 +741,18 @@
 												</div>
 											</div>
 										</li>
+										<li class="level9">
+											<div class="item-content">
+												<div class="item-media">
+													<i class="icon material-icons md-only">screen_rotation</i>
+												</div>
+												<div class="item-inner">
+													<div class="item-title">
+														<a id="btn-swac" class="link popup-open" href="#">Switch to Dealer</a>
+													</div>
+												</div>
+											</div>
+										</li>
 										<li>
 											<div class="item-content">
 												<div class="item-media">
@@ -949,7 +961,7 @@
 							<div class="block">
 								<div class="block-title">Profile</div>
 								<div class="list">
-									<ul>
+									<ul class="DLprofile">
 										<li>
 											<div class="item-content">
 												<div class="item-media">
@@ -1190,6 +1202,30 @@
 								<li>
 									<div class="item-content">
 										<div class="item-media">
+											<i class="icon material-icons md-only">content_paste</i>
+										</div>
+										<div class="item-inner">
+											<div class="item-title">
+												<a id="plgn-btn" class="link popup-open" href="#" data-popup=".popup-plgn">Packing List Generator</a>
+											</div>
+										</div>
+									</div>
+								</li>
+								<li>
+									<div class="item-content">
+										<div class="item-media">
+											<i class="icon material-icons md-only">monetization_on</i>
+										</div>
+										<div class="item-inner">
+											<div class="item-title">
+												<a id="slrd-btn" class="link popup-open" href="#" data-popup=".popup-slrd">Salary Details</a>
+											</div>
+										</div>
+									</div>
+								</li>
+								<li>
+									<div class="item-content">
+										<div class="item-media">
 											<i class="icon material-icons md-only">assessment</i>
 										</div>
 										<div class="item-inner">
@@ -1284,6 +1320,24 @@
 								</li>
 								<li>
 									<label class="item-checkbox item-content">
+										<input type="checkbox" name="cnv-checkbox" data-fn="Cheong En Yi" data-ic="860309-56-5641">
+										<i class="icon icon-checkbox"></i>
+										<div class="item-inner">
+											<div class="item-title">Ah Cheong</div>
+										</div>
+									</label>
+								</li>
+								<li>
+									<label class="item-checkbox item-content">
+										<input type="checkbox" name="cnv-checkbox" data-fn="Aiman Azrie bin Ahmad Faharuddin" data-ic="980205-08-6175">
+										<i class="icon icon-checkbox"></i>
+										<div class="item-inner">
+											<div class="item-title">Aiman</div>
+										</div>
+									</label>
+								</li>
+								<li>
+									<label class="item-checkbox item-content">
 										<input type="checkbox" name="cnv-checkbox" data-fn="Ng Gun Yin" data-ic="990105-10-7097">
 										<i class="icon icon-checkbox"></i>
 										<div class="item-inner">
@@ -1302,37 +1356,10 @@
 								</li>
 								<li>
 									<label class="item-checkbox item-content">
-										<input type="checkbox" name="cnv-checkbox" data-fn="Aiman Azrie bin Ahmad Faharuddin" data-ic="980205-08-6175">
-										<i class="icon icon-checkbox"></i>
-										<div class="item-inner">
-											<div class="item-title">Aiman</div>
-										</div>
-									</label>
-								</li>
-								<li>
-									<label class="item-checkbox item-content">
 										<input type="checkbox" name="cnv-checkbox" data-fn="Yong Kim Hong" data-ic="590820-10-6031">
 										<i class="icon icon-checkbox"></i>
 										<div class="item-inner">
 											<div class="item-title">KH</div>
-										</div>
-									</label>
-								</li>
-								<li>
-									<label class="item-checkbox item-content">
-										<input type="checkbox" name="cnv-checkbox" data-fn="Ng Yoke Kei" data-ic="000617-10-0678">
-										<i class="icon icon-checkbox"></i>
-										<div class="item-inner">
-											<div class="item-title">Yu Qi</div>
-										</div>
-									</label>
-								</li>
-								<li>
-									<label class="item-checkbox item-content">
-										<input type="checkbox" name="cnv-checkbox" data-fn="Lee Yi Ling" data-ic="000625-10-0264">
-										<i class="icon icon-checkbox"></i>
-										<div class="item-inner">
-											<div class="item-title">Yi Ling</div>
 										</div>
 									</label>
 								</li>
@@ -1356,10 +1383,10 @@
 								</li>
 								<li>
 									<label class="item-checkbox item-content">
-										<input type="checkbox" name="cnv-checkbox" data-fn="Cheong En Yi" data-ic="860309-56-5641">
+										<input type="checkbox" name="cnv-checkbox" data-fn="Ng Yoke Kei" data-ic="000617-10-0678">
 										<i class="icon icon-checkbox"></i>
 										<div class="item-inner">
-											<div class="item-title">Ah Cheong</div>
+											<div class="item-title">Yu Qi</div>
 										</div>
 									</label>
 								</li>
@@ -1372,6 +1399,15 @@
 										</div>
 									</label>
 								</li>
+								<!-- <li> -->
+									<!-- <label class="item-checkbox item-content"> -->
+										<!-- <input type="checkbox" name="cnv-checkbox" data-fn="Lee Yi Ling" data-ic="000625-10-0264"> -->
+										<!-- <i class="icon icon-checkbox"></i> -->
+										<!-- <div class="item-inner"> -->
+											<!-- <div class="item-title">Yi Ling</div> -->
+										<!-- </div> -->
+									<!-- </label> -->
+								<!-- </li> -->
 								<!-- <li> -->
 									<!-- <label class="item-checkbox item-content"> -->
 										<!-- <input type="checkbox" name="cnv-checkbox" data-fn="Ng Hon Yao" data-ic="020327-10-1259"> -->
@@ -4085,6 +4121,50 @@ data-value=''>
 								</li>
 							</ul>
 						</div>
+					</div>
+				</div>
+			</div>
+			<div class="popup popup-plgn level9">
+				<div class="toolbar">
+					<div class="toolbar-inner">
+						<div class="left">Packing List</div>
+						<div class="right"><a class="link popup-close" href="#">Close</a></div>
+					</div>
+				</div>
+				<div class="block">
+					<div class="block">
+						<div class="row">
+							<button class="col button button-raised button-active btn-plel">Event</button>
+							<button class="col button button-raised btn-plgn">List</button>
+						</div>
+					</div>
+					<div class="list media-list list-plel">
+						<ul></ul>
+					</div>
+					<div class="list list-plgn" style="display:none;">
+						<ul></ul>
+					</div>
+				</div>
+			</div>
+			<div class="popup popup-slrd level9">
+				<div class="toolbar">
+					<div class="toolbar-inner">
+						<div class="left">Salary Details</div>
+						<div class="right"><a class="link popup-close" href="#">Close</a></div>
+					</div>
+				</div>
+				<div class="block">
+					<div class="block">
+						<div class="row">
+							<button class="col button button-raised button-active btn-sldi">Info</button>
+							<button class="col button button-raised btn-slde">Edit</button>
+						</div>
+					</div>
+					<div class="list links-list list-sldi">
+						<ul></ul>
+					</div>
+					<div class="list-slde" style="display:none;">
+						
 					</div>
 				</div>
 			</div>

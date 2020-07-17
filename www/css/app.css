@@ -35,6 +35,26 @@
 .d-debit {
 	background-color: #ffdddd;
 }
+.md .row.no-gap .col-10{
+	text-align: center;
+}
+.evt_dlg_cart .row.no-gap.add-top-border{
+	border-style: double double none double;
+}
+#app .dialog-text .evt_dlg_cart .row.no-gap.add-bottom-border{
+	border-style: double;
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+.evt_dlg_cart .row.no-gap{
+	border-style: none double none double;
+}
+.evt_dlg_cart .row.no-gap:last-of-type{
+	border-style: none double double double;
+}
+.evt_dlg_cart .row.no-gap .col-85{
+	text-align: right;
+}
 span.evt-crew-ta{
 	float: right;
 	color: rgba(0, 0, 0, 0.65);
@@ -580,9 +600,9 @@ div.popup.popup-stnc{
 	}
 	.ncf-pos1 {
 		text-align: right;
-		left: calc(50% - 59px);
-		bottom: 274px;
-		width: 160px;
+		left: calc(50% - 79px);
+		bottom: 294px;
+		width: 200px;
 	}
 	.ncf-pos2 {
 		text-align: right;
@@ -694,6 +714,14 @@ body {
   height: 120px;
   border-radius: 50%;
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.5);
+}
+.blink{
+    animation:blinkingButton 1s infinite;
+}
+@keyframes blinkingButton{
+    0%{     opacity: 1;    }
+    50%{    opacity: 0.2; }
+    100%{   opacity: 1;    }
 }
 #particles-background,
 #particles-foreground {
